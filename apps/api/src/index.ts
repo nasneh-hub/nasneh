@@ -12,6 +12,7 @@ import { uploadRoutes } from './modules/upload';
 import { vendorOrderRoutes, customerOrderRoutes } from './modules/orders';
 import { providerServicesRouter, publicServicesRouter } from './modules/services';
 import { providerCalendarRouter } from './modules/availability';
+import { bookingsRoutes } from './modules/bookings';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -74,6 +75,9 @@ app.use(`${apiPrefix}/services`, publicServicesRouter);
 
 // Provider calendar routes (availability management)
 app.use(`${apiPrefix}/provider/calendar`, providerCalendarRouter);
+
+// Bookings routes (customer)
+app.use(`${apiPrefix}/bookings`, bookingsRoutes);
 
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/users`, userRoutes);
