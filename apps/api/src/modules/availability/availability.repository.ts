@@ -1,5 +1,6 @@
 import { prisma } from '../../lib/db';
 import type { DayOfWeek, OverrideType } from '@prisma/client';
+import { calendarDefaults } from '../../config/calendar.defaults';
 
 // ===========================================
 // Availability Rules Repository
@@ -239,6 +240,7 @@ export const availabilityOverridesRepository = {
 
 export const availabilitySettingsRepository = {
   // Get or create settings for a provider
+  // Uses calendarDefaults from config when creating new settings
   async getOrCreate(providerId: string) {
     const existing = await prisma.availabilitySettings.findUnique({
       where: { providerId },
@@ -246,15 +248,16 @@ export const availabilitySettingsRepository = {
 
     if (existing) return existing;
 
+    // Create with config defaults (MVP defaults - configurable per provider)
     return prisma.availabilitySettings.create({
       data: {
         providerId,
-        timezone: 'Asia/Bahrain',
-        slotDurationMinutes: 30,
-        bufferBeforeMinutes: 0,
-        bufferAfterMinutes: 0,
-        minAdvanceHours: 24,
-        maxAdvanceDays: 30,
+        timezone: calendarDefaults.timezone,
+        slotDurationMinutes: calendarDefaults.slotDurationMinutes,
+        bufferBeforeMinutes: calendarDefaults.bufferBeforeMinutes,
+        bufferAfterMinutes: calendarDefaults.bufferAfterMinutes,
+        minAdvanceHours: calendarDefaults.minAdvanceHours,
+        maxAdvanceDays: calendarDefaults.maxAdvanceDays,
       },
     });
   },
@@ -267,6 +270,7 @@ export const availabilitySettingsRepository = {
   },
 
   // Update settings
+  // Uses calendarDefaults from config when creating new settings via upsert
   async update(providerId: string, data: {
     timezone?: string;
     slotDurationMinutes?: number;
@@ -280,12 +284,12 @@ export const availabilitySettingsRepository = {
       update: data,
       create: {
         providerId,
-        timezone: data.timezone ?? 'Asia/Bahrain',
-        slotDurationMinutes: data.slotDurationMinutes ?? 30,
-        bufferBeforeMinutes: data.bufferBeforeMinutes ?? 0,
-        bufferAfterMinutes: data.bufferAfterMinutes ?? 0,
-        minAdvanceHours: data.minAdvanceHours ?? 24,
-        maxAdvanceDays: data.maxAdvanceDays ?? 30,
+        timezone: data.timezone ?? calendarDefaults.timezone,
+        slotDurationMinutes: data.slotDurationMinutes ?? calendarDefaults.slotDurationMinutes,
+        bufferBeforeMinutes: data.bufferBeforeMinutes ?? calendarDefaults.bufferBeforeMinutes,
+        bufferAfterMinutes: data.bufferAfterMinutes ?? calendarDefaults.bufferAfterMinutes,
+        minAdvanceHours: data.minAdvanceHours ?? calendarDefaults.minAdvanceHours,
+        maxAdvanceDays: data.maxAdvanceDays ?? calendarDefaults.maxAdvanceDays,
       },
     });
   },

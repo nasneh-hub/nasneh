@@ -1034,3 +1034,65 @@ describe('Day of Week Mapping', () => {
     expect(DAY_OF_WEEK_INDEX['SATURDAY']).toBe(6);
   });
 });
+
+
+// ===========================================
+// Calendar Defaults Config Tests
+// ===========================================
+
+describe('Calendar Defaults Config', () => {
+  // Import the config to test
+  // Note: We test the exported values, not the env parsing (that's integration test territory)
+  it('should export calendarDefaults object with all required fields', async () => {
+    const { calendarDefaults } = await import('../../config/calendar.defaults');
+    
+    expect(calendarDefaults).toBeDefined();
+    expect(typeof calendarDefaults.timezone).toBe('string');
+    expect(typeof calendarDefaults.slotDurationMinutes).toBe('number');
+    expect(typeof calendarDefaults.bufferBeforeMinutes).toBe('number');
+    expect(typeof calendarDefaults.bufferAfterMinutes).toBe('number');
+    expect(typeof calendarDefaults.minAdvanceHours).toBe('number');
+    expect(typeof calendarDefaults.maxAdvanceDays).toBe('number');
+  });
+
+  it('should have sensible default values', async () => {
+    const { calendarDefaults } = await import('../../config/calendar.defaults');
+    
+    // Timezone should be a valid IANA timezone string
+    expect(calendarDefaults.timezone).toMatch(/^[A-Za-z]+\/[A-Za-z_]+$/);
+    
+    // Slot duration should be reasonable (15-480 minutes)
+    expect(calendarDefaults.slotDurationMinutes).toBeGreaterThanOrEqual(15);
+    expect(calendarDefaults.slotDurationMinutes).toBeLessThanOrEqual(480);
+    
+    // Buffers should be non-negative
+    expect(calendarDefaults.bufferBeforeMinutes).toBeGreaterThanOrEqual(0);
+    expect(calendarDefaults.bufferAfterMinutes).toBeGreaterThanOrEqual(0);
+    
+    // Min advance should be reasonable (0-168 hours = 1 week)
+    expect(calendarDefaults.minAdvanceHours).toBeGreaterThanOrEqual(0);
+    expect(calendarDefaults.minAdvanceHours).toBeLessThanOrEqual(168);
+    
+    // Max advance should be reasonable (1-365 days)
+    expect(calendarDefaults.maxAdvanceDays).toBeGreaterThanOrEqual(1);
+    expect(calendarDefaults.maxAdvanceDays).toBeLessThanOrEqual(365);
+  });
+
+  it('should export individual default constants', async () => {
+    const {
+      DEFAULT_TIMEZONE,
+      DEFAULT_SLOT_DURATION_MINUTES,
+      DEFAULT_BUFFER_BEFORE_MINUTES,
+      DEFAULT_BUFFER_AFTER_MINUTES,
+      DEFAULT_MIN_ADVANCE_HOURS,
+      DEFAULT_MAX_ADVANCE_DAYS,
+    } = await import('../../config/calendar.defaults');
+    
+    expect(DEFAULT_TIMEZONE).toBeDefined();
+    expect(DEFAULT_SLOT_DURATION_MINUTES).toBeDefined();
+    expect(DEFAULT_BUFFER_BEFORE_MINUTES).toBeDefined();
+    expect(DEFAULT_BUFFER_AFTER_MINUTES).toBeDefined();
+    expect(DEFAULT_MIN_ADVANCE_HOURS).toBeDefined();
+    expect(DEFAULT_MAX_ADVANCE_DAYS).toBeDefined();
+  });
+});
