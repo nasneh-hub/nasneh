@@ -1,5 +1,5 @@
 /**
- * Services CRUD Tests - Nasneh API
+ * Services CRUD & Listing Tests - Nasneh API
  * Unit tests for services module
  */
 
@@ -8,7 +8,9 @@ import {
   createServiceSchema,
   updateServiceSchema,
   serviceQuerySchema,
+  providerServiceQuerySchema,
   ServiceType,
+  ServiceSortBy,
 } from '../../types/service.types';
 
 // ===========================================
@@ -267,6 +269,10 @@ describe('Service Schemas', () => {
     });
   });
 
+  // ===========================================
+  // Service Query Schema Tests (Public Listing)
+  // ===========================================
+
   describe('serviceQuerySchema', () => {
     it('should accept valid query with all params', () => {
       const query = {
@@ -277,6 +283,7 @@ describe('Service Schemas', () => {
         maxPrice: '100',
         isAvailable: 'true',
         search: 'haircut',
+        sortBy: 'price_asc',
       };
 
       const result = serviceQuerySchema.safeParse(query);
@@ -289,6 +296,7 @@ describe('Service Schemas', () => {
         expect(result.data.maxPrice).toBe(100);
         expect(result.data.isAvailable).toBe(true);
         expect(result.data.search).toBe('haircut');
+        expect(result.data.sortBy).toBe('price_asc');
       }
     });
 
@@ -300,6 +308,7 @@ describe('Service Schemas', () => {
       if (result.success) {
         expect(result.data.page).toBe(1);
         expect(result.data.limit).toBe(20);
+        expect(result.data.sortBy).toBe('newest');
       }
     });
 
@@ -329,6 +338,165 @@ describe('Service Schemas', () => {
       const result = serviceQuerySchema.safeParse(query);
       expect(result.success).toBe(false);
     });
+
+    it('should accept providerId filter', () => {
+      const query = {
+        providerId: '123e4567-e89b-12d3-a456-426614174000',
+      };
+
+      const result = serviceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.providerId).toBe('123e4567-e89b-12d3-a456-426614174000');
+      }
+    });
+
+    it('should accept categoryId filter', () => {
+      const query = {
+        categoryId: '123e4567-e89b-12d3-a456-426614174000',
+      };
+
+      const result = serviceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.categoryId).toBe('123e4567-e89b-12d3-a456-426614174000');
+      }
+    });
+
+    it('should accept all sortBy options', () => {
+      const sortOptions = ['newest', 'oldest', 'price_asc', 'price_desc', 'name_asc', 'name_desc'];
+      
+      for (const sortBy of sortOptions) {
+        const result = serviceQuerySchema.safeParse({ sortBy });
+        expect(result.success).toBe(true);
+        if (result.success) {
+          expect(result.data.sortBy).toBe(sortBy);
+        }
+      }
+    });
+
+    it('should reject invalid sortBy option', () => {
+      const query = {
+        sortBy: 'invalid_sort',
+      };
+
+      const result = serviceQuerySchema.safeParse(query);
+      expect(result.success).toBe(false);
+    });
+
+    it('should parse price range correctly', () => {
+      const query = {
+        minPrice: '10.50',
+        maxPrice: '99.99',
+      };
+
+      const result = serviceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.minPrice).toBe(10.5);
+        expect(result.data.maxPrice).toBe(99.99);
+      }
+    });
+
+    it('should reject negative prices', () => {
+      const query = {
+        minPrice: '-5',
+      };
+
+      const result = serviceQuerySchema.safeParse(query);
+      expect(result.success).toBe(false);
+    });
+  });
+
+  // ===========================================
+  // Provider Service Query Schema Tests
+  // ===========================================
+
+  describe('providerServiceQuerySchema', () => {
+    it('should accept status filter for provider view', () => {
+      const query = {
+        status: 'ACTIVE',
+      };
+
+      const result = providerServiceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.status).toBe('ACTIVE');
+      }
+    });
+
+    it('should accept includeDeleted flag', () => {
+      const query = {
+        includeDeleted: 'true',
+      };
+
+      const result = providerServiceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.includeDeleted).toBe(true);
+      }
+    });
+
+    it('should default includeDeleted to false', () => {
+      const query = {};
+
+      const result = providerServiceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.includeDeleted).toBe(false);
+      }
+    });
+
+    it('should accept all status options', () => {
+      const statusOptions = ['ACTIVE', 'INACTIVE', 'DELETED'];
+      
+      for (const status of statusOptions) {
+        const result = providerServiceQuerySchema.safeParse({ status });
+        expect(result.success).toBe(true);
+        if (result.success) {
+          expect(result.data.status).toBe(status);
+        }
+      }
+    });
+
+    it('should reject invalid status', () => {
+      const query = {
+        status: 'INVALID_STATUS',
+      };
+
+      const result = providerServiceQuerySchema.safeParse(query);
+      expect(result.success).toBe(false);
+    });
+
+    it('should accept combined filters', () => {
+      const query = {
+        page: '1',
+        limit: '50',
+        serviceType: 'APPOINTMENT',
+        status: 'ACTIVE',
+        minPrice: '10',
+        maxPrice: '100',
+        isAvailable: 'true',
+        search: 'massage',
+        sortBy: 'price_desc',
+        includeDeleted: 'false',
+      };
+
+      const result = providerServiceQuerySchema.safeParse(query);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.page).toBe(1);
+        expect(result.data.limit).toBe(50);
+        expect(result.data.serviceType).toBe('APPOINTMENT');
+        expect(result.data.status).toBe('ACTIVE');
+        expect(result.data.minPrice).toBe(10);
+        expect(result.data.maxPrice).toBe(100);
+        expect(result.data.isAvailable).toBe(true);
+        expect(result.data.search).toBe('massage');
+        expect(result.data.sortBy).toBe('price_desc');
+        expect(result.data.includeDeleted).toBe(false);
+      }
+    });
   });
 });
 
@@ -346,6 +514,26 @@ describe('ServiceType Constants', () => {
   it('should have exactly 3 service types', () => {
     const types = Object.keys(ServiceType);
     expect(types).toHaveLength(3);
+  });
+});
+
+// ===========================================
+// Service Sort Constants Tests
+// ===========================================
+
+describe('ServiceSortBy Constants', () => {
+  it('should have all expected sort options', () => {
+    expect(ServiceSortBy.NEWEST).toBe('newest');
+    expect(ServiceSortBy.OLDEST).toBe('oldest');
+    expect(ServiceSortBy.PRICE_ASC).toBe('price_asc');
+    expect(ServiceSortBy.PRICE_DESC).toBe('price_desc');
+    expect(ServiceSortBy.NAME_ASC).toBe('name_asc');
+    expect(ServiceSortBy.NAME_DESC).toBe('name_desc');
+  });
+
+  it('should have exactly 6 sort options', () => {
+    const options = Object.keys(ServiceSortBy);
+    expect(options).toHaveLength(6);
   });
 });
 
@@ -405,6 +593,77 @@ describe('Service Business Logic', () => {
         serviceType: 'PICKUP_DROPOFF',
       };
       expect(createServiceSchema.safeParse(pickupWithoutPrep).success).toBe(true);
+    });
+  });
+
+  describe('Pagination Edge Cases', () => {
+    it('should accept page 1 as minimum', () => {
+      const result = serviceQuerySchema.safeParse({ page: '1' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept high page numbers', () => {
+      const result = serviceQuerySchema.safeParse({ page: '1000' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept limit of 1', () => {
+      const result = serviceQuerySchema.safeParse({ limit: '1' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept limit of 100 (max)', () => {
+      const result = serviceQuerySchema.safeParse({ limit: '100' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should reject limit of 101 (over max)', () => {
+      const result = serviceQuerySchema.safeParse({ limit: '101' });
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe('Search Query Edge Cases', () => {
+    it('should accept empty search string', () => {
+      const result = serviceQuerySchema.safeParse({ search: '' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept search with special characters', () => {
+      const result = serviceQuerySchema.safeParse({ search: 'hair & beauty' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept Arabic search terms', () => {
+      const result = serviceQuerySchema.safeParse({ search: 'قص شعر' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept mixed language search', () => {
+      const result = serviceQuerySchema.safeParse({ search: 'haircut قص' });
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('Price Filter Edge Cases', () => {
+    it('should accept minPrice of 0', () => {
+      const result = serviceQuerySchema.safeParse({ minPrice: '0' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept very high maxPrice', () => {
+      const result = serviceQuerySchema.safeParse({ maxPrice: '9999' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept minPrice equal to maxPrice', () => {
+      const result = serviceQuerySchema.safeParse({ minPrice: '50', maxPrice: '50' });
+      expect(result.success).toBe(true);
+    });
+
+    it('should accept decimal prices', () => {
+      const result = serviceQuerySchema.safeParse({ minPrice: '10.500', maxPrice: '99.999' });
+      expect(result.success).toBe(true);
     });
   });
 });

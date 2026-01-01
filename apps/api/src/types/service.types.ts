@@ -38,6 +38,21 @@ export const ServiceStatus = {
 export type ServiceStatus = (typeof ServiceStatus)[keyof typeof ServiceStatus];
 
 // ===========================================
+// Sorting Options
+// ===========================================
+
+export const ServiceSortBy = {
+  NEWEST: 'newest',
+  OLDEST: 'oldest',
+  PRICE_ASC: 'price_asc',
+  PRICE_DESC: 'price_desc',
+  NAME_ASC: 'name_asc',
+  NAME_DESC: 'name_desc',
+} as const;
+
+export type ServiceSortBy = (typeof ServiceSortBy)[keyof typeof ServiceSortBy];
+
+// ===========================================
 // Service Provider Schemas
 // ===========================================
 
@@ -118,18 +133,37 @@ export type UpdateServiceInput = z.infer<typeof updateServiceSchema>;
 // ===========================================
 
 export const serviceQuerySchema = z.object({
+  // Pagination
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+  
+  // Filters
   providerId: z.string().uuid().optional(),
   categoryId: z.string().uuid().optional(),
   serviceType: z.nativeEnum(ServiceType as Record<string, string>).optional(),
+  status: z.nativeEnum(ServiceStatus as Record<string, string>).optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
-  isAvailable: z.coerce.boolean().optional(),
+  isAvailable: z
+    .union([z.boolean(), z.string().transform((val) => val === 'true')])
+    .optional(),
   search: z.string().max(100).optional(),
+  
+  // Sorting
+  sortBy: z.nativeEnum(ServiceSortBy as Record<string, string>).default(ServiceSortBy.NEWEST),
 });
 
 export type ServiceQuery = z.infer<typeof serviceQuerySchema>;
+
+// Provider-specific query (for dashboard)
+export const providerServiceQuerySchema = serviceQuerySchema.extend({
+  // Provider can see all statuses of their own services
+  includeDeleted: z
+    .union([z.boolean(), z.string().transform((val) => val === 'true')])
+    .default(false),
+});
+
+export type ProviderServiceQuery = z.infer<typeof providerServiceQuerySchema>;
 
 // ===========================================
 // Response Types
@@ -156,6 +190,7 @@ export interface ServiceResponse {
     id: string;
     businessName: string;
     logoUrl: string | null;
+    category?: string;
   };
   category?: {
     id: string;
@@ -174,4 +209,14 @@ export interface PaginatedServicesResponse {
     hasNext: boolean;
     hasPrev: boolean;
   };
+  filters?: {
+    serviceType?: string;
+    categoryId?: string;
+    providerId?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    isAvailable?: boolean;
+    search?: string;
+  };
+  sortBy: string;
 }
