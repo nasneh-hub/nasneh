@@ -17,9 +17,73 @@
 
 ---
 
-## 2. Colors
+## 2. Logo & Brand Mark
 
-### 2.1 Mono Palette (Primary)
+### 2.1 Official Logo
+
+The Nasneh logo is a stylized mark representing connection and flow - symbolizing "مني الك ومنك الي" (from me to you, from you to me).
+
+### 2.2 Logo Files
+
+| File | Fill | Usage |
+|------|------|-------|
+| `nasneh-logo.svg` | currentColor | **Primary** - adapts to text color |
+| `nasneh-logo-black.svg` | #000000 | Marketing assets (light backgrounds) |
+| `nasneh-logo-white.svg` | #FFFFFF | Marketing assets (dark backgrounds) |
+
+> **Note:** All SVG files have **identical paths** - only the `fill` attribute differs.
+
+### 2.3 Logo Component
+
+```tsx
+import { Logo } from '@nasneh/ui';
+
+// Auto color (inherits from parent text color) - RECOMMENDED
+<Logo size={40} />
+
+// With accessible label (for important/standalone logos)
+<Logo size={40} label="Nasneh" />
+
+// Black variant
+<Logo size={40} variant="black" />
+
+// White variant
+<Logo size={40} variant="white" />
+
+// Custom color
+<Logo size={40} color="#3B82F6" />
+```
+
+### 2.4 Logo Sizes
+
+| Context | Size | Example |
+|---------|------|--------|
+| Favicon | 32px | Browser tab |
+| Header | 40px | Navigation bar |
+| Footer | 32px | Footer branding |
+| Auth pages | 64px | Login/Register |
+| Loading | 80px | Splash screen |
+| Marketing | 120px+ | Landing pages |
+
+### 2.5 Logo Clear Space
+
+Maintain minimum clear space around the logo equal to 25% of the logo width.
+
+### 2.6 Logo Don'ts
+
+```
+❌ Don't stretch or distort
+❌ Don't rotate
+❌ Don't add effects (shadow, glow)
+❌ Don't use unapproved colors
+❌ Don't place on busy backgrounds
+```
+
+---
+
+## 3. Colors
+
+### 3.1 Mono Palette (Primary)
 
 | Name | Light Mode | Dark Mode | Usage |
 |------|------------|-----------|-------|
@@ -32,7 +96,7 @@
 | **Text Secondary** | #6B7280 | #9CA3AF | Secondary text |
 | **Text Tertiary** | #9CA3AF | #6B7280 | Placeholder text |
 
-### 2.2 Semantic Colors (Status Only)
+### 3.2 Semantic Colors (Status Only)
 
 | Name | Light | Dark | Usage |
 |------|-------|------|-------|
@@ -41,7 +105,7 @@
 | **Danger** | #EF4444 | #F87171 | Error, cancelled |
 | **Info** | #3B82F6 | #60A5FA | Information |
 
-### 2.3 Color Rules
+### 3.3 Color Rules
 
 **✅ DO:**
 - Use mono colors for 95% of UI
@@ -55,9 +119,9 @@
 
 ---
 
-## 3. Typography
+## 4. Typography
 
-### 3.1 Font Family
+### 4.1 Font Family
 
 **Primary Font:** Vazirmatn (Arabic + English)
 
@@ -73,7 +137,7 @@ Weights: 400, 500, 600, 700
 - RTL + LTR seamless
 - Single font = faster loading
 
-### 3.2 Font Sizes
+### 4.2 Font Sizes
 
 | Name | Size | Weight | Usage |
 |------|------|--------|-------|
@@ -85,7 +149,7 @@ Weights: 400, 500, 600, 700
 | **Small** | 14px | 400 | Secondary text |
 | **Caption** | 12px | 400 | Labels, hints |
 
-### 3.3 Font Installation
+### 4.3 Font Installation
 
 ```
 /public/fonts/vazirmatn/
@@ -97,7 +161,7 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 4. Spacing
+## 5. Spacing
 
 ### Base Unit: 4px
 
@@ -116,7 +180,7 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 5. Border Radius
+## 6. Border Radius
 
 ### Standard: 12px (rounded-xl)
 
@@ -140,7 +204,7 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 6. No-Border Design
+## 7. No-Border Design
 
 ### ⚠️ CRITICAL: No Borders Allowed
 
@@ -190,7 +254,7 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 7. Component Heights
+## 8. Component Heights
 
 ### Standard Heights
 
@@ -203,9 +267,9 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 8. Components
+## 9. Components
 
-### 8.1 Buttons
+### 9.1 Buttons
 
 ```tsx
 // Primary (default)
@@ -234,7 +298,7 @@ Weights: 400, 500, 600, 700
 </Button>
 ```
 
-### 8.2 Inputs
+### 9.2 Inputs
 
 ```tsx
 <Input
@@ -256,7 +320,7 @@ Weights: 400, 500, 600, 700
 <Input className="bg-green-100" />
 ```
 
-### 8.3 Cards
+### 9.3 Cards
 
 ```tsx
 <Card className="
@@ -273,7 +337,7 @@ Weights: 400, 500, 600, 700
 </Card>
 ```
 
-### 8.4 Badges
+### 9.4 Badges
 
 ```tsx
 // Success
@@ -291,7 +355,7 @@ Weights: 400, 500, 600, 700
 // All badges: rounded-xl, NO BORDER
 ```
 
-### 8.5 Tables
+### 9.5 Tables
 
 ```tsx
 <Table className="rounded-xl overflow-hidden">
@@ -301,7 +365,7 @@ Weights: 400, 500, 600, 700
 </Table>
 ```
 
-### 8.6 Modals
+### 9.6 Modals
 
 ```tsx
 <Dialog>
@@ -321,7 +385,7 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 9. Shared UI Package
+## 10. Shared UI Package
 
 ### Location
 All UI components live in `packages/ui/` (imported as `@nasneh/ui`)
@@ -383,7 +447,7 @@ Each app imports from the shared package:
 
 ---
 
-## 10. CSS Variables
+## 11. CSS Variables
 
 ```css
 /* /src/core/styles/tokens.css */
@@ -428,7 +492,7 @@ Each app imports from the shared package:
 
 ---
 
-## 11. Responsive Breakpoints
+## 12. Responsive Breakpoints
 
 ```
 sm:  640px   // Mobile landscape
@@ -442,7 +506,7 @@ xl:  1280px  // Desktop
 
 ---
 
-## 12. Quick Reference Checklist
+## 13. Quick Reference Checklist
 
 Before submitting UI work, verify:
 
@@ -463,7 +527,7 @@ Before submitting UI work, verify:
 
 ---
 
-## 13. Forbidden vs Required
+## 14. Forbidden vs Required
 
 ### ❌ Forbidden
 
