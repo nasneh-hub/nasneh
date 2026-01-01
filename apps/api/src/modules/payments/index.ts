@@ -15,3 +15,4 @@ export {
   UnauthorizedPaymentAccessError,
 } from './payments.service';
 export { paymentsRoutes } from './payments.routes';
+export { handleApsWebhook, handleApsReturn } from './webhook.controller';

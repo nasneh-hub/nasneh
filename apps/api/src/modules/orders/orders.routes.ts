@@ -11,7 +11,10 @@ import {
   getOrderHistory,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   createOrder,
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======
 >>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======
@@ -56,9 +59,12 @@ customerOrderRoutes.use(authMiddleware);
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // POST /orders - Create new order
 customerOrderRoutes.post('/', createOrder);
 
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======
 >>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======

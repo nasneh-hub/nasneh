@@ -23,3 +23,9 @@ export {
   apiRateLimit,
   loginRateLimit,
 } from './rate-limit.middleware';
+
+export {
+  captureRawBody,
+  jsonWithRawBody,
+  RawBodyRequest,
+} from './rawBody.middleware';
