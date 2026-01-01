@@ -77,6 +77,7 @@ model User {
   customerOrders Order[]  @relation("CustomerOrders")
   driverOrders   Order[]  @relation("DriverOrders")
   auditLogs      AuditLog[]
+  refundsCreated Refund[]
 
   @@map("users")
 }
@@ -234,6 +235,7 @@ model Order {
   vendor          Vendor          @relation(fields: [vendorId], references: [id])
   driver          User?           @relation("DriverOrders", fields: [driverId], references: [id])
   items           OrderItem[]
+  refunds         Refund[]
 
   @@index([customerId])
   @@index([vendorId])
@@ -301,4 +303,99 @@ model AuditLog {
   @@index([action])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ===========================================
+// Payment Enums
+// ===========================================
+
+enum PayableType {
+  ORDER
+  BOOKING
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CARD
+}
+
+enum RefundReason {
+  CUSTOMER_REQUEST
+  VENDOR_CANCEL
+  QUALITY_ISSUE
+  DUPLICATE
+  OTHER
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ===========================================
+// Payments
+// ===========================================
+
+model Payment {
+  id              String        @id @default(uuid())
+  transactionId   String        @unique @map("transaction_id")
+  idempotencyKey  String        @unique @map("idempotency_key")
+  payableType     PayableType   @map("payable_type")
+  payableId       String        @map("payable_id")
+  amount          Decimal       @db.Decimal(10, 3)
+  currency        String        @default("BHD")
+  status          PaymentStatus @default(PENDING)
+  paymentMethod   PaymentMethod @default(CARD) @map("payment_method")
+  gatewayResponse Json?         @map("gateway_response")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  refunds         Refund[]
+
+  @@index([idempotencyKey])
+  @@index([payableType, payableId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
+}
+
+// ===========================================
+// Refunds
+// ===========================================
+
+model Refund {
+  id            String       @id @default(uuid())
+  paymentId     String       @map("payment_id")
+  orderId       String?      @map("order_id")
+  bookingId     String?      @map("booking_id")
+  amount        Decimal      @db.Decimal(10, 3)
+  currency      String       @default("BHD")
+  reason        RefundReason
+  reasonDetails String?      @map("reason_details") @db.Text
+  status        RefundStatus @default(PENDING)
+  gatewayRef    String?      @map("gateway_ref")
+  createdById   String       @map("created_by")
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  // Relations
+  payment       Payment      @relation(fields: [paymentId], references: [id])
+  order         Order?       @relation(fields: [orderId], references: [id])
+  createdBy     User         @relation(fields: [createdById], references: [id])
+
+  @@index([paymentId])
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("refunds")
 }
