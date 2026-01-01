@@ -113,6 +113,9 @@ export const config = {
   aws: {
     region: env.AWS_REGION,
     snsRegion: env.AWS_SNS_REGION,
+    accessKeyId: env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY || '',
+    isConfigured: Boolean(env.AWS_ACCESS_KEY_ID && env.AWS_SECRET_ACCESS_KEY),
   },
 
   // WhatsApp
