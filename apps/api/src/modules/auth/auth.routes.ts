@@ -5,8 +5,10 @@
  * Endpoints:
  * - POST /auth/request-otp  - Request OTP for phone (rate limited: 5/hour)
  * - POST /auth/verify-otp   - Verify OTP and get tokens (rate limited: 10/hour)
- * - POST /auth/refresh      - Refresh access token
+ * - POST /auth/refresh      - Refresh access token (with token rotation)
  * - POST /auth/logout       - Logout (invalidate refresh token)
+ * - POST /auth/logout-all   - Logout from all devices (protected)
+ * - GET  /auth/sessions     - Get active sessions (protected)
  * - GET  /auth/me           - Get current user (protected)
  */
 
@@ -16,6 +18,8 @@ import {
   verifyOtp,
   refreshToken,
   logout,
+  logoutAll,
+  getSessions,
   getCurrentUser,
 } from './auth.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
@@ -51,16 +55,17 @@ router.post('/verify-otp', loginRateLimit, verifyOtp);
 
 /**
  * @route   POST /auth/refresh
- * @desc    Refresh access token
+ * @desc    Refresh access token using refresh token
  * @access  Public
  * @body    { refreshToken: "..." }
+ * @note    Implements token rotation - old refresh token is invalidated
  */
 router.post('/refresh', refreshToken);
 
 /**
  * @route   POST /auth/logout
  * @desc    Logout and invalidate refresh token
- * @access  Public
+ * @access  Public (but can include auth for access token blacklisting)
  * @body    { refreshToken: "..." }
  */
 router.post('/logout', logout);
@@ -68,6 +73,22 @@ router.post('/logout', logout);
 // ===========================================
 // Protected Routes
 // ===========================================
+
+/**
+ * @route   POST /auth/logout-all
+ * @desc    Logout from all devices (revoke all refresh tokens)
+ * @access  Protected
+ * @returns { success: true, revokedCount: number }
+ */
+router.post('/logout-all', authMiddleware, logoutAll);
+
+/**
+ * @route   GET /auth/sessions
+ * @desc    Get all active sessions for current user
+ * @access  Protected
+ * @returns { sessions: [{ createdAt, expiresAt, userAgent, ipAddress }] }
+ */
+router.get('/sessions', authMiddleware, getSessions);
 
 /**
  * @route   GET /auth/me

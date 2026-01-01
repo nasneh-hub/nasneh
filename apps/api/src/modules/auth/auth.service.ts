@@ -6,6 +6,10 @@
  * 1. Send OTP via WhatsApp (primary)
  * 2. Wait 10 seconds for delivery
  * 3. If failed/timeout → fallback to SMS
+ *
+ * Token Flow:
+ * - Access token: 15 minutes, JWT
+ * - Refresh token: 7 days, Redis-stored with rotation
  */
 
 import crypto from 'crypto';
@@ -26,14 +30,12 @@ import {
 } from '../../types/auth.types';
 import { config } from '../../config/env';
 import { otpRepository, StoredOtp } from './otp.repository';
-import { getRedisClient } from '../../lib/redis';
+import { tokenRepository, StoredRefreshToken } from './token.repository';
 
 // ===========================================
-// In-memory stores (replace with DB in production)
+// In-memory stores (for audit logs only)
 // ===========================================
 
-// Temporary in-memory storage for refresh tokens (will be replaced with Redis)
-const refreshTokenStore = new Map<string, string>(); // token -> userId
 const otpLogs: OtpLogEntry[] = [];
 
 // ===========================================
@@ -56,6 +58,13 @@ export class AuthService {
   }
 
   /**
+   * Generate a unique JWT ID for blacklisting
+   */
+  private generateJti(): string {
+    return crypto.randomBytes(16).toString('hex');
+  }
+
+  /**
    * Send OTP via WhatsApp Business API
    * @returns true if delivered, false otherwise
    */
@@ -75,24 +84,6 @@ export class AuthService {
 
     try {
       // WhatsApp Business API call would go here
-      // const response = await fetch(config.whatsapp.apiUrl, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${config.whatsapp.apiToken}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     messaging_product: 'whatsapp',
-      //     to: phone,
-      //     type: 'template',
-      //     template: {
-      //       name: 'otp_verification',
-      //       language: { code: 'en' },
-      //       components: [{ type: 'body', parameters: [{ type: 'text', text: otp }] }],
-      //     },
-      //   }),
-      // });
-      // return response.ok;
       return false;
     } catch (error) {
       console.error('WhatsApp OTP failed:', error);
@@ -114,12 +105,6 @@ export class AuthService {
 
     try {
       // AWS SNS call would go here
-      // const sns = new SNSClient({ region: config.aws.snsRegion });
-      // await sns.send(new PublishCommand({
-      //   PhoneNumber: phone,
-      //   Message: `Your Nasneh verification code: ${otp}. Valid for ${config.otp.expiryMinutes} minutes.`,
-      // }));
-      // return true;
       return false;
     } catch (error) {
       console.error('SMS OTP failed:', error);
@@ -136,28 +121,20 @@ export class AuthService {
     otp: string
   ): Promise<boolean> {
     return new Promise((resolve) => {
-      // In production, this would check delivery status via webhook
-      // For now, we simulate with a timeout
-
       const timeoutMs = config.otp.whatsappTimeoutSeconds * 1000;
 
-      // Try sending WhatsApp OTP
       this.sendWhatsAppOtp(phone, otp).then((sent) => {
         if (!sent) {
           resolve(false);
           return;
         }
 
-        // In development, assume immediate delivery
         if (config.isDevelopment) {
           resolve(true);
           return;
         }
 
-        // In production, wait for delivery confirmation or timeout
-        // This would be replaced with webhook-based confirmation
         setTimeout(() => {
-          // Assume delivered if no failure callback
           resolve(true);
         }, timeoutMs);
       });
@@ -169,7 +146,6 @@ export class AuthService {
    */
   private logOtpDelivery(entry: OtpLogEntry): void {
     otpLogs.push(entry);
-    // TODO: Persist to database for audit
     console.log('[OTP Log]', JSON.stringify(entry));
   }
 
@@ -188,11 +164,9 @@ export class AuthService {
     let fallbackUsed = false;
     let delivered = false;
 
-    // Step 1: Try WhatsApp first with timeout
     console.log(`[OTP] Attempting WhatsApp delivery to ${phone}...`);
     delivered = await this.waitForWhatsAppDelivery(phone, otp);
 
-    // Step 2: If WhatsApp fails/times out, fallback to SMS
     if (!delivered) {
       console.log(`[OTP] WhatsApp failed/timeout, falling back to SMS for ${phone}...`);
       channel = OtpChannel.SMS;
@@ -200,7 +174,6 @@ export class AuthService {
       delivered = await this.sendSmsOtp(phone, otp);
     }
 
-    // Log the delivery attempt
     this.logOtpDelivery({
       phone,
       channel,
@@ -213,7 +186,6 @@ export class AuthService {
       throw new Error('Failed to send OTP. Please try again.');
     }
 
-    // Store OTP in Redis with 5-minute TTL
     await otpRepository.store({
       otp,
       phone,
@@ -236,24 +208,22 @@ export class AuthService {
   /**
    * Verify OTP and return tokens
    */
-  async verifyOtp(phone: string, otp: string): Promise<VerifyOtpResponse> {
-    // Validate OTP using repository
+  async verifyOtp(
+    phone: string,
+    otp: string,
+    metadata?: { userAgent?: string; ipAddress?: string }
+  ): Promise<VerifyOtpResponse> {
     const validation = await otpRepository.isValid(phone, otp);
 
     if (!validation.valid) {
       throw new Error(validation.error);
     }
 
-    // OTP is valid - delete it
     await otpRepository.delete(phone);
 
-    // Get or create user
     const user = await this.getOrCreateUser(phone);
+    const tokens = await this.generateTokens(user, metadata);
 
-    // Generate tokens
-    const tokens = this.generateTokens(user);
-
-    // Log successful verification
     this.logOtpDelivery({
       phone,
       channel: validation.stored!.channel,
@@ -273,35 +243,50 @@ export class AuthService {
 
   /**
    * Verify access token and return payload
+   * Also checks if token is blacklisted
    */
-  verifyAccessToken(token: string): JwtPayload {
+  async verifyAccessToken(token: string): Promise<JwtPayload> {
     const payload = jwt.verify(token, config.jwt.secret) as JwtPayload;
+
+    // Check if token is blacklisted (for logout)
+    if (payload.jti) {
+      const isBlacklisted = await tokenRepository.isAccessTokenBlacklisted(payload.jti);
+      if (isBlacklisted) {
+        throw new Error('Token has been revoked');
+      }
+    }
+
     return payload;
   }
 
   /**
    * Refresh access token using refresh token
+   * Implements token rotation: old token is invalidated
    */
-  async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-    const userId = refreshTokenStore.get(refreshToken);
+  async refreshToken(
+    refreshToken: string,
+    metadata?: { userAgent?: string; ipAddress?: string }
+  ): Promise<RefreshTokenResponse> {
+    // Validate refresh token
+    const storedToken = await tokenRepository.validate(refreshToken);
 
-    if (!userId) {
-      throw new Error('Invalid refresh token');
+    if (!storedToken) {
+      throw new Error('Invalid or expired refresh token');
     }
 
     // Get user
-    const user = await this.getUserById(userId);
+    const user = await this.getUserById(storedToken.userId);
 
     if (!user) {
-      refreshTokenStore.delete(refreshToken);
+      await tokenRepository.revoke(refreshToken);
       throw new Error('User not found');
     }
 
-    // Generate new tokens
-    const tokens = this.generateTokens(user);
+    // Token rotation: revoke old token before generating new one
+    await tokenRepository.revoke(refreshToken);
 
-    // Invalidate old refresh token
-    refreshTokenStore.delete(refreshToken);
+    // Generate new tokens
+    const tokens = await this.generateTokens(user, metadata);
 
     return {
       success: true,
@@ -310,20 +295,47 @@ export class AuthService {
   }
 
   /**
-   * Logout - invalidate refresh token
+   * Logout - invalidate refresh token and blacklist access token
    */
-  async logout(refreshToken: string): Promise<void> {
-    refreshTokenStore.delete(refreshToken);
-    // TODO: Add to blacklist in Redis for distributed systems
+  async logout(refreshToken: string, accessTokenJti?: string): Promise<void> {
+    // Revoke refresh token
+    await tokenRepository.revoke(refreshToken);
+
+    // Blacklist access token if JTI provided
+    if (accessTokenJti) {
+      await tokenRepository.blacklistAccessToken(accessTokenJti);
+    }
+  }
+
+  /**
+   * Logout from all devices - revoke all refresh tokens for user
+   */
+  async logoutAll(userId: string): Promise<{ revokedCount: number }> {
+    const revokedCount = await tokenRepository.revokeAllForUser(userId);
+    return { revokedCount };
+  }
+
+  /**
+   * Get all active sessions for a user
+   */
+  async getUserSessions(userId: string): Promise<StoredRefreshToken[]> {
+    return tokenRepository.getUserSessions(userId);
   }
 
   /**
    * Generate JWT access token and refresh token
+   * Stores refresh token in Redis with 7-day TTL
    */
-  private generateTokens(user: AuthUser): AuthTokens {
+  private async generateTokens(
+    user: AuthUser,
+    metadata?: { userAgent?: string; ipAddress?: string }
+  ): Promise<AuthTokens> {
+    const jti = this.generateJti();
+
     const payload: JwtPayload = {
       userId: user.id,
       roles: user.roles,
+      jti,
     };
 
     const signOptions: SignOptions = {
@@ -338,8 +350,8 @@ export class AuthService {
 
     const refreshToken = this.generateRefreshToken();
 
-    // Store refresh token
-    refreshTokenStore.set(refreshToken, user.id);
+    // Store refresh token in Redis with metadata
+    await tokenRepository.store(refreshToken, user.id, metadata);
 
     return {
       accessToken,
@@ -353,8 +365,6 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getOrCreateUser(phone: string): Promise<AuthUser> {
-    // TODO: Implement with Prisma
-    // For now, return mock user
     const now = new Date();
     return {
       id: `user_${phone.replace(/\+/g, '')}`,
@@ -372,8 +382,6 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getUserById(userId: string): Promise<AuthUser | null> {
-    // TODO: Implement with Prisma
-    // For now, return mock user
     const phone = userId.replace('user_', '+');
     const now = new Date();
     return {

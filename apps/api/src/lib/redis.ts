@@ -11,13 +11,19 @@ import { config } from '../config/env';
 // Types
 // ===========================================
 
-interface RedisLikeClient {
+export interface RedisLikeClient {
   get(key: string): Promise<string | null>;
   set(key: string, value: string, options?: { EX?: number }): Promise<void>;
-  del(key: string): Promise<void>;
+  del(key: string | string[]): Promise<void>;
   incr(key: string): Promise<number>;
   expire(key: string, seconds: number): Promise<void>;
   ttl(key: string): Promise<number>;
+  exists(key: string): Promise<number>;
+  // Set operations for token management
+  sAdd(key: string, member: string): Promise<void>;
+  sRem(key: string, member: string): Promise<void>;
+  sMembers(key: string): Promise<string[]>;
+  sCard(key: string): Promise<number>;
 }
 
 // ===========================================
@@ -31,16 +37,30 @@ interface MemoryEntry {
 
 class InMemoryStore implements RedisLikeClient {
   private store: Map<string, MemoryEntry> = new Map();
+  private sets: Map<string, Set<string>> = new Map();
+  private setExpiry: Map<string, number | null> = new Map();
 
   private isExpired(entry: MemoryEntry): boolean {
     if (entry.expiresAt === null) return false;
     return Date.now() > entry.expiresAt;
   }
 
+  private isSetExpired(key: string): boolean {
+    const expiresAt = this.setExpiry.get(key);
+    if (expiresAt === null || expiresAt === undefined) return false;
+    return Date.now() > expiresAt;
+  }
+
   private cleanup(): void {
     for (const [key, entry] of this.store.entries()) {
       if (this.isExpired(entry)) {
         this.store.delete(key);
+      }
+    }
+    for (const [key] of this.sets.entries()) {
+      if (this.isSetExpired(key)) {
+        this.sets.delete(key);
+        this.setExpiry.delete(key);
       }
     }
   }
@@ -62,8 +82,11 @@ class InMemoryStore implements RedisLikeClient {
     this.store.set(key, { value, expiresAt });
   }
 
-  async del(key: string): Promise<void> {
-    this.store.delete(key);
+  async del(key: string | string[]): Promise<void> {
+    const keys = Array.isArray(key) ? key : [key];
+    for (const k of keys) {
+      this.store.delete(k);
+    }
   }
 
   async incr(key: string): Promise<number> {
@@ -89,6 +112,10 @@ class InMemoryStore implements RedisLikeClient {
     if (entry) {
       entry.expiresAt = Date.now() + seconds * 1000;
     }
+    // Also handle set expiry
+    if (this.sets.has(key)) {
+      this.setExpiry.set(key, Date.now() + seconds * 1000);
+    }
   }
 
   async ttl(key: string): Promise<number> {
@@ -98,6 +125,48 @@ class InMemoryStore implements RedisLikeClient {
     }
     const remaining = Math.ceil((entry.expiresAt - Date.now()) / 1000);
     return remaining > 0 ? remaining : -2;
+  }
+
+  async exists(key: string): Promise<number> {
+    this.cleanup();
+    const entry = this.store.get(key);
+    if (!entry || this.isExpired(entry)) {
+      return 0;
+    }
+    return 1;
+  }
+
+  // Set operations
+  async sAdd(key: string, member: string): Promise<void> {
+    if (!this.sets.has(key)) {
+      this.sets.set(key, new Set());
+    }
+    this.sets.get(key)!.add(member);
+  }
+
+  async sRem(key: string, member: string): Promise<void> {
+    const set = this.sets.get(key);
+    if (set) {
+      set.delete(member);
+    }
+  }
+
+  async sMembers(key: string): Promise<string[]> {
+    this.cleanup();
+    const set = this.sets.get(key);
+    if (!set || this.isSetExpired(key)) {
+      return [];
+    }
+    return Array.from(set);
+  }
+
+  async sCard(key: string): Promise<number> {
+    this.cleanup();
+    const set = this.sets.get(key);
+    if (!set || this.isSetExpired(key)) {
+      return 0;
+    }
+    return set.size;
   }
 }
 
@@ -148,7 +217,7 @@ export async function getRedisClient(): Promise<RedisLikeClient> {
           await client.set(key, value);
         }
       },
-      del: async (key: string) => {
+      del: async (key: string | string[]) => {
         await client.del(key);
       },
       incr: async (key: string) => client.incr(key),
@@ -156,6 +225,15 @@ export async function getRedisClient(): Promise<RedisLikeClient> {
         await client.expire(key, seconds);
       },
       ttl: async (key: string) => client.ttl(key),
+      exists: async (key: string) => client.exists(key),
+      sAdd: async (key: string, member: string) => {
+        await client.sAdd(key, member);
+      },
+      sRem: async (key: string, member: string) => {
+        await client.sRem(key, member);
+      },
+      sMembers: async (key: string) => client.sMembers(key),
+      sCard: async (key: string) => client.sCard(key),
     };
 
     return redisClient;
