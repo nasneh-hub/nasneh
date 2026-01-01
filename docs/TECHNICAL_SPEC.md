@@ -707,3 +707,13 @@ These defaults are sourced from `apps/api/src/config/calendar.defaults.ts`.
 2.  **Weekly Rules**: If no overrides exist for a date, the system uses the `availability_rules` for that day of the week.
 3.  **Bookings & Buffers**: Existing bookings, along with their configured buffer times, are treated as unavailable blocks.
 4.  **Slot Generation**: The system generates time slots based on the `slotDurationMinutes` setting, excluding any blocks that are unavailable due to overrides, bookings, or buffers.
+
+
+### Overrides (Blocked Dates & Special Hours)
+- `AvailabilityOverride` table stores date-specific exceptions.
+- `type: UNAVAILABLE` = **Blocked date**. This is the official way to block specific dates. No separate `/blocked` endpoint is needed.
+- `type: AVAILABLE` = Special hours for a specific date, overriding the weekly rules.
+
+### Conflict Validation
+- The system prevents deleting or modifying availability rules and overrides if the change would conflict with an existing `CONFIRMED` or `IN_PROGRESS` booking.
+- A `409 Conflict` error is returned with a descriptive message if a conflict is detected.

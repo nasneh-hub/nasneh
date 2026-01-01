@@ -59,6 +59,186 @@ export class AvailabilityValidationError extends Error {
 }
 
 // ===========================================
+// Booking Conflict Validation Types
+// ===========================================
+
+/**
+ * Result of checking for booking conflicts when modifying availability
+ */
+export interface BookingConflictCheckResult {
+  hasConflicts: boolean;
+  conflictCount: number;
+  reason?: string;
+}
+
+/**
+ * Active booking statuses that should block availability changes
+ */
+const ACTIVE_BOOKING_STATUSES = ['CONFIRMED', 'IN_PROGRESS'] as const;
+
+// ===========================================
+// Booking Conflict Validation Functions
+// ===========================================
+
+/**
+ * Check if deleting/modifying a rule would conflict with existing bookings
+ * Returns count of conflicting bookings (CONFIRMED or IN_PROGRESS)
+ */
+export async function checkRuleConflictsWithBookings(
+  providerId: string,
+  dayOfWeek: PrismaDayOfWeek,
+  options?: {
+    excludeRuleId?: string;
+    newStartTime?: Date;
+    newEndTime?: Date;
+  }
+): Promise<BookingConflictCheckResult> {
+  // Find all future bookings on this day of week that are CONFIRMED or IN_PROGRESS
+  const now = new Date();
+  
+  const conflictingBookings = await prisma.booking.findMany({
+    where: {
+      providerId,
+      scheduledDate: { gte: now },
+      status: { in: [...ACTIVE_BOOKING_STATUSES] },
+    },
+    select: {
+      id: true,
+      scheduledDate: true,
+      scheduledTime: true,
+    },
+  });
+  
+  // Filter to only bookings on the affected day of week
+  const dayIndex = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(dayOfWeek);
+  const affectedBookings = conflictingBookings.filter((b) => {
+    const bookingDayIndex = b.scheduledDate.getUTCDay();
+    return bookingDayIndex === dayIndex;
+  });
+  
+  if (affectedBookings.length === 0) {
+    return { hasConflicts: false, conflictCount: 0 };
+  }
+  
+  return {
+    hasConflicts: true,
+    conflictCount: affectedBookings.length,
+    reason: `Cannot modify availability: ${affectedBookings.length} active booking(s) on ${dayOfWeek}`,
+  };
+}
+
+/**
+ * Check if deleting/modifying an override would conflict with existing bookings
+ * Returns count of conflicting bookings (CONFIRMED or IN_PROGRESS)
+ */
+export async function checkOverrideConflictsWithBookings(
+  providerId: string,
+  date: Date
+): Promise<BookingConflictCheckResult> {
+  const dateStr = formatDateString(date);
+  const startOfDay = new Date(dateStr + 'T00:00:00Z');
+  const endOfDay = new Date(dateStr + 'T23:59:59Z');
+  
+  const conflictingBookings = await prisma.booking.count({
+    where: {
+      providerId,
+      scheduledDate: {
+        gte: startOfDay,
+        lte: endOfDay,
+      },
+      status: { in: [...ACTIVE_BOOKING_STATUSES] },
+    },
+  });
+  
+  if (conflictingBookings === 0) {
+    return { hasConflicts: false, conflictCount: 0 };
+  }
+  
+  return {
+    hasConflicts: true,
+    conflictCount: conflictingBookings,
+    reason: `Cannot modify availability: ${conflictingBookings} active booking(s) on ${dateStr}`,
+  };
+}
+
+/**
+ * Check if bulk rule update would conflict with existing bookings
+ * Compares new rules against existing bookings
+ */
+export async function checkBulkRulesConflictsWithBookings(
+  providerId: string,
+  newRules: CreateAvailabilityRuleInput[]
+): Promise<BookingConflictCheckResult> {
+  const now = new Date();
+  
+  // Get all future active bookings
+  const activeBookings = await prisma.booking.findMany({
+    where: {
+      providerId,
+      scheduledDate: { gte: now },
+      status: { in: [...ACTIVE_BOOKING_STATUSES] },
+    },
+    select: {
+      id: true,
+      scheduledDate: true,
+      scheduledTime: true,
+    },
+  });
+  
+  if (activeBookings.length === 0) {
+    return { hasConflicts: false, conflictCount: 0 };
+  }
+  
+  // Build a map of which days have rules in the new schedule
+  const newRulesByDay = new Map<string, CreateAvailabilityRuleInput[]>();
+  for (const rule of newRules) {
+    const existing = newRulesByDay.get(rule.dayOfWeek) || [];
+    existing.push(rule);
+    newRulesByDay.set(rule.dayOfWeek, existing);
+  }
+  
+  // Check each booking against the new rules
+  let conflictCount = 0;
+  for (const booking of activeBookings) {
+    const dayIndex = booking.scheduledDate.getUTCDay();
+    const dayOfWeek = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'][dayIndex];
+    const dayRules = newRulesByDay.get(dayOfWeek) || [];
+    
+    // If no rules for this day, it's a conflict
+    if (dayRules.length === 0) {
+      conflictCount++;
+      continue;
+    }
+    
+    // If booking has a specific time, check if it falls within any rule
+    if (booking.scheduledTime) {
+      const bookingMinutes = booking.scheduledTime.getUTCHours() * 60 + booking.scheduledTime.getUTCMinutes();
+      const withinAnyRule = dayRules.some((rule) => {
+        const [startH, startM] = rule.startTime.split(':').map(Number);
+        const [endH, endM] = rule.endTime.split(':').map(Number);
+        const ruleStart = startH * 60 + startM;
+        const ruleEnd = endH * 60 + endM;
+        return bookingMinutes >= ruleStart && bookingMinutes < ruleEnd;
+      });
+      
+      if (!withinAnyRule) {
+        conflictCount++;
+      }
+    }
+  }
+  
+  if (conflictCount === 0) {
+    return { hasConflicts: false, conflictCount: 0 };
+  }
+  
+  return {
+    hasConflicts: true,
+    conflictCount,
+    reason: `Cannot update availability: ${conflictCount} active booking(s) would be outside new schedule`,
+  };
+}
+
+// ===========================================
 // Availability Rules Service
 // ===========================================
 
@@ -94,12 +274,21 @@ export async function createAvailabilityRule(
 
 export async function createBulkAvailabilityRules(
   providerId: string,
-  rules: CreateAvailabilityRuleInput[]
+  rules: CreateAvailabilityRuleInput[],
+  options?: { skipConflictCheck?: boolean }
 ) {
   // Validate no overlaps in the input
   const validation = validateRulesNoOverlap(rules);
   if (!validation.valid) {
     throw new AvailabilityValidationError(validation.error!);
+  }
+  
+  // Check for booking conflicts unless explicitly skipped
+  if (!options?.skipConflictCheck) {
+    const conflictCheck = await checkBulkRulesConflictsWithBookings(providerId, rules);
+    if (conflictCheck.hasConflicts) {
+      throw new AvailabilityConflictError(conflictCheck.reason!);
+    }
   }
   
   // Delete existing rules and create new ones
@@ -174,11 +363,23 @@ export async function updateAvailabilityRule(
   return availabilityRulesRepository.update(ruleId, updateData);
 }
 
-export async function deleteAvailabilityRule(ruleId: string, providerId: string) {
+export async function deleteAvailabilityRule(
+  ruleId: string,
+  providerId: string,
+  options?: { skipConflictCheck?: boolean }
+) {
   const rule = await availabilityRulesRepository.findById(ruleId);
   
   if (!rule || rule.providerId !== providerId) {
     throw new AvailabilityNotFoundError('Availability rule not found');
+  }
+  
+  // Check for booking conflicts unless explicitly skipped
+  if (!options?.skipConflictCheck) {
+    const conflictCheck = await checkRuleConflictsWithBookings(providerId, rule.dayOfWeek);
+    if (conflictCheck.hasConflicts) {
+      throw new AvailabilityConflictError(conflictCheck.reason!);
+    }
   }
   
   return availabilityRulesRepository.delete(ruleId);
@@ -245,11 +446,25 @@ export async function updateAvailabilityOverride(
   return availabilityOverridesRepository.update(overrideId, updateData);
 }
 
-export async function deleteAvailabilityOverride(overrideId: string, providerId: string) {
+export async function deleteAvailabilityOverride(
+  overrideId: string,
+  providerId: string,
+  options?: { skipConflictCheck?: boolean }
+) {
   const override = await availabilityOverridesRepository.findById(overrideId);
   
   if (!override || override.providerId !== providerId) {
     throw new AvailabilityNotFoundError('Availability override not found');
+  }
+  
+  // Check for booking conflicts when deleting AVAILABLE overrides
+  // (deleting an AVAILABLE override removes special hours, potentially affecting bookings)
+  // UNAVAILABLE overrides (blocked dates) can be safely deleted as they only add restrictions
+  if (!options?.skipConflictCheck && override.type === 'AVAILABLE') {
+    const conflictCheck = await checkOverrideConflictsWithBookings(providerId, override.date);
+    if (conflictCheck.hasConflicts) {
+      throw new AvailabilityConflictError(conflictCheck.reason!);
+    }
   }
   
   return availabilityOverridesRepository.delete(overrideId);
