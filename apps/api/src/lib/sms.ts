@@ -42,8 +42,8 @@ export class SmsClient {
 
   constructor() {
     this.region = config.aws.snsRegion;
-    this.accessKeyId = config.aws.accessKeyId;
-    this.secretAccessKey = config.aws.secretAccessKey;
+    this.accessKeyId = config.aws.accessKeyId || '';
+    this.secretAccessKey = config.aws.secretAccessKey || '';
     this.senderId = 'Nasneh';
   }
 

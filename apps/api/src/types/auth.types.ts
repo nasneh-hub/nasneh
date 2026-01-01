@@ -147,20 +147,11 @@ export interface RefreshTokenResponse {
 export interface JwtPayload {
   userId: string;
   roles: UserRole[];
-<<<<<<< HEAD
-<<<<<<< HEAD
   /** JWT ID for token blacklisting */
   jti?: string;
-=======
   phone?: string;
   email?: string | null;
   name?: string | null;
->>>>>>> 098b23f (feat(payments): implement APS payment initiation)
-=======
-  phone?: string;
-  email?: string | null;
-  name?: string | null;
->>>>>>> 098b23f (feat(payments): implement APS payment initiation)
   iat?: number;
   exp?: number;
 }
