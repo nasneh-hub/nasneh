@@ -10,10 +10,13 @@ import {
   InvalidStatusTransitionError,
   UnauthorizedOrderAccessError,
 <<<<<<< HEAD
+<<<<<<< HEAD
   VendorNotFoundError,
   ProductNotFoundError,
   ProductNotAvailableError,
   ProductVendorMismatchError,
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======
 >>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 } from './orders.service';
@@ -21,7 +24,10 @@ import {
   updateOrderStatusSchema,
   orderQuerySchema,
 <<<<<<< HEAD
+<<<<<<< HEAD
   createOrderSchema,
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======
 >>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 } from '../../types/order.types';
@@ -241,6 +247,7 @@ export async function getOrderHistory(
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Create Order
  * POST /orders
  */
@@ -303,6 +310,8 @@ export async function createOrder(
 }
 
 /**
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 =======
 >>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
  * Get Customer Orders
