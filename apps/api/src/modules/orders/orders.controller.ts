@@ -9,15 +9,21 @@ import {
   OrderNotFoundError,
   InvalidStatusTransitionError,
   UnauthorizedOrderAccessError,
+<<<<<<< HEAD
   VendorNotFoundError,
   ProductNotFoundError,
   ProductNotAvailableError,
   ProductVendorMismatchError,
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 } from './orders.service';
 import {
   updateOrderStatusSchema,
   orderQuerySchema,
+<<<<<<< HEAD
   createOrderSchema,
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 } from '../../types/order.types';
 import { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { prisma } from '../../lib/db';
@@ -234,6 +240,7 @@ export async function getOrderHistory(
 // ===========================================
 
 /**
+<<<<<<< HEAD
  * Create Order
  * POST /orders
  */
@@ -296,6 +303,8 @@ export async function createOrder(
 }
 
 /**
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
  * Get Customer Orders
  * GET /orders
  */
