@@ -8,11 +8,15 @@ import {
   OrderStatus,
   ORDER_STATUS_TRANSITIONS,
   OrderQueryInput,
+<<<<<<< HEAD
   CreateOrderInput,
   FulfillmentType,
 } from '../../types/order.types';
 import { prisma } from '../../lib/db';
 import { Decimal } from '@prisma/client/runtime/library';
+=======
+} from '../../types/order.types';
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 import { auditService, ActorRole } from '../../lib/audit';
 import { notificationService } from '../../lib/notifications';
 
@@ -20,6 +24,7 @@ import { notificationService } from '../../lib/notifications';
 // Custom Errors
 // ===========================================
 
+<<<<<<< HEAD
 export class VendorNotFoundError extends Error {
   public statusCode = 404;
 
@@ -56,6 +61,8 @@ export class ProductVendorMismatchError extends Error {
   }
 }
 
+=======
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 export class OrderNotFoundError extends Error {
   public statusCode = 404;
 
@@ -87,6 +94,7 @@ export class UnauthorizedOrderAccessError extends Error {
 // Service
 // ===========================================
 
+<<<<<<< HEAD
 // ===========================================
 // Constants
 // ===========================================
@@ -247,6 +255,10 @@ export class OrdersService {
   }
 
   /**
+=======
+export class OrdersService {
+  /**
+>>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
    * Get order by ID
    */
   async getOrderById(orderId: string) {
