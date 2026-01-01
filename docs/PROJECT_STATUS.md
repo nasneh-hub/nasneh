@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) in progress.
 
 ---
 
-## Sprint 2 Progress: 3/17 tasks (18%)
+## Sprint 2 Progress: 4/17 tasks (24%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -20,7 +20,7 @@ Sprint 2 started. Phase 2 (Services Core) in progress.
 | Task | Status | PR |
 |------|--------|-----|
 | [SVC] Implement service CRUD API | ✅ Merged | #48 |
-| [SVC] Implement service listing API | 🔲 To Do | - |
+| [SVC] Implement service listing API | ✅ Merged | #50 |
 | [SVC] Availability schema + rules | 🔲 To Do | - |
 
 ### Phase 3: Availability + Bookings Core
@@ -76,21 +76,32 @@ Sprint 2 started. Phase 2 (Services Core) in progress.
 
 ## API Endpoints (Sprint 2)
 
-### Services API (PR #48)
+### Services API (PR #48, #50)
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | /provider/services | Create service |
-| GET | /provider/services | List provider's services |
+| GET | /provider/services | List provider's services (with status filter) |
+| GET | /provider/services/stats | Service counts by status |
 | GET | /provider/services/:id | Get service details |
 | PATCH | /provider/services/:id | Update service |
 | DELETE | /provider/services/:id | Soft delete |
 | PATCH | /provider/services/:id/toggle | Toggle availability |
-| GET | /services | Public service listing |
+| GET | /services | Public listing with filters + sorting |
+| GET | /services/search | Keyword search |
+| GET | /services/featured | Featured services |
+| GET | /services/category/:id | By category |
+| GET | /services/provider/:id | By provider |
 | GET | /services/:id | Public service details |
+
+### Filters & Sorting (PR #50)
+- **Filters:** serviceType, categoryId, providerId, minPrice, maxPrice, isAvailable, search, status
+- **Sorting:** newest, oldest, price_asc, price_desc, name_asc, name_desc
+- **Pagination:** page, limit (max 100), returns total, totalPages, hasNext, hasPrev
 
 ---
 
 ## Sprint 1 Summary (Complete)
+
 
 All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 
@@ -116,4 +127,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 2: Service CRUD API complete (PR #48)
+**Last updated:** 2026-01-02 — Sprint 2 Phase 2: Service Listing API complete (PR #50)
