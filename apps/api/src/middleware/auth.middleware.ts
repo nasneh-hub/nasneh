@@ -97,6 +97,11 @@ export function requireRoles(...allowedRoles: UserRole[]) {
 }
 
 /**
+ * Alias for authMiddleware - requires authentication
+ */
+export const requireAuth = authMiddleware;
+
+/**
  * Optional auth middleware - attaches user if token present, but doesn't require it
  */
 export function optionalAuth(

@@ -53,6 +53,15 @@ const envSchema = z.object({
   // URLs
   FRONTEND_URL: z.string().default('http://localhost:3000'),
   DASHBOARD_URL: z.string().default('http://localhost:3001'),
+
+  // Amazon Payment Services (APS)
+  APS_MERCHANT_IDENTIFIER: z.string().optional(),
+  APS_ACCESS_CODE: z.string().optional(),
+  APS_SHA_REQUEST_PHRASE: z.string().optional(),
+  APS_SHA_RESPONSE_PHRASE: z.string().optional(),
+  APS_API_URL: z.string().default('https://sbpaymentservices.payfort.com/FortAPI/paymentApi'),
+  APS_CHECKOUT_URL: z.string().default('https://sbcheckout.payfort.com/FortAPI/paymentPage'),
+  APS_CURRENCY: z.string().default('BHD'),
 });
 
 /**
@@ -133,6 +142,22 @@ export const config = {
   urls: {
     frontend: env.FRONTEND_URL,
     dashboard: env.DASHBOARD_URL,
+  },
+
+  // APS
+  aps: {
+    merchantIdentifier: env.APS_MERCHANT_IDENTIFIER,
+    accessCode: env.APS_ACCESS_CODE,
+    shaRequestPhrase: env.APS_SHA_REQUEST_PHRASE,
+    shaResponsePhrase: env.APS_SHA_RESPONSE_PHRASE,
+    apiUrl: env.APS_API_URL,
+    checkoutUrl: env.APS_CHECKOUT_URL,
+    currency: env.APS_CURRENCY,
+    isConfigured: Boolean(
+      env.APS_MERCHANT_IDENTIFIER &&
+      env.APS_ACCESS_CODE &&
+      env.APS_SHA_REQUEST_PHRASE
+    ),
   },
 } as const;
 

@@ -147,6 +147,9 @@ export interface RefreshTokenResponse {
 export interface JwtPayload {
   userId: string;
   roles: UserRole[];
+  phone?: string;
+  email?: string | null;
+  name?: string | null;
   iat?: number;
   exp?: number;
 }

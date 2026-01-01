@@ -8,6 +8,7 @@ import cors from 'cors';
 import { config } from './config/env';
 import { authRoutes } from './modules/auth';
 import { vendorOrderRoutes, customerOrderRoutes } from './modules/orders';
+import { paymentsRoutes } from './modules/payments';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -55,10 +56,12 @@ app.use(`${apiPrefix}/auth`, authRoutes);
 app.use(`${apiPrefix}/vendor/orders`, vendorOrderRoutes);
 app.use(`${apiPrefix}/orders`, customerOrderRoutes);
 
+// Payment routes
+app.use(`${apiPrefix}/payments`, paymentsRoutes);
+
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/users`, userRoutes);
 // app.use(`${apiPrefix}/products`, productRoutes);
-// app.use(`${apiPrefix}/payments`, paymentRoutes);
 
 // ===========================================
 // Error Handling
