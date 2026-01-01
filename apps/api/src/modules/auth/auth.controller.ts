@@ -12,11 +12,21 @@ import {
 } from '../../types/auth.types';
 
 /**
+ * Extended request type with cooldown setter
+ */
+interface RequestWithCooldown extends Request {
+  setCooldown?: () => Promise<void>;
+}
+
+/**
  * Request OTP
  * POST /auth/request-otp
+ *
+ * Rate limited: 5 requests per hour per phone
+ * Cooldown: 60 seconds between requests
  */
 export async function requestOtp(
-  req: Request,
+  req: RequestWithCooldown,
   res: Response,
   next: NextFunction
 ): Promise<void> {
@@ -37,6 +47,11 @@ export async function requestOtp(
     // Request OTP
     const result = await authService.requestOtp(phone);
 
+    // Set cooldown after successful OTP request
+    if (req.setCooldown) {
+      await req.setCooldown();
+    }
+
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -46,6 +61,8 @@ export async function requestOtp(
 /**
  * Verify OTP
  * POST /auth/verify-otp
+ *
+ * Rate limited: 10 attempts per hour per phone
  */
 export async function verifyOtp(
   req: Request,

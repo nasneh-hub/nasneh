@@ -15,3 +15,11 @@ export {
   notFoundHandler,
   errorHandler,
 } from './error.middleware';
+
+export {
+  rateLimit,
+  otpRateLimit,
+  otpCooldown,
+  apiRateLimit,
+  loginRateLimit,
+} from './rate-limit.middleware';

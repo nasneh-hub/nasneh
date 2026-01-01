@@ -3,8 +3,8 @@
  * Following TECHNICAL_SPEC.md §5. Authentication Flow
  *
  * Endpoints:
- * - POST /auth/request-otp  - Request OTP for phone
- * - POST /auth/verify-otp   - Verify OTP and get tokens
+ * - POST /auth/request-otp  - Request OTP for phone (rate limited: 5/hour)
+ * - POST /auth/verify-otp   - Verify OTP and get tokens (rate limited: 10/hour)
  * - POST /auth/refresh      - Refresh access token
  * - POST /auth/logout       - Logout (invalidate refresh token)
  * - GET  /auth/me           - Get current user (protected)
@@ -19,6 +19,11 @@ import {
   getCurrentUser,
 } from './auth.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
+import {
+  otpRateLimit,
+  otpCooldown,
+  loginRateLimit,
+} from '../../middleware/rate-limit.middleware';
 
 const router: Router = Router();
 
@@ -31,16 +36,18 @@ const router: Router = Router();
  * @desc    Request OTP for phone number
  * @access  Public
  * @body    { phone: "+973XXXXXXXX" }
+ * @rateLimit 5 requests per hour per phone, 60s cooldown between requests
  */
-router.post('/request-otp', requestOtp);
+router.post('/request-otp', otpRateLimit, otpCooldown, requestOtp);
 
 /**
  * @route   POST /auth/verify-otp
  * @desc    Verify OTP and get tokens
  * @access  Public
  * @body    { phone: "+973XXXXXXXX", otp: "123456" }
+ * @rateLimit 10 attempts per hour per phone
  */
-router.post('/verify-otp', verifyOtp);
+router.post('/verify-otp', loginRateLimit, verifyOtp);
 
 /**
  * @route   POST /auth/refresh

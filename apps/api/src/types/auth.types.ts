@@ -19,6 +19,7 @@ export enum UserRole {
 
 export enum TrustLevel {
   NEW = 'new',
+  BASIC = 'basic',
   VERIFIED = 'verified',
   TRUSTED = 'trusted',
 }
@@ -38,6 +39,7 @@ export enum OtpStatus {
   SENT = 'sent',
   DELIVERED = 'delivered',
   FAILED = 'failed',
+  VERIFIED = 'verified',
 }
 
 // ===========================================
@@ -114,19 +116,23 @@ export interface AuthTokens {
 export interface AuthUser {
   id: string;
   phone: string;
-  email: string | null;
-  name: string | null;
-  avatarUrl: string | null;
+  email?: string | null;
+  name?: string | null;
+  avatarUrl?: string | null;
   roles: UserRole[];
   trustLevel: TrustLevel;
   status: UserStatus;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface VerifyOtpResponse {
   success: boolean;
+  message: string;
   tokens: AuthTokens;
   user: AuthUser;
+  /** Whether this is a new user registration */
+  isNewUser: boolean;
 }
 
 export interface RefreshTokenResponse {

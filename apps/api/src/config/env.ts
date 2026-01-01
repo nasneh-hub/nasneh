@@ -124,6 +124,11 @@ export const config = {
     isConfigured: Boolean(env.WHATSAPP_API_URL && env.WHATSAPP_API_TOKEN),
   },
 
+  // Redis
+  redis: {
+    url: env.REDIS_URL,
+  },
+
   // URLs
   urls: {
     frontend: env.FRONTEND_URL,
