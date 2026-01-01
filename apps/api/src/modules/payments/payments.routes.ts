@@ -9,9 +9,28 @@ import {
   getPaymentById,
   getCustomerPayments,
 } from './payments.controller';
+import {
+  handleApsWebhook,
+  handleApsReturn,
+} from './webhook.controller';
 import { requireAuth } from '../../middleware/auth.middleware';
+import {
+  captureRawBody,
+  jsonWithRawBody,
+} from '../../middleware/rawBody.middleware';
 
 const router: Router = Router();
+
+// ===========================================
+// Webhook Routes (no auth - called by APS)
+// ===========================================
+
+// POST /payments/webhook - APS webhook callback
+// Uses raw body capture for signature verification
+router.post('/webhook', captureRawBody, jsonWithRawBody, handleApsWebhook);
+
+// GET /payments/return - APS return URL (customer redirect)
+router.get('/return', handleApsReturn);
 
 // ===========================================
 // Customer Payment Routes (authenticated)
