@@ -7,6 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import { config } from './config/env';
 import { authRoutes } from './modules/auth';
+import { vendorRouter as vendorProductsRouter, publicRouter as publicProductsRouter } from './modules/products';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -50,9 +51,14 @@ const apiPrefix = `/api/${config.apiVersion}`;
 // Auth routes
 app.use(`${apiPrefix}/auth`, authRoutes);
 
+// Products routes (public)
+app.use(`${apiPrefix}/products`, publicProductsRouter);
+
+// Vendor routes (protected)
+app.use(`${apiPrefix}/vendor`, vendorProductsRouter);
+
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/users`, userRoutes);
-// app.use(`${apiPrefix}/products`, productRoutes);
 // app.use(`${apiPrefix}/orders`, orderRoutes);
 // app.use(`${apiPrefix}/payments`, paymentRoutes);
 
