@@ -2,6 +2,16 @@
 
 **Current release/tag:** v0.1.0-foundation
 
+## Sprint 1 Progress
+| Task | Status | PR |
+|------|--------|-----|
+| [AUTH] Setup auth module structure | ✅ Done | #19 |
+| [AUTH] Implement OTP request endpoint | To Do | — |
+| [AUTH] Implement WhatsApp OTP delivery | To Do | — |
+| [AUTH] Implement SMS fallback | To Do | — |
+| [AUTH] Implement OTP verify endpoint | To Do | — |
+| [AUTH] Implement refresh token flow | To Do | — |
+
 ## Open Issues
 | # | Title |
 |---|-------|
@@ -18,12 +28,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. ClickUp backlog setup + sprint planning
-2. Resolve Issue #1 — Replace placeholder scripts
-3. Resolve Issue #4 — Generate favicons/meta images
+1. [AUTH] Implement OTP request endpoint
+2. [AUTH] Implement WhatsApp OTP delivery
+3. [AUTH] Implement SMS fallback
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by P0 Audit Fixes
+**Last updated:** 2026-01-01 by Sprint 1 - Auth Module Setup
