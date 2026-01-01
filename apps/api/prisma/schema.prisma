@@ -1,0 +1,183 @@
+// Nasneh API - Prisma Schema
+// Following TECHNICAL_SPEC.md data models
+// Currency: BHD (3 decimal places)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================================
+// Enums
+// ===========================================
+
+enum UserRole {
+  CUSTOMER
+  VENDOR
+  PROVIDER
+  DRIVER
+  ADMIN
+}
+
+enum UserStatus {
+  BASIC
+  VERIFIED
+  SUSPENDED
+}
+
+enum VendorCategory {
+  HOME_KITCHEN
+  CRAFTS
+  MARKET
+  FOOD_TRUCK
+}
+
+enum VendorStatus {
+  PENDING
+  APPROVED
+  ACTIVE
+  SUSPENDED
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DELETED
+}
+
+// ===========================================
+// Users
+// ===========================================
+
+model User {
+  id            String     @id @default(uuid())
+  phone         String     @unique
+  name          String?
+  email         String?    @unique
+  avatarUrl     String?    @map("avatar_url")
+  roles         UserRole[] @default([CUSTOMER])
+  status        UserStatus @default(BASIC)
+  preferredLang String     @default("en") @map("preferred_lang")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  vendor        Vendor?
+  addresses     Address[]
+
+  @@map("users")
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  label       String   // e.g., "Home", "Work"
+  addressLine String   @map("address_line")
+  area        String
+  block       String?
+  road        String?
+  building    String?
+  floor       String?
+  apartment   String?
+  latitude    Decimal? @db.Decimal(10, 8)
+  longitude   Decimal? @db.Decimal(11, 8)
+  isDefault   Boolean  @default(false) @map("is_default")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
+}
+
+// ===========================================
+// Vendors & Stores
+// ===========================================
+
+model Vendor {
+  id                    String           @id @default(uuid())
+  userId                String           @unique @map("user_id")
+  storeName             String           @map("store_name")
+  storeDescription      String?          @map("store_description") @db.Text
+  logoUrl               String?          @map("logo_url")
+  category              VendorCategory
+  subscriptionPlan      SubscriptionPlan @default(BASIC) @map("subscription_plan")
+  subscriptionExpiresAt DateTime?        @map("subscription_expires_at")
+  commissionRate        Decimal          @default(15.000) @map("commission_rate") @db.Decimal(5, 3)
+  status                VendorStatus     @default(PENDING)
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
+
+  // Relations
+  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products              Product[]
+
+  @@map("vendors")
+}
+
+// ===========================================
+// Categories
+// ===========================================
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String
+  nameAr      String?    @map("name_ar")
+  slug        String     @unique
+  description String?    @db.Text
+  imageUrl    String?    @map("image_url")
+  parentId    String?    @map("parent_id")
+  sortOrder   Int        @default(0) @map("sort_order")
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  // Self-relation for subcategories
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+
+  // Relations
+  products    Product[]
+
+  @@map("categories")
+}
+
+// ===========================================
+// Products
+// ===========================================
+
+model Product {
+  id          String        @id @default(uuid())
+  vendorId    String        @map("vendor_id")
+  categoryId  String?       @map("category_id")
+  name        String
+  nameAr      String?       @map("name_ar")
+  description String?       @db.Text
+  descriptionAr String?     @map("description_ar") @db.Text
+  price       Decimal       @db.Decimal(10, 3) // BHD 3 decimals
+  images      Json          @default("[]") // Array of image URLs
+  isAvailable Boolean       @default(true) @map("is_available")
+  status      ProductStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  vendor      Vendor        @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  category    Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([vendorId])
+  @@index([categoryId])
+  @@index([status, isAvailable])
+  @@map("products")
+}

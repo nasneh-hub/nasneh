@@ -10,3 +10,5 @@ export {
   getOtpKey,
   getRateLimitKey,
 } from './redis';
+
+export { prisma } from './db';
