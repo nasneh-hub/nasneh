@@ -161,6 +161,10 @@ export async function updateProviderCalendar(
       res.status(400).json({ error: error.message });
       return;
     }
+    if (error instanceof AvailabilityConflictError) {
+      res.status(409).json({ error: error.message });
+      return;
+    }
     next(error);
   }
 }
@@ -294,6 +298,10 @@ export async function deleteRule(
       res.status(404).json({ error: error.message });
       return;
     }
+    if (error instanceof AvailabilityConflictError) {
+      res.status(409).json({ error: error.message });
+      return;
+    }
     next(error);
   }
 }
@@ -386,8 +394,11 @@ export async function updateOverride(
 }
 
 /**
- * Delete an availability override
+ * Delete an availability override (blocked date or special hours)
  * DELETE /provider/calendar/overrides/:id
+ * 
+ * Note: UNAVAILABLE overrides (blocked dates) can be safely deleted.
+ * AVAILABLE overrides (special hours) will be checked for booking conflicts.
  */
 export async function deleteOverride(
   req: AuthenticatedRequest,
@@ -417,6 +428,10 @@ export async function deleteOverride(
   } catch (error) {
     if (error instanceof AvailabilityNotFoundError) {
       res.status(404).json({ error: error.message });
+      return;
+    }
+    if (error instanceof AvailabilityConflictError) {
+      res.status(409).json({ error: error.message });
       return;
     }
     next(error);

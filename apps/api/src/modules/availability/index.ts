@@ -18,6 +18,11 @@ export {
   AvailabilityNotFoundError,
   AvailabilityConflictError,
   AvailabilityValidationError,
+  // Conflict validation (for availability management)
+  checkRuleConflictsWithBookings,
+  checkOverrideConflictsWithBookings,
+  checkBulkRulesConflictsWithBookings,
+  type BookingConflictCheckResult,
 } from './availability.service';
 
 // Repository (for advanced use cases)
