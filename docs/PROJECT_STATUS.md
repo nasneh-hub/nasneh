@@ -9,8 +9,31 @@
 | [AUTH] Implement OTP request endpoint | ✅ Done | #20 |
 | [AUTH] Implement WhatsApp OTP delivery | ✅ Done | #21 |
 | [AUTH] Implement SMS fallback | ✅ Done | #22 |
-| [AUTH] Implement OTP verify endpoint | To Do | — |
-| [AUTH] Implement refresh token flow | To Do | — |
+| [AUTH] Implement OTP verify endpoint | ✅ Done | #23 |
+| [AUTH] Implement refresh token flow | ✅ Done | #24 |
+| [PROD] Create products table migration | ✅ Done | #25 |
+| [PROD] Implement product CRUD API | ✅ Done | #26 |
+| [PROD] Implement product images upload | ✅ Done | #27 |
+| [PROD] Implement product listing API | ✅ Done | #26 (included) |
+| [ORD] Create orders + order_items migrations | To Do | — |
+| [ORD] Implement order status flow | To Do | — |
+| [ORD] Implement order listing APIs | To Do | — |
+| [ORD] Implement create order endpoint | To Do | — |
+| [PAY] Create payments + refunds migrations | To Do | — |
+| [PAY] Implement APS payment initiation | To Do | — |
+| [PAY] Implement APS webhook handler | To Do | — |
+| [PAY] Implement audit logging | To Do | — |
+
+## Open PRs
+| # | Title | Status |
+|---|-------|--------|
+| #27 | feat(upload): implement product image upload to S3 | Open |
+| #26 | feat(products): implement product CRUD API | Open |
+| #25 | feat(db): create products table migration | Open |
+| #24 | feat(auth): implement refresh token flow | Open |
+| #23 | test(auth): add comprehensive OTP verify tests | Open |
+| #22 | feat(auth): implement SMS fallback | Open |
+| #21 | feat(auth): implement WhatsApp OTP delivery | Open |
 
 ## Open Issues
 | # | Title |
@@ -28,12 +51,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. [AUTH] Implement OTP verify endpoint
-2. [AUTH] Implement refresh token flow
-3. [PROD] Create products table migration
+1. [ORD] Create orders + order_items migrations
+2. [ORD] Implement order status flow
+3. [ORD] Implement order listing APIs
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - SMS Fallback Implementation
+**Last updated:** 2026-01-01 by Sprint 1 - Product Listing API (already in PR #26)
