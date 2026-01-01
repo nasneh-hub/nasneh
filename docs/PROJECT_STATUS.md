@@ -3,7 +3,6 @@
 **Current release/tag:** v0.1.0-foundation
 
 ## Sprint 1 Progress
-
 | Task | Status | PR |
 |------|--------|-----|
 | [AUTH] Setup auth module structure | ✅ Done | #19 |
@@ -13,21 +12,36 @@
 | [AUTH] Implement OTP verify endpoint | ✅ Done | #23 |
 | [AUTH] Implement refresh token flow | ✅ Done | #24 |
 | [PROD] Create products table migration | ✅ Done | #25 |
-| [PROD] Implement product CRUD API | To Do | — |
-| [PROD] Implement product listing API | To Do | — |
-| [PROD] Implement product images upload | To Do | — |
+| [PROD] Implement product CRUD API | ✅ Done | #26 |
+| [PROD] Implement product image upload | To Do | — |
+| [PROD] Implement categories API | To Do | — |
+| [PROD] Implement product search | To Do | — |
+| [ORD] Create orders table migration | To Do | — |
+| [ORD] Implement order status flow | To Do | — |
+| [ORD] Implement order listing APIs | To Do | — |
+| [ORD] Implement order creation | To Do | — |
+| [PAY] Create payments + refunds migrations | To Do | — |
+| [PAY] Implement APS payment initiation | To Do | — |
+| [PAY] Implement APS webhook handler | To Do | — |
+| [PAY] Implement audit logging | To Do | — |
 
-**Progress:** 7/18 tasks complete (Auth epic done, Products epic started)
+## Open PRs
+| # | Title | Status |
+|---|-------|--------|
+| #26 | feat(products): implement product CRUD API | Open |
+| #25 | feat(db): create products table migration | Open |
+| #24 | feat(auth): implement refresh token flow | Open |
+| #23 | test(auth): add comprehensive OTP verify tests | Open |
+| #22 | feat(auth): implement SMS fallback | Open |
+| #21 | feat(auth): implement WhatsApp OTP delivery | Open |
 
 ## Open Issues
-
 | # | Title |
 |---|-------|
 | 4 | [TECH] Generate favicons and meta images from logo |
 | 1 | [TECH] Replace placeholder scripts with real build/lint/typecheck |
 
 ## P0 Audit Status
-
 All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #8 — order_items table (§3 - Order Items)
 - [x] #9 — fulfillment_type on orders (§3 - Orders)
@@ -37,14 +51,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-
-1. [PROD] Implement product CRUD API
-2. [PROD] Implement product listing API  
-3. [PROD] Implement product images upload
+1. [PROD] Implement product image upload
+2. [PROD] Implement categories API
+3. [PROD] Implement product search
 
 ## Blockers
-
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - Products Migration
+**Last updated:** 2026-01-01 by Sprint 1 - Product CRUD API
