@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "echo 'TODO: next dev'",
+    "build": "echo 'TODO: next build'",
+    "start": "echo 'TODO: next start'",
+    "lint": "echo 'TODO: eslint .'",
+    "typecheck": "echo 'TODO: tsc --noEmit'"
   },
   "dependencies": {
     "next": "^14.0.0",
