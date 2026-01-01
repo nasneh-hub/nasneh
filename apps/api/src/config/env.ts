@@ -31,6 +31,8 @@ const envSchema = z.object({
   AWS_ACCESS_KEY_ID: z.string().optional(),
   AWS_SECRET_ACCESS_KEY: z.string().optional(),
   AWS_SNS_REGION: z.string().default('me-south-1'),
+  AWS_S3_BUCKET: z.string().default('nasneh-dev-media'),
+  AWS_S3_REGION: z.string().default('me-south-1'),
 
   // WhatsApp Business API
   WHATSAPP_API_URL: z.string().optional(),
@@ -113,9 +115,8 @@ export const config = {
   aws: {
     region: env.AWS_REGION,
     snsRegion: env.AWS_SNS_REGION,
-    accessKeyId: env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY || '',
-    isConfigured: Boolean(env.AWS_ACCESS_KEY_ID && env.AWS_SECRET_ACCESS_KEY),
+    s3Bucket: env.AWS_S3_BUCKET,
+    s3Region: env.AWS_S3_REGION,
   },
 
   // WhatsApp
