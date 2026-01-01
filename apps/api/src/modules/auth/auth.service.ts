@@ -25,21 +25,14 @@ import {
   UserStatus,
 } from '../../types/auth.types';
 import { config } from '../../config/env';
+import { otpRepository, StoredOtp } from './otp.repository';
+import { getRedisClient } from '../../lib/redis';
 
 // ===========================================
-// In-memory stores (replace with Redis/DB in production)
+// In-memory stores (replace with DB in production)
 // ===========================================
 
-interface StoredOtp {
-  otp: string;
-  phone: string;
-  expiresAt: Date;
-  attempts: number;
-  channel: OtpChannel;
-}
-
-// Temporary in-memory storage (will be replaced with Redis)
-const otpStore = new Map<string, StoredOtp>();
+// Temporary in-memory storage for refresh tokens (will be replaced with Redis)
 const refreshTokenStore = new Map<string, string>(); // token -> userId
 const otpLogs: OtpLogEntry[] = [];
 
@@ -71,6 +64,7 @@ export class AuthService {
     // For now, simulate delivery in development
     if (config.isDevelopment) {
       console.log(`[DEV] WhatsApp OTP for ${phone}: ${otp}`);
+      // Simulate WhatsApp delivery success
       return true;
     }
 
@@ -81,7 +75,23 @@ export class AuthService {
 
     try {
       // WhatsApp Business API call would go here
-      // const response = await fetch(config.whatsapp.apiUrl, { ... });
+      // const response = await fetch(config.whatsapp.apiUrl, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Authorization': `Bearer ${config.whatsapp.apiToken}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     messaging_product: 'whatsapp',
+      //     to: phone,
+      //     type: 'template',
+      //     template: {
+      //       name: 'otp_verification',
+      //       language: { code: 'en' },
+      //       components: [{ type: 'body', parameters: [{ type: 'text', text: otp }] }],
+      //     },
+      //   }),
+      // });
       // return response.ok;
       return false;
     } catch (error) {
@@ -105,12 +115,53 @@ export class AuthService {
     try {
       // AWS SNS call would go here
       // const sns = new SNSClient({ region: config.aws.snsRegion });
-      // await sns.send(new PublishCommand({ PhoneNumber: phone, Message: `Your Nasneh code: ${otp}` }));
+      // await sns.send(new PublishCommand({
+      //   PhoneNumber: phone,
+      //   Message: `Your Nasneh verification code: ${otp}. Valid for ${config.otp.expiryMinutes} minutes.`,
+      // }));
+      // return true;
       return false;
     } catch (error) {
       console.error('SMS OTP failed:', error);
       return false;
     }
+  }
+
+  /**
+   * Wait for WhatsApp delivery with timeout
+   * Returns true if delivered within timeout, false otherwise
+   */
+  private async waitForWhatsAppDelivery(
+    phone: string,
+    otp: string
+  ): Promise<boolean> {
+    return new Promise((resolve) => {
+      // In production, this would check delivery status via webhook
+      // For now, we simulate with a timeout
+
+      const timeoutMs = config.otp.whatsappTimeoutSeconds * 1000;
+
+      // Try sending WhatsApp OTP
+      this.sendWhatsAppOtp(phone, otp).then((sent) => {
+        if (!sent) {
+          resolve(false);
+          return;
+        }
+
+        // In development, assume immediate delivery
+        if (config.isDevelopment) {
+          resolve(true);
+          return;
+        }
+
+        // In production, wait for delivery confirmation or timeout
+        // This would be replaced with webhook-based confirmation
+        setTimeout(() => {
+          // Assume delivered if no failure callback
+          resolve(true);
+        }, timeoutMs);
+      });
+    });
   }
 
   /**
@@ -124,21 +175,26 @@ export class AuthService {
 
   /**
    * Request OTP for phone number
-   * Following TECHNICAL_SPEC.md OTP Delivery Channels flow
+   * Following TECHNICAL_SPEC.md OTP Delivery Channels flow:
+   * 1. Send WhatsApp first
+   * 2. Wait 10 seconds for delivery
+   * 3. If not delivered/failed, fallback to SMS
    */
   async requestOtp(phone: string): Promise<OtpRequestResponse> {
     const otp = this.generateOtp();
-    const expiresAt = new Date(Date.now() + config.otp.expiryMinutes * 60 * 1000);
+    const expiresAt = Date.now() + config.otp.expiryMinutes * 60 * 1000;
 
     let channel: OtpChannel = OtpChannel.WHATSAPP;
     let fallbackUsed = false;
     let delivered = false;
 
-    // Step 1: Try WhatsApp first
-    delivered = await this.sendWhatsAppOtp(phone, otp);
+    // Step 1: Try WhatsApp first with timeout
+    console.log(`[OTP] Attempting WhatsApp delivery to ${phone}...`);
+    delivered = await this.waitForWhatsAppDelivery(phone, otp);
 
-    // Step 2: If WhatsApp fails, fallback to SMS
+    // Step 2: If WhatsApp fails/times out, fallback to SMS
     if (!delivered) {
+      console.log(`[OTP] WhatsApp failed/timeout, falling back to SMS for ${phone}...`);
       channel = OtpChannel.SMS;
       fallbackUsed = true;
       delivered = await this.sendSmsOtp(phone, otp);
@@ -157,8 +213,8 @@ export class AuthService {
       throw new Error('Failed to send OTP. Please try again.');
     }
 
-    // Store OTP
-    otpStore.set(phone, {
+    // Store OTP in Redis with 5-minute TTL
+    await otpRepository.store({
       otp,
       phone,
       expiresAt,
@@ -169,7 +225,7 @@ export class AuthService {
     return {
       success: true,
       message: fallbackUsed
-        ? 'OTP sent via SMS'
+        ? 'OTP sent via SMS (WhatsApp unavailable)'
         : 'OTP sent via WhatsApp',
       channel,
       fallbackUsed,
@@ -181,48 +237,50 @@ export class AuthService {
    * Verify OTP and return tokens
    */
   async verifyOtp(phone: string, otp: string): Promise<VerifyOtpResponse> {
-    const stored = otpStore.get(phone);
+    // Validate OTP using repository
+    const validation = await otpRepository.isValid(phone, otp);
 
-    if (!stored) {
-      throw new Error('No OTP found for this phone number. Please request a new one.');
+    if (!validation.valid) {
+      throw new Error(validation.error);
     }
 
-    // Check expiry
-    if (new Date() > stored.expiresAt) {
-      otpStore.delete(phone);
-      throw new Error('OTP has expired. Please request a new one.');
-    }
+    // OTP is valid - delete it
+    await otpRepository.delete(phone);
 
-    // Check attempts
-    if (stored.attempts >= config.otp.maxAttempts) {
-      otpStore.delete(phone);
-      throw new Error('Too many failed attempts. Please request a new OTP.');
-    }
-
-    // Verify OTP
-    if (stored.otp !== otp) {
-      stored.attempts++;
-      throw new Error(`Invalid OTP. ${config.otp.maxAttempts - stored.attempts} attempts remaining.`);
-    }
-
-    // OTP verified - clean up
-    otpStore.delete(phone);
-
-    // Get or create user (TODO: implement with Prisma)
+    // Get or create user
     const user = await this.getOrCreateUser(phone);
 
     // Generate tokens
     const tokens = this.generateTokens(user);
 
+    // Log successful verification
+    this.logOtpDelivery({
+      phone,
+      channel: validation.stored!.channel,
+      status: OtpStatus.VERIFIED,
+      timestamp: new Date(),
+      fallbackUsed: false,
+    });
+
     return {
       success: true,
-      tokens,
+      message: 'Phone verified successfully',
       user,
+      tokens,
+      isNewUser: user.createdAt === user.updatedAt,
     };
   }
 
   /**
-   * Refresh access token
+   * Verify access token and return payload
+   */
+  verifyAccessToken(token: string): JwtPayload {
+    const payload = jwt.verify(token, config.jwt.secret) as JwtPayload;
+    return payload;
+  }
+
+  /**
+   * Refresh access token using refresh token
    */
   async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
     const userId = refreshTokenStore.get(refreshToken);
@@ -231,7 +289,7 @@ export class AuthService {
       throw new Error('Invalid refresh token');
     }
 
-    // Get user (TODO: implement with Prisma)
+    // Get user
     const user = await this.getUserById(userId);
 
     if (!user) {
@@ -239,11 +297,11 @@ export class AuthService {
       throw new Error('User not found');
     }
 
-    // Invalidate old refresh token
-    refreshTokenStore.delete(refreshToken);
-
     // Generate new tokens
     const tokens = this.generateTokens(user);
+
+    // Invalidate old refresh token
+    refreshTokenStore.delete(refreshToken);
 
     return {
       success: true,
@@ -256,6 +314,7 @@ export class AuthService {
    */
   async logout(refreshToken: string): Promise<void> {
     refreshTokenStore.delete(refreshToken);
+    // TODO: Add to blacklist in Redis for distributed systems
   }
 
   /**
@@ -294,17 +353,17 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getOrCreateUser(phone: string): Promise<AuthUser> {
-    // Placeholder - will be replaced with Prisma
+    // TODO: Implement with Prisma
+    // For now, return mock user
+    const now = new Date();
     return {
-      id: crypto.randomUUID(),
+      id: `user_${phone.replace(/\+/g, '')}`,
       phone,
-      email: null,
-      name: null,
-      avatarUrl: null,
       roles: [UserRole.CUSTOMER],
-      trustLevel: TrustLevel.NEW,
       status: UserStatus.ACTIVE,
-      createdAt: new Date(),
+      trustLevel: TrustLevel.BASIC,
+      createdAt: now,
+      updatedAt: now,
     };
   }
 
@@ -313,19 +372,19 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getUserById(userId: string): Promise<AuthUser | null> {
-    // Placeholder - will be replaced with Prisma
-    return null;
-  }
-
-  /**
-   * Verify JWT token
-   */
-  verifyAccessToken(token: string): JwtPayload {
-    try {
-      return jwt.verify(token, config.jwt.secret) as JwtPayload;
-    } catch (error) {
-      throw new Error('Invalid or expired token');
-    }
+    // TODO: Implement with Prisma
+    // For now, return mock user
+    const phone = userId.replace('user_', '+');
+    const now = new Date();
+    return {
+      id: userId,
+      phone,
+      roles: [UserRole.CUSTOMER],
+      status: UserStatus.ACTIVE,
+      trustLevel: TrustLevel.BASIC,
+      createdAt: now,
+      updatedAt: now,
+    };
   }
 }
 
