@@ -4,11 +4,11 @@
 
 ## 🚀 Sprint 2 In Progress
 
-Sprint 2 started. Phase 1 (migrations) complete.
+Sprint 2 started. Phase 2 (Services Core) in progress.
 
 ---
 
-## Sprint 2 Progress: 2/17 tasks (12%)
+## Sprint 2 Progress: 3/17 tasks (18%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -16,10 +16,10 @@ Sprint 2 started. Phase 1 (migrations) complete.
 | [SVC] Create services table migration | ✅ Merged | #45 |
 | [BOOK] Create bookings table migration | ✅ Merged | #46 |
 
-### Phase 2: Services Core (Next)
+### Phase 2: Services Core (In Progress)
 | Task | Status | PR |
 |------|--------|-----|
-| [SVC] Implement service CRUD API | 🔲 To Do | - |
+| [SVC] Implement service CRUD API | ✅ Merged | #48 |
 | [SVC] Implement service listing API | 🔲 To Do | - |
 | [SVC] Availability schema + rules | 🔲 To Do | - |
 
@@ -74,6 +74,22 @@ Sprint 2 started. Phase 1 (migrations) complete.
 
 ---
 
+## API Endpoints (Sprint 2)
+
+### Services API (PR #48)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /provider/services | Create service |
+| GET | /provider/services | List provider's services |
+| GET | /provider/services/:id | Get service details |
+| PATCH | /provider/services/:id | Update service |
+| DELETE | /provider/services/:id | Soft delete |
+| PATCH | /provider/services/:id/toggle | Toggle availability |
+| GET | /services | Public service listing |
+| GET | /services/:id | Public service details |
+
+---
+
 ## Sprint 1 Summary (Complete)
 
 All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
@@ -89,6 +105,7 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 
 ## Open Issues
 
+
 | # | Title |
 |---|-------|
 | 4 | [TECH] Generate favicons and meta images from logo |
@@ -99,4 +116,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 1 Complete (Services + Bookings migrations)
+**Last updated:** 2026-01-02 — Sprint 2 Phase 2: Service CRUD API complete (PR #48)
