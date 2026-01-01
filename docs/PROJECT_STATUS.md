@@ -20,13 +20,14 @@
 | [ORD] Implement order listing APIs | ✅ Done | #30 (included) |
 | [ORD] Implement create order endpoint | ✅ Done | #31 |
 | [PAY] Create payments + refunds migrations | ✅ Done | #32 |
-| [PAY] Implement APS payment initiation | To Do | — |
+| [PAY] Implement APS payment initiation | ✅ Done | #33 |
 | [PAY] Implement APS webhook handler | To Do | — |
 | [PAY] Implement audit logging | ✅ Done | #30 (included) |
 
 ## Open PRs
 | # | Title | Status |
 |---|-------|--------|
+| #33 | feat(payments): implement APS payment initiation | Open |
 | #32 | feat(db): create payments and refunds tables migration | Open |
 | #31 | feat(orders): implement create order endpoint | Open |
 | #30 | feat(orders): implement order status flow with audit logging | Open |
@@ -56,12 +57,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. [PAY] Implement APS payment initiation
-2. [PAY] Implement APS webhook handler
-3. Merge all open PRs to main
+1. [PAY] Implement APS webhook handler
+2. Merge all open PRs to main
+3. Sprint 1 complete → Start Sprint 2
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - Payments Migration
+**Last updated:** 2026-01-01 by Sprint 1 - APS Payment Initiation
