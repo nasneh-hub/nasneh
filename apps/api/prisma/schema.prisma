@@ -76,6 +76,7 @@ model User {
   addresses     Address[]
   customerOrders Order[]  @relation("CustomerOrders")
   driverOrders   Order[]  @relation("DriverOrders")
+  auditLogs      AuditLog[]
 
   @@map("users")
 }
@@ -260,4 +261,44 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
   @@map("order_items")
+}
+
+// ===========================================
+// Audit Logs Enums
+// ===========================================
+
+enum ActorRole {
+  CUSTOMER
+  VENDOR
+  PROVIDER
+  DRIVER
+  ADMIN
+  SYSTEM
+}
+
+// ===========================================
+// Audit Logs
+// ===========================================
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  actorId     String?   @map("actor_id")
+  actorRole   ActorRole @map("actor_role")
+  action      String    // e.g., "order.status_changed", "payment.refunded"
+  entityType  String    @map("entity_type") // e.g., "order", "payment", "user"
+  entityId    String    @map("entity_id")
+  diff        Json?     // Before/after changes
+  metadata    Json?     // Additional context
+  ipAddress   String?   @map("ip_address")
+  userAgent   String?   @map("user_agent") @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  actor       User?     @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
 }
