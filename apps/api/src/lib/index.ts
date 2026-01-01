@@ -16,3 +16,9 @@ export {
   getWhatsAppClient,
   sendWhatsAppOtpWithTimeout,
 } from './whatsapp';
+
+export {
+  SmsClient,
+  getSmsClient,
+  sendSmsOtp,
+} from './sms';

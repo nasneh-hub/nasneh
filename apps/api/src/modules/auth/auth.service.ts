@@ -61,7 +61,13 @@ export class AuthService {
   private logOtpDelivery(entry: OtpLogEntry): void {
     otpLogs.push(entry);
     // TODO: Persist to database for audit
-    console.log('[OTP Log]', JSON.stringify(entry));
+    console.log('[OTP Log]', JSON.stringify({
+      phone: entry.phone.slice(0, 7) + '****',
+      channel: entry.channel,
+      status: entry.status,
+      fallbackUsed: entry.fallbackUsed,
+      timestamp: entry.timestamp.toISOString(),
+    }));
   }
 
   /**
