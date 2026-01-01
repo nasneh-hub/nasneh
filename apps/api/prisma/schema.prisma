@@ -65,7 +65,7 @@ model User {
   name          String?
   email         String?    @unique
   avatarUrl     String?    @map("avatar_url")
-  roles         UserRole[] @default([CUSTOMER])
+  role          UserRole   @default(CUSTOMER)
   status        UserStatus @default(BASIC)
   preferredLang String     @default("en") @map("preferred_lang")
   createdAt     DateTime   @default(now()) @map("created_at")
