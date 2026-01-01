@@ -1,8 +1,8 @@
 # Nasneh - Technical Specification
 
-**Version:** 2.0  
+**Version:** 2.1  
 **Last Updated:** January 1, 2026  
-**Status:** Source of Truth
+**Status:** Source of Truth (P0 Audit Fixes Applied)
 
 ---
 
@@ -171,14 +171,31 @@ orders
 ├── customer_id (UUID, FK → users)
 ├── vendor_id (UUID, FK → vendors)
 ├── driver_id (UUID, FK, nullable)
+├── fulfillment_type (enum: delivery, pickup)
 ├── subtotal (decimal 10,3)
-├── delivery_fee (decimal 10,3)
+├── delivery_fee (decimal 10,3, nullable)  # null if pickup
 ├── commission (decimal 10,3)
 ├── total (decimal 10,3)
 ├── status (enum: pending, confirmed, preparing, ready, picked_up, delivered, cancelled)
-├── delivery_address (jsonb)
+├── delivery_address (jsonb, nullable)     # null if pickup
+├── pickup_address (jsonb, nullable)       # vendor location if pickup
 ├── notes (text, nullable)
 ├── created_at, updated_at
+```
+
+### Order Items
+```sql
+order_items
+├── id (UUID, PK)
+├── order_id (UUID, FK → orders, indexed)
+├── product_id (UUID, FK → products)
+├── -- Price snapshot at order time --
+├── product_name (string)                  # Snapshot
+├── unit_price (decimal 10,3)              # Snapshot
+├── quantity (integer)
+├── subtotal (decimal 10,3)                # unit_price × quantity
+├── currency (string, default: BHD)
+├── created_at
 ```
 
 ### Bookings
@@ -218,14 +235,48 @@ bookings
 payments
 ├── id (UUID, PK)
 ├── transaction_id (string, unique)
+├── idempotency_key (string, unique, indexed)
 ├── payable_type (enum: order, booking)
 ├── payable_id (UUID)
 ├── amount (decimal 10,3)
 ├── currency (string, default: BHD)
-├── status (enum: pending, authorized, captured, failed, refunded)
+├── status (enum: pending, authorized, captured, failed, refunded, partially_refunded)
 ├── payment_method (enum: card)
 ├── gateway_response (jsonb)
 ├── created_at, updated_at
+```
+
+### Refunds
+```sql
+refunds
+├── id (UUID, PK)
+├── payment_id (UUID, FK → payments, indexed)
+├── order_id (UUID, FK → orders, nullable)      # For order refunds
+├── booking_id (UUID, FK → bookings, nullable)  # For booking refunds
+├── amount (decimal 10,3)
+├── currency (string, default: BHD)
+├── reason (enum: customer_request, vendor_cancel, quality_issue, duplicate, other)
+├── reason_details (text, nullable)
+├── status (enum: pending, processing, completed, failed)
+├── gateway_ref (string, nullable)              # APS refund reference
+├── created_by (UUID, FK → users)               # Admin/system who initiated
+├── created_at
+```
+
+### Audit Logs
+```sql
+audit_logs
+├── id (UUID, PK)
+├── actor_id (UUID, FK → users, nullable)       # null for system actions
+├── actor_role (enum: customer, vendor, provider, driver, admin, system)
+├── action (string)                             # e.g., "order.created", "payment.refunded"
+├── entity_type (string)                        # e.g., "order", "payment", "user"
+├── entity_id (UUID)
+├── diff (jsonb, nullable)                      # Before/after changes
+├── metadata (jsonb, nullable)                  # Additional context
+├── ip_address (string, nullable)
+├── user_agent (string, nullable)
+├── created_at
 ```
 
 ### Reviews
@@ -374,7 +425,6 @@ GET    /admin/reports        # Reports & analytics
 ```
 
 ### OTP Delivery Channels
-
 **Priority Order:**
 1. **WhatsApp** (Primary) - via WhatsApp Business API
 2. **SMS** (Fallback) - via AWS SNS
@@ -382,16 +432,20 @@ GET    /admin/reports        # Reports & analytics
 **Flow Logic:**
 ```
 1. User requests OTP
-2. System checks if phone has WhatsApp
-3. IF WhatsApp available → Send via WhatsApp Business API
-4. IF WhatsApp fails OR not available → Fallback to SMS (AWS SNS)
-5. Log delivery channel used
+2. System sends OTP via WhatsApp Business API
+3. Wait up to 10 seconds for delivery confirmation
+4. IF delivered → Done
+5. IF failed OR timeout → Fallback to SMS (AWS SNS)
+6. Log delivery channel used and fallback status
 ```
+
+> **UI Wording:** "We'll try WhatsApp first (faster), then SMS as fallback."
 
 **WhatsApp Business API:**
 - Provider: Meta WhatsApp Business API (via AWS or direct)
 - Template: OTP verification message (pre-approved)
-- Fallback timeout: 10 seconds
+- Delivery timeout: 10 seconds before SMS fallback
+- No pre-check for WhatsApp availability (not supported by API)
 
 **Logging:**
 | Field | Description |
@@ -450,8 +504,46 @@ Middleware validates:
 
 ### Payment Security
 - No card data stored (handled by APS)
-- Webhook signature verification
-- Idempotency keys
+- Webhook signature verification (see below)
+- Idempotency keys (stored in payments table)
+
+### APS Webhook Signature Validation
+
+**Verification Flow:**
+```
+1. Receive webhook POST to /payments/webhook
+2. Capture raw request body (before JSON parsing)
+3. Extract signature from header (TBD: exact header name from APS docs)
+4. Extract timestamp/nonce if applicable (TBD: from APS docs)
+5. Compute expected signature using HMAC-SHA256 (TBD: confirm algorithm)
+6. Compare signatures using constant-time comparison
+7. IF mismatch → Reject with 401, log attempt
+8. IF match → Process webhook, return 200
+```
+
+**Replay Protection:**
+- Check timestamp is within 5-minute window (if provided by APS)
+- Store processed webhook IDs to prevent duplicate processing
+- Reject webhooks with previously seen IDs
+
+**Rejection Behavior:**
+- Return HTTP 401 for signature mismatch
+- Return HTTP 400 for malformed requests
+- Log all rejected webhooks with IP, headers, and body hash
+- Alert on repeated failures from same IP
+
+**Required Checklist:**
+| Step | Status |
+|------|--------|
+| Raw body capture middleware | TBD |
+| Signature header extraction | TBD (confirm header name) |
+| HMAC verification function | TBD (confirm algorithm) |
+| Timestamp validation | TBD (if APS provides) |
+| Idempotency check | TBD |
+| Rejection logging | TBD |
+
+**Implementation Notes:**
+> APS-specific values (header name, algorithm, secret rotation) must be confirmed from official APS documentation before implementation. Do not hardcode assumptions.
 
 ---
 
