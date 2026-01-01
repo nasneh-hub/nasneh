@@ -8,6 +8,7 @@ import cors from 'cors';
 import { config } from './config/env';
 import { authRoutes } from './modules/auth';
 import { vendorRouter as vendorProductsRouter, publicRouter as publicProductsRouter } from './modules/products';
+import { uploadRoutes } from './modules/upload';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -56,6 +57,9 @@ app.use(`${apiPrefix}/products`, publicProductsRouter);
 
 // Vendor routes (protected)
 app.use(`${apiPrefix}/vendor`, vendorProductsRouter);
+
+// Upload routes (protected)
+app.use(`${apiPrefix}/upload`, uploadRoutes);
 
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/users`, userRoutes);
