@@ -10,6 +10,7 @@ import { authRoutes } from './modules/auth';
 import { vendorRouter as vendorProductsRouter, publicRouter as publicProductsRouter } from './modules/products';
 import { uploadRoutes } from './modules/upload';
 import { vendorOrderRoutes, customerOrderRoutes } from './modules/orders';
+import { providerServicesRouter, publicServicesRouter } from './modules/services';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -65,6 +66,10 @@ app.use(`${apiPrefix}/upload`, uploadRoutes);
 // Order routes
 app.use(`${apiPrefix}/vendor/orders`, vendorOrderRoutes);
 app.use(`${apiPrefix}/orders`, customerOrderRoutes);
+
+// Services routes
+app.use(`${apiPrefix}/provider/services`, providerServicesRouter);
+app.use(`${apiPrefix}/services`, publicServicesRouter);
 
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/users`, userRoutes);
