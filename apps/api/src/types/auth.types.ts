@@ -147,6 +147,8 @@ export interface RefreshTokenResponse {
 export interface JwtPayload {
   userId: string;
   roles: UserRole[];
+  /** JWT ID for token blacklisting */
+  jti?: string;
   iat?: number;
   exp?: number;
 }
