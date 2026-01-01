@@ -2,10 +2,6 @@
 
 **Current release/tag:** v0.1.0-foundation
 
-## 🎉 Sprint 1 COMPLETE!
-
-All 18 tasks completed. Ready for PR merges and Sprint 2.
-
 ## Sprint 1 Progress
 | Task | Status | PR |
 |------|--------|-----|
@@ -20,22 +16,17 @@ All 18 tasks completed. Ready for PR merges and Sprint 2.
 | [PROD] Implement product images upload | ✅ Done | #27 |
 | [PROD] Implement product listing API | ✅ Done | #26 (included) |
 | [ORD] Create orders + order_items migrations | ✅ Done | #29 |
-| [ORD] Implement order status flow | ✅ Done | #30 |
-| [ORD] Implement order listing APIs | ✅ Done | #30 (included) |
-| [ORD] Implement create order endpoint | ✅ Done | #31 |
-| [PAY] Create payments + refunds migrations | ✅ Done | #32 |
-| [PAY] Implement APS payment initiation | ✅ Done | #33 |
-| [PAY] Implement APS webhook handler | ✅ Done | #34 |
-| [PAY] Implement audit logging | ✅ Done | #30 (included) |
+| [ORD] Implement order status flow | To Do | — |
+| [ORD] Implement order listing APIs | To Do | — |
+| [ORD] Implement create order endpoint | To Do | — |
+| [PAY] Create payments + refunds migrations | To Do | — |
+| [PAY] Implement APS payment initiation | To Do | — |
+| [PAY] Implement APS webhook handler | To Do | — |
+| [PAY] Implement audit logging | To Do | — |
 
-## Open PRs (Ready for Merge)
+## Open PRs
 | # | Title | Status |
 |---|-------|--------|
-| #34 | feat(payments): implement APS webhook handler | Open |
-| #33 | feat(payments): implement APS payment initiation | Open |
-| #32 | feat(db): create payments and refunds tables migration | Open |
-| #31 | feat(orders): implement create order endpoint | Open |
-| #30 | feat(orders): implement order status flow with audit logging | Open |
 | #29 | feat(db): create orders and order_items tables migration | Open |
 | #28 | docs: update PROJECT_STATUS.md with Sprint 1 progress | Open |
 | #27 | feat(upload): implement product image upload to S3 | Open |
@@ -62,12 +53,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. Merge all open PRs to main (in order: #21 → #34)
-2. Create v0.2.0-sprint1 tag
-3. Start Sprint 2 planning
+1. [ORD] Implement order status flow
+2. [ORD] Implement order listing APIs
+3. [ORD] Implement create order endpoint
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - COMPLETE 🎉
+**Last updated:** 2026-01-01 by Sprint 1 - Orders Migration
