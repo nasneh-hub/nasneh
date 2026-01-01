@@ -10,3 +10,9 @@ export {
   getOtpKey,
   getRateLimitKey,
 } from './redis';
+
+export {
+  SmsClient,
+  getSmsClient,
+  sendSmsOtp,
+} from './sms';
