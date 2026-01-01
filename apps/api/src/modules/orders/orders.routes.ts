@@ -9,6 +9,7 @@ import {
   getVendorOrderById,
   updateOrderStatus,
   getOrderHistory,
+  createOrder,
   getCustomerOrders,
   getCustomerOrderById,
   cancelOrder,
@@ -46,6 +47,9 @@ export const customerOrderRoutes: IRouter = Router();
 
 // All customer routes require authentication
 customerOrderRoutes.use(authMiddleware);
+
+// POST /orders - Create new order
+customerOrderRoutes.post('/', createOrder);
 
 // GET /orders - List customer's orders
 customerOrderRoutes.get('/', getCustomerOrders);

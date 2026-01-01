@@ -9,10 +9,15 @@ import {
   OrderNotFoundError,
   InvalidStatusTransitionError,
   UnauthorizedOrderAccessError,
+  VendorNotFoundError,
+  ProductNotFoundError,
+  ProductNotAvailableError,
+  ProductVendorMismatchError,
 } from './orders.service';
 import {
   updateOrderStatusSchema,
   orderQuerySchema,
+  createOrderSchema,
 } from '../../types/order.types';
 import { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { prisma } from '../../lib/db';
@@ -227,6 +232,68 @@ export async function getOrderHistory(
 // ===========================================
 // Customer Endpoints
 // ===========================================
+
+/**
+ * Create Order
+ * POST /orders
+ */
+export async function createOrder(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    // Validate input
+    const validation = createOrderSchema.safeParse(req.body);
+    if (!validation.success) {
+      res.status(400).json({
+        success: false,
+        error: 'Validation failed',
+        details: validation.error.flatten().fieldErrors,
+      });
+      return;
+    }
+
+    const result = await ordersService.createOrder({
+      customerId: req.user!.userId,
+      input: validation.data,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+
+    res.status(201).json(result);
+  } catch (error) {
+    if (error instanceof VendorNotFoundError) {
+      res.status(404).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+    if (error instanceof ProductNotFoundError) {
+      res.status(404).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+    if (error instanceof ProductNotAvailableError) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+    if (error instanceof ProductVendorMismatchError) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+    next(error);
+  }
+}
 
 /**
  * Get Customer Orders
