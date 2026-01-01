@@ -12,3 +12,15 @@ export {
 } from './redis';
 
 export { prisma } from './db';
+
+export {
+  WhatsAppClient,
+  getWhatsAppClient,
+  sendWhatsAppOtpWithTimeout,
+} from './whatsapp';
+
+export {
+  SmsClient,
+  getSmsClient,
+  sendSmsOtp,
+} from './sms';

@@ -5,7 +5,7 @@
  * Validates:
  * 1. Token signature
  * 2. Token expiry
- * 3. User exists & active
+ * 3. Token not blacklisted
  * 4. Role permissions
  */
 
@@ -23,11 +23,11 @@ export interface AuthenticatedRequest extends Request {
 /**
  * Auth middleware - validates JWT token
  */
-export function authMiddleware(
+export async function authMiddleware(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-): void {
+): Promise<void> {
   try {
     const authHeader = req.headers.authorization;
 
@@ -49,8 +49,8 @@ export function authMiddleware(
       return;
     }
 
-    // Verify token
-    const payload = authService.verifyAccessToken(token);
+    // Verify token (async - checks blacklist)
+    const payload = await authService.verifyAccessToken(token);
 
     // Attach user to request
     req.user = payload;
@@ -99,18 +99,18 @@ export function requireRoles(...allowedRoles: UserRole[]) {
 /**
  * Optional auth middleware - attaches user if token present, but doesn't require it
  */
-export function optionalAuth(
+export async function optionalAuth(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-): void {
+): Promise<void> {
   try {
     const authHeader = req.headers.authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
       if (token) {
-        const payload = authService.verifyAccessToken(token);
+        const payload = await authService.verifyAccessToken(token);
         req.user = payload;
       }
     }
