@@ -16,6 +16,7 @@ import {
   searchServices,
   getFeaturedServices,
 } from './services.controller';
+import { getServiceSlots } from '../availability/availability.routes';
 
 // ===========================================
 // Provider Routes (/provider/services)
@@ -68,6 +69,9 @@ publicServicesRouter.get('/category/:categoryId', getServicesByCategory);
 
 // GET /services/provider/:providerId - Get services by provider (public view)
 publicServicesRouter.get('/provider/:providerId', getServicesByProvider);
+
+// GET /services/:id/slots - Get available slots for a service
+publicServicesRouter.get('/:id/slots', getServiceSlots);
 
 // GET /services/:id - Get a specific service (must be last due to :id param)
 publicServicesRouter.get('/:id', getPublicServiceById);

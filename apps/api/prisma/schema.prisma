@@ -184,6 +184,9 @@ model ServiceProvider {
   user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   services              Service[]
   bookings              Booking[]
+  availabilityRules     AvailabilityRule[]
+  availabilityOverrides AvailabilityOverride[]
+  availabilitySettings  AvailabilitySettings?
 
   @@map("service_providers")
 }
@@ -554,4 +557,91 @@ model Booking {
   @@index([status])
   @@index([bookingNumber])
   @@map("bookings")
+}
+
+
+// ===========================================
+// Availability Enums
+// ===========================================
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+enum OverrideType {
+  AVAILABLE    // Override to make available (e.g., working on a holiday)
+  UNAVAILABLE  // Override to make unavailable (e.g., vacation day)
+}
+
+// ===========================================
+// Availability Rules
+// NOTE: Not in repo/docs - implementing minimal MVP defaults
+// Default timezone: Asia/Bahrain
+// ===========================================
+
+// Weekly recurring availability rules
+model AvailabilityRule {
+  id          String      @id @default(uuid())
+  providerId  String      @map("provider_id")
+  dayOfWeek   DayOfWeek   @map("day_of_week")
+  startTime   DateTime    @map("start_time") @db.Time(0) // e.g., 09:00
+  endTime     DateTime    @map("end_time") @db.Time(0)   // e.g., 17:00
+  isActive    Boolean     @default(true) @map("is_active")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  provider    ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, dayOfWeek, startTime, endTime])
+  @@index([providerId])
+  @@index([dayOfWeek])
+  @@map("availability_rules")
+}
+
+// Date-specific overrides (holidays, vacations, special hours)
+model AvailabilityOverride {
+  id          String       @id @default(uuid())
+  providerId  String       @map("provider_id")
+  date        DateTime     @db.Date
+  type        OverrideType
+  // If AVAILABLE, these define the available hours (null = use weekly rule times)
+  startTime   DateTime?    @map("start_time") @db.Time(0)
+  endTime     DateTime?    @map("end_time") @db.Time(0)
+  reason      String?      // e.g., "Holiday", "Vacation", "Special event"
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  provider    ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, date, startTime])
+  @@index([providerId])
+  @@index([date])
+  @@map("availability_overrides")
+}
+
+// Provider settings for availability (timezone, buffer times, etc.)
+model AvailabilitySettings {
+  id                  String   @id @default(uuid())
+  providerId          String   @unique @map("provider_id")
+  timezone            String   @default("Asia/Bahrain") // IANA timezone
+  slotDurationMinutes Int      @default(30) @map("slot_duration_minutes") // Default slot size
+  bufferBeforeMinutes Int      @default(0) @map("buffer_before_minutes") // Break before appointment
+  bufferAfterMinutes  Int      @default(0) @map("buffer_after_minutes")  // Break after appointment
+  minAdvanceHours     Int      @default(24) @map("min_advance_hours") // Minimum booking notice
+  maxAdvanceDays      Int      @default(30) @map("max_advance_days")  // How far ahead can book
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  provider            ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@map("availability_settings")
 }

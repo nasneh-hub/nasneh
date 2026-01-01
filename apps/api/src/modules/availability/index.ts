@@ -1,0 +1,28 @@
+/**
+ * Availability Module
+ * 
+ * Exports:
+ * - Routes for provider calendar management
+ * - Service functions for availability checking (used by bookings module)
+ */
+
+// Routes
+export { providerCalendarRouter, getServiceSlots } from './availability.routes';
+
+// Service functions (for bookings integration)
+export {
+  checkBookingAvailability,
+  getNextAvailableSlot,
+  getAvailableSlots,
+  getAvailableDates,
+  AvailabilityNotFoundError,
+  AvailabilityConflictError,
+  AvailabilityValidationError,
+} from './availability.service';
+
+// Repository (for advanced use cases)
+export {
+  availabilityRulesRepository,
+  availabilityOverridesRepository,
+  availabilitySettingsRepository,
+} from './availability.repository';
