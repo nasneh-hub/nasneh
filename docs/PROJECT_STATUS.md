@@ -128,12 +128,9 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 - Override precedence (date overrides > weekly rules)
 - Conflict detection hooks for bookings
 
-### Defaults (Not in docs - MVP assumptions)
-- Timezone: Asia/Bahrain
-- Slot duration: 30 minutes
-- Min advance: 24 hours
-- Max advance: 30 days
-- Buffer times: 0 minutes
+### Defaults (Configurable Per Provider)
+- **Source of Truth:** `apps/api/src/config/calendar.defaults.ts`
+- **Details:** These MVP defaults are used when creating new provider settings and can be overridden via environment variables. See `TECHNICAL_SPEC.md` for more details.
 
 ### Exported Hooks (for bookings module)
 - `checkBookingAvailability()` - Main validation hook

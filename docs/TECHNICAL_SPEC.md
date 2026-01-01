@@ -672,3 +672,38 @@ pnpm build
 ---
 
 **Document End**
+
+
+## 5. Availability System
+
+The availability system manages when services can be booked. It is designed to be flexible, allowing providers to set recurring weekly schedules and override them for specific dates.
+
+### 5.1. Data Model
+
+| Table | Description |
+|---|---|
+| `availability_rules` | Stores weekly recurring availability for providers (e.g., Mon 9am-5pm). |
+| `availability_overrides` | Stores exceptions to the weekly rules, such as holidays or special hours. |
+| `availability_settings` | Stores provider-level settings like timezone, slot duration, and buffers. |
+
+### 5.2. MVP Defaults (Configurable Per Provider)
+
+For the MVP, the following default values are used when a new provider's availability settings are created. These are configurable per provider via the API (`PATCH /provider/calendar/settings`).
+
+| Setting | Default Value | Environment Override |
+|---|---|---|
+| Timezone | `Asia/Bahrain` | `CALENDAR_DEFAULT_TIMEZONE` |
+| Slot Duration | `30` minutes | `CALENDAR_DEFAULT_SLOT_DURATION_MINUTES` |
+| Buffer Before | `0` minutes | `CALENDAR_DEFAULT_BUFFER_BEFORE_MINUTES` |
+| Buffer After | `0` minutes | `CALENDAR_DEFAULT_BUFFER_AFTER_MINUTES` |
+| Min. Advance Booking | `24` hours | `CALENDAR_DEFAULT_MIN_ADVANCE_HOURS` |
+| Max. Advance Booking | `30` days | `CALENDAR_DEFAULT_MAX_ADVANCE_DAYS` |
+
+These defaults are sourced from `apps/api/src/config/calendar.defaults.ts`.
+
+### 5.3. Logic & Precedence
+
+1.  **Date-Specific Overrides**: An `UNAVAILABLE` override for a full day makes the entire day unavailable. An `AVAILABLE` override replaces the weekly rule for that day with the specified hours.
+2.  **Weekly Rules**: If no overrides exist for a date, the system uses the `availability_rules` for that day of the week.
+3.  **Bookings & Buffers**: Existing bookings, along with their configured buffer times, are treated as unavailable blocks.
+4.  **Slot Generation**: The system generates time slots based on the `slotDurationMinutes` setting, excluding any blocks that are unavailable due to overrides, bookings, or buffers.
