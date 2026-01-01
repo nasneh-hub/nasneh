@@ -25,8 +25,8 @@ import {
   UserStatus,
 } from '../../types/auth.types';
 import { config } from '../../config/env';
-import { otpRepository, StoredOtp } from './otp.repository';
-import { getRedisClient } from '../../lib/redis';
+import { otpRepository } from './otp.repository';
+import { sendSmsOtp, getSmsClient } from '../../lib/sms';
 
 // ===========================================
 // In-memory stores (replace with DB in production)
@@ -60,42 +60,51 @@ export class AuthService {
    * @returns true if delivered, false otherwise
    */
   private async sendWhatsAppOtp(phone: string, otp: string): Promise<boolean> {
-    // TODO: Implement WhatsApp Business API integration
-    // For now, simulate delivery in development
+    // Development mode - mock delivery
     if (config.isDevelopment) {
       console.log(`[DEV] WhatsApp OTP for ${phone}: ${otp}`);
-      // Simulate WhatsApp delivery success
       return true;
     }
 
+    // Production mode - check configuration
     if (!config.whatsapp.isConfigured) {
-      console.warn('WhatsApp not configured, skipping...');
+      console.warn('[WhatsApp] Not configured, skipping...');
       return false;
     }
 
     try {
-      // WhatsApp Business API call would go here
-      // const response = await fetch(config.whatsapp.apiUrl, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${config.whatsapp.apiToken}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     messaging_product: 'whatsapp',
-      //     to: phone,
-      //     type: 'template',
-      //     template: {
-      //       name: 'otp_verification',
-      //       language: { code: 'en' },
-      //       components: [{ type: 'body', parameters: [{ type: 'text', text: otp }] }],
-      //     },
-      //   }),
-      // });
-      // return response.ok;
-      return false;
+      const response = await fetch(`${config.whatsapp.apiUrl}/${config.whatsapp.phoneNumberId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.whatsapp.apiToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          to: phone.replace('+', ''),
+          type: 'template',
+          template: {
+            name: 'otp_verification',
+            language: { code: 'en' },
+            components: [{
+              type: 'body',
+              parameters: [{ type: 'text', text: otp }],
+            }],
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        console.error('[WhatsApp] API error:', error);
+        return false;
+      }
+
+      const data = await response.json() as { messages?: Array<{ id?: string }> };
+      console.log(`[WhatsApp] OTP sent: ${data.messages?.[0]?.id}`);
+      return true;
     } catch (error) {
-      console.error('WhatsApp OTP failed:', error);
+      console.error('[WhatsApp] OTP failed:', error);
       return false;
     }
   }
@@ -104,25 +113,33 @@ export class AuthService {
    * Send OTP via SMS (AWS SNS)
    * @returns true if sent, false otherwise
    */
-  private async sendSmsOtp(phone: string, otp: string): Promise<boolean> {
-    // TODO: Implement AWS SNS integration
-    // For now, simulate delivery in development
+  private async sendSmsOtpInternal(phone: string, otp: string): Promise<boolean> {
+    // Development mode - mock delivery
     if (config.isDevelopment) {
       console.log(`[DEV] SMS OTP for ${phone}: ${otp}`);
       return true;
     }
 
+    // Production mode - use AWS SNS
+    const smsClient = getSmsClient();
+
+    if (!smsClient.isReady()) {
+      console.error('[SMS] AWS SNS not configured');
+      return false;
+    }
+
     try {
-      // AWS SNS call would go here
-      // const sns = new SNSClient({ region: config.aws.snsRegion });
-      // await sns.send(new PublishCommand({
-      //   PhoneNumber: phone,
-      //   Message: `Your Nasneh verification code: ${otp}. Valid for ${config.otp.expiryMinutes} minutes.`,
-      // }));
-      // return true;
+      const result = await sendSmsOtp(phone, otp);
+
+      if (result.success) {
+        console.log(`[SMS] OTP sent: ${result.messageId}`);
+        return true;
+      }
+
+      console.error('[SMS] OTP failed:', result.error);
       return false;
     } catch (error) {
-      console.error('SMS OTP failed:', error);
+      console.error('[SMS] OTP error:', error);
       return false;
     }
   }
@@ -136,9 +153,6 @@ export class AuthService {
     otp: string
   ): Promise<boolean> {
     return new Promise((resolve) => {
-      // In production, this would check delivery status via webhook
-      // For now, we simulate with a timeout
-
       const timeoutMs = config.otp.whatsappTimeoutSeconds * 1000;
 
       // Try sending WhatsApp OTP
@@ -170,7 +184,13 @@ export class AuthService {
   private logOtpDelivery(entry: OtpLogEntry): void {
     otpLogs.push(entry);
     // TODO: Persist to database for audit
-    console.log('[OTP Log]', JSON.stringify(entry));
+    console.log('[OTP Log]', JSON.stringify({
+      phone: entry.phone.slice(0, 7) + '****',
+      channel: entry.channel,
+      status: entry.status,
+      fallbackUsed: entry.fallbackUsed,
+      timestamp: entry.timestamp.toISOString(),
+    }));
   }
 
   /**
@@ -189,18 +209,29 @@ export class AuthService {
     let delivered = false;
 
     // Step 1: Try WhatsApp first with timeout
-    console.log(`[OTP] Attempting WhatsApp delivery to ${phone}...`);
+    console.log(`[OTP] Attempting WhatsApp delivery to ${phone.slice(0, 7)}****...`);
     delivered = await this.waitForWhatsAppDelivery(phone, otp);
 
     // Step 2: If WhatsApp fails/times out, fallback to SMS
     if (!delivered) {
-      console.log(`[OTP] WhatsApp failed/timeout, falling back to SMS for ${phone}...`);
+      console.log(`[OTP] WhatsApp failed/timeout, falling back to SMS...`);
       channel = OtpChannel.SMS;
       fallbackUsed = true;
-      delivered = await this.sendSmsOtp(phone, otp);
+
+      // Log WhatsApp failure
+      this.logOtpDelivery({
+        phone,
+        channel: OtpChannel.WHATSAPP,
+        status: OtpStatus.FAILED,
+        timestamp: new Date(),
+        fallbackUsed: true,
+      });
+
+      // Try SMS
+      delivered = await this.sendSmsOtpInternal(phone, otp);
     }
 
-    // Log the delivery attempt
+    // Log the final delivery attempt
     this.logOtpDelivery({
       phone,
       channel,

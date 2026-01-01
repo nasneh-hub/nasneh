@@ -7,8 +7,8 @@
 |------|--------|-----|
 | [AUTH] Setup auth module structure | ✅ Done | #19 |
 | [AUTH] Implement OTP request endpoint | ✅ Done | #20 |
-| [AUTH] Implement WhatsApp OTP delivery | To Do | — |
-| [AUTH] Implement SMS fallback | To Do | — |
+| [AUTH] Implement WhatsApp OTP delivery | ✅ Done | #21 |
+| [AUTH] Implement SMS fallback | ✅ Done | #22 |
 | [AUTH] Implement OTP verify endpoint | To Do | — |
 | [AUTH] Implement refresh token flow | To Do | — |
 
@@ -28,12 +28,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. [AUTH] Implement WhatsApp OTP delivery
-2. [AUTH] Implement SMS fallback
-3. [AUTH] Implement OTP verify endpoint
+1. [AUTH] Implement OTP verify endpoint
+2. [AUTH] Implement refresh token flow
+3. [PROD] Create products table migration
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - OTP Request Endpoint
+**Last updated:** 2026-01-01 by Sprint 1 - SMS Fallback Implementation
