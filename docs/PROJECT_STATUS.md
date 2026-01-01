@@ -13,13 +13,12 @@
 | [AUTH] Implement refresh token flow | ✅ Done | #24 |
 | [PROD] Create products table migration | ✅ Done | #25 |
 | [PROD] Implement product CRUD API | ✅ Done | #26 |
-| [PROD] Implement product image upload | To Do | — |
-| [PROD] Implement categories API | To Do | — |
-| [PROD] Implement product search | To Do | — |
-| [ORD] Create orders table migration | To Do | — |
+| [PROD] Implement product images upload | ✅ Done | #27 |
+| [PROD] Implement product listing API | To Do | — |
+| [ORD] Create orders + order_items migrations | To Do | — |
 | [ORD] Implement order status flow | To Do | — |
 | [ORD] Implement order listing APIs | To Do | — |
-| [ORD] Implement order creation | To Do | — |
+| [ORD] Implement create order endpoint | To Do | — |
 | [PAY] Create payments + refunds migrations | To Do | — |
 | [PAY] Implement APS payment initiation | To Do | — |
 | [PAY] Implement APS webhook handler | To Do | — |
@@ -28,6 +27,7 @@
 ## Open PRs
 | # | Title | Status |
 |---|-------|--------|
+| #27 | feat(upload): implement product image upload to S3 | Open |
 | #26 | feat(products): implement product CRUD API | Open |
 | #25 | feat(db): create products table migration | Open |
 | #24 | feat(auth): implement refresh token flow | Open |
@@ -51,12 +51,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. [PROD] Implement product image upload
-2. [PROD] Implement categories API
-3. [PROD] Implement product search
+1. [PROD] Implement product listing API
+2. [ORD] Create orders + order_items migrations
+3. [ORD] Implement order status flow
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - Product CRUD API
+**Last updated:** 2026-01-01 by Sprint 1 - Product Image Upload
