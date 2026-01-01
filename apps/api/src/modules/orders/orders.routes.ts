@@ -9,16 +9,7 @@ import {
   getVendorOrderById,
   updateOrderStatus,
   getOrderHistory,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   createOrder,
-=======
->>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
-=======
->>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
-=======
->>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
   getCustomerOrders,
   getCustomerOrderById,
   cancelOrder,
@@ -57,18 +48,9 @@ export const customerOrderRoutes: IRouter = Router();
 // All customer routes require authentication
 customerOrderRoutes.use(authMiddleware);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 // POST /orders - Create new order
 customerOrderRoutes.post('/', createOrder);
 
-=======
->>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
-=======
->>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
-=======
->>>>>>> c1acc74 (feat(orders): implement order status flow with audit logging)
 // GET /orders - List customer's orders
 customerOrderRoutes.get('/', getCustomerOrders);
 
