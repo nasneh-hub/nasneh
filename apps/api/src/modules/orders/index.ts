@@ -10,6 +10,10 @@ export {
   OrderNotFoundError,
   InvalidStatusTransitionError,
   UnauthorizedOrderAccessError,
+  VendorNotFoundError,
+  ProductNotFoundError,
+  ProductNotAvailableError,
+  ProductVendorMismatchError,
 } from './orders.service';
 export * from './orders.controller';
 export { vendorOrderRoutes, customerOrderRoutes } from './orders.routes';
