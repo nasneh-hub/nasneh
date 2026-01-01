@@ -26,7 +26,7 @@ import {
 } from '../../types/auth.types';
 import { config } from '../../config/env';
 import { otpRepository } from './otp.repository';
-import { sendSmsOtp, getSmsClient } from '../../lib/sms';
+import { otpDeliveryService } from './otp-delivery.service';
 
 // ===========================================
 // In-memory stores (replace with DB in production)
@@ -56,129 +56,6 @@ export class AuthService {
   }
 
   /**
-   * Send OTP via WhatsApp Business API
-   * @returns true if delivered, false otherwise
-   */
-  private async sendWhatsAppOtp(phone: string, otp: string): Promise<boolean> {
-    // Development mode - mock delivery
-    if (config.isDevelopment) {
-      console.log(`[DEV] WhatsApp OTP for ${phone}: ${otp}`);
-      return true;
-    }
-
-    // Production mode - check configuration
-    if (!config.whatsapp.isConfigured) {
-      console.warn('[WhatsApp] Not configured, skipping...');
-      return false;
-    }
-
-    try {
-      const response = await fetch(`${config.whatsapp.apiUrl}/${config.whatsapp.phoneNumberId}/messages`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${config.whatsapp.apiToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messaging_product: 'whatsapp',
-          to: phone.replace('+', ''),
-          type: 'template',
-          template: {
-            name: 'otp_verification',
-            language: { code: 'en' },
-            components: [{
-              type: 'body',
-              parameters: [{ type: 'text', text: otp }],
-            }],
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        console.error('[WhatsApp] API error:', error);
-        return false;
-      }
-
-      const data = await response.json() as { messages?: Array<{ id?: string }> };
-      console.log(`[WhatsApp] OTP sent: ${data.messages?.[0]?.id}`);
-      return true;
-    } catch (error) {
-      console.error('[WhatsApp] OTP failed:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Send OTP via SMS (AWS SNS)
-   * @returns true if sent, false otherwise
-   */
-  private async sendSmsOtpInternal(phone: string, otp: string): Promise<boolean> {
-    // Development mode - mock delivery
-    if (config.isDevelopment) {
-      console.log(`[DEV] SMS OTP for ${phone}: ${otp}`);
-      return true;
-    }
-
-    // Production mode - use AWS SNS
-    const smsClient = getSmsClient();
-
-    if (!smsClient.isReady()) {
-      console.error('[SMS] AWS SNS not configured');
-      return false;
-    }
-
-    try {
-      const result = await sendSmsOtp(phone, otp);
-
-      if (result.success) {
-        console.log(`[SMS] OTP sent: ${result.messageId}`);
-        return true;
-      }
-
-      console.error('[SMS] OTP failed:', result.error);
-      return false;
-    } catch (error) {
-      console.error('[SMS] OTP error:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Wait for WhatsApp delivery with timeout
-   * Returns true if delivered within timeout, false otherwise
-   */
-  private async waitForWhatsAppDelivery(
-    phone: string,
-    otp: string
-  ): Promise<boolean> {
-    return new Promise((resolve) => {
-      const timeoutMs = config.otp.whatsappTimeoutSeconds * 1000;
-
-      // Try sending WhatsApp OTP
-      this.sendWhatsAppOtp(phone, otp).then((sent) => {
-        if (!sent) {
-          resolve(false);
-          return;
-        }
-
-        // In development, assume immediate delivery
-        if (config.isDevelopment) {
-          resolve(true);
-          return;
-        }
-
-        // In production, wait for delivery confirmation or timeout
-        // This would be replaced with webhook-based confirmation
-        setTimeout(() => {
-          // Assume delivered if no failure callback
-          resolve(true);
-        }, timeoutMs);
-      });
-    });
-  }
-
-  /**
    * Log OTP delivery attempt
    */
   private logOtpDelivery(entry: OtpLogEntry): void {
@@ -204,43 +81,11 @@ export class AuthService {
     const otp = this.generateOtp();
     const expiresAt = Date.now() + config.otp.expiryMinutes * 60 * 1000;
 
-    let channel: OtpChannel = OtpChannel.WHATSAPP;
-    let fallbackUsed = false;
-    let delivered = false;
+    // Use OTP delivery service for WhatsApp → SMS fallback
+    console.log(`[OTP] Requesting OTP delivery to ${phone}...`);
+    const deliveryResult = await otpDeliveryService.deliver(phone, otp);
 
-    // Step 1: Try WhatsApp first with timeout
-    console.log(`[OTP] Attempting WhatsApp delivery to ${phone.slice(0, 7)}****...`);
-    delivered = await this.waitForWhatsAppDelivery(phone, otp);
-
-    // Step 2: If WhatsApp fails/times out, fallback to SMS
-    if (!delivered) {
-      console.log(`[OTP] WhatsApp failed/timeout, falling back to SMS...`);
-      channel = OtpChannel.SMS;
-      fallbackUsed = true;
-
-      // Log WhatsApp failure
-      this.logOtpDelivery({
-        phone,
-        channel: OtpChannel.WHATSAPP,
-        status: OtpStatus.FAILED,
-        timestamp: new Date(),
-        fallbackUsed: true,
-      });
-
-      // Try SMS
-      delivered = await this.sendSmsOtpInternal(phone, otp);
-    }
-
-    // Log the final delivery attempt
-    this.logOtpDelivery({
-      phone,
-      channel,
-      status: delivered ? OtpStatus.SENT : OtpStatus.FAILED,
-      timestamp: new Date(),
-      fallbackUsed,
-    });
-
-    if (!delivered) {
+    if (!deliveryResult.success) {
       throw new Error('Failed to send OTP. Please try again.');
     }
 
@@ -250,16 +95,16 @@ export class AuthService {
       phone,
       expiresAt,
       attempts: 0,
-      channel,
+      channel: deliveryResult.channel,
     });
 
     return {
       success: true,
-      message: fallbackUsed
+      message: deliveryResult.fallbackUsed
         ? 'OTP sent via SMS (WhatsApp unavailable)'
         : 'OTP sent via WhatsApp',
-      channel,
-      fallbackUsed,
+      channel: deliveryResult.channel,
+      fallbackUsed: deliveryResult.fallbackUsed,
       expiresIn: config.otp.expiryMinutes * 60,
     };
   }
