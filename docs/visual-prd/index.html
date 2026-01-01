@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nasneh v2 - Visual PRD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       NASNEH DESIGN SYSTEM - CSS TOKENS
+       Following /docs/DESIGN_SYSTEM.md strictly
+       ======================================== */
+    
+    :root {
+      /* Font */
+      --font-family: 'Vazirmatn', system-ui, sans-serif;
+      
+      /* Border Radius - 12px everywhere */
+      --radius: 12px;
+      
+      /* Colors - Light Mode */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #FAFAFA;
+      --bg-tertiary: #F5F5F5;
+      --input-bg: #F5F5F5;
+      --hover-bg: #F3F4F6;
+      --text-primary: #000000;
+      --text-secondary: #6B7280;
+      --text-tertiary: #9CA3AF;
+      
+      /* Semantic Colors */
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 12px;
+      --space-lg: 16px;
+      --space-xl: 24px;
+      --space-2xl: 32px;
+      --space-3xl: 48px;
+      --space-4xl: 64px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    
+    /* ========================================
+       NAVIGATION & LAYOUT
+       ======================================== */
+    
+    .prd-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 280px;
+      background: var(--bg-primary);
+      padding: var(--space-xl);
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.05);
+    }
+    
+    .sidebar-logo {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    
+    .sidebar-section {
+      margin-bottom: var(--space-xl);
+    }
+    
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--space-md);
+    }
+    
+    .sidebar-nav {
+      list-style: none;
+    }
+    
+    .sidebar-nav li {
+      margin-bottom: var(--space-xs);
+    }
+    
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    
+    .sidebar-nav a:hover {
+      background: var(--hover-bg);
+      color: var(--text-primary);
+    }
+    
+    .sidebar-nav a.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+    }
+    
+    .sidebar-nav .badge {
+      margin-right: auto;
+      padding: 2px 8px;
+      border-radius: var(--radius);
+      font-size: 10px;
+      font-weight: 600;
+    }
+    
+    .badge-mvp {
+      background: var(--success);
+      color: white;
+    }
+    
+    .badge-later {
+      background: var(--text-tertiary);
+      color: white;
+    }
+    
+    .main-content {
+      flex: 1;
+      margin-right: 280px;
+      padding: var(--space-2xl);
+    }
+    
+    /* ========================================
+       SCREEN VIEWER
+       ======================================== */
+    
+    .screen-viewer {
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    
+    .screen-header {
+      padding: var(--space-lg) var(--space-xl);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .screen-id {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      font-family: monospace;
+    }
+    
+    .screen-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .screen-tag {
+      padding: 4px 12px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .tag-mvp {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    
+    .tag-later {
+      background: #E5E7EB;
+      color: #374151;
+    }
+    
+    .screen-content {
+      padding: var(--space-xl);
+      min-height: 600px;
+    }
+    
+    .screen-annotations {
+      padding: var(--space-lg) var(--space-xl);
+      background: var(--bg-secondary);
+    }
+    
+    .annotation-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+    }
+    
+    .annotation-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+    
+    .annotation-item {
+      background: var(--bg-primary);
+      padding: var(--space-md);
+      border-radius: var(--radius);
+    }
+    
+    .annotation-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-xs);
+    }
+    
+    .annotation-value {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    /* ========================================
+       PHONE MOCKUP
+       ======================================== */
+    
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: var(--bg-primary);
+      border-radius: 40px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .phone-notch {
+      width: 150px;
+      height: 30px;
+      background: var(--text-primary);
+      border-radius: 0 0 20px 20px;
+      margin: 0 auto;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .phone-screen {
+      height: 100%;
+      padding-top: 44px;
+      overflow-y: auto;
+    }
+    
+    /* ========================================
+       UI COMPONENTS (Design System Compliant)
+       ======================================== */
+    
+    /* Buttons - NO BORDERS */
+    .btn {
+      height: 48px;
+      padding: 0 var(--space-xl);
+      border-radius: var(--radius);
+      font-family: var(--font-family);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+    
+    .btn-primary {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+    }
+    
+    .btn-primary:hover {
+      background: #1F1F1F;
+    }
+    
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--hover-bg);
+    }
+    
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+    }
+    
+    .btn-ghost:hover {
+      background: var(--hover-bg);
+    }
+    
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    
+    .btn-full {
+      width: 100%;
+    }
+    
+    /* Inputs - NO BORDERS */
+    .input {
+      height: 48px;
+      padding: 0 var(--space-lg);
+      background: var(--input-bg);
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-family);
+      font-size: 16px;
+      width: 100%;
+      outline: none;
+    }
+    
+    .input:focus {
+      box-shadow: 0 0 0 2px var(--text-primary);
+    }
+    
+    .input-error {
+      background: #FEE2E2;
+    }
+    
+    .input-success {
+      background: #D1FAE5;
+    }
+    
+    /* Cards - NO BORDERS */
+    .card {
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: var(--space-lg);
+    }
+    
+    .card-hover:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Status Badges */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .status-success {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    
+    .status-warning {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    
+    .status-danger {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+    
+    .status-info {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+    
+    .status-neutral {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+    
+    /* Navigation Bar */
+    .navbar {
+      height: 56px;
+      padding: 0 var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-primary);
+    }
+    
+    .navbar-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .navbar-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+    
+    .navbar-icon:hover {
+      background: var(--hover-bg);
+    }
+    
+    /* Bottom Tab Bar */
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 83px;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      padding-top: var(--space-sm);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      cursor: pointer;
+    }
+    
+    .tab-item.active {
+      color: var(--text-primary);
+    }
+    
+    .tab-icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    /* List Items */
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      margin-bottom: var(--space-sm);
+      cursor: pointer;
+    }
+    
+    .list-item:hover {
+      background: var(--hover-bg);
+    }
+    
+    .list-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    .list-content {
+      flex: 1;
+    }
+    
+    .list-title {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    
+    .list-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    /* Form Groups */
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+    }
+    
+    .form-hint {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: var(--space-xs);
+    }
+    
+    /* OTP Input */
+    .otp-container {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      direction: ltr;
+    }
+    
+    .otp-input {
+      width: 48px;
+      height: 56px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      background: var(--input-bg);
+      border: none;
+      border-radius: var(--radius);
+    }
+    
+    .otp-input:focus {
+      box-shadow: 0 0 0 2px var(--text-primary);
+    }
+    
+    /* Product Card */
+    .product-card {
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 160px;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+    }
+    
+    .product-info {
+      padding: var(--space-md);
+    }
+    
+    .product-name {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .product-price {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .product-price strong {
+      color: var(--text-primary);
+      font-size: 16px;
+    }
+    
+    /* Dashboard Stats */
+    .stat-card {
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      padding: var(--space-lg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    .stat-change {
+      font-size: 12px;
+      margin-top: var(--space-xs);
+    }
+    
+    .stat-change.positive {
+      color: var(--success);
+    }
+    
+    .stat-change.negative {
+      color: var(--danger);
+    }
+    
+    /* Table */
+    .table-container {
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .table th {
+      text-align: right;
+      padding: var(--space-md) var(--space-lg);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      background: var(--bg-secondary);
+    }
+    
+    .table td {
+      padding: var(--space-md) var(--space-lg);
+      font-size: 14px;
+    }
+    
+    .table tr:hover td {
+      background: var(--hover-bg);
+    }
+    
+    /* Utility Classes */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-secondary { color: var(--text-secondary); }
+    .text-tertiary { color: var(--text-tertiary); }
+    .text-success { color: var(--success); }
+    .text-danger { color: var(--danger); }
+    .text-warning { color: var(--warning); }
+    .font-bold { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .font-medium { font-weight: 500; }
+    .mt-sm { margin-top: var(--space-sm); }
+    .mt-md { margin-top: var(--space-md); }
+    .mt-lg { margin-top: var(--space-lg); }
+    .mt-xl { margin-top: var(--space-xl); }
+    .mb-sm { margin-bottom: var(--space-sm); }
+    .mb-md { margin-bottom: var(--space-md); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mb-xl { margin-bottom: var(--space-xl); }
+    .p-lg { padding: var(--space-lg); }
+    .p-xl { padding: var(--space-xl); }
+    .gap-sm { gap: var(--space-sm); }
+    .gap-md { gap: var(--space-md); }
+    .gap-lg { gap: var(--space-lg); }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .grid { display: grid; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .hidden { display: none; }
+    
+    /* Print Styles for PDF */
+    @media print {
+      .sidebar { display: none; }
+      .main-content { margin-right: 0; }
+      .screen-viewer { 
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 40px;
+      }
+      .phone-frame {
+        box-shadow: none;
+        border: 1px solid #E5E7EB;
+      }
+    }
+    
+    /* Screen Sections */
+    .screen-section {
+      display: none;
+    }
+    
+    .screen-section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="prd-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="currentColor">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8"/>
+          <path d="M30 50 Q50 30 70 50 Q50 70 30 50" fill="currentColor"/>
+        </svg>
+        Nasneh PRD
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">المصادقة والتسجيل</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="auth-splash" class="active">شاشة البداية <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="auth-phone">إدخال رقم الهاتف <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="auth-otp">التحقق من OTP <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="auth-otp-fallback">SMS Fallback <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="auth-profile">إكمال الملف الشخصي <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="auth-role">اختيار الدور <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">المنتجات والتسوق</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="products-home">الصفحة الرئيسية <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="products-list">قائمة المنتجات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="products-detail">تفاصيل المنتج <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="products-cart">سلة التسوق <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="products-checkout">إتمام الطلب <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="products-search">البحث المتقدم <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">الخدمات والحجوزات</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="services-list">قائمة الخدمات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="services-detail">تفاصيل الخدمة <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="services-provider">صفحة مقدم الخدمة <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="booking-date">اختيار التاريخ <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="booking-time">اختيار الوقت <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="booking-confirm">تأكيد الحجز <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="booking-success">نجاح الحجز <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="booking-reschedule">إعادة الجدولة <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">الطلبات والتوصيل</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="orders-list">قائمة الطلبات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="orders-detail">تفاصيل الطلب <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="orders-tracking">تتبع الطلب <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="orders-review">تقييم الطلب <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="orders-history">سجل الطلبات <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">المدفوعات</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="payment-methods">طرق الدفع <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="payment-aps">دفع APS <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="payment-success">نجاح الدفع <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="payment-refund">طلب استرداد <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="payment-wallet">المحفظة <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">لوحة البائع</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="vendor-dashboard">لوحة التحكم <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="vendor-products">إدارة المنتجات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="vendor-add-product">إضافة منتج <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="vendor-orders">الطلبات الواردة <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="vendor-order-detail">تفاصيل الطلب <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="vendor-analytics">التحليلات <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">لوحة مقدم الخدمة</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="provider-dashboard">لوحة التحكم <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="provider-services">إدارة الخدمات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="provider-bookings">الحجوزات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="provider-calendar">التقويم <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="provider-availability">إدارة التوفر <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">لوحة الإدارة</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" data-screen="admin-dashboard">لوحة التحكم <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="admin-users">إدارة المستخدمين <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="admin-vendors">إدارة البائعين <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="admin-orders">إدارة الطلبات <span class="badge badge-mvp">MVP</span></a></li>
+          <li><a href="#" data-screen="admin-reports">التقارير <span class="badge badge-later">Later</span></a></li>
+          <li><a href="#" data-screen="admin-settings">الإعدادات <span class="badge badge-later">Later</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- AUTH SCREENS -->
+      
+      <!-- AUTH-001: Splash Screen -->
+      <section id="auth-splash" class="screen-section active">
+        <div class="screen-viewer">
+          <div class="screen-header">
+            <span class="screen-id">AUTH-001</span>
+            <span class="screen-title">شاشة البداية</span>
+            <span class="screen-tag tag-mvp">MVP</span>
+          </div>
+          <div class="screen-content">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px;">
+                <svg width="80" height="80" viewBox="0 0 100 100" fill="currentColor" style="margin-bottom: 24px;">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8"/>
+                  <path d="M30 50 Q50 30 70 50 Q50 70 30 50" fill="currentColor"/>
+                </svg>
+                <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">نسنه</h1>
+                <p style="color: var(--text-secondary); text-align: center; margin-bottom: 48px;">مني الك ومنك الي</p>
+                <button class="btn btn-primary btn-full" onclick="showScreen('auth-phone')">ابدأ الآن</button>
+                <p style="font-size: 14px; color: var(--text-tertiary); margin-top: 16px;">
+                  بالمتابعة، أنت توافق على <a href="#" style="color: var(--text-primary);">الشروط والأحكام</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="screen-annotations">
+            <div class="annotation-title">Build Annotations</div>
+            <div class="annotation-grid">
+              <div class="annotation-item">
+                <div class="annotation-label">Purpose</div>
+                <div class="annotation-value">Brand introduction, entry point to auth flow</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Entry Point</div>
+                <div class="annotation-value">App launch (unauthenticated)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Exit Points</div>
+                <div class="annotation-value">AUTH-002 (Phone Input)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">ClickUp Epic</div>
+                <div class="annotation-value">Auth</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Related Tasks</div>
+                <div class="annotation-value">[AUTH] Setup auth module structure</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Notes</div>
+                <div class="annotation-value">Logo uses currentColor for theme adaptation</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- AUTH-002: Phone Input -->
+      <section id="auth-phone" class="screen-section">
+        <div class="screen-viewer">
+          <div class="screen-header">
+            <span class="screen-id">AUTH-002</span>
+            <span class="screen-title">إدخال رقم الهاتف</span>
+            <span class="screen-tag tag-mvp">MVP</span>
+          </div>
+          <div class="screen-content">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="navbar">
+                  <div class="navbar-icon" onclick="showScreen('auth-splash')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                  </div>
+                  <span class="navbar-title">تسجيل الدخول</span>
+                  <div style="width: 40px;"></div>
+                </div>
+                <div style="padding: 24px;">
+                  <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 8px;">أدخل رقم هاتفك</h2>
+                  <p style="color: var(--text-secondary); margin-bottom: 32px;">سنرسل لك رمز التحقق عبر واتساب</p>
+                  
+                  <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <div style="display: flex; gap: 12px;">
+                      <div style="width: 100px; height: 48px; background: var(--input-bg); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span>🇸🇦</span>
+                        <span>+966</span>
+                      </div>
+                      <input type="tel" class="input" placeholder="5XX XXX XXXX" dir="ltr" style="flex: 1;">
+                    </div>
+                  </div>
+                  
+                  <button class="btn btn-primary btn-full mt-xl" onclick="showScreen('auth-otp')">إرسال رمز التحقق</button>
+                  
+                  <div style="margin-top: 24px; padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <svg width="24" height="24" fill="#25D366" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                      </svg>
+                      <div>
+                        <div style="font-weight: 500; font-size: 14px;">سنرسل الرمز عبر واتساب</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">أسرع وأكثر أماناً</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-annotations">
+            <div class="annotation-title">Build Annotations</div>
+            <div class="annotation-grid">
+              <div class="annotation-item">
+                <div class="annotation-label">Purpose</div>
+                <div class="annotation-value">Collect phone number for OTP authentication</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Entry Point</div>
+                <div class="annotation-value">AUTH-001 (Splash)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Exit Points</div>
+                <div class="annotation-value">AUTH-003 (OTP Verify)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">API Endpoint</div>
+                <div class="annotation-value">POST /api/auth/otp/request</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Related Tasks</div>
+                <div class="annotation-value">[AUTH] Implement OTP request endpoint</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Validation</div>
+                <div class="annotation-value">Saudi phone format: 5XXXXXXXX</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- AUTH-003: OTP Verification -->
+      <section id="auth-otp" class="screen-section">
+        <div class="screen-viewer">
+          <div class="screen-header">
+            <span class="screen-id">AUTH-003</span>
+            <span class="screen-title">التحقق من OTP</span>
+            <span class="screen-tag tag-mvp">MVP</span>
+          </div>
+          <div class="screen-content">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="navbar">
+                  <div class="navbar-icon" onclick="showScreen('auth-phone')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                  </div>
+                  <span class="navbar-title">التحقق</span>
+                  <div style="width: 40px;"></div>
+                </div>
+                <div style="padding: 24px; text-align: center;">
+                  <div style="width: 64px; height: 64px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                    <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                  </div>
+                  <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 8px;">أدخل رمز التحقق</h2>
+                  <p style="color: var(--text-secondary); margin-bottom: 8px;">تم إرسال الرمز عبر واتساب إلى</p>
+                  <p style="font-weight: 600; margin-bottom: 32px; direction: ltr;">+966 5XX XXX XXX</p>
+                  
+                  <div class="otp-container mb-xl">
+                    <input type="text" class="otp-input" maxlength="1" value="5">
+                    <input type="text" class="otp-input" maxlength="1" value="2">
+                    <input type="text" class="otp-input" maxlength="1" value="8">
+                    <input type="text" class="otp-input" maxlength="1" value="">
+                    <input type="text" class="otp-input" maxlength="1" value="">
+                    <input type="text" class="otp-input" maxlength="1" value="">
+                  </div>
+                  
+                  <div id="otp-timer" style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                      </svg>
+                      <span>جاري الانتظار... <strong id="countdown">10</strong> ثانية</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 8px;">
+                      إذا لم يصل الرمز، سنرسله عبر SMS
+                    </div>
+                  </div>
+                  
+                  <button class="btn btn-primary btn-full" onclick="showScreen('auth-profile')">تحقق</button>
+                  
+                  <button class="btn btn-ghost btn-full mt-lg" onclick="showScreen('auth-otp-fallback')">
+                    لم يصلني الرمز؟ إرسال SMS
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-annotations">
+            <div class="annotation-title">Build Annotations</div>
+            <div class="annotation-grid">
+              <div class="annotation-item">
+                <div class="annotation-label">Purpose</div>
+                <div class="annotation-value">Verify OTP code sent via WhatsApp</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Entry Point</div>
+                <div class="annotation-value">AUTH-002 (Phone Input)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Exit Points</div>
+                <div class="annotation-value">AUTH-005 (Profile) or AUTH-004 (SMS Fallback)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">API Endpoint</div>
+                <div class="annotation-value">POST /api/auth/otp/verify</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Related Tasks</div>
+                <div class="annotation-value">[AUTH] Implement OTP verify endpoint, [AUTH] Implement WhatsApp OTP delivery</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Critical Logic</div>
+                <div class="annotation-value">10s timer → auto SMS fallback if WhatsApp fails</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- AUTH-004: SMS Fallback -->
+      <section id="auth-otp-fallback" class="screen-section">
+        <div class="screen-viewer">
+          <div class="screen-header">
+            <span class="screen-id">AUTH-004</span>
+            <span class="screen-title">SMS Fallback</span>
+            <span class="screen-tag tag-mvp">MVP</span>
+          </div>
+          <div class="screen-content">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="navbar">
+                  <div class="navbar-icon" onclick="showScreen('auth-otp')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                  </div>
+                  <span class="navbar-title">التحقق عبر SMS</span>
+                  <div style="width: 40px;"></div>
+                </div>
+                <div style="padding: 24px; text-align: center;">
+                  <div style="width: 64px; height: 64px; background: var(--info); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                    <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                    </svg>
+                  </div>
+                  <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 8px;">تم إرسال SMS</h2>
+                  <p style="color: var(--text-secondary); margin-bottom: 8px;">تم إرسال رمز التحقق عبر رسالة نصية إلى</p>
+                  <p style="font-weight: 600; margin-bottom: 32px; direction: ltr;">+966 5XX XXX XXX</p>
+                  
+                  <div class="otp-container mb-xl">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                  </div>
+                  
+                  <div style="padding: 12px 16px; background: #DBEAFE; border-radius: var(--radius); margin-bottom: 24px;">
+                    <div style="font-size: 14px; color: #1E40AF;">
+                      💡 تحقق من صندوق الرسائل النصية
+                    </div>
+                  </div>
+                  
+                  <button class="btn btn-primary btn-full" onclick="showScreen('auth-profile')">تحقق</button>
+                  
+                  <div style="margin-top: 24px; color: var(--text-secondary); font-size: 14px;">
+                    لم يصلك الرمز؟ <button class="btn btn-ghost" style="height: auto; padding: 0; text-decoration: underline;">إعادة الإرسال</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-annotations">
+            <div class="annotation-title">Build Annotations</div>
+            <div class="annotation-grid">
+              <div class="annotation-item">
+                <div class="annotation-label">Purpose</div>
+                <div class="annotation-value">Fallback OTP via SMS when WhatsApp fails</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Entry Point</div>
+                <div class="annotation-value">AUTH-003 (after 10s timeout or manual trigger)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Exit Points</div>
+                <div class="annotation-value">AUTH-005 (Profile)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">API Endpoint</div>
+                <div class="annotation-value">POST /api/auth/otp/request (channel: sms)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Related Tasks</div>
+                <div class="annotation-value">[AUTH] Implement SMS fallback</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Provider</div>
+                <div class="annotation-value">AWS SNS for SMS delivery</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- AUTH-005: Profile Completion -->
+      <section id="auth-profile" class="screen-section">
+        <div class="screen-viewer">
+          <div class="screen-header">
+            <span class="screen-id">AUTH-005</span>
+            <span class="screen-title">إكمال الملف الشخصي</span>
+            <span class="screen-tag tag-mvp">MVP</span>
+          </div>
+          <div class="screen-content">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="navbar">
+                  <div style="width: 40px;"></div>
+                  <span class="navbar-title">أكمل ملفك الشخصي</span>
+                  <div style="width: 40px;"></div>
+                </div>
+                <div style="padding: 24px;">
+                  <div style="text-align: center; margin-bottom: 32px;">
+                    <div style="width: 96px; height: 96px; background: var(--bg-tertiary); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                      <svg width="40" height="40" fill="var(--text-tertiary)" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    </div>
+                    <button class="btn btn-secondary" style="height: 36px; font-size: 14px;">
+                      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z"/>
+                      </svg>
+                      إضافة صورة
+                    </button>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="form-label">الاسم الكامل *</label>
+                    <input type="text" class="input" placeholder="أدخل اسمك الكامل">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="form-label">البريد الإلكتروني (اختياري)</label>
+                    <input type="email" class="input" placeholder="example@email.com" dir="ltr">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="form-label">المدينة</label>
+                    <div style="height: 48px; background: var(--input-bg); border-radius: var(--radius); display: flex; align-items: center; padding: 0 16px; justify-content: space-between;">
+                      <span>الرياض</span>
+                      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M6 9l6 6 6-6"/>
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <button class="btn btn-primary btn-full mt-xl" onclick="showScreen('products-home')">حفظ ومتابعة</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-annotations">
+            <div class="annotation-title">Build Annotations</div>
+            <div class="annotation-grid">
+              <div class="annotation-item">
+                <div class="annotation-label">Purpose</div>
+                <div class="annotation-value">Collect user profile info after OTP verification</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Entry Point</div>
+                <div class="annotation-value">AUTH-003/004 (OTP Verify)</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Exit Points</div>
+                <div class="annotation-value">PROD-001 (Home) for customers</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">API Endpoint</div>
+                <div class="annotation-value">PATCH /api/users/me</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Related Tasks</div>
+                <div class="annotation-value">User & Roles Epic</div>
+              </div>
+              <div class="annotation-item">
+                <div class="annotation-label">Required Fields</div>
+                <div class="annotation-value">name (required), email (optional), city (required)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Continue with more screens... -->
+      
+    </main>
+  </div>
+  
+  <script>
+    // Screen Navigation
+    function showScreen(screenId) {
+      // Hide all screens
+      document.querySelectorAll('.screen-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected screen
+      const targetScreen = document.getElementById(screenId);
+      if (targetScreen) {
+        targetScreen.classList.add('active');
+      }
+      
+      // Update sidebar active state
+      document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.screen === screenId) {
+          link.classList.add('active');
+        }
+      });
+    }
+    
+    // Sidebar navigation
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const screenId = link.dataset.screen;
+        showScreen(screenId);
+      });
+    });
+    
+    // OTP Countdown Timer
+    let countdown = 10;
+    const countdownEl = document.getElementById('countdown');
+    if (countdownEl) {
+      const timer = setInterval(() => {
+        countdown--;
+        countdownEl.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(timer);
+          document.getElementById('otp-timer').innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--warning);">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+              </svg>
+              <span>لم يصل الرمز؟ جاري إرسال SMS...</span>
+            </div>
+          `;
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
