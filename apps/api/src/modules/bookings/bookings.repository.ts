@@ -351,6 +351,27 @@ export const bookingRepository = {
     });
   },
 
+  // Find active bookings for a provider on a specific date (for availability engine)
+  async findActiveBookingsForProvider(
+    providerId: string,
+    dateStr: string
+  ) {
+    const date = new Date(dateStr);
+    return prisma.booking.findMany({
+      where: {
+        providerId,
+        scheduledDate: date,
+        status: { in: ['PENDING', 'CONFIRMED', 'IN_PROGRESS'] },
+      },
+      select: {
+        id: true,
+        scheduledDate: true,
+        scheduledTime: true,
+        endTime: true,
+      },
+    });
+  },
+
   // Generate unique booking number
   async generateBookingNumber(): Promise<string> {
     const prefix = 'BK';

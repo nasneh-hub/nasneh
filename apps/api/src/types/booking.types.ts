@@ -154,3 +154,20 @@ export interface PaginatedBookingsResponse {
     hasPrev: boolean;
   };
 }
+
+// ===========================================
+// Booking Validation Error Codes
+// ===========================================
+
+export const BookingErrorCode = {
+  SERVICE_NOT_FOUND: 'SERVICE_NOT_FOUND',
+  SERVICE_NOT_AVAILABLE: 'SERVICE_NOT_AVAILABLE',
+  PROVIDER_NOT_ACTIVE: 'PROVIDER_NOT_ACTIVE',
+  OUTSIDE_BOOKING_WINDOW: 'OUTSIDE_BOOKING_WINDOW',
+  TIME_NOT_AVAILABLE: 'TIME_NOT_AVAILABLE',
+  SLOT_ALREADY_BOOKED: 'SLOT_ALREADY_BOOKED',
+  MISSING_TIME_FOR_APPOINTMENT: 'MISSING_TIME_FOR_APPOINTMENT',
+  INVALID_DATE: 'INVALID_DATE',
+} as const;
+
+export type BookingErrorCodeType = typeof BookingErrorCode[keyof typeof BookingErrorCode];
