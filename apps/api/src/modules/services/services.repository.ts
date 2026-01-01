@@ -1,6 +1,30 @@
 import { prisma } from '../../lib/db';
-import { Prisma, ServiceType as PrismaServiceType } from '@prisma/client';
-import type { CreateServiceInput, UpdateServiceInput, ServiceQuery } from '../../types/service.types';
+import { Prisma, ServiceType as PrismaServiceType, ServiceStatus as PrismaServiceStatus } from '@prisma/client';
+import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types';
+import { ServiceSortBy } from '../../types/service.types';
+
+// ===========================================
+// Sorting Helper
+// ===========================================
+
+function getSortOrder(sortBy: string): Prisma.ServiceOrderByWithRelationInput {
+  switch (sortBy) {
+    case ServiceSortBy.NEWEST:
+      return { createdAt: 'desc' };
+    case ServiceSortBy.OLDEST:
+      return { createdAt: 'asc' };
+    case ServiceSortBy.PRICE_ASC:
+      return { price: 'asc' };
+    case ServiceSortBy.PRICE_DESC:
+      return { price: 'desc' };
+    case ServiceSortBy.NAME_ASC:
+      return { name: 'asc' };
+    case ServiceSortBy.NAME_DESC:
+      return { name: 'desc' };
+    default:
+      return { createdAt: 'desc' };
+  }
+}
 
 // ===========================================
 // Service Provider Repository
@@ -65,6 +89,7 @@ export const serviceRepository = {
             businessName: true,
             logoUrl: true,
             status: true,
+            category: true,
           },
         },
         category: {
@@ -78,14 +103,42 @@ export const serviceRepository = {
     });
   },
 
-  async findByProviderId(providerId: string, query: ServiceQuery) {
-    const { page, limit, serviceType, isAvailable, search } = query;
+  /**
+   * Find services by provider ID (for provider dashboard)
+   * Includes all statuses except DELETED by default
+   */
+  async findByProviderId(providerId: string, query: ProviderServiceQuery) {
+    const { 
+      page, 
+      limit, 
+      serviceType, 
+      status,
+      categoryId,
+      minPrice,
+      maxPrice,
+      isAvailable, 
+      search, 
+      sortBy,
+      includeDeleted,
+    } = query;
     const skip = (page - 1) * limit;
+
+    // Build price filter
+    let priceFilter: Prisma.DecimalFilter<"Service"> | undefined;
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      priceFilter = {};
+      if (minPrice !== undefined) priceFilter.gte = minPrice;
+      if (maxPrice !== undefined) priceFilter.lte = maxPrice;
+    }
 
     const where: Prisma.ServiceWhereInput = {
       providerId,
-      status: { not: 'DELETED' },
+      // By default exclude DELETED, unless includeDeleted is true
+      ...(includeDeleted ? {} : { status: { not: 'DELETED' as PrismaServiceStatus } }),
+      ...(status && { status: status as PrismaServiceStatus }),
       ...(serviceType && { serviceType: serviceType as PrismaServiceType }),
+      ...(categoryId && { categoryId }),
+      ...(priceFilter && { price: priceFilter }),
       ...(isAvailable !== undefined && { isAvailable }),
       ...(search && {
         OR: [
@@ -104,7 +157,7 @@ export const serviceRepository = {
             select: { id: true, name: true, nameAr: true },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: getSortOrder(sortBy),
         skip,
         take: limit,
       }),
@@ -121,27 +174,61 @@ export const serviceRepository = {
         hasNext: page * limit < total,
         hasPrev: page > 1,
       },
+      filters: {
+        ...(serviceType && { serviceType }),
+        ...(categoryId && { categoryId }),
+        ...(status && { status }),
+        ...(minPrice !== undefined && { minPrice }),
+        ...(maxPrice !== undefined && { maxPrice }),
+        ...(isAvailable !== undefined && { isAvailable }),
+        ...(search && { search }),
+      },
+      sortBy,
     };
   },
 
+  /**
+   * Find public services (for customers)
+   * Only returns ACTIVE services from ACTIVE providers
+   */
   async findPublic(query: ServiceQuery) {
-    const { page, limit, providerId, categoryId, serviceType, minPrice, maxPrice, isAvailable, search } = query;
+    const { 
+      page, 
+      limit, 
+      providerId, 
+      categoryId, 
+      serviceType, 
+      minPrice, 
+      maxPrice, 
+      isAvailable, 
+      search,
+      sortBy,
+    } = query;
     const skip = (page - 1) * limit;
 
+    // Build price filter
+    let priceFilter: Prisma.DecimalFilter<"Service"> | undefined;
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      priceFilter = {};
+      if (minPrice !== undefined) priceFilter.gte = minPrice;
+      if (maxPrice !== undefined) priceFilter.lte = maxPrice;
+    }
+
     const where: Prisma.ServiceWhereInput = {
-      status: 'ACTIVE',
-      isAvailable: isAvailable ?? true,
+      status: 'ACTIVE' as PrismaServiceStatus,
+      // Default to available services only, unless explicitly set to false
+      isAvailable: isAvailable !== false,
       provider: { status: 'ACTIVE' },
       ...(providerId && { providerId }),
       ...(categoryId && { categoryId }),
       ...(serviceType && { serviceType: serviceType as PrismaServiceType }),
-      ...(minPrice !== undefined && { price: { gte: minPrice } }),
-      ...(maxPrice !== undefined && { price: { lte: maxPrice } }),
+      ...(priceFilter && { price: priceFilter }),
       ...(search && {
         OR: [
           { name: { contains: search } },
           { nameAr: { contains: search } },
           { description: { contains: search } },
+          { descriptionAr: { contains: search } },
         ],
       }),
     };
@@ -155,13 +242,14 @@ export const serviceRepository = {
               id: true,
               businessName: true,
               logoUrl: true,
+              category: true,
             },
           },
           category: {
             select: { id: true, name: true, nameAr: true },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: getSortOrder(sortBy),
         skip,
         take: limit,
       }),
@@ -178,7 +266,71 @@ export const serviceRepository = {
         hasNext: page * limit < total,
         hasPrev: page > 1,
       },
+      filters: {
+        ...(serviceType && { serviceType }),
+        ...(categoryId && { categoryId }),
+        ...(providerId && { providerId }),
+        ...(minPrice !== undefined && { minPrice }),
+        ...(maxPrice !== undefined && { maxPrice }),
+        ...(isAvailable !== undefined && { isAvailable }),
+        ...(search && { search }),
+      },
+      sortBy,
     };
+  },
+
+  /**
+   * Find services by category (for category browsing)
+   */
+  async findByCategory(categoryId: string, query: ServiceQuery) {
+    return this.findPublic({ ...query, categoryId });
+  },
+
+  /**
+   * Find services by provider (for provider profile page)
+   */
+  async findByProvider(providerId: string, query: ServiceQuery) {
+    return this.findPublic({ ...query, providerId });
+  },
+
+  /**
+   * Search services with keyword
+   */
+  async search(keyword: string, query: ServiceQuery) {
+    return this.findPublic({ ...query, search: keyword });
+  },
+
+  /**
+   * Get featured/popular services
+   * For now, returns newest services. Can be enhanced with popularity metrics later.
+   */
+  async findFeatured(limit: number = 10) {
+    const where: Prisma.ServiceWhereInput = {
+      status: 'ACTIVE' as PrismaServiceStatus,
+      isAvailable: true,
+      provider: { status: 'ACTIVE' },
+    };
+
+    const data = await prisma.service.findMany({
+      where,
+      include: {
+        provider: {
+          select: {
+            id: true,
+            businessName: true,
+            logoUrl: true,
+            category: true,
+          },
+        },
+        category: {
+          select: { id: true, name: true, nameAr: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+
+    return { data };
   },
 
   async create(providerId: string, input: CreateServiceInput) {
@@ -245,7 +397,19 @@ export const serviceRepository = {
   async softDelete(id: string) {
     return prisma.service.update({
       where: { id },
-      data: { status: 'DELETED' },
+      data: { status: 'DELETED' as PrismaServiceStatus },
     });
+  },
+
+  /**
+   * Count services by provider (for stats)
+   */
+  async countByProvider(providerId: string) {
+    const [total, active, inactive] = await Promise.all([
+      prisma.service.count({ where: { providerId, status: { not: 'DELETED' as PrismaServiceStatus } } }),
+      prisma.service.count({ where: { providerId, status: 'ACTIVE' as PrismaServiceStatus } }),
+      prisma.service.count({ where: { providerId, status: 'INACTIVE' as PrismaServiceStatus } }),
+    ]);
+    return { total, active, inactive };
   },
 };

@@ -1,6 +1,6 @@
 import { serviceRepository, providerRepository } from './services.repository';
 import { auditService } from '../../lib/audit';
-import type { CreateServiceInput, UpdateServiceInput, ServiceQuery } from '../../types/service.types';
+import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types';
 
 // ===========================================
 // Custom Errors
@@ -38,6 +38,13 @@ export class InvalidServiceTypeFieldError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'InvalidServiceTypeFieldError';
+  }
+}
+
+export class CategoryNotFoundError extends Error {
+  constructor() {
+    super('Category not found');
+    this.name = 'CategoryNotFoundError';
   }
 }
 
@@ -133,9 +140,25 @@ export const servicesService = {
   },
 
   /**
-   * Get services by provider (for provider dashboard)
+   * Get a public service by ID (only ACTIVE services from ACTIVE providers)
    */
-  async getProviderServices(userId: string, query: ServiceQuery) {
+  async getPublicServiceById(serviceId: string) {
+    const service = await serviceRepository.findById(serviceId);
+    if (!service || service.status !== 'ACTIVE') {
+      throw new ServiceNotFoundError();
+    }
+    // Check provider is active
+    if (service.provider?.status !== 'ACTIVE') {
+      throw new ServiceNotFoundError();
+    }
+    return service;
+  },
+
+  /**
+   * Get services by provider (for provider dashboard)
+   * Supports filters, sorting, and pagination
+   */
+  async getProviderServices(userId: string, query: ProviderServiceQuery) {
     const provider = await providerRepository.findByUserId(userId);
     if (!provider) {
       throw new ProviderNotFoundError();
@@ -145,10 +168,51 @@ export const servicesService = {
   },
 
   /**
+   * Get provider service stats
+   */
+  async getProviderServiceStats(userId: string) {
+    const provider = await providerRepository.findByUserId(userId);
+    if (!provider) {
+      throw new ProviderNotFoundError();
+    }
+
+    return serviceRepository.countByProvider(provider.id);
+  },
+
+  /**
    * Get public services (for customers)
+   * Supports filters, sorting, and pagination
    */
   async getPublicServices(query: ServiceQuery) {
     return serviceRepository.findPublic(query);
+  },
+
+  /**
+   * Get services by category
+   */
+  async getServicesByCategory(categoryId: string, query: ServiceQuery) {
+    return serviceRepository.findByCategory(categoryId, query);
+  },
+
+  /**
+   * Get services by provider (public view)
+   */
+  async getServicesByProvider(providerId: string, query: ServiceQuery) {
+    return serviceRepository.findByProvider(providerId, query);
+  },
+
+  /**
+   * Search services
+   */
+  async searchServices(keyword: string, query: ServiceQuery) {
+    return serviceRepository.search(keyword, query);
+  },
+
+  /**
+   * Get featured services
+   */
+  async getFeaturedServices(limit: number = 10) {
+    return serviceRepository.findFeatured(limit);
   },
 
   /**
