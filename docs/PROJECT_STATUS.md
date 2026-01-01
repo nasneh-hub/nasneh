@@ -16,17 +16,18 @@
 | [PROD] Implement product images upload | ✅ Done | #27 |
 | [PROD] Implement product listing API | ✅ Done | #26 (included) |
 | [ORD] Create orders + order_items migrations | ✅ Done | #29 |
-| [ORD] Implement order status flow | To Do | — |
-| [ORD] Implement order listing APIs | To Do | — |
+| [ORD] Implement order status flow | ✅ Done | #30 |
+| [ORD] Implement order listing APIs | ✅ Done | #30 (included) |
 | [ORD] Implement create order endpoint | To Do | — |
 | [PAY] Create payments + refunds migrations | To Do | — |
 | [PAY] Implement APS payment initiation | To Do | — |
 | [PAY] Implement APS webhook handler | To Do | — |
-| [PAY] Implement audit logging | To Do | — |
+| [PAY] Implement audit logging | ✅ Done | #30 (included) |
 
 ## Open PRs
 | # | Title | Status |
 |---|-------|--------|
+| #30 | feat(orders): implement order status flow with audit logging | Open |
 | #29 | feat(db): create orders and order_items tables migration | Open |
 | #28 | docs: update PROJECT_STATUS.md with Sprint 1 progress | Open |
 | #27 | feat(upload): implement product image upload to S3 | Open |
@@ -53,12 +54,12 @@ All P0 gaps from MVP Audit resolved in TECHNICAL_SPEC.md v2.1:
 - [x] #13 — refunds table (§3 - Refunds)
 
 ## Next 3 Actions
-1. [ORD] Implement order status flow
-2. [ORD] Implement order listing APIs
-3. [ORD] Implement create order endpoint
+1. [ORD] Implement create order endpoint
+2. [PAY] Create payments + refunds migrations
+3. [PAY] Implement APS payment initiation
 
 ## Blockers
 None.
 
 ---
-**Last updated:** 2026-01-01 by Sprint 1 - Orders Migration
+**Last updated:** 2026-01-01 by Sprint 1 - Order Status Flow
