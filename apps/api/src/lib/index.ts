@@ -11,6 +11,8 @@ export {
   getRateLimitKey,
 } from './redis';
 
+export { prisma } from './db';
+
 export {
   WhatsAppClient,
   getWhatsAppClient,
