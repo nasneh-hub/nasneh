@@ -4,11 +4,11 @@
 
 ## 🚀 Sprint 2 In Progress
 
-Sprint 2 started. Phase 2 (Services Core) in progress.
+Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Bookings) starting.
 
 ---
 
-## Sprint 2 Progress: 4/17 tasks (24%)
+## Sprint 2 Progress: 5/17 tasks (29%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -16,14 +16,14 @@ Sprint 2 started. Phase 2 (Services Core) in progress.
 | [SVC] Create services table migration | ✅ Merged | #45 |
 | [BOOK] Create bookings table migration | ✅ Merged | #46 |
 
-### Phase 2: Services Core (In Progress)
+### Phase 2: Services Core ✅ Complete
 | Task | Status | PR |
 |------|--------|-----|
 | [SVC] Implement service CRUD API | ✅ Merged | #48 |
 | [SVC] Implement service listing API | ✅ Merged | #50 |
-| [SVC] Availability schema + rules | 🔲 To Do | - |
+| [SVC] Availability schema + rules | ✅ Merged | #52 |
 
-### Phase 3: Availability + Bookings Core
+### Phase 3: Availability + Bookings Core (Next)
 | Task | Status | PR |
 |------|--------|-----|
 | [SVC] Availability API + conflict checks | 🔲 To Do | - |
@@ -71,6 +71,9 @@ Sprint 2 started. Phase 2 (Services Core) in progress.
 | **service_providers** | Service provider profiles | **S2** |
 | **services** | Service catalog with types | **S2** |
 | **bookings** | Service bookings with scheduling | **S2** |
+| **availability_rules** | Weekly recurring availability | **S2** |
+| **availability_overrides** | Date-specific overrides | **S2** |
+| **availability_settings** | Provider-level settings | **S2** |
 
 ---
 
@@ -92,11 +95,49 @@ Sprint 2 started. Phase 2 (Services Core) in progress.
 | GET | /services/category/:id | By category |
 | GET | /services/provider/:id | By provider |
 | GET | /services/:id | Public service details |
+| GET | /services/:id/slots | Get available slots |
+
+### Provider Calendar API (PR #52)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /provider/calendar | Get rules, overrides, settings |
+| PATCH | /provider/calendar | Bulk update rules |
+| POST | /provider/calendar/rules | Create single rule |
+| PATCH | /provider/calendar/rules/:id | Update rule |
+| DELETE | /provider/calendar/rules/:id | Delete rule |
+| POST | /provider/calendar/overrides | Create override |
+| PATCH | /provider/calendar/overrides/:id | Update override |
+| DELETE | /provider/calendar/overrides/:id | Delete override |
+| PATCH | /provider/calendar/settings | Update settings |
 
 ### Filters & Sorting (PR #50)
+
 - **Filters:** serviceType, categoryId, providerId, minPrice, maxPrice, isAvailable, search, status
 - **Sorting:** newest, oldest, price_asc, price_desc, name_asc, name_desc
 - **Pagination:** page, limit (max 100), returns total, totalPages, hasNext, hasPrev
+
+---
+
+## Availability System (PR #52)
+
+### Features
+- Weekly recurring rules (per day of week)
+- Date-specific overrides (AVAILABLE/UNAVAILABLE)
+- Buffer times (before/after bookings)
+- Preparation days for DELIVERY_DATE services
+- Override precedence (date overrides > weekly rules)
+- Conflict detection hooks for bookings
+
+### Defaults (Not in docs - MVP assumptions)
+- Timezone: Asia/Bahrain
+- Slot duration: 30 minutes
+- Min advance: 24 hours
+- Max advance: 30 days
+- Buffer times: 0 minutes
+
+### Exported Hooks (for bookings module)
+- `checkBookingAvailability()` - Main validation hook
+- `getNextAvailableSlot()` - Suggest alternatives
 
 ---
 
@@ -127,4 +168,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 2: Service Listing API complete (PR #50)
+**Last updated:** 2026-01-02 — Sprint 2 Phase 2 complete: Availability schema + rules (PR #52)
