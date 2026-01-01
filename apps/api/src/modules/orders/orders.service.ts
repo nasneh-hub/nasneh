@@ -8,13 +8,53 @@ import {
   OrderStatus,
   ORDER_STATUS_TRANSITIONS,
   OrderQueryInput,
+  CreateOrderInput,
+  FulfillmentType,
 } from '../../types/order.types';
+import { prisma } from '../../lib/db';
+import { Decimal } from '@prisma/client/runtime/library';
 import { auditService, ActorRole } from '../../lib/audit';
 import { notificationService } from '../../lib/notifications';
 
 // ===========================================
 // Custom Errors
 // ===========================================
+
+export class VendorNotFoundError extends Error {
+  public statusCode = 404;
+
+  constructor(vendorId: string) {
+    super(`Vendor not found: ${vendorId}`);
+    this.name = 'VendorNotFoundError';
+  }
+}
+
+export class ProductNotFoundError extends Error {
+  public statusCode = 404;
+
+  constructor(productId: string) {
+    super(`Product not found: ${productId}`);
+    this.name = 'ProductNotFoundError';
+  }
+}
+
+export class ProductNotAvailableError extends Error {
+  public statusCode = 400;
+
+  constructor(productName: string) {
+    super(`Product not available: ${productName}`);
+    this.name = 'ProductNotAvailableError';
+  }
+}
+
+export class ProductVendorMismatchError extends Error {
+  public statusCode = 400;
+
+  constructor() {
+    super('All products must belong to the same vendor');
+    this.name = 'ProductVendorMismatchError';
+  }
+}
 
 export class OrderNotFoundError extends Error {
   public statusCode = 404;
@@ -47,7 +87,165 @@ export class UnauthorizedOrderAccessError extends Error {
 // Service
 // ===========================================
 
+// ===========================================
+// Constants
+// ===========================================
+
+// Default delivery fee in BHD (can be made configurable later)
+const DEFAULT_DELIVERY_FEE = new Decimal('1.000');
+
 export class OrdersService {
+  /**
+   * Create a new order
+   * - Validates vendor and products
+   * - Snapshots product prices
+   * - Calculates subtotal, commission, total
+   * - Creates order + order_items in transaction
+   */
+  async createOrder(params: {
+    customerId: string;
+    input: CreateOrderInput;
+    ipAddress?: string;
+    userAgent?: string;
+  }) {
+    const { customerId, input, ipAddress, userAgent } = params;
+
+    // 1. Validate vendor exists and is active
+    const vendor = await prisma.vendor.findUnique({
+      where: { id: input.vendorId },
+      select: {
+        id: true,
+        storeName: true,
+        commissionRate: true,
+        status: true,
+        userId: true,
+      },
+    });
+
+    if (!vendor) {
+      throw new VendorNotFoundError(input.vendorId);
+    }
+
+    if (vendor.status !== 'ACTIVE') {
+      throw new VendorNotFoundError(input.vendorId); // Treat inactive as not found
+    }
+
+    // 2. Fetch all products and validate
+    const productIds = input.items.map((item) => item.productId);
+    const products = await prisma.product.findMany({
+      where: {
+        id: { in: productIds },
+      },
+      select: {
+        id: true,
+        vendorId: true,
+        name: true,
+        price: true,
+        isAvailable: true,
+        status: true,
+      },
+    });
+
+    // Create a map for quick lookup
+    const productMap = new Map(products.map((p) => [p.id, p]));
+
+    // Validate all products exist, belong to vendor, and are available
+    for (const item of input.items) {
+      const product = productMap.get(item.productId);
+
+      if (!product) {
+        throw new ProductNotFoundError(item.productId);
+      }
+
+      if (product.vendorId !== input.vendorId) {
+        throw new ProductVendorMismatchError();
+      }
+
+      if (!product.isAvailable || product.status !== 'ACTIVE') {
+        throw new ProductNotAvailableError(product.name);
+      }
+    }
+
+    // 3. Calculate order totals
+    let subtotal = new Decimal(0);
+    const orderItems: Array<{
+      productId: string;
+      productName: string;
+      unitPrice: Decimal;
+      quantity: number;
+      subtotal: Decimal;
+    }> = [];
+
+    for (const item of input.items) {
+      const product = productMap.get(item.productId)!;
+      const itemSubtotal = new Decimal(product.price.toString()).mul(item.quantity);
+
+      orderItems.push({
+        productId: item.productId,
+        productName: product.name,
+        unitPrice: new Decimal(product.price.toString()),
+        quantity: item.quantity,
+        subtotal: itemSubtotal,
+      });
+
+      subtotal = subtotal.add(itemSubtotal);
+    }
+
+    // 4. Calculate fees and commission
+    const deliveryFee =
+      input.fulfillmentType === FulfillmentType.DELIVERY ? DEFAULT_DELIVERY_FEE : null;
+
+    // Commission is percentage of subtotal
+    const commissionRate = new Decimal(vendor.commissionRate.toString()).div(100);
+    const commission = subtotal.mul(commissionRate).toDecimalPlaces(3);
+
+    // Total = subtotal + delivery fee
+    const total = deliveryFee ? subtotal.add(deliveryFee) : subtotal;
+
+    // 5. Generate order number
+    const orderNumber = await ordersRepository.generateOrderNumber();
+
+    // 6. Create order with items
+    const order = await ordersRepository.create(
+      {
+        orderNumber,
+        customerId,
+        vendorId: input.vendorId,
+        fulfillmentType: input.fulfillmentType,
+        subtotal,
+        deliveryFee,
+        commission,
+        total,
+        deliveryAddress: input.deliveryAddress || null,
+        pickupAddress: input.pickupAddress || null,
+        notes: input.notes || null,
+      },
+      orderItems
+    );
+
+    // 7. Log audit
+    await auditService.logOrderCreated({
+      orderId: order!.id,
+      customerId,
+      orderNumber,
+      ipAddress,
+      userAgent,
+    });
+
+    // 8. Notify vendor
+    await notificationService.notifyVendorNewOrder({
+      vendorUserId: vendor.userId,
+      orderNumber,
+      total: total.toFixed(3),
+    });
+
+    return {
+      success: true,
+      message: 'Order created successfully',
+      order,
+    };
+  }
+
   /**
    * Get order by ID
    */
