@@ -6,4 +6,5 @@
 export { default as authRoutes } from './auth.routes';
 export { authService, AuthService } from './auth.service';
 export { otpRepository, OtpRepository, StoredOtp } from './otp.repository';
+export { otpDeliveryService, OtpDeliveryService } from './otp-delivery.service';
 export * from './auth.controller';

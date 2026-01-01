@@ -10,3 +10,9 @@ export {
   getOtpKey,
   getRateLimitKey,
 } from './redis';
+
+export {
+  WhatsAppClient,
+  getWhatsAppClient,
+  sendWhatsAppOtpWithTimeout,
+} from './whatsapp';
