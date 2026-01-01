@@ -108,6 +108,7 @@ model User {
   driverOrders   Order[]  @relation("DriverOrders")
   auditLogs      AuditLog[]
   refundsCreated Refund[]
+  customerBookings Booking[] @relation("CustomerBookings")
 
   @@map("users")
 }
@@ -182,6 +183,7 @@ model ServiceProvider {
   // Relations
   user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   services              Service[]
+  bookings              Booking[]
 
   @@map("service_providers")
 }
@@ -271,6 +273,7 @@ model Service {
   // Relations
   provider        ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
   category        Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  bookings        Booking[]
 
   @@index([providerId])
   @@index([categoryId])
@@ -482,6 +485,7 @@ model Refund {
   // Relations
   payment       Payment      @relation(fields: [paymentId], references: [id])
   order         Order?       @relation(fields: [orderId], references: [id])
+  booking       Booking?     @relation("BookingRefunds", fields: [bookingId], references: [id])
   createdBy     User         @relation(fields: [createdById], references: [id])
 
   @@index([paymentId])
@@ -489,4 +493,65 @@ model Refund {
   @@index([status])
   @@index([createdAt])
   @@map("refunds")
+}
+
+
+// ===========================================
+// Booking Enums
+// ===========================================
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+// ===========================================
+// Bookings
+// ===========================================
+
+model Booking {
+  id              String        @id @default(uuid())
+  bookingNumber   String        @unique @map("booking_number")
+  customerId      String        @map("customer_id")
+  providerId      String        @map("provider_id")
+  serviceId       String        @map("service_id")
+  
+  // Scheduling
+  scheduledDate   DateTime      @map("scheduled_date") @db.Date
+  scheduledTime   DateTime?     @map("scheduled_time") @db.Time(0) // For appointment type
+  endTime         DateTime?     @map("end_time") @db.Time(0) // Calculated from duration
+  
+  // Pricing (snapshot at booking time)
+  price           Decimal       @db.Decimal(10, 3) // BHD 3 decimals
+  commission      Decimal       @db.Decimal(10, 3)
+  total           Decimal       @db.Decimal(10, 3)
+  
+  // Status and details
+  status          BookingStatus @default(PENDING)
+  serviceAddress  Json?         @map("service_address") // For home services
+  notes           String?       @db.Text
+  cancellationReason String?    @map("cancellation_reason") @db.Text
+  cancelledAt     DateTime?     @map("cancelled_at")
+  cancelledBy     String?       @map("cancelled_by") // user_id who cancelled
+  
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  customer        User          @relation("CustomerBookings", fields: [customerId], references: [id])
+  provider        ServiceProvider @relation(fields: [providerId], references: [id])
+  service         Service       @relation(fields: [serviceId], references: [id])
+  refunds         Refund[]      @relation("BookingRefunds")
+
+  @@index([customerId])
+  @@index([providerId])
+  @@index([serviceId])
+  @@index([scheduledDate])
+  @@index([status])
+  @@index([bookingNumber])
+  @@map("bookings")
 }
