@@ -321,35 +321,55 @@ Weights: 400, 500, 600, 700
 
 ---
 
-## 9. Core UI Architecture
+## 9. Shared UI Package
+
+### Location
+All UI components live in `packages/ui/` (imported as `@nasneh/ui`)
 
 ### File Structure
 
 ```
-/src/core/
-├── ui/                    # All UI components
-│   ├── button.tsx
-│   ├── input.tsx
-│   ├── card.tsx
-│   ├── badge.tsx
-│   ├── table.tsx
-│   ├── dialog.tsx
-│   ├── select.tsx
-│   └── index.ts          # Export all
-│
-└── styles/
-    └── tokens.css        # CSS variables
+packages/ui/
+├── src/
+│   ├── components/
+│   │   ├── button.tsx
+│   │   ├── input.tsx
+│   │   ├── card.tsx
+│   │   ├── badge.tsx
+│   │   ├── table.tsx
+│   │   ├── dialog.tsx
+│   │   └── select.tsx
+│   ├── styles/
+│   │   └── tokens.css       # CSS variables
+│   └── index.ts             # Export all
+├── package.json
+└── README.md
 ```
 
 ### Import Rule
 
 ```tsx
-// ✅ CORRECT - Always import from core
-import { Button, Input, Card } from '@/core/ui'
+// ✅ CORRECT - Import from shared package
+import { Button, Input, Card } from '@nasneh/ui'
 
-// ❌ WRONG - Never create new components
+// ❌ WRONG - Never create local components
 const MyButton = () => <button>...</button>
+
+// ❌ WRONG - Never import from relative path
+import { Button } from '../../../packages/ui'
 ```
+
+### In Apps (customer-web, dashboard, api)
+
+Each app imports from the shared package:
+```json
+// apps/customer-web/package.json
+{
+  "dependencies": {
+    "@nasneh/ui": "workspace:*"
+  }
+}
+````
 
 ### Style Rule
 
@@ -431,7 +451,7 @@ Before submitting UI work, verify:
 - [ ] All radius = rounded-xl (12px)
 - [ ] NO borders anywhere
 - [ ] Heights: 32/40/48/56px
-- [ ] Components from /core/ui/
+- [ ] Components from @nasneh/ui
 - [ ] No inline style overrides
 - [ ] Spacing uses 4px grid
 - [ ] Focus states use ring (not border)
@@ -453,7 +473,7 @@ Before submitting UI work, verify:
 - Multiple fonts
 - CDN font loading
 - Colored borders for validation
-- Components outside /core/ui/
+- Components outside @nasneh/ui
 - Overriding core styles
 - Gradients
 - Decorative colors
@@ -465,7 +485,7 @@ Before submitting UI work, verify:
 - rounded-xl everywhere
 - Background colors for states
 - Vazirmatn font (self-hosted)
-- Components from /core/ui/
+- Components from @nasneh/ui
 - CSS Variables for theming
 - Ring for focus states
 - Mono colors (95% of UI)

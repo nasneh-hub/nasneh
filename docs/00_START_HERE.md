@@ -55,7 +55,7 @@
 | **Borders** | ❌ NEVER use borders |
 | **Radius** | 12px (rounded-xl) everywhere |
 | **Heights** | 32px / 40px / 48px / 56px |
-| **Components** | From /core/ui/ ONLY |
+| **Components** | From @nasneh/ui (packages/ui) ONLY |
 
 ---
 
@@ -93,7 +93,7 @@
 
 - ❌ Use borders
 - ❌ Use different fonts
-- ❌ Create components outside /core/ui/
+- ❌ Create components outside @nasneh/ui
 - ❌ Change scope without approval
 - ❌ Skip testing
 - ❌ Commit sensitive data

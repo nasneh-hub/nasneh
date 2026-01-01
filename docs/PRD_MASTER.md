@@ -174,6 +174,72 @@ Same as Vendor
 
 ---
 
+## 5.1 Service Types (Booking Models)
+
+Services have 3 different booking types based on how the service is delivered:
+
+### Type 1: Appointment (موعد حضور)
+**Provider comes to customer OR customer goes to provider**
+
+| Field | Description |
+|-------|-------------|
+| scheduled_at | Date + Time of appointment |
+| duration_minutes | How long the service takes |
+| location_type | customer_location / provider_location |
+| location | Address details |
+
+**Examples:**
+- Home cleaning (provider → customer)
+- Beauty services at salon (customer → provider)
+- Home maintenance (provider → customer)
+
+---
+
+### Type 2: Delivery Date (موعد تسليم)
+**Provider creates something and delivers it on a specific date**
+
+| Field | Description |
+|-------|-------------|
+| delivery_date | Date of delivery |
+| delivery_time_slot | Morning / Afternoon / Evening |
+| delivery_address | Where to deliver |
+| preparation_days | Days needed to prepare |
+
+**Examples:**
+- Custom cake (baker prepares, delivers on date)
+- Tailoring (tailor makes, delivers on date)
+- Custom furniture (carpenter makes, delivers on date)
+
+---
+
+### Type 3: Pickup & Dropoff (استلام وتسليم)
+**Customer gives item to provider, provider returns it later**
+
+| Field | Description |
+|-------|-------------|
+| pickup_date | When provider picks up item |
+| dropoff_date | When provider returns item |
+| pickup_address | Where to pickup from |
+| dropoff_address | Where to return to |
+| item_description | What item is being serviced |
+
+**Examples:**
+- Laundry service (pickup clothes → wash → return)
+- Car detailing (pickup car → clean → return)
+- Device repair (pickup phone → fix → return)
+
+---
+
+### Service Type Summary
+
+| Type | Customer Action | Provider Action | Key Dates |
+|------|-----------------|-----------------|----------|
+| **Appointment** | Books time slot | Shows up at time | scheduled_at |
+| **Delivery Date** | Orders service | Prepares & delivers | delivery_date |
+| **Pickup & Dropoff** | Hands over item | Picks up, services, returns | pickup_date + dropoff_date |
+
+---
+
 ## 6. Core Flows
 
 ### 6.1 Product Order Flow

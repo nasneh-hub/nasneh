@@ -153,7 +153,9 @@ services
 ├── name (string)
 ├── description (text)
 ├── price (decimal 10,3)
-├── duration_minutes (integer)
+├── service_type (enum: appointment, delivery_date, pickup_dropoff)
+├── duration_minutes (integer, nullable)        # For appointment type
+├── preparation_days (integer, nullable)        # For delivery_date type
 ├── images (string[])
 ├── category_id (UUID, FK)
 ├── is_available (boolean)
@@ -187,8 +189,20 @@ bookings
 ├── customer_id (UUID, FK → users)
 ├── provider_id (UUID, FK → service_providers)
 ├── service_id (UUID, FK → services)
-├── scheduled_at (timestamp)
-├── duration_minutes (integer)
+├── service_type (enum: appointment, delivery_date, pickup_dropoff)
+├── -- Appointment fields --
+├── scheduled_at (timestamp, nullable)
+├── duration_minutes (integer, nullable)
+├── location_type (enum: customer, provider, nullable)
+├── -- Delivery Date fields --
+├── delivery_date (date, nullable)
+├── delivery_time_slot (enum: morning, afternoon, evening, nullable)
+├── preparation_days (integer, nullable)
+├── -- Pickup & Dropoff fields --
+├── pickup_date (date, nullable)
+├── dropoff_date (date, nullable)
+├── item_description (text, nullable)
+├── -- Common fields --
 ├── service_fee (decimal 10,3)
 ├── platform_fee (decimal 10,3)
 ├── commission (decimal 10,3)
@@ -358,6 +372,37 @@ GET    /admin/reports        # Reports & analytics
 6. Server returns { accessToken, refreshToken, user }
 7. Client stores tokens securely
 ```
+
+### OTP Delivery Channels
+
+**Priority Order:**
+1. **WhatsApp** (Primary) - via WhatsApp Business API
+2. **SMS** (Fallback) - via AWS SNS
+
+**Flow Logic:**
+```
+1. User requests OTP
+2. System checks if phone has WhatsApp
+3. IF WhatsApp available → Send via WhatsApp Business API
+4. IF WhatsApp fails OR not available → Fallback to SMS (AWS SNS)
+5. Log delivery channel used
+```
+
+**WhatsApp Business API:**
+- Provider: Meta WhatsApp Business API (via AWS or direct)
+- Template: OTP verification message (pre-approved)
+- Fallback timeout: 10 seconds
+
+**Logging:**
+| Field | Description |
+|-------|-------------|
+| phone | User phone number |
+| channel | whatsapp / sms |
+| status | sent / delivered / failed |
+| timestamp | When sent |
+| fallback_used | true / false |
+
+---
 
 ### Token Structure
 ```
