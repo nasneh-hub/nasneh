@@ -321,3 +321,145 @@ gh pr create                          # إنشاء Pull Request
 ---
 
 **Document End**
+
+
+---
+
+## CI/CD Pipeline (GitHub Actions)
+
+### Overview
+
+| Workflow | File | Trigger | Purpose |
+|----------|------|---------|---------|
+| CI | `.github/workflows/ci.yml` | PR to main, push to main | Lint, typecheck, test, build |
+| CD | `.github/workflows/cd.yml` | Push to main (api changes) | Build Docker image, push to ECR |
+
+### CI Pipeline
+
+```
+┌─────────┐     ┌───────────┐     ┌──────┐     ┌───────┐
+│  Lint   │────►│ Typecheck │────►│ Test │────►│ Build │
+└─────────┘     └───────────┘     └──────┘     └───────┘
+     │               │               │              │
+     └───────────────┴───────────────┴──────────────┘
+                           │
+                    All run in parallel
+                    Build waits for all
+```
+
+### CD Pipeline
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Build Docker   │────►│  Push to ECR    │────►│  Deploy to ECS  │
+│     Image       │     │  (auto)         │     │  (manual only)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
+
+### Running CI Locally
+
+```bash
+# Run all CI checks
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+
+# Run individual checks
+pnpm lint       # Lint check
+pnpm typecheck  # Type check
+pnpm test       # Run tests
+pnpm build      # Build project
+```
+
+### Building Docker Image Locally
+
+```bash
+# Build image
+docker build -t nasneh-api:local -f apps/api/Dockerfile .
+
+# Run container
+docker run -p 3000:3000 \
+  -e DATABASE_URL="postgresql://..." \
+  -e JWT_SECRET="your-secret" \
+  nasneh-api:local
+
+# Test health endpoint
+curl http://localhost:3000/health
+```
+
+### GitHub Secrets Configuration
+
+Configure in GitHub → Settings → Secrets and variables → Actions:
+
+| Secret | Description | Example |
+|--------|-------------|---------|
+| `AWS_ACCESS_KEY_ID` | AWS IAM access key | `AKIA...` |
+| `AWS_SECRET_ACCESS_KEY` | AWS IAM secret key | `wJal...` |
+| `AWS_REGION` | AWS region | `me-south-1` |
+
+### Setting Secrets via CLI
+
+```bash
+gh secret set AWS_ACCESS_KEY_ID --body "AKIA..."
+gh secret set AWS_SECRET_ACCESS_KEY --body "wJal..."
+gh secret set AWS_REGION --body "me-south-1"
+```
+
+### Manual Deploy to ECS
+
+Deploy is **not automatic**. To deploy after image is pushed:
+
+1. Go to GitHub Actions → CD workflow
+2. Click "Run workflow"
+3. Select `deploy: true`
+4. Click "Run workflow"
+
+Or via CLI:
+
+```bash
+gh workflow run cd.yml -f deploy=true
+```
+
+### Image Tag Strategy
+
+| Tag | Description |
+|-----|-------------|
+| `<commit-sha>` | Short SHA of the commit |
+| `staging-latest` | Latest image for staging |
+| `<YYYYMMDD-HHmmss>` | Timestamp for traceability |
+
+### IAM Permissions Required
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecs:UpdateService",
+        "ecs:DescribeServices"
+      ],
+      "Resource": [
+        "arn:aws:ecs:me-south-1:*:service/nasneh-staging-cluster/*"
+      ]
+    }
+  ]
+}
+```
+
+---
+
+**CI/CD Section End**

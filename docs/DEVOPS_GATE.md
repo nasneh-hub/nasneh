@@ -408,8 +408,8 @@ To use a custom domain:
 | 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | ✅ Complete |
 | 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ✅ Complete |
 | 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ✅ Complete |
-| 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | 🔄 Pending Review |
-| 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ⏳ To Do |
+| 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ✅ Complete |
+| 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | 🔄 Pending Review |
 | 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ⏳ To Do |
 | 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
 
@@ -426,6 +426,101 @@ To use a custom domain:
 | Compute (ECS + ALB) | ~$28 |
 | Storage (S3 + CloudFront) | ~$2 |
 | **Total** | **~$81** |
+
+---
+
+**Document End**
+
+
+---
+
+## 10. CI/CD Pipeline
+
+The CI/CD pipeline is implemented using GitHub Actions with two workflows.
+
+### Workflows
+
+| Workflow | File | Trigger | Purpose |
+|----------|------|---------|---------|
+| CI | `.github/workflows/ci.yml` | PR to main, push to main | Lint, typecheck, test, build |
+| CD | `.github/workflows/cd.yml` | Push to main (api changes) | Build Docker image, push to ECR |
+
+### CI Pipeline
+
+Runs on every PR and push to main. All checks must pass before merge.
+
+```
+┌─────────┐     ┌───────────┐     ┌──────┐     ┌───────┐
+│  Lint   │────►│ Typecheck │────►│ Test │────►│ Build │
+└─────────┘     └───────────┘     └──────┘     └───────┘
+```
+
+| Job | Command | Description |
+|-----|---------|-------------|
+| Lint | `pnpm lint` | Code style checks |
+| Typecheck | `pnpm typecheck` | TypeScript validation |
+| Test | `pnpm test` | Run test suite |
+| Build | `pnpm build` | Build all packages |
+
+### CD Pipeline
+
+Runs on push to main when `apps/api/**` or `packages/**` changes.
+
+| Step | Description |
+|------|-------------|
+| Build Docker Image | Multi-stage build from `apps/api/Dockerfile` |
+| Push to ECR | Tags: `<sha>`, `staging-latest`, `<timestamp>` |
+| Deploy to ECS | **Manual only** via `workflow_dispatch` |
+
+### Image Tag Strategy
+
+| Tag | Example | Description |
+|-----|---------|-------------|
+| Commit SHA | `abc1234` | Short SHA for traceability |
+| Environment | `staging-latest` | Latest for environment |
+| Timestamp | `20260102-123456` | Build timestamp |
+
+### GitHub Secrets Required
+
+Configure in GitHub → Settings → Secrets and variables → Actions:
+
+| Secret | Description |
+|--------|-------------|
+| `AWS_ACCESS_KEY_ID` | AWS IAM access key |
+| `AWS_SECRET_ACCESS_KEY` | AWS IAM secret key |
+| `AWS_REGION` | AWS region (`me-south-1`) |
+
+### Dockerfile
+
+Located at `apps/api/Dockerfile`. Multi-stage build:
+
+| Stage | Purpose |
+|-------|---------|
+| `builder` | Install deps, generate Prisma, build TypeScript |
+| `production` | Production deps only, non-root user, health check |
+
+### Manual Deploy
+
+Deploy is **not automatic** to prevent accidental production changes.
+
+To deploy after image is pushed:
+1. Go to GitHub Actions → CD workflow
+2. Click "Run workflow"
+3. Select `deploy: true`
+4. Click "Run workflow"
+
+Or via CLI:
+```bash
+gh workflow run cd.yml -f deploy=true
+```
+
+### Documentation
+
+See [RUNBOOK.md](./RUNBOOK.md) for:
+- Running CI locally
+- Building Docker image locally
+- GitHub secrets configuration
+- Troubleshooting
 
 ---
 
