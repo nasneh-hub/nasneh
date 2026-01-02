@@ -42,7 +42,6 @@ The IaC code is located in the `/infra` directory with the following structure:
 │   │   └── README.md
 │   ├── compute/          # 🔜 Planned
 │   ├── database/         # 🔜 Planned
-│   ├── cache/            # 🔜 Planned
 │   └── secrets/          # 🔜 Planned
 │
 ├── versions.tf           # Terraform & provider version constraints
@@ -69,7 +68,7 @@ The `staging` environment is the first to be implemented. It serves as a templat
 ### Key Characteristics:
 
 - **Region:** `me-south-1` (AWS Bahrain)
-- **State Management:** Local state initially, with a commented-out S3 backend configuration for remote state management.
+- **State Management:** Local state initially, with S3 backend configuration for remote state management (configured as sub-step when deploying).
 - **Resource Sizing:** Uses smaller instance types (e.g., `t3.small`, `db.t3.micro`) to minimize costs.
 - **Deletion Protection:** Disabled by default to allow for easy teardown and recreation.
 
@@ -107,7 +106,7 @@ The networking module (`/infra/modules/networking`) creates the foundational net
 |----------|-------------|----------------|
 | VPC | Main VPC with DNS support | 10.0.0.0/16 |
 | Public Subnets | 2 subnets for ALB | 10.0.1.0/24, 10.0.2.0/24 |
-| Private Subnets | 2 subnets for API, DB, Cache | 10.0.10.0/24, 10.0.11.0/24 |
+| Private Subnets | 2 subnets for API, DB | 10.0.10.0/24, 10.0.11.0/24 |
 | Internet Gateway | Public internet access | 1 |
 | NAT Gateway | Private subnet egress | 1 (single for staging) |
 | Route Tables | Public and private routing | 2 |
@@ -126,7 +125,6 @@ AWS Bahrain (me-south-1) has 3 AZs available:
 | ALB | HTTP (80), HTTPS (443) from 0.0.0.0/0 | Application Load Balancer |
 | API | Port 3000 from ALB SG | ECS Fargate containers |
 | Database | Port 5432 from API SG | RDS PostgreSQL |
-| Cache | Port 6379 from API SG | ElastiCache Redis |
 
 ### Architecture Diagram
 
@@ -154,7 +152,6 @@ AWS Bahrain (me-south-1) has 3 AZs available:
                     │    │  │ me-south-1a │    │ me-south-1b │    │          │
                     │    │  │  [API/ECS]  │    │  [API/ECS]  │    │          │
                     │    │  │  [RDS]      │    │             │    │          │
-                    │    │  │  [Redis]    │    │             │    │          │
                     │    │  └─────────────┘    └─────────────┘    │          │
                     │    └────────────────────────────────────────┘          │
                     └─────────────────────────────────────────────────────────┘
@@ -172,17 +169,22 @@ AWS Bahrain (me-south-1) has 3 AZs available:
 
 ---
 
-## 5. Next Steps (DevOps Gate)
+## 5. DevOps Gate Tasks
 
-| # | Task | Status | PR |
-|---|------|--------|-----|
-| 1 | [DEVOPS] IaC Setup | ✅ Done | #70 |
-| 2 | [DEVOPS] VPC + Networking | ✅ Done | #71 |
-| 3 | [CI/CD] CI Pipeline Setup | 🔜 Next | - |
-| 4 | [DEVOPS] Terraform State Backend | 🔜 Planned | - |
-| 5 | [DEVOPS] Database Module | 🔜 Planned | - |
-| 6 | [DEVOPS] Cache Module | 🔜 Planned | - |
-| 7 | [DEVOPS] Compute Module | 🔜 Planned | - |
+**Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
+
+| # | Task | Priority | Status |
+|---|------|----------|--------|
+| 1 | [DEVOPS] IaC Setup — Terraform/CDK base structure | Urgent | ✅ Complete |
+| 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | 🔄 Pending Review |
+| 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ⏳ To Do |
+| 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ⏳ To Do |
+| 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ⏳ To Do |
+| 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ⏳ To Do |
+| 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ⏳ To Do |
+| 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
+
+> **Note:** Terraform remote state backend (S3 + DynamoDB) is configured as a sub-step during initial deployment, not as a separate task.
 
 ---
 
