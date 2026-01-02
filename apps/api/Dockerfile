@@ -25,7 +25,11 @@ COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/utils/package.json ./packages/utils/
 
+# Copy Prisma schema BEFORE install (needed for postinstall: prisma generate)
+COPY apps/api/prisma ./apps/api/prisma
+
 # Install ALL dependencies (including devDependencies for build)
+# Note: postinstall runs prisma generate which needs the schema
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
