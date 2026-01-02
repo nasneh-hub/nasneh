@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 
 ---
 
-## Sprint 2 Progress: 12/17 tasks (71%)
+## Sprint 2 Progress: 13/17 tasks (76%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -41,7 +41,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 ### Phase 5: Cart + Reviews
 | Task | Status | PR |
 |------|--------|-----|
-| [CART] Implement cart API (single-vendor) | 🔲 To Do | - |
+| [CART] Implement cart API (single-vendor) | 🔄 In Review | #64 |
 | [REV] Create reviews table migration | 🔲 To Do | - |
 | [REV] Implement review CRUD API | 🔲 To Do | - |
 
@@ -74,6 +74,8 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | **availability_rules** | Weekly recurring availability | **S2** |
 | **availability_overrides** | Date-specific overrides | **S2** |
 | **availability_settings** | Provider-level settings | **S2** |
+| **carts** | Shopping carts (single-vendor) | **S2** |
+| **cart_items** | Cart line items | **S2** |
 
 ---
 
@@ -136,6 +138,21 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 - `checkBookingAvailability()` - Main validation hook
 - `getNextAvailableSlot()` - Suggest alternatives
 
+### Cart API (PR #64)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /cart | Get current user's cart |
+| POST | /cart/items | Add item to cart |
+| PATCH | /cart/items/:id | Update item quantity |
+| DELETE | /cart/items/:id | Remove item from cart |
+| DELETE | /cart | Clear entire cart |
+
+**Single-Vendor Enforcement:**
+- Cart is locked to single vendor when first item added
+- Adding item from different vendor returns 409 DIFFERENT_VENDOR
+- Vendor lock cleared when cart emptied
+- Uses atomic transaction (SERIALIZABLE + SELECT FOR UPDATE)
+
 ---
 
 ## Sprint 1 Summary (Complete)
@@ -165,4 +182,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 2 complete: Availability schema + rules (PR #52)
+**Last updated:** 2026-01-02 — Sprint 2 Phase 5: Cart API in review (PR #64)
