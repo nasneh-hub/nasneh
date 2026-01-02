@@ -58,8 +58,8 @@ export class WhatsAppClient {
   async sendOtp(params: WhatsAppOtpParams): Promise<WhatsAppMessageResponse> {
     const { phone, otp, language = 'en' } = params;
 
-    // Development mode - mock delivery
-    if (config.isDevelopment && !this.isConfigured) {
+    // Development/Test mode - mock delivery
+    if ((config.isDevelopment || config.isTest) && !this.isConfigured) {
       return this.mockSendOtp(phone, otp);
     }
 
@@ -211,8 +211,8 @@ export class WhatsAppClient {
     messageId: string,
     timeoutMs: number = config.otp.whatsappTimeoutSeconds * 1000
   ): Promise<WhatsAppDeliveryStatus> {
-    // In development mode, simulate instant delivery
-    if (config.isDevelopment) {
+    // In development/test mode, simulate instant delivery
+    if (config.isDevelopment || config.isTest) {
       return {
         messageId,
         status: 'delivered',
@@ -242,7 +242,7 @@ export class WhatsAppClient {
    * Check if WhatsApp is properly configured
    */
   isReady(): boolean {
-    return this.isConfigured || config.isDevelopment;
+    return this.isConfigured || config.isDevelopment || config.isTest;
   }
 }
 
