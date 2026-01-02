@@ -950,3 +950,164 @@ aws dynamodb describe-table --table-name nasneh-terraform-locks
 ---
 
 **Next Steps Section End**
+
+
+---
+
+## Incident Log
+
+### Incident: Staging ECS Deployment Failing (Jan 2026)
+
+**Date:** January 2, 2026  
+**Environment:** Staging (me-south-1)  
+**Severity:** High (blocking deployment)  
+**Status:** Resolved
+
+#### Symptoms
+
+1. **CD workflow fails** at "Wait for service stability" step
+2. **Target group unhealthy** - ALB health checks failing
+3. **ECS tasks** marked as UNHEALTHY despite container RUNNING
+4. **No CloudWatch logs** - log streams created but empty (storedBytes: 0)
+5. **Service events** showing: `"task is unhealthy... Health checks failed"`
+
+#### Root Causes
+
+**1. Missing Secrets in AWS Secrets Manager**
+
+The ECS task definition expected secrets that were not present in Secrets Manager:
+
+| Secret Path | Missing Keys |
+|-------------|--------------|
+| `nasneh-staging/api` | `REDIS_URL` |
+| `nasneh-staging/database` | `DB_USERNAME`, `DB_PASSWORD` |
+| `nasneh-staging/external` | `SMS_API_URL`, `SMS_API_KEY` |
+
+Error message:
+```
+ResourceInitializationError: unable to pull secrets or registry auth: 
+execution resource retrieval failed: unable to retrieve secret from asm: 
+service call has been retried 1 time(s): retrieved secret from Secrets Manager 
+did not contain json key REDIS_URL.
+```
+
+**2. Health Check Command Missing `curl`**
+
+- ECS task definition health check uses: `curl -f http://localhost:3000/health`
+- Docker image uses `node:20-alpine` which does NOT include `curl`
+- Health check command failed → container marked UNHEALTHY → ALB target unhealthy
+
+#### Fixes Applied
+
+**1. Secrets Added to AWS Secrets Manager (Manual)**
+
+```bash
+# nasneh-staging/api - added REDIS_URL
+aws secretsmanager get-secret-value --secret-id "nasneh-staging/api" | jq '.SecretString | fromjson | keys'
+# Now includes: JWT_SECRET, JWT_REFRESH_SECRET, OTP_SECRET, REDIS_URL, ...
+
+# nasneh-staging/database - added DB_USERNAME, DB_PASSWORD
+# Now includes: DATABASE_URL, DB_HOST, DB_NAME, DB_PORT, DB_USER, DB_USERNAME, DB_PASSWORD
+
+# nasneh-staging/external - added SMS_API_URL, SMS_API_KEY
+# Now includes: WHATSAPP_API_URL, WHATSAPP_API_TOKEN, SMS_API_URL, SMS_API_KEY, ...
+```
+
+**2. Dockerfile Updated (PR #84)**
+
+Added curl installation in production stage:
+```dockerfile
+FROM node:20-alpine AS production
+
+# Install curl for health checks (ECS task definition uses curl)
+RUN apk add --no-cache curl
+```
+
+**3. CD Workflow Enhanced (PR #84)**
+
+Added "Diagnostics on failure" step that runs when deployment fails:
+- ECS service events (last 10)
+- Running/stopped task details
+- Target group health status
+- CloudWatch logs (last 30 min)
+
+#### Prevention Measures
+
+**1. Secrets Checklist for New Environments**
+
+Before first deployment to any environment, verify ALL required secrets exist:
+
+```bash
+# Check all required keys exist
+REQUIRED_API="JWT_SECRET JWT_REFRESH_SECRET OTP_SECRET REDIS_URL"
+REQUIRED_DB="DATABASE_URL DB_USERNAME DB_PASSWORD"
+REQUIRED_EXT="WHATSAPP_API_URL WHATSAPP_API_TOKEN SMS_API_URL SMS_API_KEY"
+
+# Verify api secret
+aws secretsmanager get-secret-value --secret-id "nasneh-staging/api" \
+  --query 'SecretString' --output text | jq 'keys'
+
+# Verify database secret
+aws secretsmanager get-secret-value --secret-id "nasneh-staging/database" \
+  --query 'SecretString' --output text | jq 'keys'
+
+# Verify external secret
+aws secretsmanager get-secret-value --secret-id "nasneh-staging/external" \
+  --query 'SecretString' --output text | jq 'keys'
+```
+
+**2. Health Check Dependency Note**
+
+> ⚠️ **Important:** The container image MUST include `curl` for ECS health checks.
+> 
+> If using Alpine-based images, add: `RUN apk add --no-cache curl`
+> 
+> Alternatively, update the Terraform ECS health check to use `wget` (available in Alpine):
+> ```hcl
+> healthCheck = {
+>   command = ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+> }
+> ```
+
+**3. Startup Validation (Recommended)**
+
+Consider adding startup validation in the API to fail fast if required environment variables are missing:
+
+```typescript
+// apps/api/src/config/validate.ts
+const requiredEnvVars = [
+  'DATABASE_URL',
+  'JWT_SECRET',
+  'JWT_REFRESH_SECRET',
+  'REDIS_URL',
+];
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.error(`❌ Missing required environment variable: ${envVar}`);
+    process.exit(1);
+  }
+}
+```
+
+#### Timeline
+
+| Time | Event |
+|------|-------|
+| 11:05 | CD Run #7 - Deploy fails: ServiceNotFoundException (wrong service name) |
+| 11:15 | PR #83 merged - Fixed ECS_SERVICE name |
+| 11:20 | CD Run #8 - Deploy fails: ServicesStable waiter timeout |
+| 11:25 | Diagnosis: Missing REDIS_URL in secrets |
+| 11:30 | Secrets updated in AWS Secrets Manager |
+| 11:35 | Diagnosis: Health check failing (no curl in image) |
+| 11:45 | PR #84 created - Install curl + add diagnostics |
+| 12:00 | PR #84 merged, deployment successful |
+
+#### Related PRs
+
+- **PR #83**: fix(cd): correct ECS service name and add debug steps
+- **PR #84**: fix(docker): install curl for ECS health checks + add CD diagnostics
+
+---
+
+**Incident Log Section End**
