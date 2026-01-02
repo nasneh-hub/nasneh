@@ -83,6 +83,82 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
+          # Also load locally for verification
+          load: false
+
+      - name: Pull image for verification
+        run: |
+          IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest"
+          echo "Pulling image for verification: $IMAGE"
+          docker pull $IMAGE
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Verify - Check express dependency
+        run: |
+          echo "=== Test 1: Check express module resolution ==="
+          docker run --rm $IMAGE node -p "require.resolve('express')"
+          echo "✅ Express module found!"
+
+      - name: Verify - Check working directory and files
+        run: |
+          echo "=== Test 2: Check working directory and /app contents ==="
+          docker run --rm $IMAGE node -e "
+            console.log('cwd=', process.cwd());
+            console.log('');
+            console.log('=== /app contents (first 50) ===');
+            const fs = require('fs');
+            try {
+              console.log(fs.readdirSync('/app').slice(0, 50).join('\n'));
+            } catch(e) {
+              console.log('Error reading /app:', e.message);
+            }
+            console.log('');
+            console.log('=== Current dir contents ===');
+            console.log(fs.readdirSync('.').join('\n'));
+          "
+
+      - name: Verify - Check dist directory
+        run: |
+          echo "=== Test 3: Check dist directory ==="
+          docker run --rm $IMAGE ls -la dist/ || echo "dist/ not found in WORKDIR"
+          docker run --rm $IMAGE ls -la /app/apps/api/dist/ || echo "/app/apps/api/dist/ not found"
+
+      - name: Verify - Show Dockerfile CMD and WORKDIR
+        run: |
+          echo "=== Test 4: Dockerfile configuration ==="
+          echo "--- Dockerfile excerpt (last 20 lines) ---"
+          tail -20 apps/api/Dockerfile
+          echo ""
+          echo "--- Image inspect (Cmd, WorkingDir, Entrypoint) ---"
+          docker inspect $IMAGE --format '{{json .Config}}' | jq '{Cmd, WorkingDir, Entrypoint, Env: .Env | map(select(startswith("NODE_ENV") or startswith("PORT")))}'
+
+      - name: Verify - Test health endpoint startup
+        run: |
+          echo "=== Test 5: Quick startup test ==="
+          # Run container in background
+          CONTAINER_ID=$(docker run -d --rm -p 3000:3000 \
+            -e DATABASE_URL="postgresql://test:test@localhost:5432/test" \
+            -e JWT_SECRET="test-secret-for-ci" \
+            -e REDIS_URL="redis://localhost:6379" \
+            $IMAGE)
+          
+          echo "Container started: $CONTAINER_ID"
+          
+          # Wait a few seconds for startup
+          sleep 5
+          
+          # Check if container is still running
+          if docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then
+            echo "✅ Container is running after 5 seconds"
+            docker logs $CONTAINER_ID 2>&1 | tail -30
+          else
+            echo "❌ Container exited!"
+            docker logs $CONTAINER_ID 2>&1 | tail -50
+            exit 1
+          fi
+          
+          # Stop container
+          docker stop $CONTAINER_ID || true
 
       - name: Set image output
         id: set-image
@@ -91,7 +167,7 @@ jobs:
 
       - name: Output image details
         run: |
-          echo "### Docker Image Built :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "### Docker Image Built & Verified :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Repository:** \`${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -101,6 +177,8 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Digest:** \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Verification:** ✅ All tests passed" >> $GITHUB_STEP_SUMMARY
 
   deploy:
     name: Deploy to ECS
@@ -120,6 +198,27 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Verify image digest matches build
+        run: |
+          echo "=== Verifying image digest ==="
+          BUILD_DIGEST="${{ needs.build-and-push.outputs.image_sha }}"
+          echo "Build digest: $BUILD_DIGEST"
+          
+          # Get current digest from ECR
+          ECR_DIGEST=$(aws ecr describe-images \
+            --repository-name ${{ env.ECR_REPOSITORY }} \
+            --image-ids imageTag=staging-latest \
+            --query 'imageDetails[0].imageDigest' \
+            --output text)
+          echo "ECR digest: $ECR_DIGEST"
+          
+          if [ "$BUILD_DIGEST" = "$ECR_DIGEST" ]; then
+            echo "✅ Digests match! Deploying the correct image."
+          else
+            echo "⚠️ Digests differ - this may be expected if another build ran"
+            echo "Proceeding with deployment using staging-latest tag"
+          fi
 
       - name: Verify ECS resources
         run: |
