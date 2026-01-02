@@ -39,7 +39,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      image: ${{ steps.build.outputs.image }}
+      image: ${{ steps.set-image.outputs.image }}
       image_tag: ${{ steps.meta.outputs.tags }}
       image_sha: ${{ steps.build.outputs.digest }}
 
@@ -101,9 +101,6 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Digest:** \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
-
-    outputs:
-      image: ${{ steps.set-image.outputs.image }}
 
   deploy:
     name: Deploy to ECS
