@@ -45,3 +45,15 @@
 - **No feature creep** — do not add unrequested features
 - Commit to GitHub via **PR with clear commits**
 - Update docs when relevant changes are made
+
+
+---
+
+## PR Quality Gate
+
+A PR is **NOT "Ready for Review"** unless:
+
+1. **Mergeable** ✅ — No conflicts with base branch
+2. **CI Green** ✅ — All GitHub Actions checks pass
+
+**Rule:** Fix/re-run until both conditions are met BEFORE reporting PR as ready.
