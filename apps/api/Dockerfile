@@ -43,6 +43,15 @@ COPY packages/ ./packages/
 # Explicitly run prisma generate
 RUN pnpm --filter ./apps/api... exec prisma generate
 
+# Debug: Show where Prisma client was generated
+RUN echo "=== DEBUG: Prisma paths after generate ===" && \
+    ls -la apps/api/node_modules/.prisma 2>/dev/null || echo "apps/api/node_modules/.prisma NOT FOUND" && \
+    ls -la apps/api/node_modules/@prisma/client 2>/dev/null || echo "apps/api/node_modules/@prisma/client NOT FOUND" && \
+    ls -la node_modules/.prisma 2>/dev/null || echo "node_modules/.prisma NOT FOUND" && \
+    ls -la node_modules/@prisma/client 2>/dev/null || echo "node_modules/@prisma/client NOT FOUND" && \
+    find /app -name ".prisma" -type d 2>/dev/null | head -5 || echo "No .prisma dirs found" && \
+    find /app -path "*/@prisma/client" -type d 2>/dev/null | head -5 || echo "No @prisma/client dirs found"
+
 # Build the API
 RUN pnpm --filter ./apps/api... build
 
@@ -62,10 +71,13 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy dist to /app/dist (where the code expects it)
 COPY --from=builder /app/apps/api/dist ./dist
 
-# Copy Prisma schema and generated client
+# Copy Prisma schema
 COPY --from=builder /app/apps/api/prisma ./prisma
-COPY --from=builder /app/apps/api/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/apps/api/node_modules/@prisma ./node_modules/@prisma
+
+# Copy Prisma generated client - try multiple possible locations
+# pnpm may put it in root node_modules or apps/api/node_modules
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copy package.json for module resolution
 COPY --from=builder /app/apps/api/package.json ./package.json
