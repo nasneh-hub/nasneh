@@ -788,3 +788,165 @@ aws cloudwatch enable-alarm-actions \
 ---
 
 **Monitoring Section End**
+
+
+---
+
+## Domain Configuration (Production)
+
+### Domain Overview
+
+| Domain | Purpose | Status |
+|--------|---------|--------|
+| `nasneh.com` | Production root domain | Planned |
+| `nasneh.com` | Customer web app | Planned |
+| `dashboard.nasneh.com` | Admin dashboard | Planned |
+| `api.nasneh.com` | API endpoint | Planned |
+| `staging.nasneh.com` | Staging environment | Active (ALB DNS) |
+
+### Current Staging Endpoints
+
+| Service | Endpoint |
+|---------|----------|
+| API (ALB) | http://nasneh-staging-api-alb-1514033867.me-south-1.elb.amazonaws.com |
+| CDN (CloudFront) | https://dmuz0tskgwik1.cloudfront.net |
+
+### Production DNS Setup (Future)
+
+When ready for production:
+
+1. **Register/Transfer domain** to Route 53 (or use existing registrar)
+2. **Create ACM certificates** in us-east-1 (for CloudFront) and me-south-1 (for ALB)
+3. **Configure Route 53 hosted zone** with:
+   - A record for `nasneh.com` → CloudFront distribution
+   - A record for `api.nasneh.com` → ALB
+   - A record for `dashboard.nasneh.com` → CloudFront distribution
+4. **Update Terraform** with custom domain configuration
+
+### ACM Certificate Request (Example)
+
+```bash
+# Request certificate for production (me-south-1)
+aws acm request-certificate \
+  --domain-name nasneh.com \
+  --subject-alternative-names "*.nasneh.com" \
+  --validation-method DNS \
+  --region me-south-1
+
+# Request certificate for CloudFront (must be us-east-1)
+aws acm request-certificate \
+  --domain-name nasneh.com \
+  --subject-alternative-names "*.nasneh.com" \
+  --validation-method DNS \
+  --region us-east-1
+```
+
+---
+
+## Terraform State Management
+
+### Current State
+
+- **Location:** Local (`terraform.tfstate`)
+- **Backend:** Not configured (S3 backend commented out)
+
+### Recommended: Remote State Backend
+
+For team collaboration and state safety, migrate to S3 + DynamoDB:
+
+#### 1. Create Backend Resources
+
+```bash
+# Create S3 bucket for state
+aws s3api create-bucket \
+  --bucket nasneh-terraform-state \
+  --region me-south-1 \
+  --create-bucket-configuration LocationConstraint=me-south-1
+
+# Enable versioning
+aws s3api put-bucket-versioning \
+  --bucket nasneh-terraform-state \
+  --versioning-configuration Status=Enabled
+
+# Enable encryption
+aws s3api put-bucket-encryption \
+  --bucket nasneh-terraform-state \
+  --server-side-encryption-configuration '{
+    "Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]
+  }'
+
+# Create DynamoDB table for locking
+aws dynamodb create-table \
+  --table-name nasneh-terraform-locks \
+  --attribute-definitions AttributeName=LockID,AttributeType=S \
+  --key-schema AttributeName=LockID,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST \
+  --region me-south-1
+```
+
+#### 2. Migrate State (Safe Steps)
+
+```bash
+cd infra/environments/staging
+
+# 1. Backup current state
+cp terraform.tfstate terraform.tfstate.backup
+
+# 2. Uncomment backend block in main.tf
+# backend "s3" {
+#   bucket         = "nasneh-terraform-state"
+#   key            = "staging/terraform.tfstate"
+#   region         = "me-south-1"
+#   encrypt        = true
+#   dynamodb_table = "nasneh-terraform-locks"
+# }
+
+# 3. Initialize with migration
+terraform init -migrate-state
+
+# 4. Verify state
+terraform state list
+
+# 5. Test with plan (should show no changes)
+terraform plan
+```
+
+#### 3. Verify Migration
+
+```bash
+# Check S3 for state file
+aws s3 ls s3://nasneh-terraform-state/staging/
+
+# Check DynamoDB for lock table
+aws dynamodb describe-table --table-name nasneh-terraform-locks
+```
+
+---
+
+## Next Steps Checklist
+
+### Immediate (Before First Real Deploy)
+
+- [ ] **Confirm SNS subscription** - Check email and click confirm link
+- [ ] **Update secrets** in AWS Secrets Manager with real values
+- [ ] **Deploy real app image** via CD workflow (workflow_dispatch)
+- [ ] **Verify health checks** pass after deployment
+
+### Short-term (Sprint 3)
+
+- [ ] **Migrate Terraform state** to S3 + DynamoDB backend
+- [ ] **Add Redis/ElastiCache** module for session/cache
+- [ ] **Configure custom domain** with ACM + Route 53
+- [ ] **Enable HTTPS** on ALB with ACM certificate
+
+### Pre-Production
+
+- [ ] **Create production environment** (separate Terraform workspace)
+- [ ] **Enable Multi-AZ** for RDS and NAT Gateway
+- [ ] **Configure WAF** for ALB protection
+- [ ] **Set up backup/restore** procedures
+- [ ] **Load testing** and capacity planning
+
+---
+
+**Next Steps Section End**
