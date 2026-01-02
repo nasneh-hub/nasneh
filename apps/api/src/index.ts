@@ -14,6 +14,7 @@ import { providerServicesRouter, publicServicesRouter } from './modules/services
 import { providerCalendarRouter } from './modules/availability';
 import { bookingsRoutes, customerBookingRoutes, providerBookingRoutes } from './modules/bookings';
 import { usersRoutes } from './modules/users';
+import { myAddressesRouter, userAddressesRouter } from './modules/addresses';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -84,6 +85,10 @@ app.use(`${apiPrefix}/provider`, providerBookingRoutes);
 
 // User profile routes
 app.use(`${apiPrefix}/users`, usersRoutes);
+
+// Address management routes
+app.use(`${apiPrefix}/users/me/addresses`, myAddressesRouter);
+app.use(`${apiPrefix}/users/:userId/addresses`, userAddressesRouter);
 
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/payments`, paymentRoutes);
