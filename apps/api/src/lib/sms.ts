@@ -62,7 +62,7 @@ export class SmsClient {
    * Check if client is ready (configured or in dev mode)
    */
   isReady(): boolean {
-    return config.isDevelopment || this.isConfigured();
+    return config.isDevelopment || config.isTest || this.isConfigured();
   }
 
   /**
@@ -70,6 +70,11 @@ export class SmsClient {
    */
   async send(request: SmsMessageRequest): Promise<SmsMessageResponse> {
     const { phone, message } = request;
+
+    // Test mode - always mock (regardless of configuration)
+    if (config.isTest) {
+      return this.mockSend(phone, message);
+    }
 
     // Development mode - mock delivery
     if (config.isDevelopment) {

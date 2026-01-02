@@ -22,8 +22,8 @@ DevOps Gate sprint to set up infrastructure and CI/CD before Sprint 3.
 | 2 | [DEVOPS] VPC + Networking | ✅ Merged | #71 |
 | 3 | [DEVOPS] RDS PostgreSQL | ✅ Merged | #73 |
 | 4 | [DEVOPS] ECS Fargate + ALB | ✅ Merged | #74 |
-| 5 | [DEVOPS] S3 + CloudFront | 🔄 In Review | #75 |
-| 6 | [DEVOPS] CI/CD Pipeline | ⏳ To Do | - |
+| 5 | [DEVOPS] S3 + CloudFront | ✅ Merged | #75 |
+| 6 | [DEVOPS] CI/CD Pipeline | 🔄 In Review | #76 |
 | 7 | [DEVOPS] Secrets Management | ⏳ To Do | - |
 | 8 | [DEVOPS] Monitoring + Alerts | ⏳ To Do | - |
 
@@ -257,4 +257,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — DevOps Gate in progress. S3 + CloudFront PR #75 ready for review.
+**Last updated:** 2026-01-02 — DevOps Gate in progress. CI/CD Pipeline PR #76 ready for review.

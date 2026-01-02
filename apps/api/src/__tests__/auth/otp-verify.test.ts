@@ -151,14 +151,15 @@ describe('OTP Verify Endpoint', () => {
         channel: OtpChannel.WHATSAPP,
       });
 
-      // This should be the 5th attempt
+      // This should be the 5th attempt (0 attempts remaining)
       await expect(authService.verifyOtp(phone, '000003')).rejects.toThrow(
-        /Too many failed attempts/
+        /Invalid OTP.*0 attempt/
       );
 
-      // OTP should be deleted
+      // OTP should still exist but with max attempts reached
       const stored = await otpRepository.get(phone);
-      expect(stored).toBeNull();
+      expect(stored).not.toBeNull();
+      expect(stored?.attempts).toBe(5);
     });
   });
 
