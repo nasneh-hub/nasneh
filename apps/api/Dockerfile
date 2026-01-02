@@ -42,20 +42,38 @@ RUN cd apps/api && pnpm db:generate
 # Build the API
 RUN pnpm --filter @nasneh/api build
 
-# Save Prisma client BEFORE pruning (prune removes devDependencies including prisma)
-RUN mkdir -p /prisma-client && \
-    cp -r node_modules/.prisma /prisma-client/ 2>/dev/null || true && \
-    cp -r node_modules/@prisma /prisma-client/ 2>/dev/null || true
+# -----------------------------------------------------------------------------
+# Stage 2: Production Dependencies
+# -----------------------------------------------------------------------------
+FROM node:20-alpine AS deps
 
-# Prune dev dependencies after build
-RUN pnpm prune --prod
+# Enable corepack for pnpm
+RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
 
-# Restore Prisma client after prune (it's needed at runtime)
-RUN cp -r /prisma-client/.prisma node_modules/ 2>/dev/null || true && \
-    cp -r /prisma-client/@prisma node_modules/ 2>/dev/null || true
+WORKDIR /app
+
+# Copy workspace configuration files
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+
+# Copy all package.json files for workspace packages
+COPY apps/api/package.json ./apps/api/
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/utils/package.json ./packages/utils/
+
+# Copy Prisma schema (needed for prisma generate in postinstall)
+COPY apps/api/prisma ./apps/api/prisma
+
+# Install production dependencies only
+# This creates a clean node_modules with only prod deps
+RUN pnpm install --frozen-lockfile --prod
+
+# Generate Prisma client for production
+RUN cd apps/api && npx prisma generate
 
 # -----------------------------------------------------------------------------
-# Stage 2: Production
+# Stage 3: Production Runtime
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS production
 
@@ -68,10 +86,10 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copy pruned node_modules from builder (with Prisma client restored)
-COPY --from=builder /app/node_modules ./node_modules
+# Copy production node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
 
-# Copy built API files
+# Copy built API files from builder stage
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package.json ./apps/api/
 
@@ -99,7 +117,7 @@ EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+    CMD curl -f http://localhost:3000/health || exit 1
 
 # Start the application
 CMD ["node", "dist/index.js"]
