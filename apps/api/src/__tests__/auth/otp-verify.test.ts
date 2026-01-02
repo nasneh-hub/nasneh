@@ -156,9 +156,10 @@ describe('OTP Verify Endpoint', () => {
         /Invalid OTP.*0 attempt/
       );
 
-      // OTP should be deleted
+      // OTP should still exist but with max attempts reached
       const stored = await otpRepository.get(phone);
-      expect(stored).toBeNull();
+      expect(stored).not.toBeNull();
+      expect(stored?.attempts).toBe(5);
     });
   });
 
