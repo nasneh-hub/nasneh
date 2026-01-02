@@ -84,6 +84,7 @@ jobs:
           # cache-from: type=gha
           # cache-to: type=gha,mode=max
           no-cache: true
+          pull: true
           platforms: linux/amd64
           # Also load locally for verification
           load: false
