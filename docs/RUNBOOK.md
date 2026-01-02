@@ -463,3 +463,155 @@ gh workflow run cd.yml -f deploy=true
 ---
 
 **CI/CD Section End**
+
+
+---
+
+## AWS Secrets Manager (Staging)
+
+### Secret Structure
+
+| Secret | Path | Contents |
+|--------|------|----------|
+| API | `nasneh-staging/api` | JWT_SECRET, JWT_REFRESH_SECRET, OTP_SECRET, REDIS_URL |
+| Database | `nasneh-staging/database` | DB_USERNAME, DB_PASSWORD, DATABASE_URL |
+| External | `nasneh-staging/external` | WHATSAPP_API_URL, WHATSAPP_API_TOKEN, SMS_API_URL, SMS_API_KEY |
+
+### Initial Setup (Required Before First Deploy)
+
+After running `terraform apply` for staging, update secrets with real values:
+
+```bash
+# 1. API Application Secrets
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/api \
+  --secret-string '{
+    "JWT_SECRET": "your-secure-jwt-secret-min-32-chars-here",
+    "JWT_REFRESH_SECRET": "your-secure-refresh-secret-min-32-chars",
+    "OTP_SECRET": "your-secure-otp-secret-min-32-chars-here",
+    "REDIS_URL": "redis://your-redis-endpoint:6379"
+  }' \
+  --region me-south-1
+
+# 2. Database Credentials
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/database \
+  --secret-string '{
+    "DB_USERNAME": "nasneh_app",
+    "DB_PASSWORD": "your-secure-db-password",
+    "DATABASE_URL": "postgresql://nasneh_app:password@your-rds-endpoint:5432/nasneh"
+  }' \
+  --region me-south-1
+
+# 3. External Service Keys
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/external \
+  --secret-string '{
+    "WHATSAPP_API_URL": "https://api.whatsapp.com/...",
+    "WHATSAPP_API_TOKEN": "your-whatsapp-api-token",
+    "SMS_API_URL": "https://api.sms.com/...",
+    "SMS_API_KEY": "your-sms-api-key"
+  }' \
+  --region me-south-1
+```
+
+### Viewing Secrets
+
+```bash
+# View API secrets
+aws secretsmanager get-secret-value \
+  --secret-id nasneh-staging/api \
+  --query SecretString \
+  --output text \
+  --region me-south-1 | jq .
+
+# View database secrets
+aws secretsmanager get-secret-value \
+  --secret-id nasneh-staging/database \
+  --query SecretString \
+  --output text \
+  --region me-south-1 | jq .
+
+# View external secrets
+aws secretsmanager get-secret-value \
+  --secret-id nasneh-staging/external \
+  --query SecretString \
+  --output text \
+  --region me-south-1 | jq .
+```
+
+### Rotating Secrets
+
+```bash
+# 1. Update the secret value
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/api \
+  --secret-string '{"JWT_SECRET": "new-value-here", ...}' \
+  --region me-south-1
+
+# 2. Force ECS to pull new secrets (triggers new deployment)
+aws ecs update-service \
+  --cluster nasneh-staging-cluster \
+  --service nasneh-staging-api \
+  --force-new-deployment \
+  --region me-south-1
+
+# 3. Monitor deployment
+aws ecs describe-services \
+  --cluster nasneh-staging-cluster \
+  --services nasneh-staging-api \
+  --query 'services[0].deployments' \
+  --region me-south-1
+```
+
+### Secrets Ready Checklist
+
+Before deploying to staging, verify:
+
+- [ ] `nasneh-staging/api` secret has real JWT_SECRET (min 32 chars)
+- [ ] `nasneh-staging/api` secret has real JWT_REFRESH_SECRET (min 32 chars)
+- [ ] `nasneh-staging/api` secret has real OTP_SECRET (min 32 chars)
+- [ ] `nasneh-staging/api` secret has valid REDIS_URL
+- [ ] `nasneh-staging/database` secret has DB_USERNAME
+- [ ] `nasneh-staging/database` secret has DB_PASSWORD
+- [ ] `nasneh-staging/database` secret has valid DATABASE_URL pointing to RDS
+- [ ] `nasneh-staging/external` secret has WhatsApp credentials (or mock values)
+- [ ] `nasneh-staging/external` secret has SMS credentials (or mock values)
+
+### Troubleshooting Secrets
+
+#### ECS task fails to start with "secret not found"
+
+```bash
+# Check if secret exists
+aws secretsmanager describe-secret \
+  --secret-id nasneh-staging/api \
+  --region me-south-1
+
+# Check IAM permissions
+aws iam get-role-policy \
+  --role-name nasneh-staging-ecs-task-execution \
+  --policy-name nasneh-staging-ecs-secrets-policy
+```
+
+#### ECS task starts but app crashes with "invalid secret"
+
+```bash
+# Verify secret format (must be valid JSON)
+aws secretsmanager get-secret-value \
+  --secret-id nasneh-staging/api \
+  --query SecretString \
+  --output text \
+  --region me-south-1 | jq .
+
+# Check for required keys
+aws secretsmanager get-secret-value \
+  --secret-id nasneh-staging/api \
+  --query SecretString \
+  --output text \
+  --region me-south-1 | jq 'keys'
+```
+
+---
+
+**Secrets Management Section End**

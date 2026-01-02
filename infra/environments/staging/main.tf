@@ -141,7 +141,15 @@ module "compute" {
     ENVIRONMENT = var.environment
   }
 
+  # Secrets from Secrets Manager
+  enable_secrets      = true
+  api_secret_arn      = module.secrets.api_secret_arn
+  database_secret_arn = module.secrets.database_secret_arn
+  external_secret_arn = module.secrets.external_secret_arn
+
   tags = local.common_tags
+
+  depends_on = [module.secrets]
 }
 
 # =============================================================================
@@ -180,11 +188,17 @@ module "storage" {
 }
 
 # =============================================================================
-# FUTURE MODULES (Placeholders)
+# SECRETS MODULE
 # =============================================================================
-# Uncomment as modules are implemented
+# AWS Secrets Manager for application secrets
+# Secrets are injected into ECS tasks via ARN references
 
-# module "secrets" {
-#   source = "../../modules/secrets"
-#   ...
-# }
+module "secrets" {
+  source = "../../modules/secrets"
+
+  name_prefix             = local.name_prefix
+  environment             = var.environment
+  recovery_window_in_days = 7  # 7 days for staging, 30 for production
+
+  tags = local.common_tags
+}

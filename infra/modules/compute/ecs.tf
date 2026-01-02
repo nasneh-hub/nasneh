@@ -31,6 +31,63 @@ resource "aws_cloudwatch_log_group" "api" {
 }
 
 # -----------------------------------------------------------------------------
+# Local: Secrets Configuration
+# -----------------------------------------------------------------------------
+# Build secrets list conditionally based on enable_secrets flag
+locals {
+  # Secrets from Secrets Manager (only when enabled)
+  container_secrets = var.enable_secrets ? [
+    # API Application Secrets
+    {
+      name      = "JWT_SECRET"
+      valueFrom = "${var.api_secret_arn}:JWT_SECRET::"
+    },
+    {
+      name      = "JWT_REFRESH_SECRET"
+      valueFrom = "${var.api_secret_arn}:JWT_REFRESH_SECRET::"
+    },
+    {
+      name      = "OTP_SECRET"
+      valueFrom = "${var.api_secret_arn}:OTP_SECRET::"
+    },
+    {
+      name      = "REDIS_URL"
+      valueFrom = "${var.api_secret_arn}:REDIS_URL::"
+    },
+    # Database Credentials
+    {
+      name      = "DATABASE_URL"
+      valueFrom = "${var.database_secret_arn}:DATABASE_URL::"
+    },
+    {
+      name      = "DB_USERNAME"
+      valueFrom = "${var.database_secret_arn}:DB_USERNAME::"
+    },
+    {
+      name      = "DB_PASSWORD"
+      valueFrom = "${var.database_secret_arn}:DB_PASSWORD::"
+    },
+    # External Service Keys
+    {
+      name      = "WHATSAPP_API_URL"
+      valueFrom = "${var.external_secret_arn}:WHATSAPP_API_URL::"
+    },
+    {
+      name      = "WHATSAPP_API_TOKEN"
+      valueFrom = "${var.external_secret_arn}:WHATSAPP_API_TOKEN::"
+    },
+    {
+      name      = "SMS_API_URL"
+      valueFrom = "${var.external_secret_arn}:SMS_API_URL::"
+    },
+    {
+      name      = "SMS_API_KEY"
+      valueFrom = "${var.external_secret_arn}:SMS_API_KEY::"
+    }
+  ] : []
+}
+
+# -----------------------------------------------------------------------------
 # ECS Task Definition
 # -----------------------------------------------------------------------------
 resource "aws_ecs_task_definition" "api" {
@@ -56,6 +113,7 @@ resource "aws_ecs_task_definition" "api" {
         }
       ]
 
+      # Non-sensitive environment variables
       environment = concat(
         [
           {
@@ -82,13 +140,8 @@ resource "aws_ecs_task_definition" "api" {
         [for k, v in var.environment_variables : { name = k, value = v }]
       )
 
-      # Secrets will be injected via Secrets Manager (configured in separate task)
-      # secrets = [
-      #   {
-      #     name      = "DATABASE_URL"
-      #     valueFrom = "arn:aws:secretsmanager:${var.aws_region}:*:secret:${var.name_prefix}/database-url"
-      #   }
-      # ]
+      # Secrets from AWS Secrets Manager (injected at runtime)
+      secrets = local.container_secrets
 
       logConfiguration = {
         logDriver = "awslogs"

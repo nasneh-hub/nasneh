@@ -409,8 +409,8 @@ To use a custom domain:
 | 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ✅ Complete |
 | 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ✅ Complete |
 | 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ✅ Complete |
-| 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | 🔄 Pending Review |
-| 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ⏳ To Do |
+| 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ✅ Complete |
+| 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | 🔄 Pending Review |
 | 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
 
 > **Note:** Terraform remote state backend (S3 + DynamoDB) is configured as a sub-step during initial deployment, not as a separate task.
@@ -521,6 +521,128 @@ See [RUNBOOK.md](./RUNBOOK.md) for:
 - Building Docker image locally
 - GitHub secrets configuration
 - Troubleshooting
+
+---
+
+**Document End**
+
+
+---
+
+## 11. Secrets Management
+
+The secrets module (`/infra/modules/secrets`) manages application secrets using AWS Secrets Manager.
+
+### Design Decision: JSON Blob per Category
+
+We use a **single JSON blob per category** instead of individual secrets because:
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **JSON blob (chosen)** | Fewer API calls, easier rotation, lower cost ($0.40/secret/month), simpler IAM | All-or-nothing access per category |
+| Individual secrets | Fine-grained access control | More API calls, higher cost, complex IAM |
+
+### Secret Categories
+
+| Secret | Path | Contents |
+|--------|------|----------|
+| API | `nasneh-staging/api` | JWT_SECRET, JWT_REFRESH_SECRET, OTP_SECRET, REDIS_URL |
+| Database | `nasneh-staging/database` | DB_USERNAME, DB_PASSWORD, DATABASE_URL |
+| External | `nasneh-staging/external` | WHATSAPP_API_URL, WHATSAPP_API_TOKEN, SMS_API_URL, SMS_API_KEY |
+
+### ECS Integration
+
+Secrets are injected into ECS tasks using the `secrets` block in the task definition:
+
+```hcl
+secrets = [
+  {
+    name      = "JWT_SECRET"
+    valueFrom = "${var.api_secret_arn}:JWT_SECRET::"
+  },
+  {
+    name      = "DATABASE_URL"
+    valueFrom = "${var.database_secret_arn}:DATABASE_URL::"
+  }
+]
+```
+
+The ECS task execution role has permissions to read secrets via IAM policy.
+
+### Initial Setup (Required Before Deploy)
+
+After `terraform apply`, update secrets via AWS CLI:
+
+```bash
+# API secrets
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/api \
+  --secret-string '{
+    "JWT_SECRET": "your-secure-jwt-secret-min-32-chars",
+    "JWT_REFRESH_SECRET": "your-secure-refresh-secret-min-32-chars",
+    "OTP_SECRET": "your-secure-otp-secret-min-32-chars",
+    "REDIS_URL": "redis://your-redis-host:6379"
+  }' \
+  --region me-south-1
+
+# Database secrets
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/database \
+  --secret-string '{
+    "DB_USERNAME": "nasneh_app",
+    "DB_PASSWORD": "your-secure-db-password",
+    "DATABASE_URL": "postgresql://nasneh_app:password@rds-endpoint:5432/nasneh"
+  }' \
+  --region me-south-1
+
+# External service secrets
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/external \
+  --secret-string '{
+    "WHATSAPP_API_URL": "https://api.whatsapp.com/...",
+    "WHATSAPP_API_TOKEN": "your-whatsapp-token",
+    "SMS_API_URL": "https://api.sms.com/...",
+    "SMS_API_KEY": "your-sms-api-key"
+  }' \
+  --region me-south-1
+```
+
+### Secret Rotation
+
+#### Manual Rotation
+
+```bash
+# Update specific secret
+aws secretsmanager put-secret-value \
+  --secret-id nasneh-staging/api \
+  --secret-string '{"JWT_SECRET": "new-value", ...}' \
+  --region me-south-1
+
+# Force ECS to pull new secrets
+aws ecs update-service \
+  --cluster nasneh-staging-cluster \
+  --service nasneh-staging-api \
+  --force-new-deployment \
+  --region me-south-1
+```
+
+### Secrets Ready Checklist
+
+Before deploying to staging, ensure:
+
+- [ ] `nasneh-staging/api` secret updated with real values
+- [ ] `nasneh-staging/database` secret updated with RDS credentials
+- [ ] `nasneh-staging/external` secret updated with API keys (or mock values)
+- [ ] ECS task definition has `enable_secrets = true`
+- [ ] IAM policy allows ECS to read secrets
+
+### Cost Estimate
+
+| Resource | Monthly Cost |
+|----------|--------------|
+| 3 secrets × $0.40 | ~$1.20 |
+| API calls (estimated) | ~$0.05 |
+| **Total** | **~$1.25** |
 
 ---
 
