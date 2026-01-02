@@ -1,59 +1,54 @@
 # Project Status — Nasneh
 
-**Current release/tag:** v0.2.0-sprint1
+**Current release/tag:** v0.3.0-sprint2
 
-## 🚀 Sprint 2 In Progress
+## ✅ Sprint 2 Complete
 
-Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Bookings) starting.
-
----
-
-## Sprint 2 Progress: 17/17 tasks (100%) ✅ COMPLETE
-
-### Phase 1: Migrations ✅ Complete
-| Task | Status | PR |
-|------|--------|-----|
-| [SVC] Create services table migration | ✅ Merged | #45 |
-| [BOOK] Create bookings table migration | ✅ Merged | #46 |
-
-### Phase 2: Services Core ✅ Complete
-| Task | Status | PR |
-|------|--------|-----|
-| [SVC] Implement service CRUD API | ✅ Merged | #48 |
-| [SVC] Implement service listing API | ✅ Merged | #50 |
-| [SVC] Availability schema + rules | ✅ Merged | #52 |
-
-### Phase 3: Availability + Bookings Core ✅ Complete
-| Task | Status | PR |
-|------|--------|-----|
-| [SVC] Availability API + conflict checks | ✅ Merged | #55 |
-| [BOOK] Implement create booking endpoint | ✅ Merged | #57 |
-| [BOOK] Prevent double-booking | ✅ Merged | #59 |
-
-### Phase 4: Bookings Flow + User ✅ Complete
-| Task | Status | PR |
-|------|--------|-----|
-| [BOOK] Implement booking status flow | ✅ Merged | #60 |
-| [BOOK] Implement booking listing APIs | ✅ Merged | #61 |
-| [USER] Implement user profile CRUD | ✅ Merged | #62 |
-| [USER] Implement address management | ✅ Merged | #63 |
-
-### Phase 5: Cart + Reviews
-| Task | Status | PR |
-|------|--------|-----|
-| [CART] Implement cart API (single-vendor) | ✅ Merged | #64 |
-| [REV] Create reviews table migration | ✅ Merged | #65 |
-| [REV] Implement review CRUD API | 🔄 In Review | #66 |
-
-### Phase 6: Tests ✅ Complete
-| Task | Status | PR |
-|------|--------|-----|
-| [BOOK] Booking API tests | 🔄 In Review | #67 |
-| [SVC] Service API tests | 🔄 In Review | #68 |
+Sprint 2 completed with all 17 tasks merged. Services, Availability, Bookings, Cart, Reviews, and comprehensive tests implemented.
 
 ---
 
-## Database Schema (Updated)
+## Sprint 2 Summary (Complete)
+
+**All 17 tasks completed and merged to main. Tag v0.3.0-sprint2 created.**
+
+### Merged PRs
+
+| PR | Title | Phase |
+|----|-------|-------|
+| #45 | [SVC] Create services table migration | Phase 1 |
+| #46 | [BOOK] Create bookings table migration | Phase 1 |
+| #48 | [SVC] Implement service CRUD API | Phase 2 |
+| #50 | [SVC] Implement service listing API | Phase 2 |
+| #52 | [SVC] Availability schema + rules | Phase 2 |
+| #54 | refactor: availability config defaults | Phase 2 |
+| #55 | [SVC] Availability API + conflict checks | Phase 3 |
+| #57 | [BOOK] Implement create booking endpoint | Phase 3 |
+| #59 | [BOOK] Prevent double-booking (atomic) | Phase 3 |
+| #60 | [BOOK] Implement booking status flow | Phase 4 |
+| #61 | [BOOK] Implement booking listing APIs | Phase 4 |
+| #62 | [USER] Implement user profile CRUD | Phase 4 |
+| #63 | [USER] Implement address management | Phase 4 |
+| #64 | [CART] Implement cart API (single-vendor) | Phase 5 |
+| #65 | [REV] Create reviews table migration | Phase 5 |
+| #66 | [REV] Implement review CRUD API | Phase 5 |
+| #67 | [BOOK] Booking API tests | Phase 6 |
+| #68 | [SVC] Service API tests | Phase 6 |
+
+### Phase Breakdown
+
+| Phase | Description | Tasks |
+|-------|-------------|-------|
+| Phase 1 | Migrations | 2/2 ✅ |
+| Phase 2 | Services Core | 3/3 ✅ |
+| Phase 3 | Availability + Bookings | 3/3 ✅ |
+| Phase 4 | Bookings Flow + User | 4/4 ✅ |
+| Phase 5 | Cart + Reviews | 3/3 ✅ |
+| Phase 6 | Tests | 2/2 ✅ |
+
+---
+
+## Database Schema (Current)
 
 | Table | Description | Sprint |
 |-------|-------------|--------|
@@ -68,6 +63,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | audit_logs | System-wide audit trail | S1 |
 | otp_codes | OTP verification codes | S1 |
 | refresh_tokens | JWT refresh tokens | S1 |
+| addresses | User addresses with coordinates | S1 |
 | **service_providers** | Service provider profiles | **S2** |
 | **services** | Service catalog with types | **S2** |
 | **bookings** | Service bookings with scheduling | **S2** |
@@ -76,22 +72,23 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | **availability_settings** | Provider-level settings | **S2** |
 | **carts** | Shopping carts (single-vendor) | **S2** |
 | **cart_items** | Cart line items | **S2** |
+| **reviews** | User reviews with moderation | **S2** |
 
 ---
 
 ## API Endpoints (Sprint 2)
 
-### Services API (PR #48, #50)
+### Services API
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | /provider/services | Create service |
-| GET | /provider/services | List provider's services (with status filter) |
+| GET | /provider/services | List provider's services |
 | GET | /provider/services/stats | Service counts by status |
 | GET | /provider/services/:id | Get service details |
 | PATCH | /provider/services/:id | Update service |
 | DELETE | /provider/services/:id | Soft delete |
 | PATCH | /provider/services/:id/toggle | Toggle availability |
-| GET | /services | Public listing with filters + sorting |
+| GET | /services | Public listing with filters |
 | GET | /services/search | Keyword search |
 | GET | /services/featured | Featured services |
 | GET | /services/category/:id | By category |
@@ -99,7 +96,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | GET | /services/:id | Public service details |
 | GET | /services/:id/slots | Get available slots |
 
-### Provider Calendar API (PR #52)
+### Provider Calendar API
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | /provider/calendar | Get rules, overrides, settings |
@@ -112,33 +109,36 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | DELETE | /provider/calendar/overrides/:id | Delete override |
 | PATCH | /provider/calendar/settings | Update settings |
 
-### Filters & Sorting (PR #50)
+### Bookings API
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /bookings | Create booking |
+| GET | /bookings | List bookings (role-scoped) |
+| GET | /bookings/:id | Get booking details |
+| POST | /bookings/:id/confirm | Confirm booking |
+| POST | /bookings/:id/start | Start booking |
+| POST | /bookings/:id/complete | Complete booking |
+| POST | /bookings/:id/cancel | Cancel booking |
+| POST | /bookings/:id/no-show | Mark no-show |
+| GET | /customer/bookings | Customer's bookings |
+| GET | /provider/bookings | Provider's bookings |
 
-- **Filters:** serviceType, categoryId, providerId, minPrice, maxPrice, isAvailable, search, status
-- **Sorting:** newest, oldest, price_asc, price_desc, name_asc, name_desc
-- **Pagination:** page, limit (max 100), returns total, totalPages, hasNext, hasPrev
+### User API
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /users/me | Get current user profile |
+| PATCH | /users/me | Update current user profile |
+| GET | /users | List users (admin) |
+| GET | /users/:id | Get user by ID |
+| PATCH | /users/:id | Update user by ID |
+| GET | /users/me/addresses | List my addresses |
+| POST | /users/me/addresses | Create address |
+| GET | /users/me/addresses/:id | Get address |
+| PATCH | /users/me/addresses/:id | Update address |
+| DELETE | /users/me/addresses/:id | Delete address |
+| POST | /users/me/addresses/:id/default | Set as default |
 
----
-
-## Availability System (PR #52)
-
-### Features
-- Weekly recurring rules (per day of week)
-- Date-specific overrides (AVAILABLE/UNAVAILABLE)
-- Buffer times (before/after bookings)
-- Preparation days for DELIVERY_DATE services
-- Override precedence (date overrides > weekly rules)
-- Conflict detection hooks for bookings
-
-### Defaults (Configurable Per Provider)
-- **Source of Truth:** `apps/api/src/config/calendar.defaults.ts`
-- **Details:** These MVP defaults are used when creating new provider settings and can be overridden via environment variables. See `TECHNICAL_SPEC.md` for more details.
-
-### Exported Hooks (for bookings module)
-- `checkBookingAvailability()` - Main validation hook
-- `getNextAvailableSlot()` - Suggest alternatives
-
-### Cart API (PR #64)
+### Cart API
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | /cart | Get current user's cart |
@@ -147,35 +147,52 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | DELETE | /cart/items/:id | Remove item from cart |
 | DELETE | /cart | Clear entire cart |
 
-**Single-Vendor Enforcement:**
-- Cart is locked to single vendor when first item added
-- Adding item from different vendor returns 409 DIFFERENT_VENDOR
-- Vendor lock cleared when cart emptied
-- Uses atomic transaction (SERIALIZABLE + SELECT FOR UPDATE)
-
-### Reviews API (PR #66)
+### Reviews API
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | /reviews | Create review |
-| GET | /reviews | List reviews (filters: reviewableType, reviewableId, status) |
+| GET | /reviews | List reviews |
 | GET | /reviews/:id | Get review by ID |
-| PATCH | /reviews/:id | Update own review (PENDING only) |
+| PATCH | /reviews/:id | Update own review |
 | DELETE | /reviews/:id | Delete own review |
-| POST | /admin/reviews/:id/approve | Approve review (admin) |
-| POST | /admin/reviews/:id/reject | Reject review (admin) |
-| GET | /users/me/reviews | Get current user's reviews |
+| POST | /admin/reviews/:id/approve | Approve review |
+| POST | /admin/reviews/:id/reject | Reject review |
+| GET | /users/me/reviews | Get my reviews |
 
-**RBAC:**
-- CUSTOMER/PROVIDER: create + manage own reviews only
-- ADMIN: list all + approve/reject
-- Non-admin users only see APPROVED reviews (except their own)
+---
 
-**Status Flow:** PENDING → APPROVED/REJECTED (admin can change decision)
+## Key Features (Sprint 2)
+
+### Availability System
+- Weekly recurring rules (per day of week)
+- Date-specific overrides (AVAILABLE/UNAVAILABLE)
+- Buffer times (before/after bookings)
+- Preparation days for DELIVERY_DATE services
+- Override precedence (date overrides > weekly rules)
+- Conflict detection hooks for bookings
+- Configurable defaults via `apps/api/src/config/calendar.defaults.ts`
+
+### Booking System
+- Atomic double-booking prevention (SERIALIZABLE + SELECT FOR UPDATE)
+- Status flow: PENDING → CONFIRMED → IN_PROGRESS → COMPLETED
+- Role-based permissions for status transitions
+- Cancellation with reason tracking
+- No-show marking
+
+### Cart System
+- Single-vendor enforcement (409 DIFFERENT_VENDOR)
+- Atomic operations with row locking
+- Auto vendor lock/unlock
+
+### Reviews System
+- Polymorphic reviews (PRODUCT, SERVICE, VENDOR, PROVIDER, DRIVER)
+- Admin moderation (PENDING → APPROVED/REJECTED)
+- Rating 1-5 with optional comment
+- One review per user per entity
 
 ---
 
 ## Sprint 1 Summary (Complete)
-
 
 All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 
@@ -188,8 +205,19 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 
 ---
 
-## Open Issues
+## Sprint 3 Backlog (Planned)
 
+| Task | Priority | Description |
+|------|----------|-------------|
+| [NOTIFY] Push notifications | P0 | FCM integration for booking updates |
+| [SEARCH] Elasticsearch integration | P1 | Full-text search for services/products |
+| [MEDIA] Image upload service | P1 | S3 integration for service images |
+| [REPORT] Provider analytics dashboard | P2 | Booking stats, revenue reports |
+| [ADMIN] Admin panel API | P2 | User management, moderation tools |
+
+---
+
+## Open Issues
 
 | # | Title |
 |---|-------|
@@ -201,4 +229,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 COMPLETE! All 17 tasks done. Service API tests in review (PR #68)
+**Last updated:** 2026-01-02 — Sprint 2 COMPLETE! Tag v0.3.0-sprint2 created.
