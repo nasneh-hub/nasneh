@@ -28,6 +28,8 @@ env:
   ECR_REPOSITORY: nasneh-staging-api
   ECS_CLUSTER: nasneh-staging-cluster
   ECS_SERVICE: nasneh-staging-api
+  ECS_TASK_DEFINITION: nasneh-staging-api
+  CONTAINER_NAME: api
 
 jobs:
   build-and-push:
@@ -37,6 +39,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
+      image: ${{ steps.build.outputs.image }}
       image_tag: ${{ steps.meta.outputs.tags }}
       image_sha: ${{ steps.build.outputs.digest }}
 
@@ -81,6 +84,11 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64
 
+      - name: Set image output
+        id: set-image
+        run: |
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest" >> $GITHUB_OUTPUT
+
       - name: Output image details
         run: |
           echo "### Docker Image Built :rocket:" >> $GITHUB_STEP_SUMMARY
@@ -93,6 +101,9 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Digest:** \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
+
+    outputs:
+      image: ${{ steps.set-image.outputs.image }}
 
   deploy:
     name: Deploy to ECS
@@ -121,12 +132,53 @@ jobs:
           echo "Describing service ${{ env.ECS_SERVICE }}..."
           aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].{status:status,runningCount:runningCount,desiredCount:desiredCount}'
 
-      - name: Update ECS service
+      - name: Download current task definition
         run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.ECS_TASK_DEFINITION }} \
+            --query 'taskDefinition' \
+            > task-definition.json
+          
+          # Remove fields that can't be used when registering a new revision
+          jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' \
+            task-definition.json > task-definition-clean.json
+          
+          echo "Current task definition:"
+          cat task-definition-clean.json | jq '.containerDefinitions[0].image'
+
+      - name: Update task definition with new image
+        id: task-def
+        run: |
+          NEW_IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest"
+          echo "Updating image to: $NEW_IMAGE"
+          
+          # Update the image in the container definition
+          jq --arg IMAGE "$NEW_IMAGE" \
+            '.containerDefinitions[0].image = $IMAGE' \
+            task-definition-clean.json > task-definition-updated.json
+          
+          echo "Updated task definition:"
+          cat task-definition-updated.json | jq '.containerDefinitions[0].image'
+          
+          # Register new task definition revision
+          NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://task-definition-updated.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          
+          echo "Registered new task definition: $NEW_TASK_DEF_ARN"
+          echo "task_definition_arn=$NEW_TASK_DEF_ARN" >> $GITHUB_OUTPUT
+
+      - name: Update ECS service with new task definition
+        run: |
+          echo "Updating service with new task definition..."
           aws ecs update-service \
             --cluster ${{ env.ECS_CLUSTER }} \
             --service ${{ env.ECS_SERVICE }} \
+            --task-definition ${{ steps.task-def.outputs.task_definition_arn }} \
             --force-new-deployment
+          
+          echo "Service update initiated"
 
       - name: Wait for service stability
         run: |
@@ -142,7 +194,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Cluster:** \`${{ env.ECS_CLUSTER }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Service:** \`${{ env.ECS_SERVICE }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Image Tag:** \`staging-latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Task Definition:** \`${{ steps.task-def.outputs.task_definition_arn }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** \`${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Diagnostics on failure
         if: failure()
