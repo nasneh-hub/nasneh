@@ -84,3 +84,20 @@ variable "enable_cdn" {
   type        = bool
   default     = true
 }
+
+
+# ============================================
+# Monitoring Variables
+# ============================================
+
+variable "enable_monitoring" {
+  description = "Enable CloudWatch alarms and monitoring"
+  type        = bool
+  default     = true
+}
+
+variable "alert_email" {
+  description = "Email address for CloudWatch alarm notifications (leave empty to skip)"
+  type        = string
+  default     = ""
+}
