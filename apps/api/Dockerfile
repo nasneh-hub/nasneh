@@ -1,15 +1,12 @@
 # =============================================================================
 # Nasneh API - Multi-stage Dockerfile
 # =============================================================================
-# Stage 1: builder    - Full dev dependencies, prisma generate, build
-# Stage 2: production - Final minimal image with pruned dependencies
+# Stage 1: builder    - Full install, prisma generate, build
+# Stage 2: production - Minimal runtime with production deps
 # =============================================================================
 
 # -----------------------------------------------------------------------------
 # Stage 1: Builder
-# -----------------------------------------------------------------------------
-# Full install with devDependencies, generate Prisma client, build API
-# Then prune to production dependencies
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS builder
 
@@ -37,15 +34,14 @@ RUN pnpm install --frozen-lockfile
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Ensure Prisma client is generated
+# Generate Prisma client
 RUN pnpm --filter @nasneh/api exec prisma generate
 
 # Build the API
 RUN pnpm --filter @nasneh/api build
 
-# Deploy only the api package with its production dependencies
-# This creates a standalone deployment in /app/deploy
-RUN pnpm --filter @nasneh/api deploy --prod /app/deploy
+# Prune dev dependencies
+RUN pnpm prune --prod
 
 # -----------------------------------------------------------------------------
 # Stage 2: Production Runtime
@@ -61,17 +57,24 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copy the deployed package (includes node_modules with Prisma client)
-COPY --from=builder /app/deploy ./
-
-# Copy Prisma schema (needed for migrations)
-COPY --from=builder /app/apps/api/prisma ./prisma
+# Copy the entire workspace structure (pnpm requires this)
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
+COPY --from=builder /app/packages ./packages
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # Set ownership
 RUN chown -R nodejs:nodejs /app
 
 # Switch to non-root user
 USER nodejs
+
+# Set working directory to api
+WORKDIR /app/apps/api
 
 # Environment variables
 ENV NODE_ENV=production
