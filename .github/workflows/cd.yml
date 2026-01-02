@@ -96,34 +96,48 @@ jobs:
           docker pull $IMAGE
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
+      - name: Verify - Debug directory structure
+        run: |
+          echo "=== Debug: Directory structure and node_modules ==="
+          docker run --rm $IMAGE sh -c '
+            echo "pwd: $(pwd)"
+            echo ""
+            echo "=== ls -la (current dir) ==="
+            ls -la
+            echo ""
+            echo "=== ls -la node_modules | head -20 ==="
+            ls -la node_modules | head -20
+          '
+
       - name: Verify - Check express dependency
         run: |
           echo "=== Test 1: Check express module resolution ==="
-          docker run --rm $IMAGE node -p "require.resolve('express')"
+          docker run --rm $IMAGE node -e '
+            process.chdir("/app/apps/api");
+            console.log("cwd:", process.cwd());
+            const expressPath = require.resolve("express");
+            console.log("express resolved:", expressPath);
+          '
           echo "✅ Express module found!"
 
-      - name: Verify - Check working directory and files
+      - name: Verify - Check Prisma client
         run: |
-          echo "=== Test 2: Check working directory and /app contents ==="
-          docker run --rm $IMAGE node -e "
-            console.log('cwd=', process.cwd());
-            console.log('');
-            console.log('=== /app contents (first 50) ===');
-            const fs = require('fs');
+          echo "=== Test 2: Check @prisma/client module resolution ==="
+          docker run --rm $IMAGE node -e '
+            process.chdir("/app/apps/api");
+            console.log("cwd:", process.cwd());
             try {
-              console.log(fs.readdirSync('/app').slice(0, 50).join('\n'));
+              const prismaPath = require.resolve("@prisma/client");
+              console.log("@prisma/client resolved:", prismaPath);
             } catch(e) {
-              console.log('Error reading /app:', e.message);
+              console.log("@prisma/client not found (optional):", e.message);
             }
-            console.log('');
-            console.log('=== Current dir contents ===');
-            console.log(fs.readdirSync('.').join('\n'));
-          "
+          '
+          echo "✅ Prisma check complete!"
 
       - name: Verify - Check dist directory
         run: |
           echo "=== Test 3: Check dist directory ==="
-          docker run --rm $IMAGE ls -la dist/ || echo "dist/ not found in WORKDIR"
           docker run --rm $IMAGE ls -la /app/apps/api/dist/ || echo "/app/apps/api/dist/ not found"
 
       - name: Verify - Show Dockerfile CMD and WORKDIR
@@ -295,42 +309,3 @@ jobs:
           echo "**Service:** \`${{ env.ECS_SERVICE }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Task Definition:** \`${{ steps.task-def.outputs.task_definition_arn }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Image:** \`${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest\`" >> $GITHUB_STEP_SUMMARY
-
-      - name: Diagnostics on failure
-        if: failure()
-        run: |
-          echo "### Deployment Failed - Diagnostics :x:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          echo "=== ECS Service Events (last 10) ==="
-          aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} \
-            --query 'services[0].events[0:10].[createdAt,message]' --output table
-          
-          echo ""
-          echo "=== Running Tasks ==="
-          RUNNING_TASK=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --desired-status RUNNING --query 'taskArns[0]' --output text)
-          if [ "$RUNNING_TASK" != "None" ]; then
-            aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks "$RUNNING_TASK" \
-              --query 'tasks[0].{lastStatus:lastStatus,healthStatus:healthStatus,stoppedReason:stoppedReason,containers:containers[0].{reason:reason,exitCode:exitCode,lastStatus:lastStatus}}' --output json
-          fi
-          
-          echo ""
-          echo "=== Stopped Tasks (latest) ==="
-          STOPPED_TASK=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --desired-status STOPPED --query 'taskArns[0]' --output text)
-          if [ "$STOPPED_TASK" != "None" ]; then
-            aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks "$STOPPED_TASK" \
-              --query 'tasks[0].{lastStatus:lastStatus,stoppedReason:stoppedReason,stopCode:stopCode,containers:containers[0].{reason:reason,exitCode:exitCode}}' --output json
-          fi
-          
-          echo ""
-          echo "=== Target Group Health ==="
-          TG_ARN=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].loadBalancers[0].targetGroupArn' --output text)
-          if [ "$TG_ARN" != "None" ]; then
-            aws elbv2 describe-target-health --target-group-arn "$TG_ARN" --output json
-          fi
-          
-          echo ""
-          echo "=== CloudWatch Logs (last 30 min) ==="
-          TD=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].taskDefinition' --output text)
-          LOG_GROUP=$(aws ecs describe-task-definition --task-definition "$TD" --query 'taskDefinition.containerDefinitions[0].logConfiguration.options."awslogs-group"' --output text)
-          aws logs tail "$LOG_GROUP" --since 30m || echo "No logs found"
