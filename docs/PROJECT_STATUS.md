@@ -8,6 +8,33 @@ Sprint 2 completed with all 17 tasks merged. Services, Availability, Bookings, C
 
 ---
 
+## 🚧 DevOps Gate (Sprint 2.5) — In Progress
+
+DevOps Gate sprint to set up infrastructure and CI/CD before Sprint 3.
+
+**Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
+
+### Tasks
+
+| Task | Status | PR |
+|------|--------|----|
+| [DEVOPS] IaC Setup | 🔄 In Review | #70 |
+| [CI/CD] CI Pipeline Setup | ⏳ To Do | - |
+| [DEVOPS] Terraform State Backend | ⏳ To Do | - |
+| [DEVOPS] Networking Module | ⏳ To Do | - |
+| [DEVOPS] Database Module | ⏳ To Do | - |
+| [DEVOPS] Compute Module | ⏳ To Do | - |
+| [CI/CD] CD Pipeline Setup | ⏳ To Do | - |
+
+### Key Decisions
+
+- **IaC Tool:** Terraform (chosen over CDK for separation of concerns)
+- **Region:** AWS Bahrain (me-south-1)
+- **Staging First:** All infrastructure deployed to staging before production
+- **Documentation:** See [docs/DEVOPS_GATE.md](./DEVOPS_GATE.md)
+
+---
+
 ## Sprint 2 Summary (Complete)
 
 **All 17 tasks completed and merged to main. Tag v0.3.0-sprint2 created.**
