@@ -74,8 +74,35 @@ export const bookingQuerySchema = z.object({
 export type BookingQuery = z.infer<typeof bookingQuerySchema>;
 
 // ===========================================
-// Status Transition Rules
+// User Roles (for transition permissions)
 // ===========================================
+
+export const UserRole = {
+  CUSTOMER: 'CUSTOMER',
+  PROVIDER: 'PROVIDER',
+  ADMIN: 'ADMIN',
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
+// ===========================================
+// Status Transition Rules with Role Permissions
+// ===========================================
+
+/**
+ * Booking Status State Machine
+ * 
+ * State Diagram:
+ * 
+ *   PENDING ──────┬──────> CONFIRMED ──────┬──────> IN_PROGRESS ──────> COMPLETED
+ *       │         │            │           │            │
+ *       │         │            │           │            │
+ *       └─────────┴────────────┴───────────┴────────────┴──────> CANCELLED
+ *                              │
+ *                              └──────> NO_SHOW
+ * 
+ * Terminal States: COMPLETED, CANCELLED, NO_SHOW
+ */
 
 export const BOOKING_STATUS_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
   [BookingStatus.PENDING]: [BookingStatus.CONFIRMED, BookingStatus.CANCELLED],
@@ -86,9 +113,78 @@ export const BOOKING_STATUS_TRANSITIONS: Record<BookingStatus, BookingStatus[]> 
   [BookingStatus.NO_SHOW]: [], // Terminal state
 };
 
+/**
+ * Role-based transition permissions
+ * 
+ * Defines which roles can perform each status transition.
+ * Format: { from_to: [allowed_roles] }
+ */
+export const TRANSITION_PERMISSIONS: Record<string, UserRole[]> = {
+  // PENDING transitions
+  'PENDING_CONFIRMED': [UserRole.PROVIDER, UserRole.ADMIN],
+  'PENDING_CANCELLED': [UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN],
+  
+  // CONFIRMED transitions
+  'CONFIRMED_IN_PROGRESS': [UserRole.PROVIDER, UserRole.ADMIN],
+  'CONFIRMED_CANCELLED': [UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN],
+  'CONFIRMED_NO_SHOW': [UserRole.PROVIDER, UserRole.ADMIN],
+  
+  // IN_PROGRESS transitions
+  'IN_PROGRESS_COMPLETED': [UserRole.PROVIDER, UserRole.ADMIN],
+  'IN_PROGRESS_CANCELLED': [UserRole.PROVIDER, UserRole.ADMIN], // Customer cannot cancel once started
+};
+
+/**
+ * Get the permission key for a transition
+ */
+export function getTransitionKey(from: BookingStatus, to: BookingStatus): string {
+  return `${from}_${to}`;
+}
+
+/**
+ * Check if a transition is valid (regardless of role)
+ */
 export function isValidBookingTransition(from: BookingStatus, to: BookingStatus): boolean {
   return BOOKING_STATUS_TRANSITIONS[from]?.includes(to) ?? false;
 }
+
+/**
+ * Check if a role can perform a specific transition
+ */
+export function canRolePerformTransition(
+  from: BookingStatus,
+  to: BookingStatus,
+  role: UserRole
+): boolean {
+  const key = getTransitionKey(from, to);
+  const allowedRoles = TRANSITION_PERMISSIONS[key];
+  return allowedRoles?.includes(role) ?? false;
+}
+
+/**
+ * Get all allowed transitions for a role from a given status
+ */
+export function getAllowedTransitionsForRole(
+  from: BookingStatus,
+  role: UserRole
+): BookingStatus[] {
+  const possibleTransitions = BOOKING_STATUS_TRANSITIONS[from] ?? [];
+  return possibleTransitions.filter((to) => canRolePerformTransition(from, to, role));
+}
+
+// ===========================================
+// Status Transition Error Codes
+// ===========================================
+
+export const StatusTransitionErrorCode = {
+  BOOKING_NOT_FOUND: 'BOOKING_NOT_FOUND',
+  INVALID_TRANSITION: 'INVALID_TRANSITION',
+  PERMISSION_DENIED: 'PERMISSION_DENIED',
+  BOOKING_IN_TERMINAL_STATE: 'BOOKING_IN_TERMINAL_STATE',
+  CANCELLATION_REASON_REQUIRED: 'CANCELLATION_REASON_REQUIRED',
+} as const;
+
+export type StatusTransitionErrorCode = typeof StatusTransitionErrorCode[keyof typeof StatusTransitionErrorCode];
 
 // ===========================================
 // Response Types

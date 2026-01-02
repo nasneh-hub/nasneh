@@ -787,3 +787,323 @@ describe('HTTP 409 Conflict Response', () => {
     expect(BookingErrorCode.SLOT_ALREADY_BOOKED).toBeDefined();
   });
 });
+
+
+// ===========================================
+// Status Transition State Machine Tests
+// ===========================================
+
+import {
+  BookingStatus,
+  UserRole,
+  BOOKING_STATUS_TRANSITIONS,
+  TRANSITION_PERMISSIONS,
+  isValidBookingTransition,
+  canRolePerformTransition,
+  getAllowedTransitionsForRole,
+  getTransitionKey,
+  StatusTransitionErrorCode,
+} from '../../types/booking.types';
+
+describe('Booking Status State Machine', () => {
+  describe('State Transitions', () => {
+    describe('PENDING state', () => {
+      it('should allow transition to CONFIRMED', () => {
+        expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.CONFIRMED)).toBe(true);
+      });
+
+      it('should allow transition to CANCELLED', () => {
+        expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.CANCELLED)).toBe(true);
+      });
+
+      it('should NOT allow transition to IN_PROGRESS', () => {
+        expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.IN_PROGRESS)).toBe(false);
+      });
+
+      it('should NOT allow transition to COMPLETED', () => {
+        expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.COMPLETED)).toBe(false);
+      });
+
+      it('should NOT allow transition to NO_SHOW', () => {
+        expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.NO_SHOW)).toBe(false);
+      });
+    });
+
+    describe('CONFIRMED state', () => {
+      it('should allow transition to IN_PROGRESS', () => {
+        expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS)).toBe(true);
+      });
+
+      it('should allow transition to CANCELLED', () => {
+        expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.CANCELLED)).toBe(true);
+      });
+
+      it('should allow transition to NO_SHOW', () => {
+        expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.NO_SHOW)).toBe(true);
+      });
+
+      it('should NOT allow transition to COMPLETED', () => {
+        expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.COMPLETED)).toBe(false);
+      });
+
+      it('should NOT allow transition to PENDING', () => {
+        expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.PENDING)).toBe(false);
+      });
+    });
+
+    describe('IN_PROGRESS state', () => {
+      it('should allow transition to COMPLETED', () => {
+        expect(isValidBookingTransition(BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED)).toBe(true);
+      });
+
+      it('should allow transition to CANCELLED', () => {
+        expect(isValidBookingTransition(BookingStatus.IN_PROGRESS, BookingStatus.CANCELLED)).toBe(true);
+      });
+
+      it('should NOT allow transition to CONFIRMED', () => {
+        expect(isValidBookingTransition(BookingStatus.IN_PROGRESS, BookingStatus.CONFIRMED)).toBe(false);
+      });
+
+      it('should NOT allow transition to NO_SHOW', () => {
+        expect(isValidBookingTransition(BookingStatus.IN_PROGRESS, BookingStatus.NO_SHOW)).toBe(false);
+      });
+    });
+
+    describe('Terminal states', () => {
+      it('COMPLETED should not allow any transitions', () => {
+        expect(BOOKING_STATUS_TRANSITIONS[BookingStatus.COMPLETED]).toEqual([]);
+        expect(isValidBookingTransition(BookingStatus.COMPLETED, BookingStatus.CANCELLED)).toBe(false);
+        expect(isValidBookingTransition(BookingStatus.COMPLETED, BookingStatus.PENDING)).toBe(false);
+      });
+
+      it('CANCELLED should not allow any transitions', () => {
+        expect(BOOKING_STATUS_TRANSITIONS[BookingStatus.CANCELLED]).toEqual([]);
+        expect(isValidBookingTransition(BookingStatus.CANCELLED, BookingStatus.CONFIRMED)).toBe(false);
+        expect(isValidBookingTransition(BookingStatus.CANCELLED, BookingStatus.PENDING)).toBe(false);
+      });
+
+      it('NO_SHOW should not allow any transitions', () => {
+        expect(BOOKING_STATUS_TRANSITIONS[BookingStatus.NO_SHOW]).toEqual([]);
+        expect(isValidBookingTransition(BookingStatus.NO_SHOW, BookingStatus.CONFIRMED)).toBe(false);
+        expect(isValidBookingTransition(BookingStatus.NO_SHOW, BookingStatus.CANCELLED)).toBe(false);
+      });
+    });
+  });
+
+  describe('Role-Based Permissions', () => {
+    describe('CUSTOMER role', () => {
+      it('should be able to cancel PENDING booking', () => {
+        expect(canRolePerformTransition(BookingStatus.PENDING, BookingStatus.CANCELLED, UserRole.CUSTOMER)).toBe(true);
+      });
+
+      it('should be able to cancel CONFIRMED booking', () => {
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.CANCELLED, UserRole.CUSTOMER)).toBe(true);
+      });
+
+      it('should NOT be able to cancel IN_PROGRESS booking', () => {
+        expect(canRolePerformTransition(BookingStatus.IN_PROGRESS, BookingStatus.CANCELLED, UserRole.CUSTOMER)).toBe(false);
+      });
+
+      it('should NOT be able to confirm booking', () => {
+        expect(canRolePerformTransition(BookingStatus.PENDING, BookingStatus.CONFIRMED, UserRole.CUSTOMER)).toBe(false);
+      });
+
+      it('should NOT be able to start booking', () => {
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS, UserRole.CUSTOMER)).toBe(false);
+      });
+
+      it('should NOT be able to complete booking', () => {
+        expect(canRolePerformTransition(BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, UserRole.CUSTOMER)).toBe(false);
+      });
+
+      it('should NOT be able to mark no-show', () => {
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.NO_SHOW, UserRole.CUSTOMER)).toBe(false);
+      });
+    });
+
+    describe('PROVIDER role', () => {
+      it('should be able to confirm PENDING booking', () => {
+        expect(canRolePerformTransition(BookingStatus.PENDING, BookingStatus.CONFIRMED, UserRole.PROVIDER)).toBe(true);
+      });
+
+      it('should be able to cancel PENDING booking', () => {
+        expect(canRolePerformTransition(BookingStatus.PENDING, BookingStatus.CANCELLED, UserRole.PROVIDER)).toBe(true);
+      });
+
+      it('should be able to start CONFIRMED booking', () => {
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS, UserRole.PROVIDER)).toBe(true);
+      });
+
+      it('should be able to cancel CONFIRMED booking', () => {
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.CANCELLED, UserRole.PROVIDER)).toBe(true);
+      });
+
+      it('should be able to mark no-show', () => {
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.NO_SHOW, UserRole.PROVIDER)).toBe(true);
+      });
+
+      it('should be able to complete IN_PROGRESS booking', () => {
+        expect(canRolePerformTransition(BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, UserRole.PROVIDER)).toBe(true);
+      });
+
+      it('should be able to cancel IN_PROGRESS booking', () => {
+        expect(canRolePerformTransition(BookingStatus.IN_PROGRESS, BookingStatus.CANCELLED, UserRole.PROVIDER)).toBe(true);
+      });
+    });
+
+    describe('ADMIN role', () => {
+      it('should be able to perform all valid transitions', () => {
+        // PENDING transitions
+        expect(canRolePerformTransition(BookingStatus.PENDING, BookingStatus.CONFIRMED, UserRole.ADMIN)).toBe(true);
+        expect(canRolePerformTransition(BookingStatus.PENDING, BookingStatus.CANCELLED, UserRole.ADMIN)).toBe(true);
+        
+        // CONFIRMED transitions
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS, UserRole.ADMIN)).toBe(true);
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.CANCELLED, UserRole.ADMIN)).toBe(true);
+        expect(canRolePerformTransition(BookingStatus.CONFIRMED, BookingStatus.NO_SHOW, UserRole.ADMIN)).toBe(true);
+        
+        // IN_PROGRESS transitions
+        expect(canRolePerformTransition(BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, UserRole.ADMIN)).toBe(true);
+        expect(canRolePerformTransition(BookingStatus.IN_PROGRESS, BookingStatus.CANCELLED, UserRole.ADMIN)).toBe(true);
+      });
+    });
+  });
+
+  describe('getAllowedTransitionsForRole', () => {
+    it('should return correct transitions for CUSTOMER from PENDING', () => {
+      const transitions = getAllowedTransitionsForRole(BookingStatus.PENDING, UserRole.CUSTOMER);
+      expect(transitions).toEqual([BookingStatus.CANCELLED]);
+    });
+
+    it('should return correct transitions for CUSTOMER from CONFIRMED', () => {
+      const transitions = getAllowedTransitionsForRole(BookingStatus.CONFIRMED, UserRole.CUSTOMER);
+      expect(transitions).toEqual([BookingStatus.CANCELLED]);
+    });
+
+    it('should return empty array for CUSTOMER from IN_PROGRESS', () => {
+      const transitions = getAllowedTransitionsForRole(BookingStatus.IN_PROGRESS, UserRole.CUSTOMER);
+      expect(transitions).toEqual([]);
+    });
+
+    it('should return all transitions for PROVIDER from PENDING', () => {
+      const transitions = getAllowedTransitionsForRole(BookingStatus.PENDING, UserRole.PROVIDER);
+      expect(transitions).toContain(BookingStatus.CONFIRMED);
+      expect(transitions).toContain(BookingStatus.CANCELLED);
+    });
+
+    it('should return all transitions for PROVIDER from CONFIRMED', () => {
+      const transitions = getAllowedTransitionsForRole(BookingStatus.CONFIRMED, UserRole.PROVIDER);
+      expect(transitions).toContain(BookingStatus.IN_PROGRESS);
+      expect(transitions).toContain(BookingStatus.CANCELLED);
+      expect(transitions).toContain(BookingStatus.NO_SHOW);
+    });
+
+    it('should return empty array for any role from terminal states', () => {
+      expect(getAllowedTransitionsForRole(BookingStatus.COMPLETED, UserRole.ADMIN)).toEqual([]);
+      expect(getAllowedTransitionsForRole(BookingStatus.CANCELLED, UserRole.ADMIN)).toEqual([]);
+      expect(getAllowedTransitionsForRole(BookingStatus.NO_SHOW, UserRole.ADMIN)).toEqual([]);
+    });
+  });
+
+  describe('getTransitionKey', () => {
+    it('should generate correct transition key', () => {
+      expect(getTransitionKey(BookingStatus.PENDING, BookingStatus.CONFIRMED)).toBe('PENDING_CONFIRMED');
+      expect(getTransitionKey(BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS)).toBe('CONFIRMED_IN_PROGRESS');
+      expect(getTransitionKey(BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED)).toBe('IN_PROGRESS_COMPLETED');
+    });
+  });
+});
+
+describe('Status Transition Error Codes', () => {
+  it('should have all required error codes defined', () => {
+    expect(StatusTransitionErrorCode.BOOKING_NOT_FOUND).toBe('BOOKING_NOT_FOUND');
+    expect(StatusTransitionErrorCode.INVALID_TRANSITION).toBe('INVALID_TRANSITION');
+    expect(StatusTransitionErrorCode.PERMISSION_DENIED).toBe('PERMISSION_DENIED');
+    expect(StatusTransitionErrorCode.BOOKING_IN_TERMINAL_STATE).toBe('BOOKING_IN_TERMINAL_STATE');
+    expect(StatusTransitionErrorCode.CANCELLATION_REASON_REQUIRED).toBe('CANCELLATION_REASON_REQUIRED');
+  });
+});
+
+describe('Forbidden Transitions', () => {
+  const allStatuses = Object.values(BookingStatus);
+  
+  describe('Cannot skip states', () => {
+    it('PENDING cannot go directly to IN_PROGRESS', () => {
+      expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.IN_PROGRESS)).toBe(false);
+    });
+
+    it('PENDING cannot go directly to COMPLETED', () => {
+      expect(isValidBookingTransition(BookingStatus.PENDING, BookingStatus.COMPLETED)).toBe(false);
+    });
+
+    it('CONFIRMED cannot go directly to COMPLETED', () => {
+      expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.COMPLETED)).toBe(false);
+    });
+  });
+
+  describe('Cannot go backwards', () => {
+    it('CONFIRMED cannot go back to PENDING', () => {
+      expect(isValidBookingTransition(BookingStatus.CONFIRMED, BookingStatus.PENDING)).toBe(false);
+    });
+
+    it('IN_PROGRESS cannot go back to PENDING', () => {
+      expect(isValidBookingTransition(BookingStatus.IN_PROGRESS, BookingStatus.PENDING)).toBe(false);
+    });
+
+    it('IN_PROGRESS cannot go back to CONFIRMED', () => {
+      expect(isValidBookingTransition(BookingStatus.IN_PROGRESS, BookingStatus.CONFIRMED)).toBe(false);
+    });
+
+    it('COMPLETED cannot go back to any state', () => {
+      allStatuses.forEach(status => {
+        expect(isValidBookingTransition(BookingStatus.COMPLETED, status)).toBe(false);
+      });
+    });
+  });
+
+  describe('Terminal states are final', () => {
+    it('COMPLETED is terminal', () => {
+      allStatuses.forEach(status => {
+        expect(isValidBookingTransition(BookingStatus.COMPLETED, status)).toBe(false);
+      });
+    });
+
+    it('CANCELLED is terminal', () => {
+      allStatuses.forEach(status => {
+        expect(isValidBookingTransition(BookingStatus.CANCELLED, status)).toBe(false);
+      });
+    });
+
+    it('NO_SHOW is terminal', () => {
+      allStatuses.forEach(status => {
+        expect(isValidBookingTransition(BookingStatus.NO_SHOW, status)).toBe(false);
+      });
+    });
+  });
+});
+
+describe('Permission Matrix Completeness', () => {
+  it('should have permissions defined for all valid transitions', () => {
+    Object.entries(BOOKING_STATUS_TRANSITIONS).forEach(([from, toList]) => {
+      toList.forEach(to => {
+        const key = `${from}_${to}`;
+        expect(TRANSITION_PERMISSIONS[key]).toBeDefined();
+        expect(TRANSITION_PERMISSIONS[key].length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  it('should not have permissions for invalid transitions', () => {
+    // Check that we don't have permissions for transitions that don't exist
+    const validKeys = new Set<string>();
+    Object.entries(BOOKING_STATUS_TRANSITIONS).forEach(([from, toList]) => {
+      toList.forEach(to => {
+        validKeys.add(`${from}_${to}`);
+      });
+    });
+
+    Object.keys(TRANSITION_PERMISSIONS).forEach(key => {
+      expect(validKeys.has(key)).toBe(true);
+    });
+  });
+});
