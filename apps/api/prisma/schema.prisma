@@ -110,6 +110,7 @@ model User {
   refundsCreated Refund[]
   customerBookings Booking[] @relation("CustomerBookings")
   cart             Cart?
+  reviews          Review[]
 
   @@map("users")
 }
@@ -687,4 +688,44 @@ model CartItem {
   @@index([cartId])
   @@index([productId])
   @@map("cart_items")
+}
+
+
+// ===========================================
+// Reviews
+// ===========================================
+
+enum ReviewableType {
+  PRODUCT
+  SERVICE
+  VENDOR
+  PROVIDER
+  DRIVER
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Review {
+  id             String         @id @default(uuid())
+  reviewerId     String         @map("reviewer_id")
+  reviewableType ReviewableType @map("reviewable_type")
+  reviewableId   String         @map("reviewable_id")
+  rating         Int            // 1-5
+  comment        String?        @db.Text
+  status         ReviewStatus   @default(PENDING)
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  reviewer       User           @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewerId, reviewableType, reviewableId]) // One review per user per reviewable
+  @@index([reviewerId])
+  @@index([reviewableType, reviewableId])
+  @@index([status])
+  @@map("reviews")
 }
