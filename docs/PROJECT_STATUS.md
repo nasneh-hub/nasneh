@@ -1,6 +1,56 @@
-# Project Status — Nasneh
+# Project Status
 
 **Current release/tag:** v0.3.0-sprint2
+
+---
+
+## 🔴 Current State (Now) — 2026-01-02 18:45 UTC+3
+
+- **ECS staging deployment FAILING** — Container crashes on startup
+- **18 PRs attempted** (#83-#100) to fix Dockerfile/CD issues
+- **Memory Freeze active** — No new PRs until fix plan approved
+
+---
+
+## What is Broken
+
+**Exact Error (GitHub Actions — Run 20660793380):**
+```
+Error: Cannot find module 'express'
+Require stack:
+- /app/[eval]
+code: 'MODULE_NOT_FOUND'
+```
+
+**Where:** CD workflow → `Verify - Check express dependency` step
+
+**Root Cause (Verified):** pnpm uses symlinks in `node_modules/`. Docker `COPY` copies symlinks as files, not targets. Result: `express` and other deps not found at runtime.
+
+---
+
+## Last Known Good State
+
+**NONE** — First deployment attempt. Infrastructure (VPC, RDS, ECS, ALB) is healthy. Container image is the blocker.
+
+---
+
+## Current Hypothesis (Verified)
+
+**Backed by logs (Run 20660601237):**
+```
+apps/api/node_modules/@prisma/client -> symlink to .pnpm store
+/app/node_modules/.pnpm/@prisma+client@5.22.0.../node_modules/.prisma ← actual location
+```
+
+pnpm stores all packages in `.pnpm/` and creates symlinks. Docker COPY doesn't dereference symlinks.
+
+---
+
+## Next Allowed Action
+
+**Wait for user approval to implement fix plan.**
+
+---
 
 ## ✅ Sprint 2 Complete
 
@@ -34,7 +84,7 @@ DevOps Gate sprint completed! All 8 tasks merged. **Infrastructure deployed to s
 - **Staging First:** All infrastructure deployed to staging before production
 - **Documentation:** See [docs/DEVOPS_GATE.md](./DEVOPS_GATE.md)
 
-### Staging Deployment Status ✅
+### Staging Deployment Status
 
 **Deployed:** 2026-01-02
 
@@ -54,9 +104,10 @@ DevOps Gate sprint completed! All 8 tasks merged. **Infrastructure deployed to s
 
 ### Pending Actions
 
+- [ ] Fix Dockerfile to handle pnpm symlinks
+- [ ] Deploy real app image via CD workflow
 - [ ] Confirm SNS email subscription (nasneh.com@gmail.com)
 - [ ] Update secrets with real values
-- [ ] Deploy real app image via CD workflow
 - [ ] Migrate Terraform state to S3 backend
 
 ---
@@ -89,7 +140,6 @@ DevOps Gate sprint completed! All 8 tasks merged. **Infrastructure deployed to s
 | #68 | [SVC] Service API tests | Phase 6 |
 
 ### Phase Breakdown
-
 | Phase | Description | Tasks |
 |-------|-------------|-------|
 | Phase 1 | Migrations | 2/2 ✅ |
@@ -98,188 +148,3 @@ DevOps Gate sprint completed! All 8 tasks merged. **Infrastructure deployed to s
 | Phase 4 | Bookings Flow + User | 4/4 ✅ |
 | Phase 5 | Cart + Reviews | 3/3 ✅ |
 | Phase 6 | Tests | 2/2 ✅ |
-
----
-
-## Database Schema (Current)
-
-| Table | Description | Sprint |
-|-------|-------------|--------|
-| users | Customer accounts with phone auth | S1 |
-| vendors | Vendor profiles with commission rates | S1 |
-| products | Product catalog with images | S1 |
-| categories | Product categories | S1 |
-| orders | Customer orders with fulfillment type | S1 |
-| order_items | Line items with price snapshots | S1 |
-| payments | Payment records with APS integration | S1 |
-| refunds | Refund tracking | S1 |
-| audit_logs | System-wide audit trail | S1 |
-| otp_codes | OTP verification codes | S1 |
-| refresh_tokens | JWT refresh tokens | S1 |
-| addresses | User addresses with coordinates | S1 |
-| **service_providers** | Service provider profiles | **S2** |
-| **services** | Service catalog with types | **S2** |
-| **bookings** | Service bookings with scheduling | **S2** |
-| **availability_rules** | Weekly recurring availability | **S2** |
-| **availability_overrides** | Date-specific overrides | **S2** |
-| **availability_settings** | Provider-level settings | **S2** |
-| **carts** | Shopping carts (single-vendor) | **S2** |
-| **cart_items** | Cart line items | **S2** |
-| **reviews** | User reviews with moderation | **S2** |
-
----
-
-## API Endpoints (Sprint 2)
-
-### Services API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /provider/services | Create service |
-| GET | /provider/services | List provider's services |
-| GET | /provider/services/stats | Service counts by status |
-| GET | /provider/services/:id | Get service details |
-| PATCH | /provider/services/:id | Update service |
-| DELETE | /provider/services/:id | Soft delete |
-| PATCH | /provider/services/:id/toggle | Toggle availability |
-| GET | /services | Public listing with filters |
-| GET | /services/search | Keyword search |
-| GET | /services/featured | Featured services |
-| GET | /services/category/:id | By category |
-| GET | /services/provider/:id | By provider |
-| GET | /services/:id | Public service details |
-| GET | /services/:id/slots | Get available slots |
-
-### Provider Calendar API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /provider/calendar | Get rules, overrides, settings |
-| PATCH | /provider/calendar | Bulk update rules |
-| POST | /provider/calendar/rules | Create single rule |
-| PATCH | /provider/calendar/rules/:id | Update rule |
-| DELETE | /provider/calendar/rules/:id | Delete rule |
-| POST | /provider/calendar/overrides | Create override |
-| PATCH | /provider/calendar/overrides/:id | Update override |
-| DELETE | /provider/calendar/overrides/:id | Delete override |
-| PATCH | /provider/calendar/settings | Update settings |
-
-### Bookings API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /bookings | Create booking |
-| GET | /bookings | List bookings (role-scoped) |
-| GET | /bookings/:id | Get booking details |
-| POST | /bookings/:id/confirm | Confirm booking |
-| POST | /bookings/:id/start | Start booking |
-| POST | /bookings/:id/complete | Complete booking |
-| POST | /bookings/:id/cancel | Cancel booking |
-| POST | /bookings/:id/no-show | Mark no-show |
-| GET | /customer/bookings | Customer's bookings |
-| GET | /provider/bookings | Provider's bookings |
-
-### User API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /users/me | Get current user profile |
-| PATCH | /users/me | Update current user profile |
-| GET | /users | List users (admin) |
-| GET | /users/:id | Get user by ID |
-| PATCH | /users/:id | Update user by ID |
-| GET | /users/me/addresses | List my addresses |
-| POST | /users/me/addresses | Create address |
-| GET | /users/me/addresses/:id | Get address |
-| PATCH | /users/me/addresses/:id | Update address |
-| DELETE | /users/me/addresses/:id | Delete address |
-| POST | /users/me/addresses/:id/default | Set as default |
-
-### Cart API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /cart | Get current user's cart |
-| POST | /cart/items | Add item to cart |
-| PATCH | /cart/items/:id | Update item quantity |
-| DELETE | /cart/items/:id | Remove item from cart |
-| DELETE | /cart | Clear entire cart |
-
-### Reviews API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /reviews | Create review |
-| GET | /reviews | List reviews |
-| GET | /reviews/:id | Get review by ID |
-| PATCH | /reviews/:id | Update own review |
-| DELETE | /reviews/:id | Delete own review |
-| POST | /admin/reviews/:id/approve | Approve review |
-| POST | /admin/reviews/:id/reject | Reject review |
-| GET | /users/me/reviews | Get my reviews |
-
----
-
-## Key Features (Sprint 2)
-
-### Availability System
-- Weekly recurring rules (per day of week)
-- Date-specific overrides (AVAILABLE/UNAVAILABLE)
-- Buffer times (before/after bookings)
-- Preparation days for DELIVERY_DATE services
-- Override precedence (date overrides > weekly rules)
-- Conflict detection hooks for bookings
-- Configurable defaults via `apps/api/src/config/calendar.defaults.ts`
-
-### Booking System
-- Atomic double-booking prevention (SERIALIZABLE + SELECT FOR UPDATE)
-- Status flow: PENDING → CONFIRMED → IN_PROGRESS → COMPLETED
-- Role-based permissions for status transitions
-- Cancellation with reason tracking
-- No-show marking
-
-### Cart System
-- Single-vendor enforcement (409 DIFFERENT_VENDOR)
-- Atomic operations with row locking
-- Auto vendor lock/unlock
-
-### Reviews System
-- Polymorphic reviews (PRODUCT, SERVICE, VENDOR, PROVIDER, DRIVER)
-- Admin moderation (PENDING → APPROVED/REJECTED)
-- Rating 1-5 with optional comment
-- One review per user per entity
-
----
-
-## Sprint 1 Summary (Complete)
-
-All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
-
-| Epic | Tasks | PRs |
-|------|-------|-----|
-| Auth | 6 | #19-#24 |
-| Products | 4 | #25-#27, #35-#36 |
-| Orders | 4 | #29-#31, #37-#39 |
-| Payments | 4 | #32-#34, #40-#42 |
-
----
-
-## Sprint 3 Backlog (Planned)
-
-| Task | Priority | Description |
-|------|----------|-------------|
-| [NOTIFY] Push notifications | P0 | FCM integration for booking updates |
-| [SEARCH] Elasticsearch integration | P1 | Full-text search for services/products |
-| [MEDIA] Image upload service | P1 | S3 integration for service images |
-| [REPORT] Provider analytics dashboard | P2 | Booking stats, revenue reports |
-| [ADMIN] Admin panel API | P2 | User management, moderation tools |
-
----
-
-## Open Issues
-
-| # | Title |
-|---|-------|
-| 4 | [TECH] Generate favicons and meta images from logo |
-| 1 | [TECH] Replace placeholder scripts with real build/lint/typecheck |
-
-## Blockers
-
-None.
-
----
-**Last updated:** 2026-01-02 — DevOps Gate complete! Monitoring + Alerts PR #79 ready for review.

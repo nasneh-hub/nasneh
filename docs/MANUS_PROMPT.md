@@ -151,3 +151,75 @@ After Manus completes a task:
 ---
 
 **Remember:** Good prompts = Good results
+
+
+---
+
+## Hard Rules for Deployment/DevOps Tasks
+
+These rules are **MANDATORY** for any deployment, infrastructure, or CI/CD work.
+
+### 1. Log-First Rule
+
+**Before proposing ANY fix:**
+1. Check CloudWatch logs for the failing ECS task
+2. Check GitHub Actions logs for the failing step
+3. Extract the **exact error message** (copy/paste, not paraphrase)
+4. Only then propose a fix based on evidence
+
+**Violation:** Proposing fixes based on assumptions without log evidence.
+
+### 2. One PR at a Time
+
+- Create ONE PR with ONE focused fix
+- Wait for CI to pass
+- Wait for user to trigger deployment
+- Verify result before proposing next fix
+
+**Violation:** Creating multiple PRs or "trying different approaches" in parallel.
+
+### 3. No "Try Multiple Strategies"
+
+- Do NOT propose "let's try A, if that fails we'll try B"
+- Each fix must be based on verified evidence
+- If unsure, ask user for guidance
+
+**Violation:** Experimental PRs without clear evidence-based rationale.
+
+### 4. No Claims Without Output
+
+- Do NOT say "monitoring..." unless you can paste actual output
+- Do NOT say "checking..." unless you show the command and result
+- Always provide evidence for claims
+
+**Violation:** Vague status updates without concrete evidence.
+
+### 5. Always Update PROJECT_STATUS
+
+After EVERY deployment run (success or failure):
+1. Update `docs/PROJECT_STATUS.md` with current state
+2. Include: run ID, status, error (if any), next action
+
+**Violation:** Leaving PROJECT_STATUS outdated after runs.
+
+### 6. deploy=false First
+
+- Always run CD with `deploy=false` first
+- Verify image builds and passes verification tests
+- Only then request `deploy=true`
+
+**Violation:** Running `deploy=true` without prior verification.
+
+### 7. Memory Freeze Protocol
+
+When deployment is stuck after multiple failed attempts:
+1. STOP all PRs
+2. Update docs with verified facts only
+3. Wait for user-approved fix plan
+4. Do NOT propose fixes until approved
+
+**Violation:** Continuing to create PRs after being asked to stop.
+
+---
+
+**Last updated:** 2026-01-02 18:45 UTC+3
