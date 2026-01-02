@@ -16,15 +16,16 @@ DevOps Gate sprint to set up infrastructure and CI/CD before Sprint 3.
 
 ### Tasks
 
-| Task | Status | PR |
-|------|--------|----|
-| [DEVOPS] IaC Setup | ✅ Merged | #70 |
-| [DEVOPS] VPC + Networking | 🔄 In Review | #71 |
-| [CI/CD] CI Pipeline Setup | ⏳ To Do | - |
-| [DEVOPS] Terraform State Backend | ⏳ To Do | - |
-| [DEVOPS] Database Module | ⏳ To Do | - |
-| [DEVOPS] Compute Module | ⏳ To Do | - |
-| [CI/CD] CD Pipeline Setup | ⏳ To Do | - |
+| # | Task | Status | PR |
+|---|------|--------|----|
+| 1 | [DEVOPS] IaC Setup | ✅ Merged | #70 |
+| 2 | [DEVOPS] VPC + Networking | ✅ Merged | #71 |
+| 3 | [DEVOPS] RDS PostgreSQL | 🔄 In Review | #73 |
+| 4 | [DEVOPS] ECS Fargate + ALB | ⏳ To Do | - |
+| 5 | [DEVOPS] S3 + CloudFront | ⏳ To Do | - |
+| 6 | [DEVOPS] CI/CD Pipeline | ⏳ To Do | - |
+| 7 | [DEVOPS] Secrets Management | ⏳ To Do | - |
+| 8 | [DEVOPS] Monitoring + Alerts | ⏳ To Do | - |
 
 ### Key Decisions
 
@@ -256,4 +257,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — DevOps Gate in progress. VPC + Networking PR #71 ready for review.
+**Last updated:** 2026-01-02 — DevOps Gate in progress. RDS PostgreSQL PR #73 ready for review.

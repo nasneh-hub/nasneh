@@ -40,8 +40,12 @@ The IaC code is located in the `/infra` directory with the following structure:
 │   │   ├── outputs.tf
 │   │   ├── security_groups.tf
 │   │   └── README.md
+│   ├── database/         # ✅ Implemented (PR #73)
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
 │   ├── compute/          # 🔜 Planned
-│   ├── database/         # 🔜 Planned
 │   └── secrets/          # 🔜 Planned
 │
 ├── versions.tf           # Terraform & provider version constraints
@@ -81,8 +85,8 @@ cd infra/environments/staging
 # 2. Create terraform.tfvars from the example
 cp terraform.tfvars.example terraform.tfvars
 
-# 3. (Optional) Edit terraform.tfvars with custom values
-
+# 3. Edit terraform.tfvars with actual values (especially DB credentials)
+# IMPORTANT: Never commit terraform.tfvars to version control
 
 # 4. Initialize Terraform
 terraform init
@@ -169,15 +173,85 @@ AWS Bahrain (me-south-1) has 3 AZs available:
 
 ---
 
-## 5. DevOps Gate Tasks
+## 5. Database Module
+
+The database module (`/infra/modules/database`) manages RDS PostgreSQL.
+
+### Resources Created
+
+| Resource | Description | Staging Config |
+|----------|-------------|----------------|
+| DB Subnet Group | Private subnets only | me-south-1a, me-south-1b |
+| DB Parameter Group | PostgreSQL 15 settings | Timezone: Asia/Bahrain |
+| RDS Instance | PostgreSQL database | db.t3.micro |
+
+### Configuration
+
+| Setting | Staging Value | Notes |
+|---------|---------------|-------|
+| Engine | PostgreSQL 15.4 | Latest stable |
+| Instance Class | db.t3.micro | Cost-effective |
+| Storage
+ | 20-50 GB (gp3) | Autoscaling enabled |
+| Multi-AZ | false | Single AZ for staging |
+| Backup Retention | 7 days | Automated daily backups |
+| Encryption | true | Always encrypted at rest |
+| Public Access | false | Private subnets only |
+
+### Security
+
+| Security Group | Inbound Rules | Source |
+|----------------|---------------|--------|
+| Database SG | Port 5432 | API Security Group only |
+
+> **Important:** The database is NOT publicly accessible. It can only be reached from ECS tasks in the same VPC through the API security group.
+
+### Outputs for ECS Tasks
+
+| Output | Description |
+|--------|-------------|
+| `database_endpoint` | Full endpoint (hostname:port) |
+| `database_address` | Hostname only |
+| `database_port` | Port (5432) |
+| `database_name` | Database name |
+| `database_identifier` | RDS instance ID |
+
+### Secrets Management
+
+Database credentials are passed via Terraform variables. **Do NOT commit actual values.**
+
+```bash
+# Option 1: terraform.tfvars (gitignored)
+db_username = "nasneh_admin"
+db_password = "your_secure_password"
+
+# Option 2: Environment variables
+export TF_VAR_db_username="nasneh_admin"
+export TF_VAR_db_password="your_secure_password"
+```
+
+> **Note:** AWS Secrets Manager integration will be configured in a separate task.
+
+### Cost Estimate (Staging)
+
+| Resource | Monthly Cost |
+|----------|--------------|
+| db.t3.micro | ~$12 |
+| Storage (20 GB gp3) | ~$2 |
+| Backup storage | ~$1 |
+| **Total** | **~$15** |
+
+---
+
+## 6. DevOps Gate Tasks
 
 **Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
 
 | # | Task | Priority | Status |
 |---|------|----------|--------|
 | 1 | [DEVOPS] IaC Setup — Terraform/CDK base structure | Urgent | ✅ Complete |
-| 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | 🔄 Pending Review |
-| 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ⏳ To Do |
+| 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | ✅ Complete |
+| 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | 🔄 Pending Review |
 | 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ⏳ To Do |
 | 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ⏳ To Do |
 | 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ⏳ To Do |

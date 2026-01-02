@@ -67,6 +67,37 @@ output "cache_security_group_id" {
 }
 
 # =============================================================================
+# DATABASE OUTPUTS
+# =============================================================================
+
+output "database_endpoint" {
+  description = "RDS PostgreSQL endpoint (hostname:port)"
+  value       = module.database.endpoint
+  sensitive   = true
+}
+
+output "database_address" {
+  description = "RDS PostgreSQL hostname"
+  value       = module.database.address
+  sensitive   = true
+}
+
+output "database_port" {
+  description = "RDS PostgreSQL port"
+  value       = module.database.port
+}
+
+output "database_name" {
+  description = "Database name"
+  value       = module.database.db_name
+}
+
+output "database_identifier" {
+  description = "RDS instance identifier"
+  value       = module.database.db_identifier
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented
@@ -74,12 +105,6 @@ output "cache_security_group_id" {
 # output "api_endpoint" {
 #   description = "API endpoint URL"
 #   value       = module.compute.api_endpoint
-# }
-
-# output "database_endpoint" {
-#   description = "Database endpoint"
-#   value       = module.database.endpoint
-#   sensitive   = true
 # }
 
 # output "redis_endpoint" {
