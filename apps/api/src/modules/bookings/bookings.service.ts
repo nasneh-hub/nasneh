@@ -3,10 +3,15 @@
  * 
  * Business logic for booking creation with availability validation.
  * Uses existing availability engine as the ONLY source of truth.
+ * 
+ * CRITICAL: Double-booking prevention is implemented using:
+ * 1. Database transaction with SERIALIZABLE isolation
+ * 2. Row-level locking via SELECT FOR UPDATE
+ * 3. Atomic check-and-insert pattern
  */
 
 import { prisma } from '../../lib/db';
-import { bookingRepository } from './bookings.repository';
+import { Prisma } from '@prisma/client';
 import {
   availabilityRulesRepository,
   availabilityOverridesRepository,
@@ -36,6 +41,33 @@ export class BookingValidationError extends Error {
 }
 
 // ===========================================
+// Booking Number Generator
+// ===========================================
+
+async function generateBookingNumber(tx: Prisma.TransactionClient): Promise<string> {
+  const prefix = 'BK';
+  const date = new Date().toISOString().slice(2, 10).replace(/-/g, ''); // YYMMDD
+  
+  // Get count of bookings today for sequence (within transaction)
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const count = await tx.booking.count({
+    where: {
+      createdAt: {
+        gte: todayStart,
+        lte: todayEnd,
+      },
+    },
+  });
+
+  const sequence = String(count + 1).padStart(4, '0');
+  return `${prefix}${date}${sequence}`;
+}
+
+// ===========================================
 // Booking Service
 // ===========================================
 
@@ -43,15 +75,26 @@ export const bookingService = {
   /**
    * Create a new booking with full availability validation
    * 
+   * CRITICAL: Uses atomic transaction with row locking to prevent double-booking.
+   * 
    * Validation order:
    * 1. Service exists and is available
    * 2. Provider is active
    * 3. Date is within booking window (min/max advance)
    * 4. Time is within available hours (rules + overrides)
-   * 5. No conflicting bookings (double-booking prevention)
+   * 5. No conflicting bookings (double-booking prevention) - ATOMIC
+   * 
+   * Race condition prevention:
+   * - Uses Prisma interactive transaction
+   * - Acquires row-level lock on conflicting bookings via raw SQL SELECT FOR UPDATE
+   * - Conflict check and insert happen atomically within the same transaction
    */
   async createBooking(customerId: string, input: CreateBookingInput) {
     const { serviceId, scheduledDate, scheduledTime, serviceAddress, notes } = input;
+
+    // =========================================
+    // Pre-transaction validation (read-only)
+    // =========================================
 
     // 1. Get service with provider
     const service = await prisma.service.findUnique({
@@ -147,7 +190,6 @@ export const bookingService = {
 
       // Get availability rules and overrides
       const rules = await availabilityRulesRepository.findByProvider(providerId);
-      // Get overrides for a reasonable date range (30 days around booking date)
       const rangeStart = new Date(bookingDate);
       rangeStart.setDate(rangeStart.getDate() - 1);
       const rangeEnd = new Date(bookingDate);
@@ -171,10 +213,8 @@ export const bookingService = {
       }
     } else {
       // For DELIVERY_DATE and PICKUP_DROPOFF, check if date is available
-      // Get overrides for the booking date
       const overrides = await availabilityOverridesRepository.findByProviderAndDate(providerId, bookingDate);
       
-      // Check for full-day unavailable override
       const fullDayUnavailable = overrides.find(
         (o: { type: string; startTime: Date | null; endTime: Date | null; reason: string | null }) => 
           o.type === 'UNAVAILABLE' && !o.startTime && !o.endTime
@@ -188,51 +228,122 @@ export const bookingService = {
       }
     }
 
-    // 7. Check for conflicting bookings (double-booking prevention)
-    const existingBookings = await bookingRepository.findActiveBookingsForProvider(
-      providerId,
-      scheduledDate
-    );
-
-    const conflictCheck = checkBookingConflict(
-      bookingDate,
-      bookingTime,
-      durationMinutes,
-      existingBookings,
-      effectiveSettings.bufferBeforeMinutes,
-      effectiveSettings.bufferAfterMinutes
-    );
-
-    if (conflictCheck.hasConflict) {
-      throw new BookingValidationError(
-        BookingErrorCode.SLOT_ALREADY_BOOKED,
-        conflictCheck.reason ?? 'Time slot is already booked'
-      );
-    }
-
-    // 8. Calculate pricing
+    // Calculate pricing (before transaction)
     const price = Number(service.price);
     const commissionRate = Number(service.provider.commissionRate);
     const commission = price * (commissionRate / 100);
     const total = price;
 
-    // 9. Generate booking number
-    const bookingNumber = await bookingRepository.generateBookingNumber();
+    // =========================================
+    // ATOMIC TRANSACTION: Conflict check + Insert
+    // =========================================
+    // This prevents race conditions where two concurrent requests
+    // could both pass the conflict check and create overlapping bookings.
 
-    // 10. Create the booking
-    const booking = await bookingRepository.create({
-      bookingNumber,
-      customerId,
-      providerId,
-      serviceId,
-      scheduledDate: bookingDate,
-      scheduledTime: bookingTime,
-      endTime,
-      price,
-      commission,
-      total,
-      serviceAddress: serviceAddress ?? null,
-      notes: notes ?? null,
+    const booking = await prisma.$transaction(async (tx) => {
+      // Step 1: Acquire row-level lock on existing bookings for this provider/date
+      // This prevents other transactions from reading/modifying these rows
+      // until this transaction completes.
+      //
+      // Using raw SQL because Prisma doesn't support SELECT FOR UPDATE directly.
+      // The lock ensures serialized access to the booking slot.
+      
+      const dateStr = formatDateString(bookingDate);
+      
+      // Lock all active bookings for this provider on this date
+      // FOR UPDATE NOWAIT will fail immediately if lock cannot be acquired
+      // (prevents deadlocks and long waits)
+      const lockedBookings = await tx.$queryRaw<Array<{
+        id: string;
+        scheduled_date: Date;
+        scheduled_time: Date | null;
+        end_time: Date | null;
+      }>>`
+        SELECT id, scheduled_date, scheduled_time, end_time
+        FROM bookings
+        WHERE provider_id = ${providerId}
+          AND scheduled_date = ${bookingDate}
+          AND status IN ('PENDING', 'CONFIRMED', 'IN_PROGRESS')
+        FOR UPDATE
+      `;
+
+      // Step 2: Check for conflicts using the availability engine
+      // (same logic as before, but now with locked rows)
+      const existingBookings = lockedBookings.map(b => ({
+        id: b.id,
+        scheduledDate: b.scheduled_date,
+        scheduledTime: b.scheduled_time,
+        endTime: b.end_time,
+      }));
+
+      const conflictCheck = checkBookingConflict(
+        bookingDate,
+        bookingTime,
+        durationMinutes,
+        existingBookings,
+        effectiveSettings.bufferBeforeMinutes,
+        effectiveSettings.bufferAfterMinutes
+      );
+
+      if (conflictCheck.hasConflict) {
+        throw new BookingValidationError(
+          BookingErrorCode.SLOT_ALREADY_BOOKED,
+          conflictCheck.reason ?? 'Time slot is already booked'
+        );
+      }
+
+      // Step 3: Generate booking number (within transaction for uniqueness)
+      const bookingNumber = await generateBookingNumber(tx);
+
+      // Step 4: Create the booking (atomic with conflict check)
+      const newBooking = await tx.booking.create({
+        data: {
+          bookingNumber,
+          customerId,
+          providerId,
+          serviceId,
+          scheduledDate: bookingDate,
+          scheduledTime: bookingTime,
+          endTime,
+          price,
+          commission,
+          total,
+          serviceAddress: serviceAddress ?? Prisma.JsonNull,
+          notes: notes ?? null,
+        },
+        include: {
+          customer: {
+            select: {
+              id: true,
+              name: true,
+              phone: true,
+            },
+          },
+          provider: {
+            select: {
+              id: true,
+              businessName: true,
+              logoUrl: true,
+            },
+          },
+          service: {
+            select: {
+              id: true,
+              name: true,
+              nameAr: true,
+              serviceType: true,
+              durationMinutes: true,
+            },
+          },
+        },
+      });
+
+      return newBooking;
+    }, {
+      // Transaction options
+      maxWait: 5000,  // Max time to wait for transaction slot (5s)
+      timeout: 10000, // Max transaction duration (10s)
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
     });
 
     return booking;

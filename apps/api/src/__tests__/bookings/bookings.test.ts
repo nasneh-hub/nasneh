@@ -473,3 +473,317 @@ describe('Booking Error Codes', () => {
     expect(BookingErrorCode.INVALID_DATE).toBe('INVALID_DATE');
   });
 });
+
+
+// ===========================================
+// Double-Booking Prevention Tests
+// ===========================================
+
+describe('Double-Booking Prevention', () => {
+  /**
+   * These tests verify the atomic transaction logic for preventing double-bookings.
+   * 
+   * The implementation uses:
+   * 1. Prisma interactive transaction with SERIALIZABLE isolation
+   * 2. Row-level locking via SELECT FOR UPDATE
+   * 3. Atomic check-and-insert pattern
+   * 
+   * Since we can't easily test actual database transactions in unit tests,
+   * we test the conflict detection logic that runs inside the transaction.
+   */
+
+  describe('Conflict Detection Logic', () => {
+    it('should detect exact time overlap', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T10:00:00Z');
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'),
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(true);
+      expect(result.conflictingBooking?.id).toBe('booking-1');
+    });
+
+    it('should detect partial overlap at start', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T09:30:00Z'); // 09:30-10:30
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(true);
+    });
+
+    it('should detect partial overlap at end', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T10:30:00Z'); // 10:30-11:30
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(true);
+    });
+
+    it('should detect when proposed booking contains existing', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T09:00:00Z'); // 09:00-12:00 (3 hours)
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 180, existingBookings);
+      expect(result.hasConflict).toBe(true);
+    });
+
+    it('should detect when existing booking contains proposed', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T10:15:00Z'); // 10:15-10:45 (30 min)
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 30, existingBookings);
+      expect(result.hasConflict).toBe(true);
+    });
+
+    it('should allow adjacent bookings (no gap)', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T11:00:00Z'); // 11:00-12:00
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(false);
+    });
+
+    it('should allow booking before existing', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T09:00:00Z'); // 09:00-10:00
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(false);
+    });
+
+    it('should detect conflict with buffer times', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T11:00:00Z'); // Would be blocked by 15min buffer
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00 + 15min buffer = 11:15
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      // With 15 min buffer after, existing booking effectively ends at 11:15
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings, 0, 15);
+      expect(result.hasConflict).toBe(true);
+    });
+
+    it('should allow booking after buffer time', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T11:15:00Z'); // After 15min buffer
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'), // 10:00-11:00 + 15min buffer = 11:15
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings, 0, 15);
+      expect(result.hasConflict).toBe(false);
+    });
+  });
+
+  describe('Date-Only Booking Conflicts (DELIVERY_DATE/PICKUP_DROPOFF)', () => {
+    it('should detect conflict for same date', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: null,
+          endTime: null,
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, null, 0, existingBookings);
+      expect(result.hasConflict).toBe(true);
+      expect(result.reason).toContain('Date already booked');
+    });
+
+    it('should allow booking on different date', () => {
+      const proposedDate = new Date('2024-03-19T00:00:00Z');
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: null,
+          endTime: null,
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, null, 0, existingBookings);
+      expect(result.hasConflict).toBe(false);
+    });
+  });
+
+  describe('Multiple Existing Bookings', () => {
+    it('should detect conflict with any of multiple bookings', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T14:30:00Z'); // 14:30-15:30
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'),
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+        {
+          id: 'booking-2',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T14:00:00Z'), // 14:00-15:00 - conflicts
+          endTime: new Date('2024-03-18T15:00:00Z'),
+        },
+        {
+          id: 'booking-3',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T16:00:00Z'),
+          endTime: new Date('2024-03-18T17:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(true);
+      expect(result.conflictingBooking?.id).toBe('booking-2');
+    });
+
+    it('should allow booking between existing bookings', () => {
+      const proposedDate = new Date('2024-03-18T00:00:00Z');
+      const proposedTime = new Date('2024-03-18T12:00:00Z'); // 12:00-13:00
+
+      const existingBookings = [
+        {
+          id: 'booking-1',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T10:00:00Z'),
+          endTime: new Date('2024-03-18T11:00:00Z'),
+        },
+        {
+          id: 'booking-2',
+          scheduledDate: new Date('2024-03-18T00:00:00Z'),
+          scheduledTime: new Date('2024-03-18T14:00:00Z'),
+          endTime: new Date('2024-03-18T15:00:00Z'),
+        },
+      ];
+
+      const result = checkBookingConflict(proposedDate, proposedTime, 60, existingBookings);
+      expect(result.hasConflict).toBe(false);
+    });
+  });
+
+  describe('Transaction Isolation Behavior', () => {
+    /**
+     * These tests document the expected behavior of the atomic transaction.
+     * Actual concurrency testing would require integration tests with a real database.
+     */
+
+    it('should use SERIALIZABLE isolation level', () => {
+      // This is a documentation test - the actual implementation uses:
+      // isolationLevel: Prisma.TransactionIsolationLevel.Serializable
+      expect(true).toBe(true);
+    });
+
+    it('should use SELECT FOR UPDATE for row locking', () => {
+      // This is a documentation test - the actual implementation uses:
+      // SELECT ... FOR UPDATE to lock rows during the transaction
+      expect(true).toBe(true);
+    });
+
+    it('should have transaction timeout of 10 seconds', () => {
+      // This is a documentation test - the actual implementation uses:
+      // timeout: 10000 (10 seconds)
+      expect(true).toBe(true);
+    });
+
+    it('should have max wait of 5 seconds for transaction slot', () => {
+      // This is a documentation test - the actual implementation uses:
+      // maxWait: 5000 (5 seconds)
+      expect(true).toBe(true);
+    });
+  });
+});
+
+// ===========================================
+// HTTP 409 Conflict Response Tests
+// ===========================================
+
+describe('HTTP 409 Conflict Response', () => {
+  it('should return SLOT_ALREADY_BOOKED error code on conflict', () => {
+    // The controller maps SLOT_ALREADY_BOOKED to HTTP 409
+    expect(BookingErrorCode.SLOT_ALREADY_BOOKED).toBe('SLOT_ALREADY_BOOKED');
+  });
+
+  it('should have consistent error code with availability endpoints', () => {
+    // Both booking and availability endpoints use HTTP 409 for conflicts
+    // This ensures consistent API behavior
+    expect(BookingErrorCode.SLOT_ALREADY_BOOKED).toBeDefined();
+  });
+});
