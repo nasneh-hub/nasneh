@@ -9,8 +9,10 @@ import { bookingService, BookingValidationError } from './bookings.service';
 import {
   createBookingSchema,
   cancelBookingSchema,
+  bookingQuerySchema,
   BookingErrorCode,
   StatusTransitionErrorCode,
+  ListingErrorCode,
   UserRole,
 } from '../../types/booking.types';
 
@@ -22,6 +24,7 @@ interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
     role: string;
+    providerId?: string; // Provider's provider ID (for PROVIDER role)
   };
 }
 
@@ -244,6 +247,126 @@ export async function markNoShow(req: AuthenticatedRequest, res: Response) {
 }
 
 // ===========================================
+// Listing Endpoints
+// ===========================================
+
+/**
+ * GET /bookings
+ * List bookings with pagination, filters, and role-based visibility
+ * 
+ * Role-based visibility:
+ * - CUSTOMER: only own bookings
+ * - PROVIDER: only bookings for their provider account
+ * - ADMIN: all bookings
+ */
+export async function listBookings(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.user?.id;
+    const userRole = mapToUserRole(req.user?.role);
+    const providerId = req.user?.providerId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Parse and validate query parameters
+    const parseResult = bookingQuerySchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return res.status(400).json({
+        error: 'Invalid query parameters',
+        details: parseResult.error.flatten().fieldErrors,
+      });
+    }
+
+    const result = await bookingService.listBookings(
+      userId,
+      userRole,
+      parseResult.data,
+      providerId
+    );
+
+    return res.json({
+      success: true,
+      ...result,
+    });
+  } catch (error) {
+    return handleBookingError(res, error);
+  }
+}
+
+/**
+ * GET /customer/bookings
+ * List bookings for the authenticated customer
+ */
+export async function listCustomerBookings(req: AuthenticatedRequest, res: Response) {
+  try {
+    const customerId = req.user?.id;
+
+    if (!customerId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Parse and validate query parameters
+    const parseResult = bookingQuerySchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return res.status(400).json({
+        error: 'Invalid query parameters',
+        details: parseResult.error.flatten().fieldErrors,
+      });
+    }
+
+    const result = await bookingService.getCustomerBookings(customerId, parseResult.data);
+
+    return res.json({
+      success: true,
+      ...result,
+    });
+  } catch (error) {
+    return handleBookingError(res, error);
+  }
+}
+
+/**
+ * GET /provider/bookings
+ * List bookings for the authenticated provider
+ */
+export async function listProviderBookings(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.user?.id;
+    const providerId = req.user?.providerId;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (!providerId) {
+      return res.status(403).json({
+        error: 'Provider account required',
+        code: ListingErrorCode.ACCESS_DENIED,
+      });
+    }
+
+    // Parse and validate query parameters
+    const parseResult = bookingQuerySchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return res.status(400).json({
+        error: 'Invalid query parameters',
+        details: parseResult.error.flatten().fieldErrors,
+      });
+    }
+
+    const result = await bookingService.getProviderBookings(userId, providerId, parseResult.data);
+
+    return res.json({
+      success: true,
+      ...result,
+    });
+  } catch (error) {
+    return handleBookingError(res, error);
+  }
+}
+
+// ===========================================
 // Helper Functions
 // ===========================================
 
@@ -304,7 +427,12 @@ function getStatusCodeForError(code: string): number {
     case StatusTransitionErrorCode.BOOKING_IN_TERMINAL_STATE:
       return 422;
     case StatusTransitionErrorCode.PERMISSION_DENIED:
+    case ListingErrorCode.ACCESS_DENIED:
       return 403;
+    
+    // Listing errors
+    case ListingErrorCode.INVALID_DATE_RANGE:
+      return 400;
     
     default:
       return 400;

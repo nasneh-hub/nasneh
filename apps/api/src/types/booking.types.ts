@@ -61,17 +61,53 @@ export type CancelBookingInput = z.infer<typeof cancelBookingSchema>;
 // Query Schemas
 // ===========================================
 
+// Allowed sort fields for booking listing
+export const BookingSortField = {
+  CREATED_AT: 'createdAt',
+  SCHEDULED_DATE: 'scheduledDate',
+  STATUS: 'status',
+  TOTAL: 'total',
+} as const;
+
+export type BookingSortField = (typeof BookingSortField)[keyof typeof BookingSortField];
+
+export const SortOrder = {
+  ASC: 'asc',
+  DESC: 'desc',
+} as const;
+
+export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+
 export const bookingQuerySchema = z.object({
+  // Pagination
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+  
+  // Filters
   providerId: z.string().uuid().optional(),
   serviceId: z.string().uuid().optional(),
+  customerId: z.string().uuid().optional(),
   status: z.nativeEnum(BookingStatus as Record<string, string>).optional(),
-  fromDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  toDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  fromDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD format').optional(),
+  toDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD format').optional(),
+  
+  // Sorting (default: createdAt desc)
+  sortBy: z.nativeEnum(BookingSortField as Record<string, string>).default('createdAt'),
+  sortOrder: z.nativeEnum(SortOrder as Record<string, string>).default('desc'),
 });
 
 export type BookingQuery = z.infer<typeof bookingQuerySchema>;
+
+// ===========================================
+// Listing Error Codes
+// ===========================================
+
+export const ListingErrorCode = {
+  INVALID_DATE_RANGE: 'INVALID_DATE_RANGE',
+  ACCESS_DENIED: 'ACCESS_DENIED',
+} as const;
+
+export type ListingErrorCode = typeof ListingErrorCode[keyof typeof ListingErrorCode];
 
 // ===========================================
 // User Roles (for transition permissions)

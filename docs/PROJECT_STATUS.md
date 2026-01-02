@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 
 ---
 
-## Sprint 2 Progress: 9/17 tasks (53%)
+## Sprint 2 Progress: 10/17 tasks (59%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -34,7 +34,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | Task | Status | PR |
 |------|--------|-----|
 | [BOOK] Implement booking status flow | ✅ Merged | #60 |
-| [BOOK] Implement booking listing APIs | 🔲 To Do | - |
+| [BOOK] Implement booking listing APIs | ✅ Merged | #61 |
 | [USER] Implement user profile CRUD | 🔲 To Do | - |
 | [USER] Implement address management | 🔲 To Do | - |
 

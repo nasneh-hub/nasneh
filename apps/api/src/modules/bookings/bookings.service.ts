@@ -27,12 +27,15 @@ import {
 import {
   BookingErrorCode,
   StatusTransitionErrorCode,
+  ListingErrorCode,
   BookingStatus,
   UserRole,
   isValidBookingTransition,
   canRolePerformTransition,
   getAllowedTransitionsForRole,
   type CreateBookingInput,
+  type BookingQuery,
+  type PaginatedBookingsResponse,
 } from '../../types/booking.types';
 import { calendarDefaults } from '../../config/calendar.defaults';
 
@@ -539,5 +542,160 @@ export const bookingService = {
         service: { select: { id: true, name: true, nameAr: true, serviceType: true, durationMinutes: true } },
       },
     });
+  },
+
+  /**
+   * List bookings with pagination, filters, and role-based visibility
+   * 
+   * Role-based visibility:
+   * - CUSTOMER: only own bookings
+   * - PROVIDER: only bookings for their provider account
+   * - ADMIN: all bookings
+   */
+  async listBookings(
+    userId: string,
+    userRole: UserRole,
+    query: BookingQuery,
+    providerIdForRole?: string // Provider's provider ID (for PROVIDER role)
+  ): Promise<PaginatedBookingsResponse> {
+    const {
+      page,
+      limit,
+      providerId,
+      serviceId,
+      customerId,
+      status,
+      fromDate,
+      toDate,
+      sortBy,
+      sortOrder,
+    } = query;
+
+    // Validate date range
+    if (fromDate && toDate) {
+      const from = new Date(fromDate);
+      const to = new Date(toDate);
+      if (from > to) {
+        throw new BookingValidationError(
+          ListingErrorCode.INVALID_DATE_RANGE,
+          'fromDate must be before or equal to toDate'
+        );
+      }
+    }
+
+    // Build where clause with role-based filtering
+    const where: Prisma.BookingWhereInput = {};
+
+    // Role-based visibility
+    switch (userRole) {
+      case UserRole.CUSTOMER:
+        // Customer can only see their own bookings
+        where.customerId = userId;
+        // Ignore customerId filter for customers (they can only see their own)
+        break;
+      
+      case UserRole.PROVIDER:
+        // Provider can only see bookings for their provider account
+        if (!providerIdForRole) {
+          throw new BookingValidationError(
+            ListingErrorCode.ACCESS_DENIED,
+            'Provider ID required for provider role'
+          );
+        }
+        where.providerId = providerIdForRole;
+        // Ignore providerId filter for providers (they can only see their own)
+        break;
+      
+      case UserRole.ADMIN:
+        // Admin can see all bookings, apply filters as requested
+        if (providerId) where.providerId = providerId;
+        if (customerId) where.customerId = customerId;
+        break;
+    }
+
+    // Apply common filters
+    if (serviceId) where.serviceId = serviceId;
+    if (status) where.status = status as any; // Cast to Prisma enum type
+
+    // Date range filter
+    if (fromDate || toDate) {
+      where.scheduledDate = {};
+      if (fromDate) {
+        where.scheduledDate.gte = new Date(fromDate);
+      }
+      if (toDate) {
+        // Include the entire day
+        const toDateEnd = new Date(toDate);
+        toDateEnd.setHours(23, 59, 59, 999);
+        where.scheduledDate.lte = toDateEnd;
+      }
+    }
+
+    // Calculate pagination
+    const skip = (page - 1) * limit;
+
+    // Execute count and find in parallel
+    const [total, bookings] = await Promise.all([
+      prisma.booking.count({ where }),
+      prisma.booking.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        include: {
+          customer: { select: { id: true, name: true, phone: true } },
+          provider: { select: { id: true, businessName: true, logoUrl: true } },
+          service: { select: { id: true, name: true, nameAr: true, serviceType: true, durationMinutes: true } },
+        },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: bookings as any,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+    };
+  },
+
+  /**
+   * Get bookings for a specific customer (for customer dashboard)
+   */
+  async getCustomerBookings(
+    customerId: string,
+    query: Omit<BookingQuery, 'customerId' | 'providerId'>
+  ): Promise<PaginatedBookingsResponse> {
+    return this.listBookings(customerId, UserRole.CUSTOMER, {
+      ...query,
+      customerId: undefined,
+      providerId: undefined,
+    } as BookingQuery);
+  },
+
+  /**
+   * Get bookings for a specific provider (for provider dashboard)
+   */
+  async getProviderBookings(
+    userId: string,
+    providerId: string,
+    query: Omit<BookingQuery, 'customerId' | 'providerId'>
+  ): Promise<PaginatedBookingsResponse> {
+    return this.listBookings(
+      userId,
+      UserRole.PROVIDER,
+      {
+        ...query,
+        customerId: undefined,
+        providerId: undefined,
+      } as BookingQuery,
+      providerId
+    );
   },
 };
