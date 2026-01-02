@@ -950,3 +950,89 @@ aws dynamodb describe-table --table-name nasneh-terraform-locks
 ---
 
 **Next Steps Section End**
+
+
+---
+
+## Incident Log
+
+### Incident: Staging ECS Deployment Failing (Jan 2026)
+
+**Date:** January 2, 2026
+
+#### Symptoms
+
+1. CD workflow fails at "Wait for service stability" (10 minute timeout)
+2. ALB Target Group shows targets as `unhealthy`
+3. ECS tasks keep getting replaced in a crash loop
+4. CloudWatch logs show: `Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express'`
+
+#### Root Causes
+
+| Issue | Description |
+|-------|-------------|
+| **Wrong ECS service name** | cd.yml used `nasneh-staging-api-service` but Terraform created `nasneh-staging-api` |
+| **Wrong Docker image** | Task definition pointed to `amazon/amazon-ecs-sample` instead of actual API image |
+| **Missing secrets** | Task definition expected keys not present in AWS Secrets Manager |
+| **Missing curl** | ECS health check used `curl` but
+ `node:20-alpine` doesn't include curl |
+| **Dockerfile pnpm issue** | `pnpm prune --prod` broke symlinks, causing missing dependencies at runtime |
+| **Postinstall failure** | `pnpm install --prod` triggered `prisma generate` postinstall, but `prisma` CLI is a devDependency |
+
+#### Fixes Applied
+
+**1. CD Workflow (cd.yml):**
+- Fixed `ECS_SERVICE` env var: `nasneh-staging-api-service` → `nasneh-staging-api`
+- Added task definition update step (downloads current, updates image, registers new revision)
+- Added "Diagnostics on failure" step for debugging
+
+**2. AWS Secrets Manager:**
+```bash
+# Added missing keys:
+nasneh-staging/api:      + REDIS_URL
+nasneh-staging/database: + DB_USERNAME, DB_PASSWORD
+nasneh-staging/external: + SMS_API_URL, SMS_API_KEY
+```
+
+**3. Dockerfile (Final Solution):**
+
+The Dockerfile uses a 3-stage build to properly handle pnpm monorepo + Prisma:
+
+```dockerfile
+# Stage 1: deps - Production dependencies only
+FROM node:20-alpine AS deps
+# Install prod deps, skip postinstall scripts (prisma CLI is devDep)
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# Stage 2: builder - Full dev dependencies + build
+FROM node:20-alpine AS builder
+# Full install (includes prisma CLI)
+RUN pnpm install --frozen-lockfile
+# Generate Prisma client
+RUN pnpm --filter @nasneh/api exec prisma generate
+# Build API
+RUN pnpm --filter @nasneh/api build
+
+# Stage 3: production - Minimal runtime image
+FROM node:20-alpine AS production
+# Copy prod node_modules from deps
+COPY --from=deps /app/node_modules ./node_modules
+# Copy Prisma client artifacts from builder (generated files)
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
+# Copy built dist from builder
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+```
+
+**Key insight:** Prisma client is *generated* at build time and must be copied from the builder stage, not installed via `pnpm install --prod`.
+
+#### Prevention
+
+1. **Secrets Checklist:** Before first deploy, verify all required secrets exist in AWS Secrets Manager
+2. **Dockerfile Testing:** Test Docker build locally before pushing: `docker build -t test -f apps/api/Dockerfile .`
+3. **Health Check Dependency:** Container must include `curl` (or change to `wget`/node-based check)
+4. **CI Guard (Future):** Add startup check to fail fast if required env vars are missing
+
+---
+
+**Incident Log Section End**
