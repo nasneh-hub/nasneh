@@ -140,6 +140,20 @@ jobs:
           echo "=== Test 3: Check dist directory ==="
           docker run --rm $IMAGE ls -la /app/apps/api/dist/ || echo "/app/apps/api/dist/ not found"
 
+      - name: Verify - Debug dist structure
+        run: |
+          echo "=== Debug: dist directory structure ==="
+          docker run --rm $IMAGE sh -c '
+            echo "=== ls -la /app/apps/api/dist ==="
+            ls -la /app/apps/api/dist
+            echo ""
+            echo "=== ls -la /app/apps/api/dist/config || true ==="
+            ls -la /app/apps/api/dist/config || echo "config dir not found"
+            echo ""
+            echo "=== find dist -maxdepth 2 -type f (first 120) ==="
+            find /app/apps/api/dist -maxdepth 2 -type f | head -120
+          '
+
       - name: Verify - Show Dockerfile CMD and WORKDIR
         run: |
           echo "=== Test 4: Dockerfile configuration ==="
