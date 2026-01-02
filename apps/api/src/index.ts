@@ -16,6 +16,7 @@ import { bookingsRoutes, customerBookingRoutes, providerBookingRoutes } from './
 import { usersRoutes } from './modules/users';
 import { myAddressesRouter, userAddressesRouter } from './modules/addresses';
 import { cartRouter } from './modules/cart';
+import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/reviews';
 import { notFoundHandler, errorHandler } from './middleware';
 
 // ===========================================
@@ -93,6 +94,11 @@ app.use(`${apiPrefix}/users/:userId/addresses`, userAddressesRouter);
 
 // Cart routes
 app.use(`${apiPrefix}/cart`, cartRouter);
+
+// Reviews routes
+app.use(`${apiPrefix}/reviews`, reviewsRoutes);
+app.use(`${apiPrefix}/admin/reviews`, adminReviewsRoutes);
+app.use(`${apiPrefix}/users/me/reviews`, userReviewsRoutes);
 
 // TODO: Add more routes as modules are created
 // app.use(`${apiPrefix}/payments`, paymentRoutes);

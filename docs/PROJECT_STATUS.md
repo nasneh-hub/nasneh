@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 
 ---
 
-## Sprint 2 Progress: 13/17 tasks (76%)
+## Sprint 2 Progress: 15/17 tasks (88%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -41,9 +41,9 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 ### Phase 5: Cart + Reviews
 | Task | Status | PR |
 |------|--------|-----|
-| [CART] Implement cart API (single-vendor) | 🔄 In Review | #64 |
-| [REV] Create reviews table migration | 🔲 To Do | - |
-| [REV] Implement review CRUD API | 🔲 To Do | - |
+| [CART] Implement cart API (single-vendor) | ✅ Merged | #64 |
+| [REV] Create reviews table migration | ✅ Merged | #65 |
+| [REV] Implement review CRUD API | 🔄 In Review | #66 |
 
 ### Phase 6: Tests
 | Task | Status | PR |
@@ -153,6 +153,25 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 - Vendor lock cleared when cart emptied
 - Uses atomic transaction (SERIALIZABLE + SELECT FOR UPDATE)
 
+### Reviews API (PR #66)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /reviews | Create review |
+| GET | /reviews | List reviews (filters: reviewableType, reviewableId, status) |
+| GET | /reviews/:id | Get review by ID |
+| PATCH | /reviews/:id | Update own review (PENDING only) |
+| DELETE | /reviews/:id | Delete own review |
+| POST | /admin/reviews/:id/approve | Approve review (admin) |
+| POST | /admin/reviews/:id/reject | Reject review (admin) |
+| GET | /users/me/reviews | Get current user's reviews |
+
+**RBAC:**
+- CUSTOMER/PROVIDER: create + manage own reviews only
+- ADMIN: list all + approve/reject
+- Non-admin users only see APPROVED reviews (except their own)
+
+**Status Flow:** PENDING → APPROVED/REJECTED (admin can change decision)
+
 ---
 
 ## Sprint 1 Summary (Complete)
@@ -182,4 +201,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 5: Cart API in review (PR #64)
+**Last updated:** 2026-01-02 — Sprint 2 Phase 5: Review CRUD API in review (PR #66)
