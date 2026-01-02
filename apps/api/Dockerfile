@@ -1,40 +1,15 @@
 # =============================================================================
 # Nasneh API - Multi-stage Dockerfile
 # =============================================================================
-# Stage 1: deps       - Production dependencies only (no postinstall scripts)
-# Stage 2: builder    - Full dev dependencies, prisma generate, build
-# Stage 3: production - Final minimal image
+# Stage 1: builder    - Full dev dependencies, prisma generate, build
+# Stage 2: production - Final minimal image with pruned dependencies
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Stage 1: Production Dependencies
-# -----------------------------------------------------------------------------
-# Install only production dependencies, skip postinstall scripts
-# (postinstall runs prisma generate but prisma CLI is a devDependency)
-# -----------------------------------------------------------------------------
-FROM node:20-alpine AS deps
-
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
-
-WORKDIR /app
-
-# Copy workspace configuration
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-
-# Copy all package.json files
-COPY apps/api/package.json ./apps/api/
-COPY packages/config/package.json ./packages/config/
-COPY packages/types/package.json ./packages/types/
-COPY packages/ui/package.json ./packages/ui/
-COPY packages/utils/package.json ./packages/utils/
-
-# Install production dependencies only, skip postinstall scripts
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
-
-# -----------------------------------------------------------------------------
-# Stage 2: Builder
+# Stage 1: Builder
 # -----------------------------------------------------------------------------
 # Full install with devDependencies, generate Prisma client, build API
+# Then prune to production dependencies
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS builder
 
@@ -52,36 +27,28 @@ COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/utils/package.json ./packages/utils/
 
-# Copy Prisma schema (needed for prisma generate in postinstall)
+# Copy Prisma schema (needed for prisma generate)
 COPY apps/api/prisma ./apps/api/prisma
 
 # Install ALL dependencies (including devDependencies)
-# postinstall will run prisma generate automatically
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Ensure Prisma client is generated (may already be done by postinstall)
+# Ensure Prisma client is generated
 RUN pnpm --filter @nasneh/api exec prisma generate
 
 # Build the API
 RUN pnpm --filter @nasneh/api build
 
-# Debug: Show where Prisma client was generated
-RUN echo "=== Prisma client locations ===" && \
-    find /app -name ".prisma" -type d 2>/dev/null && \
-    ls -la /app/apps/api/node_modules/.prisma/ 2>/dev/null || echo "Not in apps/api/node_modules" && \
-    ls -la /app/node_modules/.prisma/ 2>/dev/null || echo "Not in root node_modules"
+# Deploy only the api package with its production dependencies
+# This creates a standalone deployment in /app/deploy
+RUN pnpm --filter @nasneh/api deploy --prod /app/deploy
 
 # -----------------------------------------------------------------------------
-# Stage 3: Production Runtime
-# -----------------------------------------------------------------------------
-# Minimal image with:
-# - Production node_modules from deps stage
-# - Prisma client artifacts from builder stage
-# - Built dist from builder stage
+# Stage 2: Production Runtime
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS production
 
@@ -94,33 +61,17 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copy production node_modules from deps stage
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
-
-# Copy Prisma client artifacts from builder stage
-# In pnpm monorepo, Prisma generates client in apps/api/node_modules/.prisma
-COPY --from=builder /app/apps/api/node_modules/.prisma ./apps/api/node_modules/.prisma
-COPY --from=builder /app/apps/api/node_modules/@prisma ./apps/api/node_modules/@prisma
-
-# Copy built API files from builder stage
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/package.json ./apps/api/
+# Copy the deployed package (includes node_modules with Prisma client)
+COPY --from=builder /app/deploy ./
 
 # Copy Prisma schema (needed for migrations)
-COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
-
-# Copy workspace packages if needed at runtime
-COPY --from=builder /app/packages ./packages
+COPY --from=builder /app/apps/api/prisma ./prisma
 
 # Set ownership
 RUN chown -R nodejs:nodejs /app
 
 # Switch to non-root user
 USER nodejs
-
-# Set working directory to api
-WORKDIR /app/apps/api
 
 # Environment variables
 ENV NODE_ENV=production
