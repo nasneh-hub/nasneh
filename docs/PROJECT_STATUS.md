@@ -18,10 +18,10 @@ DevOps Gate sprint to set up infrastructure and CI/CD before Sprint 3.
 
 | Task | Status | PR |
 |------|--------|----|
-| [DEVOPS] IaC Setup | 🔄 In Review | #70 |
+| [DEVOPS] IaC Setup | ✅ Merged | #70 |
+| [DEVOPS] VPC + Networking | 🔄 In Review | #71 |
 | [CI/CD] CI Pipeline Setup | ⏳ To Do | - |
 | [DEVOPS] Terraform State Backend | ⏳ To Do | - |
-| [DEVOPS] Networking Module | ⏳ To Do | - |
 | [DEVOPS] Database Module | ⏳ To Do | - |
 | [DEVOPS] Compute Module | ⏳ To Do | - |
 | [CI/CD] CD Pipeline Setup | ⏳ To Do | - |
@@ -256,4 +256,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 COMPLETE! Tag v0.3.0-sprint2 created.
+**Last updated:** 2026-01-02 — DevOps Gate in progress. VPC + Networking PR #71 ready for review.
