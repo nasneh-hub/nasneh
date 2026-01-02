@@ -2,7 +2,7 @@
 # Nasneh API - Multi-stage Dockerfile
 # =============================================================================
 # Stage 1: builder    - Full install, prisma generate, build
-# Stage 2: production - Minimal runtime with production deps
+# Stage 2: production - Runtime with full node_modules (no prune)
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -43,11 +43,13 @@ RUN pnpm --filter @nasneh/api build
 # Debug: Show what was built
 RUN echo "=== Builder: apps/api/dist contents ===" && \
     ls -la /app/apps/api/dist/ && \
-    echo "=== Builder: apps/api/dist/config contents ===" && \
-    ls -la /app/apps/api/dist/config/ || echo "No config dir"
+    echo "=== Builder: apps/api/dist/config ===" && \
+    ls -la /app/apps/api/dist/config/ && \
+    echo "=== Builder: node_modules sample ===" && \
+    ls /app/node_modules | head -10
 
-# Prune dev dependencies
-RUN pnpm prune --prod
+# NOTE: We do NOT run pnpm prune --prod because it breaks pnpm symlinks
+# This results in a larger image but guarantees all dependencies work
 
 # -----------------------------------------------------------------------------
 # Stage 2: Production Runtime
@@ -61,27 +63,21 @@ RUN apk add --no-cache curl
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-# WORKDIR is /app - this is where Node.js will run from
-# The compiled code expects imports like './config/env' relative to /app/dist
 WORKDIR /app
 
-# Copy node_modules from builder (pnpm structure)
+# Copy the entire node_modules (pnpm structure with symlinks)
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 
-# Copy the dist folder to /app/dist (NOT /app/apps/api/dist)
-# This is because the compiled code uses relative imports from dist/
+# Copy the dist folder to /app/dist
 COPY --from=builder /app/apps/api/dist ./dist
 
 # Copy package.json for Node.js module resolution
 COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/package.json ./root-package.json
 
 # Copy Prisma schema and generated client
 COPY --from=builder /app/apps/api/prisma ./prisma
 
-# Copy workspace packages (may be needed for internal imports)
-COPY --from=builder /app/packages ./packages
+# Copy pnpm workspace config (needed for module resolution)
 COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # Debug: Show final structure
@@ -89,10 +85,13 @@ RUN echo "=== Production: /app contents ===" && \
     ls -la /app/ && \
     echo "=== Production: /app/dist contents ===" && \
     ls -la /app/dist/ && \
-    echo "=== Production: /app/dist/config contents ===" && \
-    ls -la /app/dist/config/ || echo "No config dir" && \
-    echo "=== Production: /app/node_modules (first 20) ===" && \
-    ls /app/node_modules | head -20
+    echo "=== Production: /app/dist/config ===" && \
+    ls -la /app/dist/config/ && \
+    echo "=== Production: node_modules sample ===" && \
+    ls /app/node_modules | head -10 && \
+    echo "=== Production: Check express exists ===" && \
+    ls -la /app/node_modules/express 2>/dev/null || echo "express not in root node_modules" && \
+    ls -la /app/node_modules/.pnpm/express* 2>/dev/null | head -5 || echo "checking .pnpm store"
 
 # Set ownership
 RUN chown -R nodejs:nodejs /app
