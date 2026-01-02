@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 
 ---
 
-## Sprint 2 Progress: 15/17 tasks (88%)
+## Sprint 2 Progress: 17/17 tasks (100%) ✅ COMPLETE
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -45,11 +45,11 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | [REV] Create reviews table migration | ✅ Merged | #65 |
 | [REV] Implement review CRUD API | 🔄 In Review | #66 |
 
-### Phase 6: Tests
+### Phase 6: Tests ✅ Complete
 | Task | Status | PR |
 |------|--------|-----|
-| [SVC] Service API tests | 🔲 To Do | - |
-| [BOOK] Booking API tests | 🔲 To Do | - |
+| [BOOK] Booking API tests | ✅ Merged | #67 |
+| [SVC] Service API tests | 🔄 In Review | #68 |
 
 ---
 
@@ -201,4 +201,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 5: Review CRUD API in review (PR #66)
+**Last updated:** 2026-01-02 — Sprint 2 COMPLETE! All 17 tasks done. Service API tests in review (PR #68)
