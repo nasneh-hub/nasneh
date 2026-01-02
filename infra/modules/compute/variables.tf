@@ -155,3 +155,31 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+# -----------------------------------------------------------------------------
+# Secrets Configuration (from Secrets Manager)
+# -----------------------------------------------------------------------------
+
+variable "api_secret_arn" {
+  description = "ARN of the API application secrets in Secrets Manager"
+  type        = string
+  default     = ""
+}
+
+variable "database_secret_arn" {
+  description = "ARN of the database credentials secret in Secrets Manager"
+  type        = string
+  default     = ""
+}
+
+variable "external_secret_arn" {
+  description = "ARN of the external services secret in Secrets Manager"
+  type        = string
+  default     = ""
+}
+
+variable "enable_secrets" {
+  description = "Whether to inject secrets from Secrets Manager into ECS tasks"
+  type        = bool
+  default     = false
+}

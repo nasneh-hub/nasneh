@@ -19,6 +19,7 @@ build
 *.pem
 *.key
 secrets/
+!infra/modules/secrets/
 
 # IDE
 .idea

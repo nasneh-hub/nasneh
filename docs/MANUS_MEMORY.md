@@ -57,3 +57,48 @@ A PR is **NOT "Ready for Review"** unless:
 2. **CI Green** ✅ — All GitHub Actions checks pass
 
 **Rule:** Fix/re-run until both conditions are met BEFORE reporting PR as ready.
+
+
+---
+
+## Post-Merge Verification
+
+After merging any PR to main:
+
+1. **Check CI** — Verify GitHub Actions → CI workflow passes on main
+2. **Check CD** — Verify GitHub Actions → CD workflow passes on main (if triggered)
+3. **Report status** — Confirm both are green before marking task complete
+
+---
+
+## Secrets Policy
+
+**No secrets in repo / tfvars / plaintext Terraform state.**
+
+| Rule | Description |
+|------|-------------|
+| Storage | All secrets live in **AWS Secrets Manager** |
+| Naming | `nasneh/{env}/api`, `nasneh/{env}/database`, `nasneh/{env}/external` |
+| ECS Access | Secrets injected via ARN references in task definition |
+| Terraform | Initial placeholders only; real values set via AWS CLI/Console |
+| GitHub | Only AWS credentials (IAM) in GitHub Secrets; no app secrets |
+
+### Secret Categories
+
+| Secret | Contents |
+|--------|----------|
+| `nasneh/{env}/api` | JWT_SECRET, JWT_REFRESH_SECRET, OTP_SECRET, REDIS_URL |
+| `nasneh/{env}/database` | DB_USERNAME, DB_PASSWORD, DATABASE_URL |
+| `nasneh/{env}/external` | WHATSAPP_API_URL, WHATSAPP_API_TOKEN, SMS_API_URL, SMS_API_KEY |
+
+---
+
+## Deploy Policy
+
+| Rule | Description |
+|------|-------------|
+| Auto-deploy | **Disabled by default** |
+| Manual deploy | Via `workflow_dispatch` only |
+| Approval | Explicit approval required before enabling auto-deploy |
+
+**Rationale:** Staging infrastructure is not yet fully provisioned. Auto-deploy could fail or cause issues until all modules are deployed and secrets are configured.

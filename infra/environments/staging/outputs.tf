@@ -166,6 +166,30 @@ output "cdn_enabled" {
 }
 
 # =============================================================================
+# SECRETS OUTPUTS
+# =============================================================================
+
+output "api_secret_arn" {
+  description = "ARN of the API application secrets"
+  value       = module.secrets.api_secret_arn
+}
+
+output "database_secret_arn" {
+  description = "ARN of the database credentials secret"
+  value       = module.secrets.database_secret_arn
+}
+
+output "external_secret_arn" {
+  description = "ARN of the external services secret"
+  value       = module.secrets.external_secret_arn
+}
+
+output "secrets_read_policy_arn" {
+  description = "ARN of the IAM policy for reading secrets"
+  value       = module.secrets.secrets_read_policy_arn
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented
