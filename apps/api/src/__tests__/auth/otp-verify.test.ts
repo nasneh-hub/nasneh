@@ -151,9 +151,9 @@ describe('OTP Verify Endpoint', () => {
         channel: OtpChannel.WHATSAPP,
       });
 
-      // This should be the 5th attempt
+      // This should be the 5th attempt (0 attempts remaining)
       await expect(authService.verifyOtp(phone, '000003')).rejects.toThrow(
-        /Too many failed attempts/
+        /Invalid OTP.*0 attempt/
       );
 
       // OTP should be deleted

@@ -97,7 +97,7 @@ describe('AuthService', () => {
       const invalidToken = 'invalid-refresh-token';
 
       await expect(authService.refreshToken(invalidToken)).rejects.toThrow(
-        'Invalid refresh token'
+        'Invalid or expired refresh token'
       );
     });
   });
