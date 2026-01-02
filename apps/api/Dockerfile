@@ -1,8 +1,8 @@
 # =============================================================================
 # Nasneh API - Multi-stage Dockerfile
 # =============================================================================
-# Stage 1: Build
-# Stage 2: Production
+# Stage 1: Build (full dependencies + build)
+# Stage 2: Production (minimal runtime)
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -10,21 +10,27 @@
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS builder
 
-# Install pnpm
+# Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
 
 WORKDIR /app
 
-# Copy workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY apps/api/package.json ./apps/api/
-COPY packages/ ./packages/
+# Copy workspace configuration files first (for better caching)
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 
-# Install dependencies
+# Copy all package.json files for workspace packages
+COPY apps/api/package.json ./apps/api/
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/utils/package.json ./packages/utils/
+
+# Install ALL dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY apps/api/ ./apps/api/
+COPY packages/ ./packages/
 
 # Generate Prisma client
 RUN cd apps/api && pnpm db:generate
@@ -32,13 +38,13 @@ RUN cd apps/api && pnpm db:generate
 # Build the API
 RUN pnpm --filter @nasneh/api build
 
+# Prune dev dependencies after build
+RUN pnpm prune --prod
+
 # -----------------------------------------------------------------------------
 # Stage 2: Production
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS production
-
-# Install pnpm for production dependencies
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
 
 # Add non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
@@ -46,18 +52,20 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json ./apps/api/
-COPY packages/ ./packages/
+# Copy pruned node_modules from builder (already production-only)
+COPY --from=builder /app/node_modules ./node_modules
 
-# Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
-
-# Copy built files from builder
+# Copy built API files
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package.json ./apps/api/
+
+# Copy Prisma schema and generated client
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
+# Copy workspace packages if needed at runtime
+COPY --from=builder /app/packages ./packages
 
 # Set ownership
 RUN chown -R nodejs:nodejs /app
