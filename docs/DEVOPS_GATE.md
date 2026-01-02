@@ -37,7 +37,6 @@ The IaC code is located in the `/infra` directory with the following structure:
 │   ├── networking/
 │   ├── compute/
 │   ├── database/
-│   ├── cache/
 │   └── secrets/
 │
 ├── versions.tf           # Terraform & provider version constraints
@@ -64,7 +63,7 @@ The `staging` environment is the first to be implemented. It serves as a templat
 ### Key Characteristics:
 
 - **Region:** `me-south-1` (AWS Bahrain)
-- **State Management:** Local state initially, with a commented-out S3 backend configuration for remote state management.
+- **State Management:** Local state initially, with S3 backend configuration for remote state management (configured as sub-step when deploying).
 - **Resource Sizing:** Uses smaller instance types (e.g., `t3.small`, `db.t3.micro`) to minimize costs.
 - **Deletion Protection:** Disabled by default to allow for easy teardown and recreation.
 
@@ -79,6 +78,7 @@ cp terraform.tfvars.example terraform.tfvars
 
 # 3. (Optional) Edit terraform.tfvars with custom values
 
+
 # 4. Initialize Terraform
 terraform init
 
@@ -91,15 +91,22 @@ terraform apply
 
 ---
 
-## 4. Next Steps (DevOps Gate)
+## 4. DevOps Gate Tasks
 
-1. **[CI/CD] CI Pipeline Setup:** Configure GitHub Actions to lint, test, and build the application code.
-2. **[DEVOPS] Terraform State Backend:** Configure S3 and DynamoDB for remote state management and locking.
-3. **[DEVOPS] Networking Module:** Implement the networking module (VPC, subnets, security groups).
-4. **[DEVOPS] Database Module:** Implement the database module (RDS PostgreSQL).
-5. **[DEVOPS] Cache Module:** Implement the cache module (ElastiCache Redis).
-6. **[DEVOPS] Compute Module:** Implement the compute module (ECS Fargate, ALB).
-7. **[CI/CD] CD Pipeline Setup:** Configure GitHub Actions to deploy to staging on merge to `develop`.
+**Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
+
+| # | Task | Priority | Status |
+|---|------|----------|--------|
+| 1 | [DEVOPS] IaC Setup — Terraform/CDK base structure | Urgent | ✅ Complete |
+| 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | 🔄 Pending Review |
+| 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ⏳ To Do |
+| 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ⏳ To Do |
+| 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ⏳ To Do |
+| 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ⏳ To Do |
+| 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ⏳ To Do |
+| 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
+
+> **Note:** Terraform remote state backend (S3 + DynamoDB) is configured as a sub-step during initial deployment, not as a separate task.
 
 ---
 
