@@ -58,8 +58,13 @@ export class WhatsAppClient {
   async sendOtp(params: WhatsAppOtpParams): Promise<WhatsAppMessageResponse> {
     const { phone, otp, language = 'en' } = params;
 
-    // Development/Test mode - mock delivery
-    if ((config.isDevelopment || config.isTest) && !this.isConfigured) {
+    // Test mode - always mock (regardless of configuration)
+    if (config.isTest) {
+      return this.mockSendOtp(phone, otp);
+    }
+
+    // Development mode - mock if not configured
+    if (config.isDevelopment && !this.isConfigured) {
       return this.mockSendOtp(phone, otp);
     }
 

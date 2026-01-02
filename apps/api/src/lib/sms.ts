@@ -71,8 +71,13 @@ export class SmsClient {
   async send(request: SmsMessageRequest): Promise<SmsMessageResponse> {
     const { phone, message } = request;
 
-    // Development/Test mode - mock delivery
-    if (config.isDevelopment || config.isTest) {
+    // Test mode - always mock (regardless of configuration)
+    if (config.isTest) {
+      return this.mockSend(phone, message);
+    }
+
+    // Development mode - mock delivery
+    if (config.isDevelopment) {
       return this.mockSend(phone, message);
     }
 
