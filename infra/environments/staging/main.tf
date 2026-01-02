@@ -145,6 +145,41 @@ module "compute" {
 }
 
 # =============================================================================
+# STORAGE MODULE
+# =============================================================================
+# S3 bucket for static assets + CloudFront CDN
+# S3 has Block Public Access ON, only accessible via CloudFront OAC
+
+module "storage" {
+  source = "../../modules/storage"
+
+  name_prefix = local.name_prefix
+  aws_region  = var.aws_region
+
+  # Feature toggles (set to false to disable)
+  enable_storage = var.enable_storage
+  enable_cdn     = var.enable_cdn
+
+  # S3 configuration
+  bucket_suffix             = "assets"
+  force_destroy             = true  # Allow deletion for staging
+  versioning_enabled        = true
+  lifecycle_expiration_days = 90
+
+  # CloudFront configuration
+  price_class = "PriceClass_100"  # US, Canada, Europe - cheapest
+  default_ttl = 86400             # 1 day
+  max_ttl     = 604800            # 7 days
+  compress    = true
+
+  # Custom domain (optional - leave empty for now)
+  # custom_domain       = "cdn.staging.nasneh.com"
+  # acm_certificate_arn = "arn:aws:acm:us-east-1:xxx:certificate/xxx"
+
+  tags = local.common_tags
+}
+
+# =============================================================================
 # FUTURE MODULES (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented

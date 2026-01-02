@@ -132,6 +132,40 @@ output "cloudwatch_log_group" {
 }
 
 # =============================================================================
+# STORAGE OUTPUTS
+# =============================================================================
+
+output "assets_bucket_name" {
+  description = "S3 bucket name for static assets"
+  value       = module.storage.bucket_name
+}
+
+output "cloudfront_distribution_id" {
+  description = "CloudFront distribution ID"
+  value       = module.storage.cloudfront_distribution_id
+}
+
+output "cloudfront_domain_name" {
+  description = "CloudFront domain name"
+  value       = module.storage.cloudfront_domain_name
+}
+
+output "cdn_url" {
+  description = "Full HTTPS URL for CDN"
+  value       = module.storage.cdn_url
+}
+
+output "storage_enabled" {
+  description = "Whether storage module is enabled"
+  value       = module.storage.storage_enabled
+}
+
+output "cdn_enabled" {
+  description = "Whether CloudFront CDN is enabled"
+  value       = module.storage.cdn_enabled
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented

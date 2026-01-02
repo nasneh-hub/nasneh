@@ -67,3 +67,20 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+
+# ============================================
+# Storage / CDN Variables
+# ============================================
+
+variable "enable_storage" {
+  description = "Enable S3 storage module (set to false to skip)"
+  type        = bool
+  default     = true
+}
+
+variable "enable_cdn" {
+  description = "Enable CloudFront CDN (set to false for S3 only)"
+  type        = bool
+  default     = true
+}
