@@ -77,7 +77,7 @@ module "database" {
 
   # Instance configuration (staging - cost-effective)
   instance_class        = var.db_instance_class
-  engine_version        = "15.4"
+  engine_version        = "15.10"  # Available in me-south-1
   allocated_storage     = local.staging_config.db_allocated_storage
   max_allocated_storage = local.staging_config.db_max_storage
   storage_type          = "gp3"
