@@ -202,3 +202,43 @@ module "secrets" {
 
   tags = local.common_tags
 }
+
+
+# =============================================================================
+# MONITORING MODULE
+# =============================================================================
+# CloudWatch alarms, SNS notifications, and log retention
+# Alerts for: CPU > 80%, Memory > 80%, 5XX errors, Running tasks < desired
+
+module "monitoring" {
+  source = "../../modules/monitoring"
+
+  name_prefix = local.name_prefix
+  environment = var.environment
+
+  # ECS resources (for alarms)
+  ecs_cluster_name   = module.compute.cluster_name
+  ecs_service_name   = module.compute.service_name
+  desired_task_count = local.staging_config.api_desired
+
+  # ALB resources (for alarms)
+  alb_arn_suffix          = module.compute.alb_arn_suffix
+  target_group_arn_suffix = module.compute.target_group_arn_suffix
+
+  # Log configuration
+  log_retention_days      = 14  # 14 days for staging
+  existing_log_group_name = module.compute.log_group_name
+
+  # Alarm thresholds
+  cpu_threshold_percent    = 80
+  memory_threshold_percent = 80
+  error_5xx_threshold      = 1
+
+  # Notifications
+  alert_email   = var.alert_email
+  enable_alarms = var.enable_monitoring
+
+  tags = local.common_tags
+
+  depends_on = [module.compute]
+}

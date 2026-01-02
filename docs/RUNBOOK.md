@@ -615,3 +615,176 @@ aws secretsmanager get-secret-value \
 ---
 
 **Secrets Management Section End**
+
+
+---
+
+## Monitoring + Alerts (CloudWatch)
+
+### Overview
+
+| Resource | Description |
+|----------|-------------|
+| SNS Topic | `nasneh-staging-alerts` |
+| Alarms | CPU, Memory, 5XX Errors, Running Tasks |
+| Dashboard | `nasneh-staging-overview` |
+| Log Retention | 14 days (staging) |
+
+### Configuring Alert Email
+
+```bash
+# Set via environment variable
+export TF_VAR_alert_email="alerts@nasneh.com"
+
+# Or add to terraform.tfvars
+echo 'alert_email = "alerts@nasneh.com"' >> terraform.tfvars
+
+# Apply changes
+terraform apply
+```
+
+**Important:** After apply, check your email and confirm the SNS subscription.
+
+### Viewing Alarms
+
+```bash
+# List all alarms
+aws cloudwatch describe-alarms \
+  --alarm-name-prefix nasneh-staging \
+  --region me-south-1
+
+# Get alarm state
+aws cloudwatch describe-alarms \
+  --alarm-names nasneh-staging-ecs-cpu-high \
+  --query 'MetricAlarms[0].StateValue' \
+  --output text \
+  --region me-south-1
+```
+
+### Viewing Dashboard
+
+Access the CloudWatch dashboard:
+
+```
+https://me-south-1.console.aws.amazon.com/cloudwatch/home?region=me-south-1#dashboards:name=nasneh-staging-overview
+```
+
+### Viewing Logs
+
+```bash
+# View recent logs
+aws logs tail /ecs/nasneh-staging-api --follow --region me-south-1
+
+# Search logs for errors
+aws logs filter-log-events \
+  --log-group-name /ecs/nasneh-staging-api \
+  --filter-pattern "ERROR" \
+  --start-time $(date -d '1 hour ago' +%s000) \
+  --region me-south-1
+```
+
+### Alarm Response Playbook
+
+#### ECS CPU High (> 80%)
+
+```bash
+# 1. Check current CPU usage
+aws ecs describe-services \
+  --cluster nasneh-staging-cluster \
+  --services nasneh-staging-api \
+  --query 'services[0].deployments[0]' \
+  --region me-south-1
+
+# 2. Check logs for CPU-intensive operations
+aws logs tail /ecs/nasneh-staging-api --since 30m --region me-south-1
+
+# 3. If persistent, scale up CPU
+# Update container_cpu in staging main.tf and apply
+```
+
+#### ECS Memory High (> 80%)
+
+```bash
+# 1. Check for memory leaks
+aws logs filter-log-events \
+  --log-group-name /ecs/nasneh-staging-api \
+  --filter-pattern "heap" \
+  --region me-south-1
+
+# 2. Check container metrics
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/ECS \
+  --metric-name MemoryUtilization \
+  --dimensions Name=ClusterName,Value=nasneh-staging-cluster Name=ServiceName,Value=nasneh-staging-api \
+  --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) \
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
+  --period 300 \
+  --statistics Average \
+  --region me-south-1
+```
+
+#### ALB 5XX Errors
+
+```bash
+# 1. Check application logs
+aws logs filter-log-events \
+  --log-group-name /ecs/nasneh-staging-api \
+  --filter-pattern "ERROR" \
+  --start-time $(date -d '30 minutes ago' +%s000) \
+  --region me-south-1
+
+# 2. Check ECS task health
+aws ecs describe-services \
+  --cluster nasneh-staging-cluster \
+  --services nasneh-staging-api \
+  --query 'services[0].events[:5]' \
+  --region me-south-1
+
+# 3. Check database connectivity
+aws rds describe-db-instances \
+  --db-instance-identifier nasneh-staging-postgres \
+  --query 'DBInstances[0].DBInstanceStatus' \
+  --region me-south-1
+```
+
+#### Running Tasks Low
+
+```bash
+# 1. Check service events
+aws ecs describe-services \
+  --cluster nasneh-staging-cluster \
+  --services nasneh-staging-api \
+  --query 'services[0].events[:10]' \
+  --region me-south-1
+
+# 2. Check stopped tasks
+aws ecs list-tasks \
+  --cluster nasneh-staging-cluster \
+  --desired-status STOPPED \
+  --region me-south-1
+
+# 3. Force new deployment
+aws ecs update-service \
+  --cluster nasneh-staging-cluster \
+  --service nasneh-staging-api \
+  --force-new-deployment \
+  --region me-south-1
+```
+
+### Disabling Alarms (Maintenance)
+
+```bash
+# Disable alarms during maintenance
+aws cloudwatch disable-alarm-actions \
+  --alarm-names nasneh-staging-ecs-cpu-high nasneh-staging-ecs-memory-high \
+  --region me-south-1
+
+# Re-enable after maintenance
+aws cloudwatch enable-alarm-actions \
+  --alarm-names nasneh-staging-ecs-cpu-high nasneh-staging-ecs-memory-high \
+  --region me-south-1
+```
+
+---
+
+**Monitoring Section End**

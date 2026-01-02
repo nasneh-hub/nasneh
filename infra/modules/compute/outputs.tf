@@ -89,3 +89,17 @@ output "api_endpoint" {
   description = "HTTP endpoint for the API (use HTTPS in production)"
   value       = "http://${aws_lb.api.dns_name}"
 }
+
+
+# -----------------------------------------------------------------------------
+# ARN Suffixes (for CloudWatch metrics)
+# -----------------------------------------------------------------------------
+output "alb_arn_suffix" {
+  description = "ARN suffix of the ALB (for CloudWatch metrics)"
+  value       = aws_lb.api.arn_suffix
+}
+
+output "target_group_arn_suffix" {
+  description = "ARN suffix of the target group (for CloudWatch metrics)"
+  value       = aws_lb_target_group.api.arn_suffix
+}

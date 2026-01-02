@@ -190,6 +190,25 @@ output "secrets_read_policy_arn" {
 }
 
 # =============================================================================
+# MONITORING OUTPUTS
+# =============================================================================
+
+output "sns_topic_arn" {
+  description = "ARN of the SNS topic for alerts"
+  value       = module.monitoring.sns_topic_arn
+}
+
+output "cloudwatch_dashboard_url" {
+  description = "URL to CloudWatch dashboard"
+  value       = module.monitoring.dashboard_url
+}
+
+output "monitoring_enabled" {
+  description = "Whether monitoring alarms are enabled"
+  value       = var.enable_monitoring
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented

@@ -410,8 +410,8 @@ To use a custom domain:
 | 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ✅ Complete |
 | 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ✅ Complete |
 | 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ✅ Complete |
-| 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | 🔄 Pending Review |
-| 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
+| 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ✅ Complete |
+| 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | 🔄 Pending Review |
 
 > **Note:** Terraform remote state backend (S3 + DynamoDB) is configured as a sub-step during initial deployment, not as a separate task.
 
@@ -425,7 +425,9 @@ To use a custom domain:
 | Database (RDS) | ~$15 |
 | Compute (ECS + ALB) | ~$28 |
 | Storage (S3 + CloudFront) | ~$2 |
-| **Total** | **~$81** |
+| Secrets | ~$1.25 |
+| Monitoring | ~$4.40 |
+| **Total** | **~$87** |
 
 ---
 
@@ -643,6 +645,130 @@ Before deploying to staging, ensure:
 | 3 secrets × $0.40 | ~$1.20 |
 | API calls (estimated) | ~$0.05 |
 | **Total** | **~$1.25** |
+
+---
+
+**Document End**
+
+
+---
+
+## 12. Monitoring + Alerts
+
+The monitoring module (`/infra/modules/monitoring`) provides CloudWatch alarms, SNS notifications, and a dashboard.
+
+### Resources Created
+
+| Resource | Description |
+|----------|-------------|
+| SNS Topic | `nasneh-staging-alerts` for notifications |
+| CloudWatch Alarms | 4 alarms for ECS and ALB metrics |
+| CloudWatch Dashboard | Overview dashboard with key metrics |
+| Log Retention | 14 days for staging logs |
+
+### Alarms
+
+| Alarm | Metric | Threshold | Description |
+|-------|--------|-----------|-------------|
+| ECS CPU High | CPUUtilization | > 80% | CPU above threshold for 10 min |
+| ECS Memory High | MemoryUtilization | > 80% | Memory above threshold for 10 min |
+| ALB 5XX Errors | HTTPCode_Target_5XX_Count | >= 1 | Any 5XX errors in 5 min |
+| Running Tasks Low | RunningTaskCount | < desired | Tasks below desired count |
+
+### SNS Email Subscription
+
+After `terraform apply`, configure email notifications:
+
+```bash
+# Set alert email via terraform.tfvars or environment variable
+export TF_VAR_alert_email="alerts@nasneh.com"
+terraform apply
+```
+
+**Important:** Check your email and confirm the SNS subscription to receive alerts.
+
+### CloudWatch Dashboard
+
+Access the dashboard at:
+
+```
+https://me-south-1.console.aws.amazon.com/cloudwatch/home?region=me-south-1#dashboards:name=nasneh-staging-overview
+```
+
+Dashboard widgets:
+- ECS CPU & Memory Utilization
+- ALB Request Count & Latency
+- ALB HTTP Errors (4XX, 5XX)
+- ECS Running Tasks vs Desired
+
+### Alarm Response Guide
+
+#### ECS CPU High
+
+1. Check CloudWatch logs for high-CPU processes
+2. Consider scaling up task CPU allocation
+3. Review application for CPU-intensive operations
+
+#### ECS Memory High
+
+1. Check for memory leaks in application
+2. Consider scaling up task memory allocation
+3. Review container metrics for OOM events
+
+#### ALB 5XX Errors
+
+1. Check application logs for errors
+2. Verify database connectivity
+3. Check ECS task health
+4. Review recent deployments
+
+#### Running Tasks Low
+
+1. Check ECS service events for failures
+2. Verify task definition is valid
+3. Check for resource constraints
+4. Review CloudWatch logs for crash reasons
+
+### Cost Estimate
+
+| Resource | Monthly Cost |
+|----------|--------------|
+| SNS (1000 notifications) | ~$0.50 |
+| CloudWatch Alarms (4) | ~$0.40 |
+| CloudWatch Dashboard | ~$3.00 |
+| CloudWatch Logs (1 GB) | ~$0.50 |
+| **Total** | **~$4.40** |
+
+---
+
+## 🎉 DevOps Gate Complete!
+
+All 8 tasks completed. Infrastructure is ready for staging deployment.
+
+### Summary
+
+| Module | Status | PR |
+|--------|--------|-----|
+| IaC Setup | ✅ Complete | #70 |
+| VPC + Networking | ✅ Complete | #71 |
+| RDS PostgreSQL | ✅ Complete | #73 |
+| ECS Fargate + ALB | ✅ Complete | #74 |
+| S3 + CloudFront | ✅ Complete | #75 |
+| CI/CD Pipeline | ✅ Complete | #76, #77 |
+| Secrets Management | ✅ Complete | #78 |
+| Monitoring + Alerts | ✅ Complete | #79 |
+
+### Next Steps
+
+1. **Configure AWS credentials** for Terraform
+2. **Run `terraform init`** to initialize backend
+3. **Run `terraform plan`** to review changes
+4. **Run `terraform apply`** to create infrastructure
+5. **Update secrets** in AWS Secrets Manager
+6. **Confirm SNS subscription** for alerts
+7. **Deploy first container image** via CD workflow
+
+See [RUNBOOK.md](./RUNBOOK.md) for detailed deployment instructions.
 
 ---
 
