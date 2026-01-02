@@ -3,7 +3,7 @@
  * Database operations for categories
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 
 export interface CreateCategoryInput {
   name: string;

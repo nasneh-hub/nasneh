@@ -8,16 +8,16 @@ import {
   initiatePayment,
   getPaymentById,
   getCustomerPayments,
-} from './payments.controller';
+} from './payments.controller.js';
 import {
   handleApsWebhook,
   handleApsReturn,
-} from './webhook.controller';
-import { requireAuth } from '../../middleware/auth.middleware';
+} from './webhook.controller.js';
+import { requireAuth } from '../../middleware/auth.middleware.js';
 import {
   captureRawBody,
   jsonWithRawBody,
-} from '../../middleware/rawBody.middleware';
+} from '../../middleware/rawBody.middleware.js';
 
 const router: Router = Router();
 

@@ -8,9 +8,9 @@
  * - Attempt tracking for brute-force protection
  */
 
-import { getRedisClient, getOtpKey } from '../../lib/redis';
-import { config } from '../../config/env';
-import { OtpChannel } from '../../types/auth.types';
+import { getRedisClient, getOtpKey } from '../../lib/redis.js';
+import { config } from '../../config/env.js';
+import { OtpChannel } from '../../types/auth.types.js';
 
 // ===========================================
 // Types

@@ -3,4 +3,4 @@
  * Exports all vendors-related components
  */
 
-export { vendorsRepository, VendorsRepository } from './vendors.repository';
+export { vendorsRepository, VendorsRepository } from './vendors.repository.js';

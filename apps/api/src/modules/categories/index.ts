@@ -3,4 +3,4 @@
  * Exports all categories-related components
  */
 
-export { categoriesRepository, CategoriesRepository } from './categories.repository';
+export { categoriesRepository, CategoriesRepository } from './categories.repository.js';

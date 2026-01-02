@@ -10,12 +10,12 @@ interface AuthenticatedRequest extends Request {
     role: string;
   };
 }
-import { reviewsService, ReviewError } from './reviews.service';
+import { reviewsService, ReviewError } from './reviews.service.js';
 import {
   createReviewSchema,
   updateReviewSchema,
   reviewQuerySchema,
-} from '../../types/review.types';
+} from '../../types/review.types.js';
 import { ZodError } from 'zod';
 
 // ===========================================

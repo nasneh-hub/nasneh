@@ -1,6 +1,6 @@
-import { serviceRepository, providerRepository } from './services.repository';
-import { auditService } from '../../lib/audit';
-import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types';
+import { serviceRepository, providerRepository } from './services.repository.js';
+import { auditService } from '../../lib/audit.js';
+import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types.js';
 
 // ===========================================
 // Custom Errors

@@ -8,9 +8,9 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { getRedisClient, getRateLimitKey } from '../lib/redis';
-import { config } from '../config/env';
-import { ApiError } from './error.middleware';
+import { getRedisClient, getRateLimitKey } from '../lib/redis.js';
+import { config } from '../config/env.js';
+import { ApiError } from './error.middleware.js';
 
 // ===========================================
 // Types

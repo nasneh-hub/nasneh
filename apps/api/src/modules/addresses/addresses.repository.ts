@@ -4,7 +4,7 @@
  * Database operations for user addresses.
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import type { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 

@@ -5,14 +5,14 @@
  */
 
 import { Response, NextFunction } from 'express';
-import { productsService, ProductNotFoundError } from './products.service';
+import { productsService, ProductNotFoundError } from './products.service.js';
 import {
   createProductSchema,
   updateProductSchema,
   productQuerySchema,
-} from '../../types/product.types';
-import { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { prisma } from '../../lib/db';
+} from '../../types/product.types.js';
+import { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { prisma } from '../../lib/db.js';
 
 /**
  * Create Product

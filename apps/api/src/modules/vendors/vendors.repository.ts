@@ -3,8 +3,8 @@
  * Database operations for vendors
  */
 
-import { prisma } from '../../lib/db';
-import { VendorCategory, VendorStatus, SubscriptionPlan } from '../../types/product.types';
+import { prisma } from '../../lib/db.js';
+import { VendorCategory, VendorStatus, SubscriptionPlan } from '../../types/product.types.js';
 
 export interface CreateVendorInput {
   userId: string;

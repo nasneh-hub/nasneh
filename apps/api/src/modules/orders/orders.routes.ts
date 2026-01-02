@@ -13,9 +13,9 @@ import {
   getCustomerOrders,
   getCustomerOrderById,
   cancelOrder,
-} from './orders.controller';
-import { authMiddleware, requireRoles } from '../../middleware/auth.middleware';
-import { UserRole } from '../../types/auth.types';
+} from './orders.controller.js';
+import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
+import { UserRole } from '../../types/auth.types.js';
 
 // ===========================================
 // Vendor Routes

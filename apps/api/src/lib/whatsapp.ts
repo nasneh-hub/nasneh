@@ -9,7 +9,7 @@
  * - Mock mode for development/testing
  */
 
-import { config } from '../config/env';
+import { config } from '../config/env.js';
 
 // ===========================================
 // Types

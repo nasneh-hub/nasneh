@@ -13,15 +13,15 @@ import {
   ProductNotFoundError,
   ProductNotAvailableError,
   ProductVendorMismatchError,
-} from './orders.service';
+} from './orders.service.js';
 import {
   updateOrderStatusSchema,
   orderQuerySchema,
   createOrderSchema,
-} from '../../types/order.types';
-import { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { prisma } from '../../lib/db';
-import { ActorRole } from '../../lib/audit';
+} from '../../types/order.types.js';
+import { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { prisma } from '../../lib/db.js';
+import { ActorRole } from '../../lib/audit.js';
 
 // ===========================================
 // Vendor Endpoints

@@ -21,13 +21,13 @@ import {
   logoutAll,
   getSessions,
   getCurrentUser,
-} from './auth.controller';
-import { authMiddleware } from '../../middleware/auth.middleware';
+} from './auth.controller.js';
+import { authMiddleware } from '../../middleware/auth.middleware.js';
 import {
   otpRateLimit,
   otpCooldown,
   loginRateLimit,
-} from '../../middleware/rate-limit.middleware';
+} from '../../middleware/rate-limit.middleware.js';
 
 const router: Router = Router();
 

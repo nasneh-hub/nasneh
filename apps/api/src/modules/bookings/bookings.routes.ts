@@ -16,7 +16,7 @@ import {
   completeBooking,
   cancelBooking,
   markNoShow,
-} from './bookings.controller';
+} from './bookings.controller.js';
 
 const router: RouterType = Router();
 

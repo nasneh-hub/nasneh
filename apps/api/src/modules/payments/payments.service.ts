@@ -3,16 +3,16 @@
  * Business logic for payment operations
  */
 
-import { paymentsRepository } from './payments.repository';
-import { apsService } from '../../lib/aps';
-import { auditService, ActorRole } from '../../lib/audit';
-import { prisma } from '../../lib/db';
-import { config } from '../../config/env';
+import { paymentsRepository } from './payments.repository.js';
+import { apsService } from '../../lib/aps.js';
+import { auditService, ActorRole } from '../../lib/audit.js';
+import { prisma } from '../../lib/db.js';
+import { config } from '../../config/env.js';
 import {
   PaymentStatus,
   PayableType,
   PaymentQueryInput,
-} from '../../types/payment.types';
+} from '../../types/payment.types.js';
 import { Decimal } from '@prisma/client/runtime/library';
 import { v4 as uuidv4 } from 'uuid';
 

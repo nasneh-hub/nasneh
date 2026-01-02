@@ -6,8 +6,8 @@
  */
 
 import { Router } from 'express';
-import { authMiddleware, requireRoles } from '../../middleware/auth.middleware';
-import { UserRole } from '../../types/auth.types';
+import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
+import { UserRole } from '../../types/auth.types.js';
 import {
   getProviderCalendar,
   updateProviderCalendar,
@@ -19,7 +19,7 @@ import {
   deleteOverride,
   updateSettings,
   getServiceSlots,
-} from './availability.controller';
+} from './availability.controller.js';
 
 // ===========================================
 // Provider Calendar Routes (/provider/calendar)

@@ -1,6 +1,6 @@
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import { Prisma, BookingStatus as PrismaBookingStatus } from '@prisma/client';
-import type { BookingQuery } from '../../types/booking.types';
+import type { BookingQuery } from '../../types/booking.types.js';
 
 // ===========================================
 // Bookings Repository

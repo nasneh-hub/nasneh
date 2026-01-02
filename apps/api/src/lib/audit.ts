@@ -3,13 +3,13 @@
  * Centralized audit logging for all actions
  */
 
-import { prisma } from './db';
+import { prisma } from './db.js';
 import {
   ActorRole,
   AuditAction,
   EntityType,
   CreateAuditLogInput,
-} from '../types/audit.types';
+} from '../types/audit.types.js';
 
 export class AuditService {
   /**

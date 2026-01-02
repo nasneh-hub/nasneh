@@ -3,12 +3,12 @@
  * Database operations for orders
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import {
   OrderQueryInput,
   OrderStatus,
   FulfillmentType,
-} from '../../types/order.types';
+} from '../../types/order.types.js';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // ===========================================

@@ -5,12 +5,12 @@
  */
 
 import { Response, NextFunction } from 'express';
-import { apsService, ApsPaymentResponse } from '../../lib/aps';
-import { paymentsRepository } from './payments.repository';
-import { auditService, ActorRole } from '../../lib/audit';
-import { prisma } from '../../lib/db';
-import { PaymentStatus } from '../../types/payment.types';
-import { RawBodyRequest } from '../../middleware/rawBody.middleware';
+import { apsService, ApsPaymentResponse } from '../../lib/aps.js';
+import { paymentsRepository } from './payments.repository.js';
+import { auditService, ActorRole } from '../../lib/audit.js';
+import { prisma } from '../../lib/db.js';
+import { PaymentStatus } from '../../types/payment.types.js';
+import { RawBodyRequest } from '../../middleware/rawBody.middleware.js';
 
 // ===========================================
 // Types

@@ -1,6 +1,6 @@
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import type { DayOfWeek, OverrideType } from '@prisma/client';
-import { calendarDefaults } from '../../config/calendar.defaults';
+import { calendarDefaults } from '../../config/calendar.defaults.js';
 
 // ===========================================
 // Availability Rules Repository

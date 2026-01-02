@@ -5,8 +5,8 @@
  * Uses atomic transactions to prevent race conditions.
  */
 
-import { prisma } from '../../lib';
-import { cartRepository, cartItemRepository, productRepository } from './cart.repository';
+import { prisma } from '../../lib/index.js';
+import { cartRepository, cartItemRepository, productRepository } from './cart.repository.js';
 import {
   CartErrorCode,
   type AddCartItemInput,
@@ -14,7 +14,7 @@ import {
   type CartResponse,
   type CartItemResponse,
   type DifferentVendorError,
-} from '../../types/cart.types';
+} from '../../types/cart.types.js';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // ===========================================

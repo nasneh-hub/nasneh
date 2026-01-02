@@ -4,7 +4,7 @@
  */
 
 import crypto from 'crypto';
-import { config } from '../config/env';
+import { config } from '../config/env.js';
 
 // ===========================================
 // Types

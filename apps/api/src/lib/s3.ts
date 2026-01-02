@@ -5,8 +5,8 @@
  */
 
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { config } from '../config/env';
-import { UploadResult, UploadCategory, UploadError } from '../types/upload.types';
+import { config } from '../config/env.js';
+import { UploadResult, UploadCategory, UploadError } from '../types/upload.types.js';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 

@@ -5,7 +5,7 @@
  * In development mode, uses in-memory fallback if Redis is not available.
  */
 
-import { config } from '../config/env';
+import { config } from '../config/env.js';
 
 // ===========================================
 // Types

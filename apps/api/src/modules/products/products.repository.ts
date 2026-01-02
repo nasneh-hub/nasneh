@@ -3,13 +3,13 @@
  * Database operations for products
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import {
   CreateProductInput,
   UpdateProductInput,
   ProductQueryInput,
   ProductStatus,
-} from '../../types/product.types';
+} from '../../types/product.types.js';
 
 export class ProductsRepository {
   /**

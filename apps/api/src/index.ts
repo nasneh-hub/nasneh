@@ -5,19 +5,19 @@
 
 import express from 'express';
 import cors from 'cors';
-import { config } from './config/env';
-import { authRoutes } from './modules/auth';
-import { vendorRouter as vendorProductsRouter, publicRouter as publicProductsRouter } from './modules/products';
-import { uploadRoutes } from './modules/upload';
-import { vendorOrderRoutes, customerOrderRoutes } from './modules/orders';
-import { providerServicesRouter, publicServicesRouter } from './modules/services';
-import { providerCalendarRouter } from './modules/availability';
-import { bookingsRoutes, customerBookingRoutes, providerBookingRoutes } from './modules/bookings';
-import { usersRoutes } from './modules/users';
-import { myAddressesRouter, userAddressesRouter } from './modules/addresses';
-import { cartRouter } from './modules/cart';
-import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/reviews';
-import { notFoundHandler, errorHandler } from './middleware';
+import { config } from './config/env.js';
+import { authRoutes } from './modules/auth/index.js';
+import { vendorRouter as vendorProductsRouter, publicRouter as publicProductsRouter } from './modules/products/index.js';
+import { uploadRoutes } from './modules/upload/index.js';
+import { vendorOrderRoutes, customerOrderRoutes } from './modules/orders/index.js';
+import { providerServicesRouter, publicServicesRouter } from './modules/services/index.js';
+import { providerCalendarRouter } from './modules/availability/index.js';
+import { bookingsRoutes, customerBookingRoutes, providerBookingRoutes } from './modules/bookings/index.js';
+import { usersRoutes } from './modules/users/index.js';
+import { myAddressesRouter, userAddressesRouter } from './modules/addresses/index.js';
+import { cartRouter } from './modules/cart/index.js';
+import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/reviews/index.js';
+import { notFoundHandler, errorHandler } from './middleware/index.js';
 
 // ===========================================
 // Create Express App

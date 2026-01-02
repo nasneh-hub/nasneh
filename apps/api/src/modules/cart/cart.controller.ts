@@ -5,12 +5,12 @@
  */
 
 import type { Request, Response } from 'express';
-import { cartService, CartError } from './cart.service';
+import { cartService, CartError } from './cart.service.js';
 import {
   addCartItemSchema,
   updateCartItemSchema,
   CartErrorCode,
-} from '../../types/cart.types';
+} from '../../types/cart.types.js';
 
 // ===========================================
 // Type Extensions

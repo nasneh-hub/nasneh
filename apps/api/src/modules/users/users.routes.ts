@@ -11,7 +11,7 @@ import {
   listUsers,
   getUserById,
   updateUserById,
-} from './users.controller';
+} from './users.controller.js';
 
 const router: RouterType = Router();
 

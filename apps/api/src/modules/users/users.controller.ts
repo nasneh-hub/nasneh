@@ -5,14 +5,14 @@
  */
 
 import type { Request, Response } from 'express';
-import { usersService, ProfileError } from './users.service';
+import { usersService, ProfileError } from './users.service.js';
 import {
   updateProfileSchema,
   adminUpdateUserSchema,
   userQuerySchema,
   ProfileErrorCode,
   UserRole,
-} from '../../types/user.types';
+} from '../../types/user.types.js';
 
 // ===========================================
 // Type Extensions

@@ -1,3 +1,3 @@
-export * from './users.repository';
-export * from './users.service';
-export { default as usersRoutes } from './users.routes';
+export * from './users.repository.js';
+export * from './users.service.js';
+export { default as usersRoutes } from './users.routes.js';

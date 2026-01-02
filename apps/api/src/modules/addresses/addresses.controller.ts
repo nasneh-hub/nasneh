@@ -5,13 +5,13 @@
  */
 
 import type { Request, Response } from 'express';
-import { addressesService, AddressError } from './addresses.service';
+import { addressesService, AddressError } from './addresses.service.js';
 import {
   createAddressSchema,
   updateAddressSchema,
   AddressErrorCode,
-} from '../../types/address.types';
-import { UserRole } from '../../types/user.types';
+} from '../../types/address.types.js';
+import { UserRole } from '../../types/user.types.js';
 
 // ===========================================
 // Type Extensions

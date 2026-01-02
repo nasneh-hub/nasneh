@@ -1,7 +1,7 @@
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import { Prisma, ServiceType as PrismaServiceType, ServiceStatus as PrismaServiceStatus } from '@prisma/client';
-import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types';
-import { ServiceSortBy } from '../../types/service.types';
+import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types.js';
+import { ServiceSortBy } from '../../types/service.types.js';
 
 // ===========================================
 // Sorting Helper

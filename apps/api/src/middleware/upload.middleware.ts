@@ -10,7 +10,7 @@ import {
   MAX_FILE_SIZE,
   MAX_FILES_PER_REQUEST,
   FileValidationError,
-} from '../types/upload.types';
+} from '../types/upload.types.js';
 
 /**
  * Multer storage configuration
