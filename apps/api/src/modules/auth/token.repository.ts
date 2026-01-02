@@ -9,8 +9,8 @@
  * - Atomic operations for thread safety
  */
 
-import { getRedisClient } from '../../lib/redis';
-import { config } from '../../config/env';
+import { getRedisClient } from '../../lib/redis.js';
+import { config } from '../../config/env.js';
 
 // ===========================================
 // Constants

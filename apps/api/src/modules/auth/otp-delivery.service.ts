@@ -10,9 +10,9 @@
  * UI Wording: "Try WhatsApp first (faster) then SMS fallback"
  */
 
-import { config } from '../../config/env';
-import { sendWhatsAppOtpWithTimeout, WhatsAppDeliveryStatus } from '../../lib/whatsapp';
-import { OtpChannel, OtpStatus, OtpLogEntry } from '../../types/auth.types';
+import { config } from '../../config/env.js';
+import { sendWhatsAppOtpWithTimeout, WhatsAppDeliveryStatus } from '../../lib/whatsapp.js';
+import { OtpChannel, OtpStatus, OtpLogEntry } from '../../types/auth.types.js';
 
 // ===========================================
 // Types

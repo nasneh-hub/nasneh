@@ -1,3 +1,3 @@
-export * from './bookings.repository';
-export * from './bookings.service';
-export { default as bookingsRoutes, customerBookingRoutes, providerBookingRoutes } from './bookings.routes';
+export * from './bookings.repository.js';
+export * from './bookings.service.js';
+export { default as bookingsRoutes, customerBookingRoutes, providerBookingRoutes } from './bookings.routes.js';

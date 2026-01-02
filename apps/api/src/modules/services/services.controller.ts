@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { servicesService, ProviderNotFoundError, ProviderNotActiveError, ServiceNotFoundError, ServiceNotOwnedError, InvalidServiceTypeFieldError } from './services.service';
-import { createServiceSchema, updateServiceSchema, serviceQuerySchema, providerServiceQuerySchema } from '../../types/service.types';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { servicesService, ProviderNotFoundError, ProviderNotActiveError, ServiceNotFoundError, ServiceNotOwnedError, InvalidServiceTypeFieldError } from './services.service.js';
+import { createServiceSchema, updateServiceSchema, serviceQuerySchema, providerServiceQuerySchema } from '../../types/service.types.js';
 import { ZodError } from 'zod';
 
 // ===========================================

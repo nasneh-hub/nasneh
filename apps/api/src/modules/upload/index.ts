@@ -3,6 +3,6 @@
  * Exports all upload-related components
  */
 
-export { uploadService, UploadService } from './upload.service';
-export * from './upload.controller';
-export { default as uploadRoutes } from './upload.routes';
+export { uploadService, UploadService } from './upload.service.js';
+export * from './upload.controller.js';
+export { default as uploadRoutes } from './upload.routes.js';

@@ -7,7 +7,7 @@
  */
 
 // Routes
-export { providerCalendarRouter, getServiceSlots } from './availability.routes';
+export { providerCalendarRouter, getServiceSlots } from './availability.routes.js';
 
 // Service functions (for bookings integration)
 export {
@@ -23,11 +23,11 @@ export {
   checkOverrideConflictsWithBookings,
   checkBulkRulesConflictsWithBookings,
   type BookingConflictCheckResult,
-} from './availability.service';
+} from './availability.service.js';
 
 // Repository (for advanced use cases)
 export {
   availabilityRulesRepository,
   availabilityOverridesRepository,
   availabilitySettingsRepository,
-} from './availability.repository';
+} from './availability.repository.js';

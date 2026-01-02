@@ -3,7 +3,7 @@
  * Exports all orders-related components
  */
 
-export { ordersRepository, OrdersRepository } from './orders.repository';
+export { ordersRepository, OrdersRepository } from './orders.repository.js';
 export {
   ordersService,
   OrdersService,
@@ -14,6 +14,6 @@ export {
   ProductNotFoundError,
   ProductNotAvailableError,
   ProductVendorMismatchError,
-} from './orders.service';
-export * from './orders.controller';
-export { vendorOrderRoutes, customerOrderRoutes } from './orders.routes';
+} from './orders.service.js';
+export * from './orders.controller.js';
+export { vendorOrderRoutes, customerOrderRoutes } from './orders.routes.js';

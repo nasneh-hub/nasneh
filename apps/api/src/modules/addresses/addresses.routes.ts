@@ -14,7 +14,7 @@ import {
   setMyDefaultAddress,
   listUserAddresses,
   createUserAddress,
-} from './addresses.controller';
+} from './addresses.controller.js';
 
 // ===========================================
 // My Addresses Routes (mounted at /users/me/addresses)

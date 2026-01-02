@@ -4,7 +4,7 @@
  * Database operations for user profiles.
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import type { Prisma } from '@prisma/client';
 
 // ===========================================

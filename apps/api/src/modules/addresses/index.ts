@@ -1,3 +1,3 @@
-export * from './addresses.repository';
-export * from './addresses.service';
-export { myAddressesRouter, userAddressesRouter } from './addresses.routes';
+export * from './addresses.repository.js';
+export * from './addresses.service.js';
+export { myAddressesRouter, userAddressesRouter } from './addresses.routes.js';

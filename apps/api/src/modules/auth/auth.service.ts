@@ -27,11 +27,11 @@ import {
   UserRole,
   TrustLevel,
   UserStatus,
-} from '../../types/auth.types';
-import { config } from '../../config/env';
-import { otpRepository } from './otp.repository';
-import { tokenRepository, StoredRefreshToken } from './token.repository';
-import { otpDeliveryService } from './otp-delivery.service';
+} from '../../types/auth.types.js';
+import { config } from '../../config/env.js';
+import { otpRepository } from './otp.repository.js';
+import { tokenRepository, StoredRefreshToken } from './token.repository.js';
+import { otpDeliveryService } from './otp-delivery.service.js';
 
 // ===========================================
 // In-memory stores (for audit logs only)

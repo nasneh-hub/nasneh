@@ -3,7 +3,7 @@
  * Exports all payments-related components
  */
 
-export { paymentsRepository, PaymentsRepository } from './payments.repository';
+export { paymentsRepository, PaymentsRepository } from './payments.repository.js';
 export {
   paymentsService,
   PaymentsService,
@@ -13,6 +13,6 @@ export {
   PaymentAlreadyExistsError,
   ApsNotConfiguredError,
   UnauthorizedPaymentAccessError,
-} from './payments.service';
-export { paymentsRoutes } from './payments.routes';
-export { handleApsWebhook, handleApsReturn } from './webhook.controller';
+} from './payments.service.js';
+export { paymentsRoutes } from './payments.routes.js';
+export { handleApsWebhook, handleApsReturn } from './webhook.controller.js';

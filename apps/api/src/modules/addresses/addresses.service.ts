@@ -4,13 +4,13 @@
  * Business logic for address management with owner-only access.
  */
 
-import { addressesRepository } from './addresses.repository';
+import { addressesRepository } from './addresses.repository.js';
 import {
   AddressErrorCode,
   type CreateAddressInput,
   type UpdateAddressInput,
-} from '../../types/address.types';
-import { UserRole } from '../../types/user.types';
+} from '../../types/address.types.js';
+import { UserRole } from '../../types/user.types.js';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // ===========================================

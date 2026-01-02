@@ -9,14 +9,14 @@
  */
 
 import { Router, Request, Response, NextFunction } from 'express';
-import { uploadImage, uploadImages, deleteImage } from './upload.controller';
-import { authMiddleware } from '../../middleware/auth.middleware';
+import { uploadImage, uploadImages, deleteImage } from './upload.controller.js';
+import { authMiddleware } from '../../middleware/auth.middleware.js';
 import {
   uploadSingle,
   uploadMultiple,
   handleMulterError,
-} from '../../middleware/upload.middleware';
-import { FileValidationError } from '../../types/upload.types';
+} from '../../middleware/upload.middleware.js';
+import { FileValidationError } from '../../types/upload.types.js';
 
 const router: Router = Router();
 

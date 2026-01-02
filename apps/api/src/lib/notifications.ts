@@ -4,7 +4,7 @@
  * TODO: Implement actual notification delivery (push, SMS, WhatsApp)
  */
 
-import { OrderStatus } from '../types/order.types';
+import { OrderStatus } from '../types/order.types.js';
 
 export interface NotificationPayload {
   userId: string;

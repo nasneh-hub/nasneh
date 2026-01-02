@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authMiddleware, requireRoles } from '../../middleware/auth.middleware';
-import { UserRole } from '../../types/auth.types';
+import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
+import { UserRole } from '../../types/auth.types.js';
 import {
   createService,
   getProviderServices,
@@ -15,8 +15,8 @@ import {
   getServicesByProvider,
   searchServices,
   getFeaturedServices,
-} from './services.controller';
-import { getServiceSlots } from '../availability/availability.routes';
+} from './services.controller.js';
+import { getServiceSlots } from '../availability/availability.routes.js';
 
 // ===========================================
 // Provider Routes (/provider/services)

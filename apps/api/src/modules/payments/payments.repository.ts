@@ -3,7 +3,7 @@
  * Database operations for payments and refunds
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import {
   PaymentQueryInput,
   RefundQueryInput,
@@ -12,7 +12,7 @@ import {
   PayableType,
   RefundReason,
   PaymentMethod,
-} from '../../types/payment.types';
+} from '../../types/payment.types.js';
 import { Decimal } from '@prisma/client/runtime/library';
 
 // ===========================================

@@ -3,13 +3,13 @@ import {
   reviewsRepository,
   ReviewWithReviewer,
   ReviewFilters,
-} from './reviews.repository';
+} from './reviews.repository.js';
 import {
   ReviewErrorCode,
   ReviewDTO,
   ReviewListResponse,
   REVIEW_STATUS_TRANSITIONS,
-} from '../../types/review.types';
+} from '../../types/review.types.js';
 
 const prisma = new PrismaClient();
 

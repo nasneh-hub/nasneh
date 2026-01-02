@@ -8,13 +8,13 @@ export {
   requireRoles,
   optionalAuth,
   AuthenticatedRequest,
-} from './auth.middleware';
+} from './auth.middleware.js';
 
 export {
   ApiError,
   notFoundHandler,
   errorHandler,
-} from './error.middleware';
+} from './error.middleware.js';
 
 export {
   rateLimit,
@@ -22,10 +22,10 @@ export {
   otpCooldown,
   apiRateLimit,
   loginRateLimit,
-} from './rate-limit.middleware';
+} from './rate-limit.middleware.js';
 
 export {
   captureRawBody,
   jsonWithRawBody,
   RawBodyRequest,
-} from './rawBody.middleware';
+} from './rawBody.middleware.js';

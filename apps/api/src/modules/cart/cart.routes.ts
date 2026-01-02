@@ -11,7 +11,7 @@ import {
   updateItem,
   removeItem,
   clearCart,
-} from './cart.controller';
+} from './cart.controller.js';
 
 // ===========================================
 // Cart Routes (mounted at /cart)

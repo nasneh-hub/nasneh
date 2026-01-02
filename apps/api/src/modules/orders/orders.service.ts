@@ -3,18 +3,18 @@
  * Business logic for order operations including status flow
  */
 
-import { ordersRepository } from './orders.repository';
+import { ordersRepository } from './orders.repository.js';
 import {
   OrderStatus,
   ORDER_STATUS_TRANSITIONS,
   OrderQueryInput,
   CreateOrderInput,
   FulfillmentType,
-} from '../../types/order.types';
-import { prisma } from '../../lib/db';
+} from '../../types/order.types.js';
+import { prisma } from '../../lib/db.js';
 import { Decimal } from '@prisma/client/runtime/library';
-import { auditService, ActorRole } from '../../lib/audit';
-import { notificationService } from '../../lib/notifications';
+import { auditService, ActorRole } from '../../lib/audit.js';
+import { notificationService } from '../../lib/notifications.js';
 
 // ===========================================
 // Custom Errors

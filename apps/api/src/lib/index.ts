@@ -9,18 +9,18 @@ export {
   RATE_LIMIT_KEY_PREFIX,
   getOtpKey,
   getRateLimitKey,
-} from './redis';
+} from './redis.js';
 
-export { prisma } from './db';
+export { prisma } from './db.js';
 
 export {
   WhatsAppClient,
   getWhatsAppClient,
   sendWhatsAppOtpWithTimeout,
-} from './whatsapp';
+} from './whatsapp.js';
 
 export {
   SmsClient,
   getSmsClient,
   sendSmsOtp,
-} from './sms';
+} from './sms.js';

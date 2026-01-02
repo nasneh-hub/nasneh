@@ -4,7 +4,7 @@
  * Business logic for user profile operations with RBAC.
  */
 
-import { usersRepository } from './users.repository';
+import { usersRepository } from './users.repository.js';
 import {
   ProfileErrorCode,
   UserRole,
@@ -12,7 +12,7 @@ import {
   type AdminUpdateUserInput,
   type UserQuery,
   type PaginatedUsersResponse,
-} from '../../types/user.types';
+} from '../../types/user.types.js';
 import type { Prisma } from '@prisma/client';
 
 // ===========================================

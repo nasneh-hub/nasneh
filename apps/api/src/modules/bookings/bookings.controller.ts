@@ -5,7 +5,7 @@
  */
 
 import type { Request, Response } from 'express';
-import { bookingService, BookingValidationError } from './bookings.service';
+import { bookingService, BookingValidationError } from './bookings.service.js';
 import {
   createBookingSchema,
   cancelBookingSchema,
@@ -14,7 +14,7 @@ import {
   StatusTransitionErrorCode,
   ListingErrorCode,
   UserRole,
-} from '../../types/booking.types';
+} from '../../types/booking.types.js';
 
 // ===========================================
 // Type Extensions

@@ -4,7 +4,7 @@
  * Following ClickUp task requirements
  */
 
-import { smartUpload, deleteFromS3, extractKeyFromUrl } from '../../lib/s3';
+import { smartUpload, deleteFromS3, extractKeyFromUrl } from '../../lib/s3.js';
 import {
   UploadedFile,
   UploadResult,
@@ -13,7 +13,7 @@ import {
   MAX_FILE_SIZE,
   MAX_FILES_PER_REQUEST,
   FileValidationError,
-} from '../../types/upload.types';
+} from '../../types/upload.types.js';
 
 export class UploadService {
   /**

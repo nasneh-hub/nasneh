@@ -5,12 +5,12 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { uploadService } from './upload.service';
+import { uploadService } from './upload.service.js';
 import {
   UploadCategory,
   FileValidationError,
   UploadError,
-} from '../../types/upload.types';
+} from '../../types/upload.types.js';
 
 /**
  * Upload Single Image

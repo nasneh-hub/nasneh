@@ -6,7 +6,7 @@
  * SMS is the fallback channel when WhatsApp fails/times out.
  */
 
-import { config } from '../config/env';
+import { config } from '../config/env.js';
 
 // ===========================================
 // Types

@@ -5,12 +5,12 @@
  * Exposes hooks for the bookings module to prevent double-booking.
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import {
   availabilityRulesRepository,
   availabilityOverridesRepository,
   availabilitySettingsRepository,
-} from './availability.repository';
+} from './availability.repository.js';
 import {
   generateAvailability,
   generateDateAvailability,
@@ -20,7 +20,7 @@ import {
   validateRulesNoOverlap,
   timeStringToDate,
   formatDateString,
-} from '../../lib/availability-engine';
+} from '../../lib/availability-engine.js';
 import type {
   CreateAvailabilityRuleInput,
   UpdateAvailabilityRuleInput,
@@ -30,7 +30,7 @@ import type {
   GetSlotsQueryInput,
   AvailabilityResponse,
   DateRangeAvailability,
-} from '../../types/availability.types';
+} from '../../types/availability.types.js';
 import type { DayOfWeek as PrismaDayOfWeek, OverrideType as PrismaOverrideType } from '@prisma/client';
 
 // ===========================================

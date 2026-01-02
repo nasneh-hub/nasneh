@@ -1,5 +1,5 @@
 import { Router, RequestHandler } from 'express';
-import { reviewsController } from './reviews.controller';
+import { reviewsController } from './reviews.controller.js';
 
 // ===========================================
 // Public Reviews Routes

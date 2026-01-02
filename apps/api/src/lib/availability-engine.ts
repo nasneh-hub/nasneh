@@ -25,8 +25,8 @@ import type {
   AvailabilityResponse,
   DateAvailability,
   DateRangeAvailability,
-} from '../types/availability.types';
-import { INDEX_TO_DAY_OF_WEEK, DAY_OF_WEEK_INDEX } from '../types/availability.types';
+} from '../types/availability.types.js';
+import { INDEX_TO_DAY_OF_WEEK, DAY_OF_WEEK_INDEX } from '../types/availability.types.js';
 
 // ===========================================
 // Time Utilities

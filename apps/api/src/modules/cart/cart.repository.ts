@@ -4,7 +4,7 @@
  * Data access layer for cart operations.
  */
 
-import { prisma } from '../../lib';
+import { prisma } from '../../lib/index.js';
 import type { Prisma, PrismaClient } from '@prisma/client';
 
 // Type for transaction client

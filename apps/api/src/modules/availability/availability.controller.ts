@@ -19,9 +19,9 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 import { ZodError } from 'zod';
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import {
   createAvailabilityRule,
   createBulkAvailabilityRules,
@@ -39,7 +39,7 @@ import {
   AvailabilityNotFoundError,
   AvailabilityConflictError,
   AvailabilityValidationError,
-} from './availability.service';
+} from './availability.service.js';
 import {
   createAvailabilityRuleSchema,
   updateAvailabilityRuleSchema,
@@ -48,7 +48,7 @@ import {
   updateAvailabilityOverrideSchema,
   updateAvailabilitySettingsSchema,
   getSlotsQuerySchema,
-} from '../../types/availability.types';
+} from '../../types/availability.types.js';
 
 // ===========================================
 // Helper: Get Provider ID from User

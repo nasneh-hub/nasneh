@@ -10,8 +10,8 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { authService } from '../modules/auth/auth.service';
-import { UserRole, JwtPayload } from '../types/auth.types';
+import { authService } from '../modules/auth/auth.service.js';
+import { UserRole, JwtPayload } from '../types/auth.types.js';
 
 /**
  * Extended Request type with user info

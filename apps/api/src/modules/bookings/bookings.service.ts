@@ -10,20 +10,20 @@
  * 3. Atomic check-and-insert pattern
  */
 
-import { prisma } from '../../lib/db';
+import { prisma } from '../../lib/db.js';
 import { Prisma } from '@prisma/client';
 import {
   availabilityRulesRepository,
   availabilityOverridesRepository,
   availabilitySettingsRepository,
-} from '../availability/availability.repository';
+} from '../availability/availability.repository.js';
 import {
   checkBookingConflict,
   checkWithinAvailableHours,
   validateWithinBookingWindow,
   timeStringToDate,
   formatDateString,
-} from '../../lib/availability-engine';
+} from '../../lib/availability-engine.js';
 import {
   BookingErrorCode,
   StatusTransitionErrorCode,
@@ -36,8 +36,8 @@ import {
   type CreateBookingInput,
   type BookingQuery,
   type PaginatedBookingsResponse,
-} from '../../types/booking.types';
-import { calendarDefaults } from '../../config/calendar.defaults';
+} from '../../types/booking.types.js';
+import { calendarDefaults } from '../../config/calendar.defaults.js';
 
 // ===========================================
 // Custom Errors

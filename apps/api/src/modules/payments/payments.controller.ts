@@ -13,10 +13,10 @@ import {
   PaymentAlreadyExistsError,
   ApsNotConfiguredError,
   UnauthorizedPaymentAccessError,
-} from './payments.service';
-import { paymentQuerySchema } from '../../types/payment.types';
-import { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { config } from '../../config/env';
+} from './payments.service.js';
+import { paymentQuerySchema } from '../../types/payment.types.js';
+import { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { config } from '../../config/env.js';
 
 // ===========================================
 // Validation Schemas

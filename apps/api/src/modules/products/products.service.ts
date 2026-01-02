@@ -4,13 +4,13 @@
  * Following TECHNICAL_SPEC.md §4. API Endpoints - Vendor Dashboard
  */
 
-import { productsRepository } from './products.repository';
+import { productsRepository } from './products.repository.js';
 import {
   CreateProductInput,
   UpdateProductInput,
   ProductQueryInput,
   ProductStatus,
-} from '../../types/product.types';
+} from '../../types/product.types.js';
 
 export class ProductsService {
   /**

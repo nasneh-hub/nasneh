@@ -23,9 +23,9 @@ import {
   getPublicProducts,
   getProductById,
   getFeaturedProducts,
-} from './products.controller';
-import { authMiddleware, requireRoles } from '../../middleware/auth.middleware';
-import { UserRole } from '../../types/auth.types';
+} from './products.controller.js';
+import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
+import { UserRole } from '../../types/auth.types.js';
 
 // ===========================================
 // Vendor Routes (Protected)

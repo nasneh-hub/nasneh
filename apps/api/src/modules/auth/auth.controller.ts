@@ -4,13 +4,13 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { authService } from './auth.service';
+import { authService } from './auth.service.js';
 import {
   requestOtpSchema,
   verifyOtpSchema,
   refreshTokenSchema,
   JwtPayload,
-} from '../../types/auth.types';
+} from '../../types/auth.types.js';
 
 /**
  * Extended request type with cooldown setter and user
