@@ -11,7 +11,7 @@ RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # =============================================================================
-# Builder (dev deps + build + prisma generate)
+# Builder (dev deps + build + prisma generate + dereference deps)
 # =============================================================================
 FROM base AS builder
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
@@ -28,29 +28,33 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Explicitly run prisma generate
+# Explicitly run prisma generate (in builder stage)
 RUN pnpm --filter ./apps/api... exec prisma generate
 
 # Build the API
 RUN pnpm --filter ./apps/api... build
 
+# Create dereferenced node_modules tar (resolves pnpm symlinks to real files)
+RUN cd apps/api && tar -c --dereference -f /tmp/node_modules.tar node_modules
+
 # =============================================================================
-# Final runtime
+# Final runtime (WORKDIR = /app/apps/api)
 # =============================================================================
 FROM node:20-slim AS runner
-WORKDIR /app
+WORKDIR /app/apps/api
 ENV NODE_ENV=production
 
 # Install curl for health checks and openssl for Prisma
 RUN apt-get update && apt-get install -y curl openssl && rm -rf /var/lib/apt/lists/*
 
-# Copy entire node_modules from builder (includes Prisma in pnpm store)
-COPY --from=builder /app/node_modules ./node_modules
+# Copy dereferenced node_modules tar and extract
+COPY --from=builder /tmp/node_modules.tar /tmp/
+RUN tar -xf /tmp/node_modules.tar -C /app/apps/api && rm /tmp/node_modules.tar
 
-# Copy dist to /app/dist (where the code expects it)
+# Copy dist (built API code)
 COPY --from=builder /app/apps/api/dist ./dist
 
-# Copy Prisma schema
+# Copy Prisma schema (for runtime reference if needed)
 COPY --from=builder /app/apps/api/prisma ./prisma
 
 # Copy package.json for module resolution
