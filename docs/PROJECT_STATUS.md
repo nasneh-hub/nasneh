@@ -10,7 +10,7 @@ Sprint 2 completed with all 17 tasks merged. Services, Availability, Bookings, C
 
 ## ✅ DevOps Gate (Sprint 2.5) — Complete 🎉
 
-DevOps Gate sprint completed! All 8 tasks merged. Infrastructure ready for staging deployment.
+DevOps Gate sprint completed! All 8 tasks merged. **Infrastructure deployed to staging!**
 
 **Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
 
@@ -25,7 +25,7 @@ DevOps Gate sprint completed! All 8 tasks merged. Infrastructure ready for stagi
 | 5 | [DEVOPS] S3 + CloudFront | ✅ Merged | #75 |
 | 6 | [DEVOPS] CI/CD Pipeline | ✅ Merged | #76, #77 |
 | 7 | [DEVOPS] Secrets Management | ✅ Merged | #78 |
-| 8 | [DEVOPS] Monitoring + Alerts | 🔄 In Review | #79 |
+| 8 | [DEVOPS] Monitoring + Alerts | ✅ Merged | #79 |
 
 ### Key Decisions
 
@@ -33,6 +33,31 @@ DevOps Gate sprint completed! All 8 tasks merged. Infrastructure ready for stagi
 - **Region:** AWS Bahrain (me-south-1)
 - **Staging First:** All infrastructure deployed to staging before production
 - **Documentation:** See [docs/DEVOPS_GATE.md](./DEVOPS_GATE.md)
+
+### Staging Deployment Status ✅
+
+**Deployed:** 2026-01-02
+
+| Resource | Status | Endpoint/ARN |
+|----------|--------|-------------|
+| VPC | ✅ Active | vpc-05321b414c66b92a7 |
+| RDS PostgreSQL | ✅ Available | nasneh-staging-postgres |
+| ECS Cluster | ✅ Active | nasneh-staging-cluster |
+| ALB | ✅ Active | http://nasneh-staging-api-alb-1514033867.me-south-1.elb.amazonaws.com |
+| CloudFront | ✅ Active | https://dmuz0tskgwik1.cloudfront.net |
+| ECR | ✅ Ready | 277225104996.dkr.ecr.me-south-1.amazonaws.com/nasneh-staging-api |
+| Secrets Manager | ✅ Created | 3 secrets (api, database, external) |
+| CloudWatch | ✅ Active | 4 alarms + dashboard |
+| SNS | ✅ Active | nasneh-staging-alerts |
+
+**Estimated Monthly Cost:** ~$87
+
+### Pending Actions
+
+- [ ] Confirm SNS email subscription (nasneh.com@gmail.com)
+- [ ] Update secrets with real values
+- [ ] Deploy real app image via CD workflow
+- [ ] Migrate Terraform state to S3 backend
 
 ---
 
