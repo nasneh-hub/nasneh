@@ -152,30 +152,47 @@ jobs:
       - name: Verify - Test health endpoint startup
         run: |
           echo "=== Test 5: Quick startup test ==="
-          # Run container in background
-          CONTAINER_ID=$(docker run -d --rm -p 3000:3000 \
+          
+          # Cleanup any previous container with same name
+          docker rm -f nasneh-health 2>/dev/null || true
+          
+          # Run container WITHOUT --rm, with fixed name
+          docker run -d --name nasneh-health -p 3000:3000 \
             -e DATABASE_URL="postgresql://test:test@localhost:5432/test" \
             -e JWT_SECRET="test-secret-for-ci" \
             -e REDIS_URL="redis://localhost:6379" \
-            $IMAGE)
+            $IMAGE
           
-          echo "Container started: $CONTAINER_ID"
+          echo "Container started: nasneh-health"
           
           # Wait a few seconds for startup
           sleep 5
           
           # Check if container is still running
-          if docker ps -q --filter "id=$CONTAINER_ID" | grep -q .; then
+          if docker ps -q --filter "name=nasneh-health" | grep -q .; then
             echo "✅ Container is running after 5 seconds"
-            docker logs $CONTAINER_ID 2>&1 | tail -30
+            docker logs nasneh-health 2>&1 | tail -30
           else
             echo "❌ Container exited!"
-            docker logs $CONTAINER_ID 2>&1 | tail -50
+            echo ""
+            echo "=== docker ps -a ==="
+            docker ps -a
+            echo ""
+            echo "=== docker logs nasneh-health (tail 200) ==="
+            docker logs nasneh-health 2>&1 | tail -200
+            echo ""
+            echo "=== docker inspect nasneh-health (State) ==="
+            docker inspect nasneh-health --format '{{json .State}}' | jq .
+            echo ""
+            # Cleanup
+            docker rm -f nasneh-health || true
             exit 1
           fi
           
-          # Stop container
-          docker stop $CONTAINER_ID || true
+          # Cleanup on success
+          docker stop nasneh-health || true
+          docker rm -f nasneh-health || true
+
 
       - name: Set image output
         id: set-image
