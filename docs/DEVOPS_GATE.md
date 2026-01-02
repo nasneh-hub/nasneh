@@ -45,7 +45,14 @@ The IaC code is located in the `/infra` directory with the following structure:
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
 │   │   └── README.md
-│   ├── compute/          # 🔜 Planned
+│   ├── compute/          # ✅ Implemented (PR #74)
+│   │   ├── alb.tf
+│   │   ├── ecs.tf
+│   │   ├── ecr.tf
+│   │   ├── iam.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
 │   └── secrets/          # 🔜 Planned
 │
 ├── versions.tf           # Terraform & provider version constraints
@@ -191,8 +198,7 @@ The database module (`/infra/modules/database`) manages RDS PostgreSQL.
 |---------|---------------|-------|
 | Engine | PostgreSQL 15.4 | Latest stable |
 | Instance Class | db.t3.micro | Cost-effective |
-| Storage
- | 20-50 GB (gp3) | Autoscaling enabled |
+| Storage | 20-50 GB (gp3) | Autoscaling enabled |
 | Multi-AZ | false | Single AZ for staging |
 | Backup Retention | 7 days | Automated daily backups |
 | Encryption | true | Always encrypted at rest |
@@ -243,7 +249,75 @@ export TF_VAR_db_password="your_secure_password"
 
 ---
 
-## 6. DevOps Gate Tasks
+## 6. Compute Module
+
+The compute module (`/infra/modules/compute`) manages ECS Fargate and ALB.
+
+### Resources Created
+
+| Resource | Description | Staging Config |
+|----------|-------------|----------------|
+| ECS Cluster | Fargate cluster | Container Insights enabled |
+| ECS Service | API service | 1 desired task |
+| ECS Task Definition | Fargate task | 256 CPU, 512 MB |
+| Application Load Balancer | Public-facing | In public subnets |
+| Target Group | IP-based | Health check on /health |
+| HTTP Listener | Port 80 | HTTPS placeholder ready |
+| ECR Repository | Container registry | Lifecycle policy |
+| CloudWatch Log Group | API logs | 30-day retention |
+| IAM Roles | Execution + Task | Secrets Manager prepared |
+
+### Configuration
+
+| Setting | Staging Value | Notes |
+|---------|---------------|-------|
+| CPU | 256 (0.25 vCPU) | Minimal for staging |
+| Memory | 512 MB | Minimal for staging |
+| Desired Count | 1 | Single task |
+| Min/Max | 1/2 | Limited autoscaling |
+| Container Port | 3000 | API port |
+| Health Check | /health | HTTP 200 |
+
+### Health Checks
+
+| Check | Configuration |
+|-------|---------------|
+| ALB Health Check | GET /health, 200 OK |
+| Container Health Check | curl localhost:3000/health |
+| Interval | 30 seconds |
+| Healthy Threshold | 2 |
+| Unhealthy Threshold | 3 |
+
+### IAM Roles
+
+| Role | Permissions |
+|------|-------------|
+| Task Execution | ECR pull, CloudWatch logs, Secrets Manager |
+| Task | S3 access, application permissions |
+
+### Outputs for CI/CD
+
+| Output | Description |
+|--------|-------------|
+| `api_endpoint` | HTTP endpoint URL |
+| `alb_dns_name` | ALB DNS name |
+| `ecr_repository_url` | ECR URL for docker push |
+| `cluster_name` | ECS cluster name |
+| `service_name` | ECS service name |
+
+### Cost Estimate (Staging)
+
+| Resource | Monthly Cost |
+|----------|--------------|
+| Fargate (256 CPU, 512 MB) | ~$10 |
+| ALB | ~$16 |
+| CloudWatch Logs | ~$1 |
+| ECR Storage | ~$1 |
+| **Total** | **~$28** |
+
+---
+
+## 7. DevOps Gate Tasks
 
 **Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
 
@@ -251,14 +325,25 @@ export TF_VAR_db_password="your_secure_password"
 |---|------|----------|--------|
 | 1 | [DEVOPS] IaC Setup — Terraform/CDK base structure | Urgent | ✅ Complete |
 | 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | ✅ Complete |
-| 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | 🔄 Pending Review |
-| 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ⏳ To Do |
+| 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ✅ Complete |
+| 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | 🔄 Pending Review |
 | 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ⏳ To Do |
 | 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ⏳ To Do |
 | 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ⏳ To Do |
 | 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
 
 > **Note:** Terraform remote state backend (S3 + DynamoDB) is configured as a sub-step during initial deployment, not as a separate task.
+
+---
+
+## 8. Total Cost Estimate (Staging)
+
+| Module | Monthly Cost |
+|--------|--------------|
+| Networking (NAT + EIP) | ~$36 |
+| Database (RDS) | ~$15 |
+| Compute (ECS + ALB) | ~$28 |
+| **Total** | **~$79** |
 
 ---
 

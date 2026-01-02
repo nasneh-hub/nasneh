@@ -99,14 +99,55 @@ module "database" {
 }
 
 # =============================================================================
+# COMPUTE MODULE
+# =============================================================================
+# ECS Fargate + ALB for API deployment
+# ALB in public subnets, ECS tasks in private subnets
+
+module "compute" {
+  source = "../../modules/compute"
+
+  name_prefix = local.name_prefix
+  aws_region  = var.aws_region
+
+  # Networking
+  vpc_id                = module.networking.vpc_id
+  public_subnet_ids     = module.networking.public_subnet_ids
+  private_subnet_ids    = module.networking.private_subnet_ids
+  alb_security_group_id = module.networking.alb_security_group_id
+  api_security_group_id = module.networking.api_security_group_id
+
+  # Database connection (for environment variables)
+  database_endpoint = module.database.endpoint
+  database_name     = module.database.db_name
+
+  # Container configuration (placeholder image until CI/CD builds real image)
+  container_image  = "amazon/amazon-ecs-sample"
+  container_port   = 3000
+  container_cpu    = 256   # 0.25 vCPU
+  container_memory = 512   # MB
+
+  # Service configuration (minimal for staging)
+  desired_count = local.staging_config.api_desired
+  min_capacity  = local.staging_config.api_min_instances
+  max_capacity  = local.staging_config.api_max_instances
+
+  # Health check
+  health_check_path = "/health"
+
+  # Environment variables (non-sensitive placeholders)
+  environment_variables = {
+    APP_NAME    = "nasneh-api"
+    ENVIRONMENT = var.environment
+  }
+
+  tags = local.common_tags
+}
+
+# =============================================================================
 # FUTURE MODULES (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented
-
-# module "compute" {
-#   source = "../../modules/compute"
-#   ...
-# }
 
 # module "secrets" {
 #   source = "../../modules/secrets"

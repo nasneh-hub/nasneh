@@ -98,14 +98,43 @@ output "database_identifier" {
 }
 
 # =============================================================================
+# COMPUTE OUTPUTS
+# =============================================================================
+
+output "api_endpoint" {
+  description = "API endpoint URL (HTTP)"
+  value       = module.compute.api_endpoint
+}
+
+output "alb_dns_name" {
+  description = "ALB DNS name"
+  value       = module.compute.alb_dns_name
+}
+
+output "ecs_cluster_name" {
+  description = "ECS cluster name"
+  value       = module.compute.cluster_name
+}
+
+output "ecs_service_name" {
+  description = "ECS service name"
+  value       = module.compute.service_name
+}
+
+output "ecr_repository_url" {
+  description = "ECR repository URL for CI/CD"
+  value       = module.compute.ecr_repository_url
+}
+
+output "cloudwatch_log_group" {
+  description = "CloudWatch log group for API logs"
+  value       = module.compute.log_group_name
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented
-
-# output "api_endpoint" {
-#   description = "API endpoint URL"
-#   value       = module.compute.api_endpoint
-# }
 
 # output "redis_endpoint" {
 #   description = "Redis endpoint"
