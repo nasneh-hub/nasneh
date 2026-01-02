@@ -48,7 +48,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 ### Phase 6: Tests ✅ Complete
 | Task | Status | PR |
 |------|--------|-----|
-| [BOOK] Booking API tests | ✅ Merged | #67 |
+| [BOOK] Booking API tests | 🔄 In Review | #67 |
 | [SVC] Service API tests | 🔄 In Review | #68 |
 
 ---
