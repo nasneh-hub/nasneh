@@ -102,3 +102,37 @@ After merging any PR to main:
 | Approval | Explicit approval required before enabling auto-deploy |
 
 **Rationale:** Staging infrastructure is not yet fully provisioned. Auto-deploy could fail or cause issues until all modules are deployed and secrets are configured.
+
+
+---
+
+## Deployment Incident Timeline — Jan 2026
+
+### Chronological Events
+
+| Timestamp (UTC+3) | Event | Evidence |
+|-------------------|-------|----------|
+| 2026-01-02 ~10:00 | First CD deploy attempt fails | Run 20658102400 |
+| 2026-01-02 ~10:30 | PR #83: Fix ECS service name | [PR #83](https://github.com/nasneh-hub/nasneh/pull/83) |
+| 2026-01-02 ~11:00 | PR #84: Add curl for health checks | [PR #84](https://github.com/nasneh-hub/nasneh/pull/84) |
+| 2026-01-02 ~11:30 | PR #86: Update task definition with new image | [PR #86](https://github.com/nasneh-hub/nasneh/pull/86) |
+| 2026-01-02 ~12:00 | Container crashes: `Cannot find module 'express'` | CloudWatch logs |
+| 2026-01-02 12:00-18:00 | PRs #88-#100: Various Dockerfile fixes | All failed |
+| 2026-01-02 18:30 | Memory Freeze initiated | User request |
+| 2026-01-02 18:45 | Evidence Inventory compiled | This document |
+
+### Decisions Made
+
+1. **deploy=false verification rule** — Always run CD with deploy=false first to verify image builds
+2. **Memory freeze protocol** — After 3+ failed attempts, stop PRs and document
+3. **One PR at a time** — No parallel experiments
+4. **Log-first rule** — Check CloudWatch/GHA logs before proposing fixes
+
+### Active Constraints
+
+- **STOP PRs** — No new PRs until fix plan approved
+- **Log-first** — Must provide log evidence before any theory
+- **Single-PR policy** — One focused fix per PR
+- **Update PROJECT_STATUS** — After every deployment run
+
+---

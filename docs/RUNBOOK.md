@@ -1036,3 +1036,49 @@ COPY --from=builder /app/apps/api/dist ./apps/api/dist
 ---
 
 **Incident Log Section End**
+
+
+---
+
+## Incident: ECS Staging Deployment Failures — Jan 2026 (Updated)
+
+**Status:** ONGOING  
+**Last Updated:** 2026-01-02 18:45 UTC+3
+
+### Symptoms
+
+1. CD workflow fails at "Wait for service stability" (timeout)
+2. Target group shows `unhealthy`
+3. Container crashes with `exitCode: 1`
+4. CloudWatch logs show `Cannot find module 'express'`
+
+### Root Causes (Verified)
+
+| Cause | Evidence | Run ID |
+|-------|----------|--------|
+| pnpm symlinks not dereferenced by Docker COPY | `apps/api/node_modules/@prisma/client -> symlink to .pnpm store` | [20660601237](https://github.com/nasneh-hub/nasneh/actions/runs/20660601237) |
+| express module not found at runtime | `Error: Cannot find module 'express'` | [20660793380](https://github.com/nasneh-hub/nasneh/actions/runs/20660793380) |
+| Prisma postinstall fails without schema | `Error: Could not find Prisma Schema` | [20660355736](https://github.com/nasneh-hub/nasneh/actions/runs/20660355736) |
+
+### Fixes Attempted (PRs #83-#100)
+
+| PR | Fix | Outcome |
+|----|-----|---------|
+| #83 | Correct ECS service name | ✅ Fixed |
+| #84 | Install curl for health checks | ✅ Fixed |
+| #86 | Update task definition with new image | ✅ Fixed |
+| #87 | Remove duplicate outputs | ✅ Fixed |
+| #88-#100 | Various Dockerfile fixes | ❌ All failed |
+
+**Common failure:** `Cannot find module 'express'` — pnpm symlinks not resolved.
+
+### Prevention Rules
+
+1. **Log-first:** Always check CloudWatch/GHA logs before proposing fixes
+2. **One PR at a time:** No parallel experiments
+3. **deploy=false first:** Verify image builds before deploying
+4. **Test locally:** `docker build -t test -f apps/api/Dockerfile .`
+5. **Memory freeze:** After 3+ failed attempts, stop and document
+6. **Symlink awareness:** pnpm requires special handling in Docker
+
+---
