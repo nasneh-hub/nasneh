@@ -24,7 +24,16 @@ import {
   timeStringToDate,
   formatDateString,
 } from '../../lib/availability-engine';
-import { BookingErrorCode, type CreateBookingInput } from '../../types/booking.types';
+import {
+  BookingErrorCode,
+  StatusTransitionErrorCode,
+  BookingStatus,
+  UserRole,
+  isValidBookingTransition,
+  canRolePerformTransition,
+  getAllowedTransitionsForRole,
+  type CreateBookingInput,
+} from '../../types/booking.types';
 import { calendarDefaults } from '../../config/calendar.defaults';
 
 // ===========================================
@@ -347,5 +356,188 @@ export const bookingService = {
     });
 
     return booking;
+  },
+
+  /**
+   * Update booking status with role-based permission validation
+   * 
+   * Validates:
+   * 1. Booking exists
+   * 2. Transition is valid in state machine
+   * 3. User role has permission for this transition
+   * 4. Cancellation reason provided if cancelling
+   */
+  async updateBookingStatus(
+    bookingId: string,
+    newStatus: BookingStatus,
+    userId: string,
+    userRole: UserRole,
+    cancellationReason?: string
+  ) {
+    // 1. Get the booking
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        customer: { select: { id: true, name: true, phone: true } },
+        provider: { select: { id: true, businessName: true, logoUrl: true } },
+        service: { select: { id: true, name: true, nameAr: true, serviceType: true, durationMinutes: true } },
+      },
+    });
+
+    if (!booking) {
+      throw new BookingValidationError(
+        StatusTransitionErrorCode.BOOKING_NOT_FOUND,
+        'Booking not found'
+      );
+    }
+
+    const currentStatus = booking.status as BookingStatus;
+
+    // 2. Check if booking is in terminal state
+    const terminalStates: BookingStatus[] = [
+      BookingStatus.COMPLETED,
+      BookingStatus.CANCELLED,
+      BookingStatus.NO_SHOW,
+    ];
+    if (terminalStates.includes(currentStatus)) {
+      throw new BookingValidationError(
+        StatusTransitionErrorCode.BOOKING_IN_TERMINAL_STATE,
+        `Cannot update booking in ${currentStatus} state`
+      );
+    }
+
+    // 3. Check if transition is valid
+    if (!isValidBookingTransition(currentStatus, newStatus)) {
+      throw new BookingValidationError(
+        StatusTransitionErrorCode.INVALID_TRANSITION,
+        `Invalid transition from ${currentStatus} to ${newStatus}`
+      );
+    }
+
+    // 4. Check role permission
+    if (!canRolePerformTransition(currentStatus, newStatus, userRole)) {
+      const allowedTransitions = getAllowedTransitionsForRole(currentStatus, userRole);
+      throw new BookingValidationError(
+        StatusTransitionErrorCode.PERMISSION_DENIED,
+        `${userRole} cannot transition from ${currentStatus} to ${newStatus}. Allowed: ${allowedTransitions.join(', ') || 'none'}`
+      );
+    }
+
+    // 5. Validate cancellation reason if cancelling
+    if (newStatus === BookingStatus.CANCELLED && !cancellationReason) {
+      throw new BookingValidationError(
+        StatusTransitionErrorCode.CANCELLATION_REASON_REQUIRED,
+        'Cancellation reason is required'
+      );
+    }
+
+    // 6. Update the booking
+    const updateData: Prisma.BookingUpdateInput = {
+      status: newStatus,
+    };
+
+    if (newStatus === BookingStatus.CANCELLED) {
+      updateData.cancellationReason = cancellationReason;
+      updateData.cancelledAt = new Date();
+      updateData.cancelledBy = userId;
+    }
+
+    const updatedBooking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: updateData,
+      include: {
+        customer: { select: { id: true, name: true, phone: true } },
+        provider: { select: { id: true, businessName: true, logoUrl: true } },
+        service: { select: { id: true, name: true, nameAr: true, serviceType: true, durationMinutes: true } },
+      },
+    });
+
+    return updatedBooking;
+  },
+
+  /**
+   * Confirm a booking (PENDING -> CONFIRMED)
+   * Only provider or admin can confirm
+   */
+  async confirmBooking(bookingId: string, userId: string, userRole: UserRole) {
+    return this.updateBookingStatus(
+      bookingId,
+      BookingStatus.CONFIRMED,
+      userId,
+      userRole
+    );
+  },
+
+  /**
+   * Start a booking (CONFIRMED -> IN_PROGRESS)
+   * Only provider or admin can start
+   */
+  async startBooking(bookingId: string, userId: string, userRole: UserRole) {
+    return this.updateBookingStatus(
+      bookingId,
+      BookingStatus.IN_PROGRESS,
+      userId,
+      userRole
+    );
+  },
+
+  /**
+   * Complete a booking (IN_PROGRESS -> COMPLETED)
+   * Only provider or admin can complete
+   */
+  async completeBooking(bookingId: string, userId: string, userRole: UserRole) {
+    return this.updateBookingStatus(
+      bookingId,
+      BookingStatus.COMPLETED,
+      userId,
+      userRole
+    );
+  },
+
+  /**
+   * Cancel a booking (any non-terminal state -> CANCELLED)
+   * Customer can cancel PENDING/CONFIRMED
+   * Provider/Admin can cancel any non-terminal state
+   */
+  async cancelBooking(
+    bookingId: string,
+    userId: string,
+    userRole: UserRole,
+    reason: string
+  ) {
+    return this.updateBookingStatus(
+      bookingId,
+      BookingStatus.CANCELLED,
+      userId,
+      userRole,
+      reason
+    );
+  },
+
+  /**
+   * Mark booking as no-show (CONFIRMED -> NO_SHOW)
+   * Only provider or admin can mark as no-show
+   */
+  async markNoShow(bookingId: string, userId: string, userRole: UserRole) {
+    return this.updateBookingStatus(
+      bookingId,
+      BookingStatus.NO_SHOW,
+      userId,
+      userRole
+    );
+  },
+
+  /**
+   * Get booking by ID
+   */
+  async getBookingById(bookingId: string) {
+    return prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        customer: { select: { id: true, name: true, phone: true } },
+        provider: { select: { id: true, businessName: true, logoUrl: true } },
+        service: { select: { id: true, name: true, nameAr: true, serviceType: true, durationMinutes: true } },
+      },
+    });
   },
 };

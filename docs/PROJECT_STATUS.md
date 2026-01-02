@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 
 ---
 
-## Sprint 2 Progress: 8/17 tasks (47%)
+## Sprint 2 Progress: 9/17 tasks (53%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -23,7 +23,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | [SVC] Implement service listing API | ✅ Merged | #50 |
 | [SVC] Availability schema + rules | ✅ Merged | #52 |
 
-### Phase 3: Availability + Bookings Core (Next)
+### Phase 3: Availability + Bookings Core ✅ Complete
 | Task | Status | PR |
 |------|--------|-----|
 | [SVC] Availability API + conflict checks | ✅ Merged | #55 |
@@ -33,7 +33,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 ### Phase 4: Bookings Flow + User
 | Task | Status | PR |
 |------|--------|-----|
-| [BOOK] Implement booking status flow | 🔲 To Do | - |
+| [BOOK] Implement booking status flow | ✅ Merged | #60 |
 | [BOOK] Implement booking listing APIs | 🔲 To Do | - |
 | [USER] Implement user profile CRUD | 🔲 To Do | - |
 | [USER] Implement address management | 🔲 To Do | - |
