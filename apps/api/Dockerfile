@@ -1,84 +1,85 @@
 # =============================================================================
 # Nasneh API - Multi-stage Dockerfile
 # =============================================================================
-# Stage 1: Build (full dependencies + build)
-# Stage 2: Production Dependencies (prod deps only)
-# Stage 3: Production Runtime (minimal image)
+# Stage 1: deps       - Production dependencies only (no postinstall scripts)
+# Stage 2: builder    - Full dev dependencies, prisma generate, build
+# Stage 3: production - Final minimal image
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Stage 1: Build
+# Stage 1: Production Dependencies
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS builder
+# Install only production dependencies, skip postinstall scripts
+# (postinstall runs prisma generate but prisma CLI is a devDependency)
+# -----------------------------------------------------------------------------
+FROM node:20-alpine AS deps
 
-# Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
 
 WORKDIR /app
 
-# Copy workspace configuration files first (for better caching)
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+# Copy workspace configuration
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# Copy all package.json files for workspace packages
+# Copy all package.json files
 COPY apps/api/package.json ./apps/api/
 COPY packages/config/package.json ./packages/config/
 COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/utils/package.json ./packages/utils/
 
-# Copy Prisma schema BEFORE install (needed for postinstall: prisma generate)
+# Install production dependencies only, skip postinstall scripts
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# -----------------------------------------------------------------------------
+# Stage 2: Builder
+# -----------------------------------------------------------------------------
+# Full install with devDependencies, generate Prisma client, build API
+# -----------------------------------------------------------------------------
+FROM node:20-alpine AS builder
+
+RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+
+WORKDIR /app
+
+# Copy workspace configuration
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+
+# Copy all package.json files
+COPY apps/api/package.json ./apps/api/
+COPY packages/config/package.json ./packages/config/
+COPY packages/types/package.json ./packages/types/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/utils/package.json ./packages/utils/
+
+# Copy Prisma schema (needed for prisma generate in postinstall)
 COPY apps/api/prisma ./apps/api/prisma
 
-# Install ALL dependencies (including devDependencies for build)
-# Note: postinstall runs prisma generate which needs the schema
+# Install ALL dependencies (including devDependencies)
+# postinstall will run prisma generate automatically
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Generate Prisma client (ensure it's generated)
-RUN cd apps/api && pnpm db:generate
+# Ensure Prisma client is generated (may already be done by postinstall)
+RUN pnpm --filter @nasneh/api exec prisma generate
 
 # Build the API
 RUN pnpm --filter @nasneh/api build
 
 # -----------------------------------------------------------------------------
-# Stage 2: Production Dependencies
-# -----------------------------------------------------------------------------
-FROM node:20-alpine AS deps
-
-# Enable corepack for pnpm
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
-
-WORKDIR /app
-
-# Copy workspace configuration files
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-
-# Copy all package.json files for workspace packages
-COPY apps/api/package.json ./apps/api/
-COPY packages/config/package.json ./packages/config/
-COPY packages/types/package.json ./packages/types/
-COPY packages/ui/package.json ./packages/ui/
-COPY packages/utils/package.json ./packages/utils/
-
-# Copy Prisma schema (needed for prisma generate)
-COPY apps/api/prisma ./apps/api/prisma
-
-# Install production dependencies only, ignoring postinstall scripts
-# (postinstall tries to run prisma generate but prisma CLI is a devDep)
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
-
-# Now manually generate Prisma client using npx (downloads prisma temporarily)
-RUN cd apps/api && npx prisma generate
-
-# -----------------------------------------------------------------------------
 # Stage 3: Production Runtime
+# -----------------------------------------------------------------------------
+# Minimal image with:
+# - Production node_modules from deps stage
+# - Prisma client artifacts from builder stage
+# - Built dist from builder stage
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS production
 
-# Install curl for health checks (ECS task definition uses curl)
+# Install curl for health checks
 RUN apk add --no-cache curl
 
 # Add non-root user for security
@@ -89,6 +90,11 @@ WORKDIR /app
 
 # Copy production node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
+
+# Copy Prisma client artifacts from builder stage
+# These are generated by prisma generate and required at runtime
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
 # Copy built API files from builder stage
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
@@ -109,16 +115,14 @@ USER nodejs
 # Set working directory to api
 WORKDIR /app/apps/api
 
-# Environment variables (defaults, override at runtime)
+# Environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Expose port
 EXPOSE 3000
 
-# Health check
+# Health check using curl
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3000/health || exit 1
 
-# Start the application
 CMD ["node", "dist/index.js"]
