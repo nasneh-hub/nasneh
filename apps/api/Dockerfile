@@ -2,7 +2,8 @@
 # Nasneh API - Multi-stage Dockerfile
 # =============================================================================
 # Stage 1: Build (full dependencies + build)
-# Stage 2: Production (minimal runtime)
+# Stage 2: Production Dependencies (prod deps only)
+# Stage 3: Production Runtime (minimal image)
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -62,14 +63,14 @@ COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/utils/package.json ./packages/utils/
 
-# Copy Prisma schema (needed for prisma generate in postinstall)
+# Copy Prisma schema (needed for prisma generate)
 COPY apps/api/prisma ./apps/api/prisma
 
-# Install production dependencies only
-# This creates a clean node_modules with only prod deps
-RUN pnpm install --frozen-lockfile --prod
+# Install production dependencies only, ignoring postinstall scripts
+# (postinstall tries to run prisma generate but prisma CLI is a devDep)
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
-# Generate Prisma client for production
+# Now manually generate Prisma client using npx (downloads prisma temporarily)
 RUN cd apps/api && npx prisma generate
 
 # -----------------------------------------------------------------------------
