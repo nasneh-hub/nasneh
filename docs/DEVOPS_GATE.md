@@ -53,6 +53,12 @@ The IaC code is located in the `/infra` directory with the following structure:
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
 │   │   └── README.md
+│   ├── storage/          # ✅ Implemented (PR #75)
+│   │   ├── main.tf
+│   │   ├── cloudfront.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
 │   └── secrets/          # 🔜 Planned
 │
 ├── versions.tf           # Terraform & provider version constraints
@@ -317,7 +323,82 @@ The compute module (`/infra/modules/compute`) manages ECS Fargate and ALB.
 
 ---
 
-## 7. DevOps Gate Tasks
+## 7. Storage Module
+
+The storage module (`/infra/modules/storage`) manages S3 bucket and CloudFront CDN.
+
+### Resources Created
+
+| Resource | Description | Staging Config |
+|----------|-------------|----------------|
+| S3 Bucket | Static assets storage | Block Public Access ON |
+| S3 Bucket Policy | CloudFront OAC only | No public access |
+| S3 Versioning | Enabled | 90-day expiration |
+| S3 Encryption | AES256 | Server-side encryption |
+| CloudFront OAC | Origin Access Control | Modern, secure |
+| CloudFront Distribution | CDN | HTTPS redirect |
+
+### Configuration
+
+| Setting | Staging Value | Notes |
+|---------|---------------|-------|
+| Block Public Access | ON | All public access blocked |
+| Versioning | Enabled | For recovery and audit |
+| Encryption | AES256 | Server-side encryption |
+| Lifecycle | 90 days | Expire old versions |
+| Price Class | PriceClass_100 | US, Canada, Europe |
+| Default TTL | 86400 (1 day) | Cache duration |
+| Compression | Enabled | Automatic gzip/brotli |
+
+### Security
+
+| Component | Configuration |
+|-----------|---------------|
+| S3 Bucket | Block Public Access: ON |
+| Bucket Policy | CloudFront OAC access only |
+| CloudFront | HTTPS redirect, TLS 1.2 |
+| OAC | Origin Access Control (modern) |
+
+> **Important:** The S3 bucket is NOT publicly accessible. Objects can only be accessed through CloudFront using Origin Access Control (OAC).
+
+### Outputs for CI/CD
+
+| Output | Description |
+|--------|-------------|
+| `bucket_name` | S3 bucket name |
+| `cloudfront_distribution_id` | CloudFront distribution ID |
+| `cloudfront_domain_name` | CloudFront domain name |
+| `cdn_url` | Full HTTPS URL |
+
+### Feature Toggles
+
+```hcl
+# Disable entire module
+enable_storage = false
+
+# Disable CloudFront only (S3 only)
+enable_cdn = false
+```
+
+### Custom Domain (Future)
+
+To use a custom domain:
+1. Create ACM certificate in **us-east-1** (required for CloudFront)
+2. Pass `custom_domain` and `acm_certificate_arn` variables
+3. Create Route53 alias record pointing to CloudFront
+
+### Cost Estimate (Staging)
+
+| Resource | Monthly Cost |
+|----------|--------------|
+| S3 Storage (10 GB) | ~$0.25 |
+| S3 Requests | ~$0.50 |
+| CloudFront (10 GB transfer) | ~$1.00 |
+| **Total** | **~$2** |
+
+---
+
+## 8. DevOps Gate Tasks
 
 **Source of Truth:** [ClickUp DevOps Gate List](https://app.clickup.com/90182234772/v/l/li/901814719216)
 
@@ -326,8 +407,8 @@ The compute module (`/infra/modules/compute`) manages ECS Fargate and ALB.
 | 1 | [DEVOPS] IaC Setup — Terraform/CDK base structure | Urgent | ✅ Complete |
 | 2 | [DEVOPS] VPC + Networking — subnets, routing, security groups | Urgent | ✅ Complete |
 | 3 | [DEVOPS] RDS PostgreSQL — staging DB setup + backups | Urgent | ✅ Complete |
-| 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | 🔄 Pending Review |
-| 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | ⏳ To Do |
+| 4 | [DEVOPS] ECS Fargate + ALB — API deployment + health checks | Urgent | ✅ Complete |
+| 5 | [DEVOPS] S3 + CloudFront — static assets/CDN | High | 🔄 Pending Review |
 | 6 | [DEVOPS] CI/CD Pipeline — GitHub Actions + ECR + migrations | Urgent | ⏳ To Do |
 | 7 | [DEVOPS] Secrets Management — AWS Secrets Manager + GitHub | Urgent | ⏳ To Do |
 | 8 | [DEVOPS] Monitoring + Alerts — CloudWatch logs + alarms | High | ⏳ To Do |
@@ -336,14 +417,15 @@ The compute module (`/infra/modules/compute`) manages ECS Fargate and ALB.
 
 ---
 
-## 8. Total Cost Estimate (Staging)
+## 9. Total Cost Estimate (Staging)
 
 | Module | Monthly Cost |
 |--------|--------------|
 | Networking (NAT + EIP) | ~$36 |
 | Database (RDS) | ~$15 |
 | Compute (ECS + ALB) | ~$28 |
-| **Total** | **~$79** |
+| Storage (S3 + CloudFront) | ~$2 |
+| **Total** | **~$81** |
 
 ---
 
