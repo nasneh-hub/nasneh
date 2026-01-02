@@ -36,14 +36,23 @@ RUN pnpm install --frozen-lockfile
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Generate Prisma client
+# Generate Prisma client (ensure it's generated)
 RUN cd apps/api && pnpm db:generate
 
 # Build the API
 RUN pnpm --filter @nasneh/api build
 
+# Save Prisma client BEFORE pruning (prune removes devDependencies including prisma)
+RUN mkdir -p /prisma-client && \
+    cp -r node_modules/.prisma /prisma-client/ 2>/dev/null || true && \
+    cp -r node_modules/@prisma /prisma-client/ 2>/dev/null || true
+
 # Prune dev dependencies after build
 RUN pnpm prune --prod
+
+# Restore Prisma client after prune (it's needed at runtime)
+RUN cp -r /prisma-client/.prisma node_modules/ 2>/dev/null || true && \
+    cp -r /prisma-client/@prisma node_modules/ 2>/dev/null || true
 
 # -----------------------------------------------------------------------------
 # Stage 2: Production
@@ -56,17 +65,15 @@ RUN addgroup -g 1001 -S nodejs && \
 
 WORKDIR /app
 
-# Copy pruned node_modules from builder (already production-only)
+# Copy pruned node_modules from builder (with Prisma client restored)
 COPY --from=builder /app/node_modules ./node_modules
 
 # Copy built API files
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package.json ./apps/api/
 
-# Copy Prisma schema and generated client
+# Copy Prisma schema (needed for migrations)
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copy workspace packages if needed at runtime
 COPY --from=builder /app/packages ./packages
