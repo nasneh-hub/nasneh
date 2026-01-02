@@ -8,7 +8,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 
 ---
 
-## Sprint 2 Progress: 13/17 tasks (76%)
+## Sprint 2 Progress: 14/17 tasks (82%)
 
 ### Phase 1: Migrations ✅ Complete
 | Task | Status | PR |
@@ -41,8 +41,8 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 ### Phase 5: Cart + Reviews
 | Task | Status | PR |
 |------|--------|-----|
-| [CART] Implement cart API (single-vendor) | 🔄 In Review | #64 |
-| [REV] Create reviews table migration | 🔲 To Do | - |
+| [CART] Implement cart API (single-vendor) | ✅ Merged | #64 |
+| [REV] Create reviews table migration | 🔄 In Review | #65 |
 | [REV] Implement review CRUD API | 🔲 To Do | - |
 
 ### Phase 6: Tests
@@ -76,6 +76,7 @@ Sprint 2 started. Phase 2 (Services Core) complete. Phase 3 (Availability + Book
 | **availability_settings** | Provider-level settings | **S2** |
 | **carts** | Shopping carts (single-vendor) | **S2** |
 | **cart_items** | Cart line items | **S2** |
+| **reviews** | User reviews (polymorphic) | **S2** |
 
 ---
 
@@ -182,4 +183,4 @@ All 18 tasks completed and merged to main. Tag v0.2.0-sprint1 created.
 None.
 
 ---
-**Last updated:** 2026-01-02 — Sprint 2 Phase 5: Cart API in review (PR #64)
+**Last updated:** 2026-01-02 — Sprint 2 Phase 5: Reviews migration in review (PR #65)
