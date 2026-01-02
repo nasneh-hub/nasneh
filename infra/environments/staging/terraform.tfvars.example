@@ -20,5 +20,13 @@ api_instance_type = "t3.small"
 # Database Configuration
 db_instance_class = "db.t3.micro"
 
+# Database Credentials (REQUIRED - do not commit actual values)
+# Option 1: Set in terraform.tfvars (gitignored)
+# Option 2: Use environment variables:
+#   export TF_VAR_db_username="your_username"
+#   export TF_VAR_db_password="your_secure_password"
+db_username = "nasneh_admin"
+db_password = "CHANGE_ME_BEFORE_DEPLOY"
+
 # Protection Settings
 enable_deletion_protection = false

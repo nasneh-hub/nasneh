@@ -47,3 +47,23 @@ variable "enable_deletion_protection" {
   type        = bool
   default     = false # Disabled for staging
 }
+
+# ============================================
+# Database Credentials (Sensitive)
+# ============================================
+# DO NOT commit actual values to the repository.
+# Use terraform.tfvars (gitignored) or environment variables:
+#   export TF_VAR_db_username="your_username"
+#   export TF_VAR_db_password="your_password"
+
+variable "db_username" {
+  description = "Master username for RDS PostgreSQL"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "Master password for RDS PostgreSQL"
+  type        = string
+  sensitive   = true
+}
