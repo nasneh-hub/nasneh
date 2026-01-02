@@ -34,11 +34,16 @@ The IaC code is located in the `/infra` directory with the following structure:
 │   └── production/       # (Planned) Production environment
 │
 ├── modules/              # Reusable infrastructure modules
-│   ├── networking/
-│   ├── compute/
-│   ├── database/
-│   ├── cache/
-│   └── secrets/
+│   ├── networking/       # ✅ Implemented (PR #71)
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   ├── security_groups.tf
+│   │   └── README.md
+│   ├── compute/          # 🔜 Planned
+│   ├── database/         # 🔜 Planned
+│   ├── cache/            # 🔜 Planned
+│   └── secrets/          # 🔜 Planned
 │
 ├── versions.tf           # Terraform & provider version constraints
 ├── variables.tf          # Root variables
@@ -79,6 +84,7 @@ cp terraform.tfvars.example terraform.tfvars
 
 # 3. (Optional) Edit terraform.tfvars with custom values
 
+
 # 4. Initialize Terraform
 terraform init
 
@@ -91,15 +97,92 @@ terraform apply
 
 ---
 
-## 4. Next Steps (DevOps Gate)
+## 4. Networking Module
 
-1. **[CI/CD] CI Pipeline Setup:** Configure GitHub Actions to lint, test, and build the application code.
-2. **[DEVOPS] Terraform State Backend:** Configure S3 and DynamoDB for remote state management and locking.
-3. **[DEVOPS] Networking Module:** Implement the networking module (VPC, subnets, security groups).
-4. **[DEVOPS] Database Module:** Implement the database module (RDS PostgreSQL).
-5. **[DEVOPS] Cache Module:** Implement the cache module (ElastiCache Redis).
-6. **[DEVOPS] Compute Module:** Implement the compute module (ECS Fargate, ALB).
-7. **[CI/CD] CD Pipeline Setup:** Configure GitHub Actions to deploy to staging on merge to `develop`.
+The networking module (`/infra/modules/networking`) creates the foundational network infrastructure.
+
+### Resources Created
+
+| Resource | Description | Staging Config |
+|----------|-------------|----------------|
+| VPC | Main VPC with DNS support | 10.0.0.0/16 |
+| Public Subnets | 2 subnets for ALB | 10.0.1.0/24, 10.0.2.0/24 |
+| Private Subnets | 2 subnets for API, DB, Cache | 10.0.10.0/24, 10.0.11.0/24 |
+| Internet Gateway | Public internet access | 1 |
+| NAT Gateway | Private subnet egress | 1 (single for staging) |
+| Route Tables | Public and private routing | 2 |
+
+### Availability Zones
+
+AWS Bahrain (me-south-1) has 3 AZs available:
+- `me-south-1a` ✅ Used
+- `me-south-1b` ✅ Used
+- `me-south-1c` (available for production HA)
+
+### Security Groups
+
+| Security Group | Inbound Rules | Purpose |
+|----------------|---------------|---------|
+| ALB | HTTP (80), HTTPS (443) from 0.0.0.0/0 | Application Load Balancer |
+| API | Port 3000 from ALB SG | ECS Fargate containers |
+| Database | Port 5432 from API SG | RDS PostgreSQL |
+| Cache | Port 6379 from API SG | ElastiCache Redis |
+
+### Architecture Diagram
+
+```
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                      VPC (10.0.0.0/16)                  │
+                    │                                                         │
+    Internet ───────┼──► Internet Gateway                                     │
+                    │         │                                               │
+                    │    ┌────┴────────────────────────────────────┐          │
+                    │    │           Public Subnets                │          │
+                    │    │  ┌─────────────┐    ┌─────────────┐     │          │
+                    │    │  │ 10.0.1.0/24 │    │ 10.0.2.0/24 │     │          │
+                    │    │  │ me-south-1a │    │ me-south-1b │     │          │
+                    │    │  │   [ALB]     │    │   [ALB]     │     │          │
+                    │    │  │   [NAT]     │    │             │     │          │
+                    │    │  └─────────────┘    └─────────────┘     │          │
+                    │    └────────────────────────────────────────┘          │
+                    │              │                                          │
+                    │              ▼ NAT Gateway                              │
+                    │    ┌────────────────────────────────────────┐          │
+                    │    │          Private Subnets               │          │
+                    │    │  ┌─────────────┐    ┌─────────────┐    │          │
+                    │    │  │10.0.10.0/24 │    │10.0.11.0/24 │    │          │
+                    │    │  │ me-south-1a │    │ me-south-1b │    │          │
+                    │    │  │  [API/ECS]  │    │  [API/ECS]  │    │          │
+                    │    │  │  [RDS]      │    │             │    │          │
+                    │    │  │  [Redis]    │    │             │    │          │
+                    │    │  └─────────────┘    └─────────────┘    │          │
+                    │    └────────────────────────────────────────┘          │
+                    └─────────────────────────────────────────────────────────┘
+```
+
+### Cost Estimate (Staging)
+
+| Resource | Monthly Cost |
+|----------|--------------|
+| NAT Gateway | ~$32 |
+| Elastic IP | ~$3.65 |
+| **Total** | **~$36** |
+
+> **Note:** NAT Gateway is required for ECS Fargate tasks in private subnets to pull container images and access AWS services (Secrets Manager, ECR, etc.).
+
+---
+
+## 5. Next Steps (DevOps Gate)
+
+| # | Task | Status | PR |
+|---|------|--------|-----|
+| 1 | [DEVOPS] IaC Setup | ✅ Done | #70 |
+| 2 | [DEVOPS] VPC + Networking | ✅ Done | #71 |
+| 3 | [CI/CD] CI Pipeline Setup | 🔜 Next | - |
+| 4 | [DEVOPS] Terraform State Backend | 🔜 Planned | - |
+| 5 | [DEVOPS] Database Module | 🔜 Planned | - |
+| 6 | [DEVOPS] Cache Module | 🔜 Planned | - |
+| 7 | [DEVOPS] Compute Module | 🔜 Planned | - |
 
 ---
 
