@@ -1,13 +1,16 @@
 /**
  * Bookings Routes
  * 
- * Customer and provider booking endpoints including status transitions.
+ * Customer and provider booking endpoints including status transitions and listing.
  */
 
 import { Router, type Router as RouterType } from 'express';
 import {
   createBooking,
   getBooking,
+  listBookings,
+  listCustomerBookings,
+  listProviderBookings,
   confirmBooking,
   startBooking,
   completeBooking,
@@ -16,6 +19,16 @@ import {
 } from './bookings.controller';
 
 const router: RouterType = Router();
+
+// ===========================================
+// Booking Listing
+// ===========================================
+
+// GET /bookings - List bookings with role-based visibility
+// - CUSTOMER: only own bookings
+// - PROVIDER: only bookings for their provider account
+// - ADMIN: all bookings
+router.get('/', listBookings);
 
 // ===========================================
 // Booking CRUD
@@ -52,3 +65,21 @@ router.post('/:id/cancel', cancelBooking);
 router.post('/:id/no-show', markNoShow);
 
 export default router;
+
+// ===========================================
+// Customer-specific routes (for /customer prefix)
+// ===========================================
+
+export const customerBookingRoutes: RouterType = Router();
+
+// GET /customer/bookings - List customer's own bookings
+customerBookingRoutes.get('/bookings', listCustomerBookings);
+
+// ===========================================
+// Provider-specific routes (for /provider prefix)
+// ===========================================
+
+export const providerBookingRoutes: RouterType = Router();
+
+// GET /provider/bookings - List provider's bookings
+providerBookingRoutes.get('/bookings', listProviderBookings);
