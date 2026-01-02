@@ -27,7 +27,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REPOSITORY: nasneh-staging-api
   ECS_CLUSTER: nasneh-staging-cluster
-  ECS_SERVICE: nasneh-staging-api-service
+  ECS_SERVICE: nasneh-staging-api
 
 jobs:
   build-and-push:
@@ -109,9 +109,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+      - name: Verify ECS resources
+        run: |
+          echo "Listing services in cluster ${{ env.ECS_CLUSTER }}..."
+          aws ecs list-services --cluster ${{ env.ECS_CLUSTER }}
+          echo ""
+          echo "Describing service ${{ env.ECS_SERVICE }}..."
+          aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].{status:status,runningCount:runningCount,desiredCount:desiredCount}'
 
       - name: Update ECS service
         run: |
@@ -134,4 +138,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Cluster:** \`${{ env.ECS_CLUSTER }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Service:** \`${{ env.ECS_SERVICE }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Image Tag:** \`staging-latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Deploy Input:** \`${{ github.event.inputs.deploy }}\`" >> $GITHUB_STEP_SUMMARY
