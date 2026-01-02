@@ -143,3 +143,42 @@ jobs:
           echo "**Cluster:** \`${{ env.ECS_CLUSTER }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Service:** \`${{ env.ECS_SERVICE }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Image Tag:** \`staging-latest\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          echo "### Deployment Failed - Diagnostics :x:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "=== ECS Service Events (last 10) ==="
+          aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].events[0:10].[createdAt,message]' --output table
+          
+          echo ""
+          echo "=== Running Tasks ==="
+          RUNNING_TASK=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --desired-status RUNNING --query 'taskArns[0]' --output text)
+          if [ "$RUNNING_TASK" != "None" ]; then
+            aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks "$RUNNING_TASK" \
+              --query 'tasks[0].{lastStatus:lastStatus,healthStatus:healthStatus,stoppedReason:stoppedReason,containers:containers[0].{reason:reason,exitCode:exitCode,lastStatus:lastStatus}}' --output json
+          fi
+          
+          echo ""
+          echo "=== Stopped Tasks (latest) ==="
+          STOPPED_TASK=$(aws ecs list-tasks --cluster ${{ env.ECS_CLUSTER }} --service-name ${{ env.ECS_SERVICE }} --desired-status STOPPED --query 'taskArns[0]' --output text)
+          if [ "$STOPPED_TASK" != "None" ]; then
+            aws ecs describe-tasks --cluster ${{ env.ECS_CLUSTER }} --tasks "$STOPPED_TASK" \
+              --query 'tasks[0].{lastStatus:lastStatus,stoppedReason:stoppedReason,stopCode:stopCode,containers:containers[0].{reason:reason,exitCode:exitCode}}' --output json
+          fi
+          
+          echo ""
+          echo "=== Target Group Health ==="
+          TG_ARN=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].loadBalancers[0].targetGroupArn' --output text)
+          if [ "$TG_ARN" != "None" ]; then
+            aws elbv2 describe-target-health --target-group-arn "$TG_ARN" --output json
+          fi
+          
+          echo ""
+          echo "=== CloudWatch Logs (last 30 min) ==="
+          TD=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].taskDefinition' --output text)
+          LOG_GROUP=$(aws ecs describe-task-definition --task-definition "$TD" --query 'taskDefinition.containerDefinitions[0].logConfiguration.options."awslogs-group"' --output text)
+          aws logs tail "$LOG_GROUP" --since 30m || echo "No logs found"

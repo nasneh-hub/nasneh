@@ -59,6 +59,9 @@ RUN cp -r /prisma-client/.prisma node_modules/ 2>/dev/null || true && \
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS production
 
+# Install curl for health checks (ECS task definition uses curl)
+RUN apk add --no-cache curl
+
 # Add non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
