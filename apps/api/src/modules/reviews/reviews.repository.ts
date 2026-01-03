@@ -1,10 +1,15 @@
-import { PrismaClient, ReviewableType, ReviewStatus, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../lib/db.js';
+import type { 
+  ReviewableType as ReviewableTypeType, 
+  ReviewStatus as ReviewStatusType, 
+  Prisma as PrismaTypes 
+} from '@prisma/client';
+import prismaClient from '@prisma/client';
+const { ReviewableType, ReviewStatus, Prisma } = prismaClient;
 
 export interface CreateReviewData {
   reviewerId: string;
-  reviewableType: ReviewableType;
+  reviewableType: ReviewableTypeType;
   reviewableId: string;
   rating: number;
   comment?: string;
@@ -16,20 +21,20 @@ export interface UpdateReviewData {
 }
 
 export interface ReviewFilters {
-  reviewableType?: ReviewableType;
+  reviewableType?: ReviewableTypeType;
   reviewableId?: string;
   reviewerId?: string;
-  status?: ReviewStatus;
+  status?: ReviewStatusType;
 }
 
 export interface ReviewWithReviewer {
   id: string;
   reviewerId: string;
-  reviewableType: ReviewableType;
+  reviewableType: ReviewableTypeType;
   reviewableId: string;
   rating: number;
   comment: string | null;
-  status: ReviewStatus;
+  status: ReviewStatusType;
   createdAt: Date;
   updatedAt: Date;
   reviewer: {
@@ -51,7 +56,7 @@ export const reviewsRepository = {
         reviewableId: data.reviewableId,
         rating: data.rating,
         comment: data.comment,
-        status: 'PENDING',
+        status: 'PENDING' as ReviewStatusType,
       },
       include: {
         reviewer: {
@@ -88,7 +93,7 @@ export const reviewsRepository = {
    */
   async findByUserAndReviewable(
     reviewerId: string,
-    reviewableType: ReviewableType,
+    reviewableType: ReviewableTypeType,
     reviewableId: string
   ): Promise<ReviewWithReviewer | null> {
     return prisma.review.findUnique({
@@ -121,7 +126,7 @@ export const reviewsRepository = {
     sortBy: 'createdAt' | 'rating',
     sortOrder: 'asc' | 'desc'
   ): Promise<{ reviews: ReviewWithReviewer[]; total: number }> {
-    const where: Prisma.ReviewWhereInput = {};
+    const where: PrismaTypes.ReviewWhereInput = {};
 
     if (filters.reviewableType) {
       where.reviewableType = filters.reviewableType;
@@ -180,7 +185,7 @@ export const reviewsRepository = {
   /**
    * Update review status
    */
-  async updateStatus(id: string, status: ReviewStatus): Promise<ReviewWithReviewer> {
+  async updateStatus(id: string, status: ReviewStatusType): Promise<ReviewWithReviewer> {
     return prisma.review.update({
       where: { id },
       data: { status },
@@ -209,7 +214,7 @@ export const reviewsRepository = {
    * Get review statistics for a reviewable
    */
   async getStats(
-    reviewableType: ReviewableType,
+    reviewableType: ReviewableTypeType,
     reviewableId: string
   ): Promise<{
     averageRating: number;
@@ -221,7 +226,7 @@ export const reviewsRepository = {
         where: {
           reviewableType,
           reviewableId,
-          status: 'APPROVED',
+          status: 'APPROVED' as ReviewStatusType,
         },
         _avg: { rating: true },
         _count: true,
@@ -231,7 +236,7 @@ export const reviewsRepository = {
         where: {
           reviewableType,
           reviewableId,
-          status: 'APPROVED',
+          status: 'APPROVED' as ReviewStatusType,
         },
         _count: true,
       }),

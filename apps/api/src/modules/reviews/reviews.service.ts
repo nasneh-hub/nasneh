@@ -1,370 +1,168 @@
-import { PrismaClient, ReviewableType, ReviewStatus } from '@prisma/client';
-import {
-  reviewsRepository,
-  ReviewWithReviewer,
-  ReviewFilters,
+import { reviewsRepository } from './reviews.repository.js';
+import type { 
+  ReviewableType as ReviewableTypeType, 
+  ReviewStatus as ReviewStatusType 
+} from '@prisma/client';
+import prismaClient from '@prisma/client';
+const { ReviewableType, ReviewStatus } = prismaClient;
+import type { 
+  ReviewWithReviewer, 
+  ReviewFilters 
 } from './reviews.repository.js';
-import {
-  ReviewErrorCode,
-  ReviewDTO,
-  ReviewListResponse,
-  REVIEW_STATUS_TRANSITIONS,
-} from '../../types/review.types.js';
-
-const prisma = new PrismaClient();
-
-// ===========================================
-// Error Classes
-// ===========================================
 
 export class ReviewError extends Error {
-  constructor(
-    public code: ReviewErrorCode,
-    message: string,
-    public statusCode: number = 400
-  ) {
+  constructor(public message: string, public statusCode: number, public code: string) {
     super(message);
     this.name = 'ReviewError';
   }
 }
 
-// ===========================================
-// Helper Functions
-// ===========================================
-
-function toReviewDTO(review: ReviewWithReviewer): ReviewDTO {
-  return {
-    id: review.id,
-    reviewerId: review.reviewerId,
-    reviewerName: review.reviewer.name,
-    reviewerAvatar: review.reviewer.avatarUrl,
-    reviewableType: review.reviewableType as ReviewableType,
-    reviewableId: review.reviewableId,
-    rating: review.rating,
-    comment: review.comment,
-    status: review.status as ReviewStatus,
-    createdAt: review.createdAt,
-    updatedAt: review.updatedAt,
-  };
-}
-
-/**
- * Validate that the reviewable entity exists
- */
-async function validateReviewableExists(
-  reviewableType: ReviewableType,
-  reviewableId: string
-): Promise<boolean> {
-  let exists = false;
-
-  switch (reviewableType) {
-    case 'PRODUCT':
-      exists = !!(await prisma.product.findUnique({ where: { id: reviewableId } }));
-      break;
-    case 'SERVICE':
-      exists = !!(await prisma.service.findUnique({ where: { id: reviewableId } }));
-      break;
-    case 'VENDOR':
-      exists = !!(await prisma.vendor.findUnique({ where: { id: reviewableId } }));
-      break;
-    case 'PROVIDER':
-      exists = !!(await prisma.serviceProvider.findUnique({ where: { id: reviewableId } }));
-      break;
-    case 'DRIVER':
-      // Driver is a user with driver role - check if user exists
-      // For MVP, we'll just check if user exists
-      exists = !!(await prisma.user.findUnique({ where: { id: reviewableId } }));
-      break;
-    default:
-      return false;
-  }
-
-  return exists;
-}
-
-// ===========================================
-// Service Functions
-// ===========================================
-
 export const reviewsService = {
   /**
    * Create a new review
    */
-  async createReview(
-    userId: string,
-    data: {
-      reviewableType: ReviewableType;
-      reviewableId: string;
-      rating: number;
-      comment?: string;
-    }
-  ): Promise<ReviewDTO> {
-    // Check if reviewable exists
-    const reviewableExists = await validateReviewableExists(
+  async createReview(reviewerId: string, data: any): Promise<ReviewWithReviewer> {
+    // Check if user already reviewed this
+    const existing = await reviewsRepository.findByUserAndReviewable(
+      reviewerId,
       data.reviewableType,
       data.reviewableId
     );
-    if (!reviewableExists) {
-      throw new ReviewError(
-        'REVIEWABLE_NOT_FOUND',
-        `${data.reviewableType} with ID ${data.reviewableId} not found`,
-        404
-      );
+
+    if (existing) {
+      throw new ReviewError('You have already reviewed this', 400, 'ALREADY_REVIEWED');
     }
 
-    // Check for duplicate review
-    const existingReview = await reviewsRepository.findByUserAndReviewable(
-      userId,
-      data.reviewableType,
-      data.reviewableId
-    );
-    if (existingReview) {
-      throw new ReviewError(
-        'DUPLICATE_REVIEW',
-        'You have already reviewed this item',
-        409
-      );
-    }
-
-    // Create review
-    const review = await reviewsRepository.create({
-      reviewerId: userId,
-      reviewableType: data.reviewableType,
-      reviewableId: data.reviewableId,
-      rating: data.rating,
-      comment: data.comment,
+    return reviewsRepository.create({
+      reviewerId,
+      ...data
     });
-
-    return toReviewDTO(review);
-  },
-
-  /**
-   * Get review by ID
-   */
-  async getReview(reviewId: string): Promise<ReviewDTO> {
-    const review = await reviewsRepository.findById(reviewId);
-    if (!review) {
-      throw new ReviewError('REVIEW_NOT_FOUND', 'Review not found', 404);
-    }
-    return toReviewDTO(review);
   },
 
   /**
    * List reviews with filters
    */
-  async listReviews(
-    query: {
-      reviewableType?: ReviewableType;
-      reviewableId?: string;
-      reviewerId?: string;
-      status?: ReviewStatus;
-      page: number;
-      limit: number;
-      sortBy: 'createdAt' | 'rating';
-      sortOrder: 'asc' | 'desc';
-    },
-    userRole: string,
-    userId?: string
-  ): Promise<ReviewListResponse> {
-    const filters: ReviewFilters = {};
-
-    // Apply filters
-    if (query.reviewableType) {
-      filters.reviewableType = query.reviewableType;
-    }
-    if (query.reviewableId) {
-      filters.reviewableId = query.reviewableId;
-    }
-    if (query.reviewerId) {
-      filters.reviewerId = query.reviewerId;
+  async listReviews(filters: ReviewFilters, userRole: string, userId?: string): Promise<{ reviews: ReviewWithReviewer[]; total: number }> {
+    // Non-admins can only see APPROVED reviews by default
+    const finalFilters = { ...filters };
+    if (userRole !== 'ADMIN' && !finalFilters.status) {
+      finalFilters.status = 'APPROVED' as ReviewStatusType;
     }
 
-    // Non-admin users can only see APPROVED reviews (unless viewing their own)
-    if (userRole !== 'ADMIN') {
-      if (query.reviewerId && query.reviewerId === userId) {
-        // User viewing their own reviews - can see all statuses
-        if (query.status) {
-          filters.status = query.status;
-        }
-      } else {
-        // Non-admin viewing others' reviews - only APPROVED
-        filters.status = 'APPROVED';
-      }
-    } else {
-      // Admin can filter by any status
-      if (query.status) {
-        filters.status = query.status;
-      }
-    }
-
-    const { reviews, total } = await reviewsRepository.findMany(
-      filters,
-      query.page,
-      query.limit,
-      query.sortBy,
-      query.sortOrder
+    return reviewsRepository.findMany(
+      finalFilters,
+      (filters as any).page || 1,
+      (filters as any).limit || 10,
+      (filters as any).sortBy || 'createdAt',
+      (filters as any).sortOrder || 'desc'
     );
+  },
 
-    const totalPages = Math.ceil(total / query.limit);
+  /**
+   * Get review by ID
+   */
+  async getReview(id: string): Promise<ReviewWithReviewer> {
+    const review = await reviewsRepository.findById(id);
+    if (!review) {
+      throw new ReviewError('Review not found', 404, 'REVIEW_NOT_FOUND');
+    }
+    return review;
+  },
 
-    const response: ReviewListResponse = {
-      data: reviews.map(toReviewDTO),
-      pagination: {
-        page: query.page,
-        limit: query.limit,
-        total,
-        totalPages,
-        hasNext: query.page < totalPages,
-        hasPrev: query.page > 1,
-      },
+  /**
+   * Update review
+   */
+  async updateReview(id: string, userId: string, userRole: string, data: any): Promise<ReviewWithReviewer> {
+    const review = await reviewsRepository.findById(id);
+    if (!review) {
+      throw new ReviewError('Review not found', 404, 'REVIEW_NOT_FOUND');
+    }
+
+    if (userRole !== 'ADMIN' && review.reviewerId !== userId) {
+      throw new ReviewError('Unauthorized', 403, 'UNAUTHORIZED');
+    }
+
+    return reviewsRepository.update(id, data);
+  },
+
+  /**
+   * Get reviews for a reviewable (service or provider)
+   */
+  async getReviews(
+    type: ReviewableTypeType,
+    id: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ reviews: ReviewWithReviewer[]; total: number; stats: any }> {
+    const [result, stats] = await Promise.all([
+      reviewsRepository.findMany(
+        { reviewableType: type, reviewableId: id, status: 'APPROVED' as ReviewStatusType },
+        page,
+        limit,
+        'createdAt',
+        'desc'
+      ),
+      reviewsRepository.getStats(type, id),
+    ]);
+
+    return {
+      ...result,
+      stats,
     };
-
-    // Include stats if filtering by specific reviewable
-    if (query.reviewableType && query.reviewableId) {
-      response.stats = await reviewsRepository.getStats(
-        query.reviewableType,
-        query.reviewableId
-      );
-    }
-
-    return response;
   },
 
   /**
-   * Update own review (only while PENDING)
+   * Moderate a review (approve/reject)
    */
-  async updateReview(
+  async moderateReview(
     reviewId: string,
-    userId: string,
-    userRole: string,
-    data: { rating?: number; comment?: string }
-  ): Promise<ReviewDTO> {
-    const review = await reviewsRepository.findById(reviewId);
-    if (!review) {
-      throw new ReviewError('REVIEW_NOT_FOUND', 'Review not found', 404);
-    }
-
-    // Check ownership (admin can update any)
-    if (userRole !== 'ADMIN' && review.reviewerId !== userId) {
-      throw new ReviewError(
-        'PERMISSION_DENIED',
-        'You can only update your own reviews',
-        403
-      );
-    }
-
-    // Non-admin can only update PENDING reviews
-    if (userRole !== 'ADMIN' && review.status !== 'PENDING') {
-      throw new ReviewError(
-        'CANNOT_UPDATE_MODERATED',
-        'Cannot update a review that has been moderated',
-        422
-      );
-    }
-
-    const updated = await reviewsRepository.update(reviewId, data);
-    return toReviewDTO(updated);
+    status: ReviewStatusType
+  ): Promise<ReviewWithReviewer> {
+    return reviewsRepository.updateStatus(reviewId, status);
   },
 
   /**
-   * Delete own review
+   * Approve review
    */
-  async deleteReview(
-    reviewId: string,
-    userId: string,
-    userRole: string
-  ): Promise<void> {
+  async approveReview(id: string): Promise<ReviewWithReviewer> {
+    return reviewsRepository.updateStatus(id, 'APPROVED' as ReviewStatusType);
+  },
+
+  /**
+   * Reject review
+   */
+  async rejectReview(id: string): Promise<ReviewWithReviewer> {
+    return reviewsRepository.updateStatus(id, 'REJECTED' as ReviewStatusType);
+  },
+
+  /**
+   * Delete a review
+   */
+  async deleteReview(reviewId: string, userId: string, userRole: string): Promise<void> {
     const review = await reviewsRepository.findById(reviewId);
+    
     if (!review) {
-      throw new ReviewError('REVIEW_NOT_FOUND', 'Review not found', 404);
+      throw new ReviewError('Review not found', 404, 'REVIEW_NOT_FOUND');
     }
 
-    // Check ownership (admin can delete any)
+    // Only reviewer or admin can delete
     if (userRole !== 'ADMIN' && review.reviewerId !== userId) {
-      throw new ReviewError(
-        'PERMISSION_DENIED',
-        'You can only delete your own reviews',
-        403
-      );
+      throw new ReviewError('Unauthorized', 403, 'UNAUTHORIZED');
     }
 
     await reviewsRepository.delete(reviewId);
   },
 
   /**
-   * Approve review (admin only)
+   * Get reviews by user
    */
-  async approveReview(reviewId: string): Promise<ReviewDTO> {
-    const review = await reviewsRepository.findById(reviewId);
-    if (!review) {
-      throw new ReviewError('REVIEW_NOT_FOUND', 'Review not found', 404);
-    }
-
-    // Check valid transition
-    const allowedTransitions = REVIEW_STATUS_TRANSITIONS[review.status as ReviewStatus];
-    if (!allowedTransitions.includes('APPROVED')) {
-      throw new ReviewError(
-        'ALREADY_APPROVED',
-        'Review is already approved',
-        422
-      );
-    }
-
-    const updated = await reviewsRepository.updateStatus(reviewId, 'APPROVED');
-    return toReviewDTO(updated);
-  },
-
-  /**
-   * Reject review (admin only)
-   */
-  async rejectReview(reviewId: string): Promise<ReviewDTO> {
-    const review = await reviewsRepository.findById(reviewId);
-    if (!review) {
-      throw new ReviewError('REVIEW_NOT_FOUND', 'Review not found', 404);
-    }
-
-    // Check valid transition
-    const allowedTransitions = REVIEW_STATUS_TRANSITIONS[review.status as ReviewStatus];
-    if (!allowedTransitions.includes('REJECTED')) {
-      throw new ReviewError(
-        'ALREADY_REJECTED',
-        'Review is already rejected',
-        422
-      );
-    }
-
-    const updated = await reviewsRepository.updateStatus(reviewId, 'REJECTED');
-    return toReviewDTO(updated);
-  },
-
-  /**
-   * Get user's reviews
-   */
-  async getUserReviews(
-    userId: string,
-    page: number,
-    limit: number
-  ): Promise<ReviewListResponse> {
-    const { reviews, total } = await reviewsRepository.findMany(
+  async getUserReviews(userId: string, page: number, limit: number): Promise<{ reviews: ReviewWithReviewer[]; total: number }> {
+    return reviewsRepository.findMany(
       { reviewerId: userId },
       page,
       limit,
       'createdAt',
       'desc'
     );
-
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      data: reviews.map(toReviewDTO),
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages,
-        hasNext: page < totalPages,
-        hasPrev: page > 1,
-      },
-    };
   },
 };
