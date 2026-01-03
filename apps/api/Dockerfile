@@ -35,7 +35,8 @@ RUN pnpm --filter ./apps/api exec prisma generate
 RUN pnpm --filter ./apps/api... build
 
 # Create production bundle with pnpm deploy
-RUN pnpm --filter ./apps/api... deploy --prod /app/out
+# Note: --prod flag removed to include CLI binaries (e.g., prisma) needed for migrations
+RUN pnpm --filter ./apps/api... deploy /app/out
 
 # CRITICAL FIX: Fix Prisma client module resolution
 #
