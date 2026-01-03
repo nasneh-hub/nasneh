@@ -301,3 +301,91 @@ Add migration step to CD pipeline:
 **Priority:** Medium (manual process works, automation is enhancement).
 
 ---
+
+
+---
+
+## Complete API Inventory (Jan 3, 2026 Audit)
+
+**Status:** Source of Truth for all existing API endpoints as of Sprint 2 completion.
+
+| Module | Endpoint | Method | Sprint | PR | Staging Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Auth** | `/api/v1/auth/request-otp` | POST | 1 | #20 | ✅ **Working (Public)** |
+| | `/api/v1/auth/verify-otp` | POST | 1 | #23 | ✅ **Working (Public)** |
+| | `/api/v1/auth/refresh` | POST | 1 | #24 | ✅ **Working (Public)** |
+| | `/api/v1/auth/logout` | POST | 1 | #24 | ✅ **Working (Public)** |
+| | `/api/v1/auth/logout-all` | POST | 1 | #24 | ✅ **Working (Protected)** |
+| | `/api/v1/auth/sessions` | GET | 1 | #24 | ✅ **Working (Protected)** |
+| | `/api/v1/auth/me` | GET | 1 | #24 | ✅ **Working (Protected)** |
+| **Products** | `/api/v1/products` | GET | 1 | #35 | ✅ **Working (Public)** |
+| | `/api/v1/products/featured` | GET | 1 | #35 | ✅ **Working (Public)** |
+| | `/api/v1/products/:id` | GET | 1 | #35 | ✅ **Working (Public)** |
+| | `/api/v1/vendor/products` | GET | 1 | #35 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/products` | POST | 1 | #35 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/products/:id` | PATCH | 1 | #35 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/products/:id` | DELETE | 1 | #35 | ✅ **Working (Protected)** |
+| **Orders** | `/api/v1/orders` | POST | 1 | #39 | ✅ **Working (Protected)** |
+| | `/api/v1/orders` | GET | 1 | #39 | ✅ **Working (Protected)** |
+| | `/api/v1/orders/:id` | GET | 1 | #39 | ✅ **Working (Protected)** |
+| | `/api/v1/orders/:id/cancel` | PATCH | 1 | #39 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/orders` | GET | 1 | #38 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/orders/:id` | GET | 1 | #38 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/orders/:id/status` | PATCH | 1 | #38 | ✅ **Working (Protected)** |
+| | `/api/v1/vendor/orders/:id/history` | GET | 1 | #38 | ✅ **Working (Protected)** |
+| **Payments** | `/api/v1/payments/initiate` | POST | 1 | #41 | ❌ **Not Mounted (404)** |
+| | `/api/v1/payments` | GET | 1 | #41 | ❌ **Not Mounted (404)** |
+| | `/api/v1/payments/:id` | GET | 1 | #41 | ❌ **Not Mounted (404)** |
+| | `/api/v1/payments/webhook` | POST | 1 | #42 | ❌ **Not Mounted (404)** |
+| | `/api/v1/payments/return` | GET | 1 | #42 | ❌ **Not Mounted (404)** |
+| **Services** | `/api/v1/services` | GET | 2 | #50 | ✅ **Working (Public)** |
+| | `/api/v1/services/search` | GET | 2 | #50 | ✅ **Working (Public)** |
+| | `/api/v1/services/featured` | GET | 2 | #50 | ✅ **Working (Public)** |
+| | `/api/v1/services/category/:categoryId` | GET | 2 | #50 | ✅ **Working (Public)** |
+| | `/api/v1/services/provider/:providerId` | GET | 2 | #50 | ✅ **Working (Public)** |
+| | `/api/v1/services/:id` | GET | 2 | #48 | ✅ **Working (Public)** |
+| | `/api/v1/services/:id/slots` | GET | 2 | #52 | ✅ **Working (Public)** |
+| | `/api/v1/provider/services` | POST | 2 | #48 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/services` | GET | 2 | #48 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/services/stats` | GET | 2 | #48 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/services/:id` | GET | 2 | #48 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/services/:id` | PATCH | 2 | #48 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/services/:id` | DELETE | 2 | #48 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/services/:id/toggle` | PATCH | 2 | #48 | ✅ **Working (Protected)** |
+| **Bookings** | `/api/v1/bookings` | POST | 2 | #57 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings` | GET | 2 | #61 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings/:id` | GET | 2 | #61 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings/:id/confirm` | POST | 2 | #60 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings/:id/start` | POST | 2 | #60 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings/:id/complete` | POST | 2 | #60 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings/:id/cancel` | POST | 2 | #60 | ✅ **Working (Protected)** |
+| | `/api/v1/bookings/:id/no-show` | POST | 2 | #60 | ✅ **Working (Protected)** |
+| | `/api/v1/customer/bookings` | GET | 2 | #61 | ✅ **Working (Protected)** |
+| | `/api/v1/provider/bookings` | GET | 2 | #61 | ✅ **Working (Protected)** |
+| **Users** | `/api/v1/users/me` | GET | 2 | #62 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me` | PATCH | 2 | #62 | ✅ **Working (Protected)** |
+| | `/api/v1/users` | GET | 2 | #62 | ✅ **Working (Protected)** |
+| | `/api/v1/users/:id` | GET | 2 | #62 | ✅ **Working (Protected)** |
+| | `/api/v1/users/:id` | PATCH | 2 | #62 | ✅ **Working (Protected)** |
+| **Addresses** | `/api/v1/users/me/addresses` | GET | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me/addresses` | POST | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me/addresses/:id` | GET | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me/addresses/:id` | PATCH | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me/addresses/:id` | DELETE | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me/addresses/:id/default`| POST | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/:userId/addresses` | GET | 2 | #63 | ✅ **Working (Protected)** |
+| | `/api/v1/users/:userId/addresses` | POST | 2 | #63 | ✅ **Working (Protected)** |
+| **Cart** | `/api/v1/cart` | GET | 2 | #64 | ✅ **Working (Protected)** |
+| | `/api/v1/cart/items` | POST | 2 | #64 | ✅ **Working (Protected)** |
+| | `/api/v1/cart/items/:id` | PATCH | 2 | #64 | ✅ **Working (Protected)** |
+| | `/api/v1/cart/items/:id` | DELETE | 2 | #64 | ✅ **Working (Protected)** |
+| | `/api/v1/cart` | DELETE | 2 | #64 | ✅ **Working (Protected)** |
+| **Reviews** | `/api/v1/reviews` | GET | 2 | #66 | ✅ **Working (Public)** |
+| | `/api/v1/reviews/:id` | GET | 2 | #66 | ✅ **Working (Public)** |
+| | `/api/v1/reviews` | POST | 2 | #66 | ✅ **Working (Protected)** |
+| | `/api/v1/reviews/:id` | PATCH | 2 | #66 | ✅ **Working (Protected)** |
+| | `/api/v1/reviews/:id` | DELETE | 2 | #66 | ✅ **Working (Protected)** |
+| | `/api/v1/admin/reviews/:id/approve` | POST | 2 | #66 | ✅ **Working (Protected)** |
+| | `/api/v1/admin/reviews/:id/reject` | POST | 2 | #66 | ✅ **Working (Protected)** |
+| | `/api/v1/users/me/reviews` | GET | 2 | #66 | ✅ **Working (Protected)** |
+| **Upload** | `/api/v1/upload` | POST | 1 | #36 | ✅ **Working (Protected)** |
