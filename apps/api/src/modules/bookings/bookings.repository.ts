@@ -1,6 +1,7 @@
 import { prisma } from '../../lib/db.js';
-import prismaPkg from '@prisma/client';
-const { Prisma, BookingStatus: PrismaBookingStatus } = prismaPkg;
+import type { Prisma, BookingStatus as PrismaBookingStatusType } from '@prisma/client';
+import prismaClient from '@prisma/client';
+const { BookingStatus } = prismaClient;
 import type { BookingQuery } from '../../types/booking.types.js';
 
 // ===========================================
@@ -39,54 +40,48 @@ export const bookingRepository = {
     });
   },
 
-  async findByBookingNumber(bookingNumber: string) {
-    return prisma.booking.findUnique({
-      where: { bookingNumber },
-      include: {
-        customer: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-          },
-        },
-        provider: {
-          select: {
-            id: true,
-            businessName: true,
-            logoUrl: true,
-          },
-        },
-        service: {
-          select: {
-            id: true,
-            name: true,
-            nameAr: true,
-            serviceType: true,
-            durationMinutes: true,
-          },
-        },
-      },
-    });
-  },
+  async findMany(query: BookingQuery) {
+    const {
+      customerId,
+      providerId,
+      serviceId,
+      status,
+      fromDate,
+      toDate,
+      page = 1,
+      limit = 10,
+    } = query;
 
-  async findByCustomerId(customerId: string, query: BookingQuery) {
-    const { page, limit, providerId, serviceId, status, fromDate, toDate } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.BookingWhereInput = {
-      customerId,
+      ...(customerId && { customerId }),
       ...(providerId && { providerId }),
       ...(serviceId && { serviceId }),
-      ...(status && { status: status as PrismaBookingStatus }),
-      ...(fromDate && { scheduledDate: { gte: new Date(fromDate) } }),
-      ...(toDate && { scheduledDate: { lte: new Date(toDate) } }),
+      ...(status && { status: status as PrismaBookingStatusType }),
+      ...(fromDate && toDate && {
+        scheduledDate: {
+          gte: new Date(fromDate),
+          lte: new Date(toDate),
+        },
+      }),
     };
 
-    const [data, total] = await Promise.all([
+    const [total, items] = await Promise.all([
+      prisma.booking.count({ where }),
       prisma.booking.findMany({
         where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
         include: {
+          customer: {
+            select: {
+              id: true,
+              name: true,
+              phone: true,
+            },
+          },
           provider: {
             select: {
               id: true,
@@ -104,76 +99,15 @@ export const bookingRepository = {
             },
           },
         },
-        orderBy: { scheduledDate: 'desc' },
-        skip,
-        take: limit,
       }),
-      prisma.booking.count({ where }),
     ]);
 
     return {
-      data,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasNext: page * limit < total,
-        hasPrev: page > 1,
-      },
-    };
-  },
-
-  async findByProviderId(providerId: string, query: BookingQuery) {
-    const { page, limit, serviceId, status, fromDate, toDate } = query;
-    const skip = (page - 1) * limit;
-
-    const where: Prisma.BookingWhereInput = {
-      providerId,
-      ...(serviceId && { serviceId }),
-      ...(status && { status: status as PrismaBookingStatus }),
-      ...(fromDate && { scheduledDate: { gte: new Date(fromDate) } }),
-      ...(toDate && { scheduledDate: { lte: new Date(toDate) } }),
-    };
-
-    const [data, total] = await Promise.all([
-      prisma.booking.findMany({
-        where,
-        include: {
-          customer: {
-            select: {
-              id: true,
-              name: true,
-              phone: true,
-            },
-          },
-          service: {
-            select: {
-              id: true,
-              name: true,
-              nameAr: true,
-              serviceType: true,
-              durationMinutes: true,
-            },
-          },
-        },
-        orderBy: { scheduledDate: 'desc' },
-        skip,
-        take: limit,
-      }),
-      prisma.booking.count({ where }),
-    ]);
-
-    return {
-      data,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasNext: page * limit < total,
-        hasPrev: page > 1,
-      },
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      items,
     };
   },
 
@@ -188,7 +122,7 @@ export const bookingRepository = {
     price: number;
     commission: number;
     total: number;
-    serviceAddress: Prisma.InputJsonValue | null;
+    serviceAddress: any;
     notes: string | null;
   }) {
     return prisma.booking.create({
@@ -203,7 +137,7 @@ export const bookingRepository = {
         price: data.price,
         commission: data.commission,
         total: data.total,
-        serviceAddress: data.serviceAddress ?? Prisma.JsonNull,
+        serviceAddress: data.serviceAddress ?? (prismaClient.Prisma.JsonNull as any),
         notes: data.notes,
       },
       include: {
@@ -234,7 +168,7 @@ export const bookingRepository = {
     });
   },
 
-  async updateStatus(id: string, status: PrismaBookingStatus) {
+  async updateStatus(id: string, status: PrismaBookingStatusType) {
     return prisma.booking.update({
       where: { id },
       data: { status },
@@ -270,7 +204,7 @@ export const bookingRepository = {
     return prisma.booking.update({
       where: { id },
       data: {
-        status: 'CANCELLED',
+        status: 'CANCELLED' as PrismaBookingStatusType,
         cancellationReason: reason,
         cancelledBy,
         cancelledAt: new Date(),
@@ -316,7 +250,7 @@ export const bookingRepository = {
       providerId,
       serviceId,
       scheduledDate,
-      status: { notIn: ['CANCELLED', 'NO_SHOW'] },
+      status: { notIn: ['CANCELLED', 'NO_SHOW'] as PrismaBookingStatusType[] },
       ...(excludeBookingId && { id: { not: excludeBookingId } }),
     };
 
@@ -362,7 +296,7 @@ export const bookingRepository = {
       where: {
         providerId,
         scheduledDate: date,
-        status: { in: ['PENDING', 'CONFIRMED', 'IN_PROGRESS'] },
+        status: { in: ['PENDING', 'CONFIRMED', 'IN_PROGRESS'] as PrismaBookingStatusType[] },
       },
       select: {
         id: true,
@@ -383,7 +317,6 @@ export const bookingRepository = {
     todayStart.setHours(0, 0, 0, 0);
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
-
     const count = await prisma.booking.count({
       where: {
         createdAt: {
@@ -392,7 +325,6 @@ export const bookingRepository = {
         },
       },
     });
-
     const sequence = String(count + 1).padStart(4, '0');
     return `${prefix}${date}${sequence}`;
   },
