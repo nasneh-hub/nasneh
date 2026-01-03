@@ -1,5 +1,8 @@
 import { prisma } from '../../lib/db.js';
-import type { DayOfWeek, OverrideType } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+type DayOfWeek = PrismaTypes.DayOfWeek;
+type OverrideType = PrismaTypes.OverrideType;
 import { calendarDefaults } from '../../config/calendar.defaults.js';
 
 // ===========================================

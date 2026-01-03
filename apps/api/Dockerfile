@@ -26,6 +26,9 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
+# Generate Prisma Client for TypeScript compilation
+RUN pnpm --filter ./apps/api exec prisma generate
+
 # Build the API
 RUN pnpm --filter ./apps/api... build
 
