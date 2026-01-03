@@ -9,9 +9,11 @@ RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
 # =============================================================================
-# Builder
+# Builder Stage
 # =============================================================================
 FROM base AS builder
+
+# Copy package.json files for dependency installation
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/config/package.json ./packages/config/
@@ -19,50 +21,59 @@ COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/utils/package.json ./packages/utils/
 
-# Install all dependencies
+# Install ALL dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy source code
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Generate Prisma Client for TypeScript compilation
+# Generate Prisma Client (BEFORE build, in full node_modules)
+# This creates /app/node_modules/@prisma/client/ with generated code
 RUN pnpm --filter ./apps/api exec prisma generate
 
-# Build the API
+# Build TypeScript (now has access to generated Prisma types)
+# This creates /app/apps/api/dist/
 RUN pnpm --filter ./apps/api... build
 
-# Use pnpm deploy to create a self-contained production bundle
+# Create production bundle with pnpm deploy
+# This creates /app/out with ONLY production dependencies
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
 
-# Generate Prisma Client INSIDE the deployed bundle
-# This ensures the generated artifacts are part of the final production node_modules
-WORKDIR /app/out
-COPY apps/api/prisma ./prisma
-RUN pnpm exec prisma generate
+# Manually copy the generated Prisma Client to the production bundle
+# pnpm deploy doesn't copy generated artifacts, so we do it manually
+RUN cp -r /app/node_modules/@prisma /app/out/node_modules/
+
+# Copy the built dist directory to the production bundle
+RUN cp -r /app/apps/api/dist /app/out/
+
+# Copy the Prisma schema for runtime reference (migrations, introspection)
+RUN cp -r /app/apps/api/prisma /app/out/
 
 # =============================================================================
-# Runner
+# Runner Stage (Production)
 # =============================================================================
 FROM node:20-slim AS runner
-WORKDIR /app/apps/api
-ENV NODE_ENV=production
 
-# Install runtime dependencies
+# Set working directory to match the application structure
+WORKDIR /app
+
+# Install runtime dependencies (openssl for Prisma, curl for healthcheck)
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
-# Copy the deployed bundle (now including generated Prisma Client)
-COPY --from=builder /app/out /app/apps/api
+# Copy the complete production bundle from builder
+# This includes: node_modules (with @prisma), dist, prisma, package.json
+COPY --from=builder /app/out /app
 
-# Copy the built dist directory
-COPY --from=builder /app/apps/api/dist /app/apps/api/dist
+# Set environment
+ENV NODE_ENV=production
 
-# Copy Prisma schema for runtime reference
-COPY --from=builder /app/apps/api/prisma /app/apps/api/prisma
-
+# Expose port
 EXPOSE 3000
 
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3000/health || exit 1
 
+# Start the application
 CMD ["node", "dist/index.js"]
