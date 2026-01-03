@@ -17,6 +17,7 @@ import { usersRoutes } from './modules/users/index.js';
 import { myAddressesRouter, userAddressesRouter } from './modules/addresses/index.js';
 import { cartRouter } from './modules/cart/index.js';
 import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/reviews/index.js';
+import { paymentsRoutes } from './modules/payments/index.js';
 import { notFoundHandler, errorHandler } from './middleware/index.js';
 
 // ===========================================
@@ -100,8 +101,8 @@ app.use(`${apiPrefix}/reviews`, reviewsRoutes);
 app.use(`${apiPrefix}/admin/reviews`, adminReviewsRoutes);
 app.use(`${apiPrefix}/users/me/reviews`, userReviewsRoutes);
 
-// TODO: Add more routes as modules are created
-// app.use(`${apiPrefix}/payments`, paymentRoutes);
+// Payment routes
+app.use(`${apiPrefix}/payments`, paymentsRoutes);
 
 // ===========================================
 // Error Handling
