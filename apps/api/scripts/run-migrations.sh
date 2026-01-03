@@ -3,5 +3,5 @@ set -eu
 
 echo "🔄 Running database migrations..."
 cd /app
-./node_modules/.bin/prisma migrate deploy
+./node_modules/@prisma/client/node_modules/.bin/prisma migrate deploy
 echo "✅ Migrations completed successfully!"
