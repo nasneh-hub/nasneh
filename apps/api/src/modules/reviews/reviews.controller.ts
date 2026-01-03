@@ -1,4 +1,11 @@
 import type { Request, Response } from 'express';
+import { reviewsService, ReviewError } from './reviews.service.js';
+import {
+  createReviewSchema,
+  updateReviewSchema,
+  reviewQuerySchema,
+} from '../../types/review.types.js';
+import { ZodError } from 'zod';
 
 // ===========================================
 // Type Extensions
@@ -10,13 +17,6 @@ interface AuthenticatedRequest extends Request {
     role: string;
   };
 }
-import { reviewsService, ReviewError } from './reviews.service.js';
-import {
-  createReviewSchema,
-  updateReviewSchema,
-  reviewQuerySchema,
-} from '../../types/review.types.js';
-import { ZodError } from 'zod';
 
 // ===========================================
 // Helper Functions

@@ -1,5 +1,11 @@
 import { prisma } from '../../lib/db.js';
-import { Prisma, ServiceType as PrismaServiceType, ServiceStatus as PrismaServiceStatus } from '@prisma/client';
+import type { 
+  Prisma as PrismaTypes, 
+  ServiceType as PrismaServiceType, 
+  ServiceStatus as PrismaServiceStatus 
+} from '@prisma/client';
+import prismaClient from '@prisma/client';
+const { Prisma, ServiceType, ServiceStatus } = prismaClient;
 import type { CreateServiceInput, UpdateServiceInput, ServiceQuery, ProviderServiceQuery } from '../../types/service.types.js';
 import { ServiceSortBy } from '../../types/service.types.js';
 
@@ -7,7 +13,7 @@ import { ServiceSortBy } from '../../types/service.types.js';
 // Sorting Helper
 // ===========================================
 
-function getSortOrder(sortBy: string): Prisma.ServiceOrderByWithRelationInput {
+function getSortOrder(sortBy: string): PrismaTypes.ServiceOrderByWithRelationInput {
   switch (sortBy) {
     case ServiceSortBy.NEWEST:
       return { createdAt: 'desc' };
@@ -69,7 +75,7 @@ export const providerRepository = {
   }>) {
     return prisma.serviceProvider.update({
       where: { id },
-      data: data as Prisma.ServiceProviderUpdateInput,
+      data: data as PrismaTypes.ServiceProviderUpdateInput,
     });
   },
 };
@@ -124,14 +130,14 @@ export const serviceRepository = {
     const skip = (page - 1) * limit;
 
     // Build price filter
-    let priceFilter: Prisma.DecimalFilter<"Service"> | undefined;
+    let priceFilter: PrismaTypes.DecimalFilter<"Service"> | undefined;
     if (minPrice !== undefined || maxPrice !== undefined) {
       priceFilter = {};
       if (minPrice !== undefined) priceFilter.gte = minPrice;
       if (maxPrice !== undefined) priceFilter.lte = maxPrice;
     }
 
-    const where: Prisma.ServiceWhereInput = {
+    const where: PrismaTypes.ServiceWhereInput = {
       providerId,
       // By default exclude DELETED, unless includeDeleted is true
       ...(includeDeleted ? {} : { status: { not: 'DELETED' as PrismaServiceStatus } }),
@@ -207,14 +213,14 @@ export const serviceRepository = {
     const skip = (page - 1) * limit;
 
     // Build price filter
-    let priceFilter: Prisma.DecimalFilter<"Service"> | undefined;
+    let priceFilter: PrismaTypes.DecimalFilter<"Service"> | undefined;
     if (minPrice !== undefined || maxPrice !== undefined) {
       priceFilter = {};
       if (minPrice !== undefined) priceFilter.gte = minPrice;
       if (maxPrice !== undefined) priceFilter.lte = maxPrice;
     }
 
-    const where: Prisma.ServiceWhereInput = {
+    const where: PrismaTypes.ServiceWhereInput = {
       status: 'ACTIVE' as PrismaServiceStatus,
       // Default to available services only, unless explicitly set to false
       isAvailable: isAvailable !== false,
@@ -305,7 +311,7 @@ export const serviceRepository = {
    * For now, returns newest services. Can be enhanced with popularity metrics later.
    */
   async findFeatured(limit: number = 10) {
-    const where: Prisma.ServiceWhereInput = {
+    const where: PrismaTypes.ServiceWhereInput = {
       status: 'ACTIVE' as PrismaServiceStatus,
       isAvailable: true,
       provider: { status: 'ACTIVE' },
