@@ -29,7 +29,7 @@ COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
 # Generate Prisma Client (BEFORE build)
-# pnpm stores generated client in .pnpm store, accessible via symlinks
+# This generates client in /app/node_modules/.pnpm/@prisma+client@VERSION/node_modules/.prisma/client/
 RUN pnpm --filter ./apps/api exec prisma generate
 
 # Build TypeScript (now has access to generated Prisma types)
@@ -37,10 +37,15 @@ RUN pnpm --filter ./apps/api... build
 
 # Create production bundle with pnpm deploy
 # This creates /app/out with production dependencies
-# pnpm deploy automatically resolves and copies @prisma/client with generated code
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
 
-# Copy the built dist directory to the production bundle
+# CRITICAL FIX: Manually copy the generated Prisma client
+# pnpm deploy copies @prisma/client package but NOT the generated .prisma subdirectory
+# We need to copy the entire generated client from the pnpm store
+RUN cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/@prisma/ || \
+    (echo "ERROR: Failed to copy generated Prisma client" && exit 1)
+
+# Copy the built dist directory
 RUN cp -r /app/apps/api/dist /app/out/
 
 # Copy the Prisma schema for runtime reference
@@ -58,7 +63,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
 # Copy the complete production bundle from builder
-# This includes: node_modules (with @prisma/client + generated code), dist, prisma, package.json
+# This includes: node_modules (with @prisma/client + .prisma/client), dist, prisma, package.json
 COPY --from=builder /app/out /app
 
 # Set environment
