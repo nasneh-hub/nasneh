@@ -1,6 +1,7 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env sh
+set -eu
 
 echo "🔄 Running database migrations..."
-pnpm db:migrate
+cd /app
+./node_modules/.bin/prisma migrate deploy
 echo "✅ Migrations completed successfully!"
