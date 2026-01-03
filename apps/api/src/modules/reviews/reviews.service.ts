@@ -1,10 +1,12 @@
 import { reviewsRepository } from './reviews.repository.js';
-import type { 
-  ReviewableType as ReviewableTypeType, 
-  ReviewStatus as ReviewStatusType 
-} from '@prisma/client';
-import prismaClient from '@prisma/client';
-const { ReviewableType, ReviewStatus } = prismaClient;
+import type * as PrismaTypes from '@prisma/client';
+import prismaPkg from '@prisma/client';
+
+const prismaMod = prismaPkg as any;
+const { ReviewableType, ReviewStatus } = prismaMod;
+
+type ReviewableTypeType = PrismaTypes.ReviewableType;
+type ReviewStatusType = PrismaTypes.ReviewStatus;
 import type { 
   ReviewWithReviewer, 
   ReviewFilters 

@@ -4,11 +4,12 @@
 
 ---
 
-## 🟡 Current State (Now) — 2026-01-03 12:00 UTC+3
+## 🟢 Current State (Now) — 2026-01-03 14:30 UTC+3
 
-- **Docker Build Stage Stabilizing** — Fixed TypeScript ESM/Prisma compatibility issues.
-- **PR #115 (Pending)** — Systematic fix for Prisma named imports and Decimal type issues across all API modules.
-- **Local Build Passing** — `pnpm build` in `apps/api` now succeeds.
+- **Docker Build Stage Fixed** — Comprehensive TypeScript ESM/Prisma compatibility fixes applied.
+- **PR #115 (Merged)** — Fixed Prisma named imports in addresses, cart, orders, payments modules.
+- **PR #116 (Pending)** — Fixed remaining Prisma imports in reviews, services, bookings, availability modules.
+- **Local Build Passing** — `pnpm build` in `apps/api` succeeds with all fixes applied.
 
 ---
 

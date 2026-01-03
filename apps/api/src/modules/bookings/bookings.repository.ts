@@ -1,7 +1,11 @@
 import { prisma } from '../../lib/db.js';
-import type { Prisma, BookingStatus as PrismaBookingStatusType } from '@prisma/client';
-import prismaClient from '@prisma/client';
-const { BookingStatus } = prismaClient;
+import type * as PrismaTypes from '@prisma/client';
+import prismaPkg from '@prisma/client';
+
+const prismaMod = prismaPkg as any;
+const { BookingStatus, Prisma } = prismaMod;
+
+type PrismaBookingStatusType = PrismaTypes.BookingStatus;
 import type { BookingQuery } from '../../types/booking.types.js';
 
 // ===========================================
@@ -54,7 +58,7 @@ export const bookingRepository = {
 
     const skip = (page - 1) * limit;
 
-    const where: Prisma.BookingWhereInput = {
+    const where: any = {
       ...(customerId && { customerId }),
       ...(providerId && { providerId }),
       ...(serviceId && { serviceId }),
@@ -137,7 +141,7 @@ export const bookingRepository = {
         price: data.price,
         commission: data.commission,
         total: data.total,
-        serviceAddress: data.serviceAddress ?? (prismaClient.Prisma.JsonNull as any),
+        serviceAddress: data.serviceAddress ?? (Prisma.JsonNull as any),
         notes: data.notes,
       },
       include: {
@@ -246,7 +250,7 @@ export const bookingRepository = {
     endTime: Date | null,
     excludeBookingId?: string
   ) {
-    const where: Prisma.BookingWhereInput = {
+    const where: any = {
       providerId,
       serviceId,
       scheduledDate,

@@ -11,9 +11,11 @@
  */
 
 import { prisma } from '../../lib/db.js';
-import type { Prisma as PrismaTypes } from '@prisma/client';
-import prismaClient from '@prisma/client';
-const { Prisma } = prismaClient;
+import type * as PrismaTypes from '@prisma/client';
+import prismaPkg from '@prisma/client';
+
+const prismaMod = prismaPkg as any;
+const { Prisma } = prismaMod;
 import {
   getAvailableSlots,
 } from '../availability/index.js';

@@ -11,13 +11,13 @@
  * Default timezone: Asia/Bahrain
  */
 
-import type { 
-  AvailabilityRule, 
-  AvailabilityOverride, 
-  AvailabilitySettings,
-  Booking,
-  Service,
-} from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+type AvailabilityRule = PrismaTypes.AvailabilityRule;
+type AvailabilityOverride = PrismaTypes.AvailabilityOverride;
+type AvailabilitySettings = PrismaTypes.AvailabilitySettings;
+type Booking = PrismaTypes.Booking;
+type Service = PrismaTypes.Service;
 import type {
   DayOfWeek,
   TimeSlot,
