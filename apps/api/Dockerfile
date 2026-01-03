@@ -29,26 +29,25 @@ COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
 # Generate Prisma Client (BEFORE build)
-# This generates client in /app/node_modules/.pnpm/@prisma+client@VERSION/node_modules/.prisma/client/
 RUN pnpm --filter ./apps/api exec prisma generate
 
-# Build TypeScript (now has access to generated Prisma types)
+# Build TypeScript
 RUN pnpm --filter ./apps/api... build
 
 # Create production bundle with pnpm deploy
-# This creates /app/out with production dependencies
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
 
-# CRITICAL FIX: Manually copy the generated Prisma client
-# pnpm deploy copies @prisma/client package but NOT the generated .prisma subdirectory
-# We need to copy the entire generated client from the pnpm store
-RUN cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/@prisma/ || \
-    (echo "ERROR: Failed to copy generated Prisma client" && exit 1)
+# CRITICAL FIX: Replace symlinked @prisma/client with actual files
+# pnpm deploy creates symlinks to .pnpm store, but the store doesn't exist in /app/out
+# Solution: Remove the symlink and copy the actual client files
+RUN rm -rf /app/out/node_modules/@prisma/client && \
+    cp -rL /app/node_modules/.pnpm/@prisma+client@*/node_modules/@prisma/client /app/out/node_modules/@prisma/ && \
+    cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/@prisma/
 
 # Copy the built dist directory
 RUN cp -r /app/apps/api/dist /app/out/
 
-# Copy the Prisma schema for runtime reference
+# Copy the Prisma schema
 RUN cp -r /app/apps/api/prisma /app/out/
 
 # =============================================================================
@@ -59,11 +58,10 @@ FROM node:20-slim AS runner
 # Set working directory
 WORKDIR /app
 
-# Install runtime dependencies (openssl for Prisma, curl for healthcheck)
+# Install runtime dependencies
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
 # Copy the complete production bundle from builder
-# This includes: node_modules (with @prisma/client + .prisma/client), dist, prisma, package.json
 COPY --from=builder /app/out /app
 
 # Set environment
