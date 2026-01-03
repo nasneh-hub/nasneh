@@ -113,7 +113,6 @@ jobs:
         run: |
           echo "=== Test 1: Check express module resolution ==="
           docker run --rm $IMAGE node -e '
-            process.chdir("/app/apps/api");
             console.log("cwd:", process.cwd());
             const expressPath = require.resolve("express");
             console.log("express resolved:", expressPath);
@@ -124,7 +123,6 @@ jobs:
         run: |
           echo "=== Test 2: Check @prisma/client module resolution ==="
           docker run --rm $IMAGE node -e '
-            process.chdir("/app/apps/api");
             console.log("cwd:", process.cwd());
             try {
               const prismaPath = require.resolve("@prisma/client");
@@ -138,20 +136,20 @@ jobs:
       - name: Verify - Check dist directory
         run: |
           echo "=== Test 3: Check dist directory ==="
-          docker run --rm $IMAGE ls -la /app/apps/api/dist/ || echo "/app/apps/api/dist/ not found"
+          docker run --rm $IMAGE ls -la /app/dist/ || echo "/app/dist/ not found"
 
       - name: Verify - Debug dist structure
         run: |
           echo "=== Debug: dist directory structure ==="
           docker run --rm $IMAGE sh -c '
-            echo "=== ls -la /app/apps/api/dist ==="
-            ls -la /app/apps/api/dist
+            echo "=== ls -la /app/dist ==="
+            ls -la /app/dist
             echo ""
-            echo "=== ls -la /app/apps/api/dist/config || true ==="
-            ls -la /app/apps/api/dist/config || echo "config dir not found"
+            echo "=== ls -la /app/dist/config || true ==="
+            ls -la /app/dist/config || echo "config dir not found"
             echo ""
             echo "=== find dist -maxdepth 2 -type f (first 120) ==="
-            find /app/apps/api/dist -maxdepth 2 -type f | head -120
+            find /app/dist -maxdepth 2 -type f | head -120
           '
 
       - name: Verify - Show Dockerfile CMD and WORKDIR
