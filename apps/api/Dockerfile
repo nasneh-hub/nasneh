@@ -37,20 +37,23 @@ RUN pnpm --filter ./apps/api... build
 # Create production bundle with pnpm deploy
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
 
-# CRITICAL FIX: Replace symlinked @prisma/client with actual files
-# AND ensure .prisma directory is in the correct location
-# 
-# Prisma's require structure:
-# @prisma/client/default.js requires '.prisma/client/default'
-# This means .prisma must be INSIDE @prisma/client/, not beside it
+# CRITICAL FIX: Fix Prisma client module resolution
+#
+# How Prisma works:
+# - @prisma/client/default.js contains: require('.prisma/client/default')
+# - Node.js resolves '.prisma' from node_modules root, NOT from @prisma/client/
+# - Correct structure:
+#   /app/node_modules/
+#   ├── @prisma/client/  (symlink → broken after deploy)
+#   └── .prisma/client/  (generated client)
 #
 # Steps:
-# 1. Remove the symlink
+# 1. Remove broken @prisma/client symlink
 # 2. Copy actual @prisma/client package files
-# 3. Copy .prisma directory INSIDE @prisma/client/
+# 3. Copy .prisma directory to node_modules ROOT (not inside @prisma/client)
 RUN rm -rf /app/out/node_modules/@prisma/client && \
     cp -rL /app/node_modules/.pnpm/@prisma+client@*/node_modules/@prisma/client /app/out/node_modules/@prisma/ && \
-    cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/@prisma/client/
+    cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/
 
 # Copy the built dist directory
 RUN cp -r /app/apps/api/dist /app/out/
