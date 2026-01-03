@@ -1,5 +1,6 @@
 import { prisma } from '../../lib/db.js';
-import { Prisma, BookingStatus as PrismaBookingStatus } from '@prisma/client';
+import prismaPkg from '@prisma/client';
+const { Prisma, BookingStatus: PrismaBookingStatus } = prismaPkg;
 import type { BookingQuery } from '../../types/booking.types.js';
 
 // ===========================================
