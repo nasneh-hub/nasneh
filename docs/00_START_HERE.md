@@ -8,7 +8,7 @@
 
 **What:** Multi-category marketplace for Bahrain  
 **Who:** Customers + Vendors + Service Providers + Drivers  
-**Philosophy:** "مني الك ومنك الي" (From me to you, from you to me)
+**Philosophy:** "From me to you, from you to me"
 
 ---
 
@@ -52,7 +52,7 @@
 |------|-------|
 | **Font** | Vazirmatn ONLY |
 | **Colors** | Black + White + Gray (mono) |
-| **Borders** | ❌ NEVER use borders |
+| **Borders** | NEVER use borders |
 | **Radius** | 12px (rounded-xl) everywhere |
 | **Heights** | 32px / 40px / 48px / 56px |
 | **Components** | From @nasneh/ui (packages/ui) ONLY |
@@ -69,13 +69,44 @@
 
 ---
 
+## Documentation Structure
+
+| Folder | Purpose |
+|--------|---------|
+| `SPECS/` | Product requirements, technical specs, design system |
+| `OPS/` | Runbook, deployment, security |
+| `GOVERNANCE/` | AI rules, contribution guidelines |
+| `MEMORY/` | Project history, lessons learned |
+| `AUDITS/` | Audit reports, postmortems |
+
+---
+
 ## Documents to Read
 
 | Document | Contains |
 |----------|----------|
-| `PRD_MASTER.md` | What to build |
-| `TECHNICAL_SPEC.md` | How to build |
-| `DESIGN_SYSTEM.md` | How it looks |
+| `SPECS/PRD_MASTER.md` | What to build |
+| `SPECS/TECHNICAL_SPEC.md` | How to build |
+| `SPECS/DESIGN_SYSTEM.md` | How it looks |
+| `OPS/RUNBOOK.md` | How to run |
+| `GOVERNANCE/AI_OPERATING_RULES.md` | Rules for AI agents |
+
+---
+
+## For AI Agents
+
+**Session Start Protocol:**
+1. Read this file (00_START_HERE.md)
+2. Read MEMORY/PROJECT_TIMELINE.md (last 10 entries)
+3. Read MEMORY/MANUS_MEMORY.md (if you are Manus)
+4. Check assigned tasks in ClickUp
+5. Confirm: "Read updates. Ready to work on [task]."
+
+**Session End Protocol:**
+1. Update relevant documentation
+2. Add entry to MEMORY/PROJECT_TIMELINE.md
+3. Create PR with all changes
+4. Post session summary on ClickUp task
 
 ---
 
@@ -91,12 +122,12 @@
 
 ## What NOT to Do
 
-- ❌ Use borders
-- ❌ Use different fonts
-- ❌ Create components outside @nasneh/ui
-- ❌ Change scope without approval
-- ❌ Skip testing
-- ❌ Commit sensitive data
+- Do not use borders
+- Do not use different fonts
+- Do not create components outside @nasneh/ui
+- Do not change scope without approval
+- Do not skip testing
+- Do not commit sensitive data
 
 ---
 
@@ -108,4 +139,4 @@
 
 ---
 
-**Ready? Start by reading PRD_MASTER.md →**
+**Ready? Start by reading SPECS/PRD_MASTER.md**
