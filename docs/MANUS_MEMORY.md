@@ -136,3 +136,168 @@ After merging any PR to main:
 - **Update PROJECT_STATUS** — After every deployment run
 
 ---
+
+## CD & Database Stabilization Lessons (Jan 2026)
+
+### Problems We Faced & Solutions
+
+| Problem | Root Cause | Solution | PR |
+|---------|------------|----------|-----|
+| **Provider mismatch** | `schema.prisma` had `mysql`, infrastructure had PostgreSQL | Changed provider to `postgresql` | #120 |
+| **Missing tables** | Migrations never ran, no migration files existed | Created initial schema migration | #121 |
+| **prisma CLI missing (1st attempt)** | `prisma` was in `devDependencies` | Moved to `dependencies` | #124 |
+| **prisma CLI still missing** | `pnpm deploy --prod` excludes CLI binaries even from `dependencies` | Removed `--prod` flag from Dockerfile | #125 |
+| **Wrong script path** | Prisma binary path changed after removing `--prod` flag | Updated to `./node_modules/.bin/prisma` | #126 |
+
+### Key Learnings
+
+#### 1. pnpm `--prod` Flag Behavior
+**Problem:** `pnpm deploy --prod` excludes CLI binaries even when they are in `dependencies` (not `devDependencies`).
+
+**Why:** The `--prod` flag is designed to create the smallest possible production bundle by excluding:
+- All `devDependencies`
+- CLI binaries and scripts
+- Development tools
+
+**Solution:** Remove `--prod` flag when CLI tools (like `prisma`) are needed in production for migrations.
+
+**Trade-off:** Slightly larger image size (~10MB) vs. ability to run migrations.
+
+#### 2. Prisma Schema Provider Must Match Infrastructure
+**Problem:** `schema.prisma` had `provider = "mysql"` but Terraform deployed PostgreSQL.
+
+**Root Cause:** Initial schema was created with MySQL provider, but infrastructure decision was PostgreSQL.
+
+**Lesson:** Always verify `schema.prisma` provider matches deployed database type **before** running migrations.
+
+**Validation Command:**
+```bash
+# Check schema provider
+grep "provider" apps/api/prisma/schema.prisma
+
+# Check RDS engine
+aws rds describe-db-instances --query 'DBInstances[*].Engine'
+```
+
+#### 3. Prisma Client vs. Prisma CLI
+**Problem:** `@prisma/client` (library) ≠ `prisma` (CLI tool).
+
+**Key Distinction:**
+- `@prisma/client`: Runtime library for database queries (always needed)
+- `prisma`: CLI tool for migrations, schema management (only needed for migrations)
+
+**Lesson:** Both packages are required in production if migrations run in production containers.
+
+#### 4. Migration Script Path Depends on Build Configuration
+**Problem:** Prisma binary path changed after removing `--prod` flag.
+
+**Paths:**
+```bash
+# With --prod flag (nested in @prisma/client)
+./node_modules/@prisma/client/node_modules/.bin/prisma
+
+# Without --prod flag (standard location)
+./node_modules/.bin/prisma
+```
+
+**Lesson:** Migration scripts must be updated when Dockerfile build configuration changes.
+
+#### 5. Always Test Docker Builds in Codespaces
+**Problem:** Multiple failed deployments due to untested Docker builds.
+
+**Lesson:** Before merging Dockerfile changes:
+1. Open GitHub Codespaces on the PR branch
+2. Run `docker build -f apps/api/Dockerfile -t test .`
+3. Run `docker run -p 4000:4000 -e DATABASE_URL=... test`
+4. Test `/health` and one DB endpoint
+
+**Quality Gate:** Docker build + local run must pass before merge.
+
+#### 6. Migration Files Must Exist Before Running Migrations
+**Problem:** `prisma migrate deploy` failed because no migration files existed in the repo.
+
+**Root Cause:** Prisma schema was created but `prisma migrate dev` was never run to generate migration files.
+
+**Lesson:** After creating/modifying `schema.prisma`:
+1. Run `prisma migrate dev --name description` locally
+2. Commit generated files in `prisma/migrations/`
+3. Deploy with `prisma migrate deploy` in production
+
+**Migration Files Structure:**
+```
+apps/api/prisma/
+├── schema.prisma
+├── migrations/
+│   ├── migration_lock.toml
+│   └── 20260103_initial_schema/
+│       └── migration.sql
+```
+
+#### 7. ECS Task Run-Task for One-Time Operations
+**Pattern:** Use `aws ecs run-task` with command overrides for one-time operations like migrations.
+
+**Example:**
+```bash
+aws ecs run-task \
+  --cluster nasneh-staging-cluster \
+  --task-definition nasneh-staging-api:11 \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={...}" \
+  --overrides '{"containerOverrides":[{"name":"api","command":["sh","./scripts/run-migrations.sh"]}]}'
+```
+
+**Benefits:**
+- Same network/security configuration as service
+- Same Docker image as deployed service
+- Isolated from running service (no downtime)
+- Exit code verification (0 = success)
+
+#### 8. CloudWatch Logs Are Essential for Debugging
+**Lesson:** Always check CloudWatch logs before proposing fixes.
+
+**Log Groups:**
+```
+/ecs/nasneh-staging/api
+```
+
+**Log Stream Pattern:**
+```
+api/api/{task-id}
+```
+
+**Command:**
+```bash
+aws logs get-log-events \
+  --log-group-name "/ecs/nasneh-staging/api" \
+  --log-stream-name "api/api/{task-id}" \
+  --limit 50
+```
+
+---
+
+## Migration Automation (Future)
+
+### Current State (Manual)
+1. Merge PR with schema changes
+2. Run CD to build new image
+3. Manually run ECS task for migrations
+4. Verify API endpoints
+
+### Future State (Automated)
+Add migration step to CD pipeline:
+```yaml
+- name: Run Migrations
+  run: |
+    aws ecs run-task \
+      --cluster ${{ env.CLUSTER }} \
+      --task-definition ${{ env.TASK_DEF }} \
+      --overrides '{"containerOverrides":[{"name":"api","command":["sh","./scripts/run-migrations.sh"]}]}'
+    # Wait for task completion
+    # Verify exit code = 0
+```
+
+**Blocker:** Requires ECS task wait/poll logic in GitHub Actions.
+
+**Priority:** Medium (manual process works, automation is enhancement).
+
+---
