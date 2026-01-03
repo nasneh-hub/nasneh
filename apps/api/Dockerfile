@@ -38,11 +38,19 @@ RUN pnpm --filter ./apps/api... build
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
 
 # CRITICAL FIX: Replace symlinked @prisma/client with actual files
-# pnpm deploy creates symlinks to .pnpm store, but the store doesn't exist in /app/out
-# Solution: Remove the symlink and copy the actual client files
+# AND ensure .prisma directory is in the correct location
+# 
+# Prisma's require structure:
+# @prisma/client/default.js requires '.prisma/client/default'
+# This means .prisma must be INSIDE @prisma/client/, not beside it
+#
+# Steps:
+# 1. Remove the symlink
+# 2. Copy actual @prisma/client package files
+# 3. Copy .prisma directory INSIDE @prisma/client/
 RUN rm -rf /app/out/node_modules/@prisma/client && \
     cp -rL /app/node_modules/.pnpm/@prisma+client@*/node_modules/@prisma/client /app/out/node_modules/@prisma/ && \
-    cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/@prisma/
+    cp -r /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma /app/out/node_modules/@prisma/client/
 
 # Copy the built dist directory
 RUN cp -r /app/apps/api/dist /app/out/
