@@ -40,21 +40,21 @@ RUN pnpm --filter ./apps/api... deploy --prod /app/out
 # Runner
 # =============================================================================
 FROM node:20-slim AS runner
-WORKDIR /app
+# Restore the expected directory structure for verify scripts
+WORKDIR /app/apps/api
 ENV NODE_ENV=production
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
-# Copy the deployed bundle from builder
-# This includes node_modules (dereferenced), package.json, and other necessary files
-COPY --from=builder /app/out /app
+# Copy the deployed bundle from builder to the expected path
+COPY --from=builder /app/out /app/apps/api
 
-# Copy the built dist directory (pnpm deploy --prod doesn't include build artifacts by default)
-COPY --from=builder /app/apps/api/dist /app/dist
+# Copy the built dist directory (pnpm deploy --prod doesn't include build artifacts)
+COPY --from=builder /app/apps/api/dist /app/apps/api/dist
 
 # Copy Prisma schema for runtime
-COPY --from=builder /app/apps/api/prisma /app/prisma
+COPY --from=builder /app/apps/api/prisma /app/apps/api/prisma
 
 EXPOSE 3000
 
