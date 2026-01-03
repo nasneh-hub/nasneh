@@ -173,7 +173,7 @@ jobs:
           # Run container WITHOUT --rm, with fixed name
           docker run -d --name nasneh-health -p 3000:3000 \
             -e DATABASE_URL="postgresql://test:test@localhost:5432/test" \
-            -e JWT_SECRET="test-secret-for-ci" \
+            -e JWT_SECRET="test-secret-for-ci-must-be-at-least-32-chars" \
             -e REDIS_URL="redis://localhost:6379" \
             $IMAGE
           
