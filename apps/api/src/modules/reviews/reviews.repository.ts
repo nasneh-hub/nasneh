@@ -1,11 +1,12 @@
 import { prisma } from '../../lib/db.js';
-import type { 
-  ReviewableType as ReviewableTypeType, 
-  ReviewStatus as ReviewStatusType, 
-  Prisma as PrismaTypes 
-} from '@prisma/client';
-import prismaClient from '@prisma/client';
-const { ReviewableType, ReviewStatus, Prisma } = prismaClient;
+import type * as PrismaTypes from '@prisma/client';
+import prismaPkg from '@prisma/client';
+
+const prismaMod = prismaPkg as any;
+const { ReviewableType, ReviewStatus, Prisma } = prismaMod;
+
+type ReviewableTypeType = PrismaTypes.ReviewableType;
+type ReviewStatusType = PrismaTypes.ReviewStatus;
 
 export interface CreateReviewData {
   reviewerId: string;
@@ -126,7 +127,7 @@ export const reviewsRepository = {
     sortBy: 'createdAt' | 'rating',
     sortOrder: 'asc' | 'desc'
   ): Promise<{ reviews: ReviewWithReviewer[]; total: number }> {
-    const where: PrismaTypes.ReviewWhereInput = {};
+    const where: any = {};
 
     if (filters.reviewableType) {
       where.reviewableType = filters.reviewableType;
