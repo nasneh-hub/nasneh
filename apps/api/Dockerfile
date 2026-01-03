@@ -28,41 +28,22 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Generate Prisma Client (BEFORE build, in full node_modules)
-# This creates /app/node_modules/@prisma/client/ with generated code
+# Generate Prisma Client (BEFORE build)
+# pnpm stores generated client in .pnpm store, accessible via symlinks
 RUN pnpm --filter ./apps/api exec prisma generate
 
-# DEBUG: Show where Prisma client was actually generated
-RUN echo "=== Checking /app/node_modules/ for Prisma ===" && \
-    ls -la /app/node_modules/ | grep -i prisma || echo "No prisma in /app/node_modules/"
-RUN echo "=== Checking /app/node_modules/@prisma/ ===" && \
-    ls -la /app/node_modules/@prisma/ || echo "No @prisma directory"
-RUN echo "=== Checking /app/node_modules/.prisma/ ===" && \
-    ls -la /app/node_modules/.prisma/ || echo "No .prisma directory"
-RUN echo "=== Checking /app/node_modules/.pnpm/ for prisma ===" && \
-    find /app/node_modules/.pnpm -name "*prisma*" -type d | head -n 20 || echo "No prisma in .pnpm"
-
 # Build TypeScript (now has access to generated Prisma types)
-# This creates /app/apps/api/dist/
 RUN pnpm --filter ./apps/api... build
 
 # Create production bundle with pnpm deploy
-# This creates /app/out with ONLY production dependencies
+# This creates /app/out with production dependencies
+# pnpm deploy automatically resolves and copies @prisma/client with generated code
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
-
-# DEBUG: Show what's in /app/out/node_modules/ after deploy
-RUN echo "=== Checking /app/out/node_modules/ after deploy ===" && \
-    ls -la /app/out/node_modules/ | grep -i prisma || echo "No prisma in /app/out/node_modules/"
-
-# Manually copy the generated Prisma Client to the production bundle
-# pnpm deploy doesn't copy generated artifacts, so we do it manually
-# TEMPORARILY DISABLED FOR DEBUGGING - will fix after seeing debug output
-# RUN cp -r /app/node_modules/@prisma /app/out/node_modules/
 
 # Copy the built dist directory to the production bundle
 RUN cp -r /app/apps/api/dist /app/out/
 
-# Copy the Prisma schema for runtime reference (migrations, introspection)
+# Copy the Prisma schema for runtime reference
 RUN cp -r /app/apps/api/prisma /app/out/
 
 # =============================================================================
@@ -70,14 +51,14 @@ RUN cp -r /app/apps/api/prisma /app/out/
 # =============================================================================
 FROM node:20-slim AS runner
 
-# Set working directory to match the application structure
+# Set working directory
 WORKDIR /app
 
 # Install runtime dependencies (openssl for Prisma, curl for healthcheck)
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
 # Copy the complete production bundle from builder
-# This includes: node_modules (with @prisma), dist, prisma, package.json
+# This includes: node_modules (with @prisma/client + generated code), dist, prisma, package.json
 COPY --from=builder /app/out /app
 
 # Set environment
