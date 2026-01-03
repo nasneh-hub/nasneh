@@ -31,7 +31,10 @@ import type {
   AvailabilityResponse,
   DateRangeAvailability,
 } from '../../types/availability.types.js';
-import type { DayOfWeek as PrismaDayOfWeek, OverrideType as PrismaOverrideType } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+type PrismaDayOfWeek = PrismaTypes.DayOfWeek;
+type PrismaOverrideType = PrismaTypes.OverrideType;
 
 // ===========================================
 // Error Classes

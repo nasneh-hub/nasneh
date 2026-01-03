@@ -5,7 +5,7 @@
  */
 
 import { prisma } from '../../lib/db.js';
-import type { Prisma } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
 
 // ===========================================
 // Select Fields (exclude sensitive data)
@@ -62,7 +62,7 @@ export const usersRepository = {
   /**
    * Update user profile
    */
-  async update(userId: string, data: Prisma.UserUpdateInput) {
+  async update(userId: string, data: PrismaTypes.Prisma.UserUpdateInput) {
     return prisma.user.update({
       where: { id: userId },
       data,
@@ -76,8 +76,8 @@ export const usersRepository = {
   async findMany(params: {
     skip: number;
     take: number;
-    where?: Prisma.UserWhereInput;
-    orderBy?: Prisma.UserOrderByWithRelationInput;
+    where?: PrismaTypes.Prisma.UserWhereInput;
+    orderBy?: PrismaTypes.Prisma.UserOrderByWithRelationInput;
   }) {
     const { skip, take, where, orderBy } = params;
 

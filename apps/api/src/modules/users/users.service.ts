@@ -13,7 +13,7 @@ import {
   type UserQuery,
   type PaginatedUsersResponse,
 } from '../../types/user.types.js';
-import type { Prisma } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
 
 // ===========================================
 // Custom Errors
@@ -174,7 +174,7 @@ export const usersService = {
     }
 
     // Build update data
-    const updateData: Prisma.UserUpdateInput = {
+    const updateData: PrismaTypes.Prisma.UserUpdateInput = {
       name: data.name,
       email: data.email,
       avatarUrl: data.avatarUrl,
@@ -209,7 +209,7 @@ export const usersService = {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: Prisma.UserWhereInput = {};
+    const where: PrismaTypes.Prisma.UserWhereInput = {};
 
     if (role) where.role = role as any;
     if (status) where.status = status as any;

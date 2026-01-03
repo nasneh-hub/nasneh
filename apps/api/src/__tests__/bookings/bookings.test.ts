@@ -19,7 +19,11 @@ import {
   validateWithinBookingWindow,
   formatDateString,
 } from '../../lib/availability-engine';
-import type { AvailabilityRule, AvailabilityOverride, AvailabilitySettings } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+type AvailabilityRule = PrismaTypes.AvailabilityRule;
+type AvailabilityOverride = PrismaTypes.AvailabilityOverride;
+type AvailabilitySettings = PrismaTypes.AvailabilitySettings;
 
 // ===========================================
 // Schema Validation Tests

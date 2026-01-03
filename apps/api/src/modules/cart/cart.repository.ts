@@ -5,10 +5,10 @@
  */
 
 import { prisma } from '../../lib/index.js';
-import type { Prisma, PrismaClient } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
 
 // Type for transaction client
-type TransactionClient = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>;
+type TransactionClient = Omit<PrismaTypes.PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>;
 
 // ===========================================
 // Cart Repository

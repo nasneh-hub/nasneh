@@ -39,7 +39,11 @@ import {
   INDEX_TO_DAY_OF_WEEK,
   DAY_OF_WEEK_INDEX,
 } from '../../types/availability.types';
-import type { AvailabilityRule, AvailabilityOverride, AvailabilitySettings } from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+type AvailabilityRule = PrismaTypes.AvailabilityRule;
+type AvailabilityOverride = PrismaTypes.AvailabilityOverride;
+type AvailabilitySettings = PrismaTypes.AvailabilitySettings;
 
 // ===========================================
 // Time Utility Tests
