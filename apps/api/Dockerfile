@@ -26,34 +26,35 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY apps/api/ ./apps/api/
 COPY packages/ ./packages/
 
-# Generate Prisma Client
-RUN pnpm --filter ./apps/api... exec prisma generate
-
 # Build the API
 RUN pnpm --filter ./apps/api... build
 
 # Use pnpm deploy to create a self-contained production bundle
-# This isolates the app and its dependencies into a single directory without symlinks
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
+
+# Generate Prisma Client INSIDE the deployed bundle
+# This ensures the generated artifacts are part of the final production node_modules
+WORKDIR /app/out
+COPY apps/api/prisma ./prisma
+RUN pnpm exec prisma generate
 
 # =============================================================================
 # Runner
 # =============================================================================
 FROM node:20-slim AS runner
-# Restore the expected directory structure for verify scripts
 WORKDIR /app/apps/api
 ENV NODE_ENV=production
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
-# Copy the deployed bundle from builder to the expected path
+# Copy the deployed bundle (now including generated Prisma Client)
 COPY --from=builder /app/out /app/apps/api
 
-# Copy the built dist directory (pnpm deploy --prod doesn't include build artifacts)
+# Copy the built dist directory
 COPY --from=builder /app/apps/api/dist /app/apps/api/dist
 
-# Copy Prisma schema for runtime
+# Copy Prisma schema for runtime reference
 COPY --from=builder /app/apps/api/prisma /app/apps/api/prisma
 
 EXPOSE 3000
