@@ -4,51 +4,45 @@
 
 ---
 
-## 🔴 Current State (Now) — 2026-01-02 18:45 UTC+3
+## 🟡 Current State (Now) — 2026-01-03 12:00 UTC+3
 
-- **ECS staging deployment FAILING** — Container crashes on startup
-- **18 PRs attempted** (#83-#100) to fix Dockerfile/CD issues
-- **Memory Freeze active** — No new PRs until fix plan approved
+- **Docker Build Stage Stabilizing** — Fixed TypeScript ESM/Prisma compatibility issues.
+- **PR #115 (Pending)** — Systematic fix for Prisma named imports and Decimal type issues across all API modules.
+- **Local Build Passing** — `pnpm build` in `apps/api` now succeeds.
 
 ---
 
-## What is Broken
+## What was Broken
 
-**Exact Error (GitHub Actions — Run 20660793380):**
+**Exact Error (GitHub Actions — Latest Runs):**
 ```
-Error: Cannot find module 'express'
-Require stack:
-- /app/[eval]
-code: 'MODULE_NOT_FOUND'
+TS7006: Parameter 'p' implicitly has 'any' type (payments.service.ts)
+Multiple "Module '@prisma/client' has no exported member" errors for: Prisma, ReviewStatus, ServiceStatus, ServiceType, ReviewableType
+Property 'Prisma' does not exist on typeof import("@prisma/client/default")
 ```
 
-**Where:** CD workflow → `Verify - Check express dependency` step
+**Where:** Docker build stage during `tsc` compilation.
 
-**Root Cause (Verified):** pnpm uses symlinks in `node_modules/`. Docker `COPY` copies symlinks as files, not targets. Result: `express` and other deps not found at runtime.
+**Root Cause (Verified):** TypeScript `NodeNext` module resolution (strict ESM) is incompatible with named imports from CommonJS modules like `@prisma/client`. Additionally, `Decimal` type/value from Prisma required specific handling in ESM.
 
 ---
 
 ## Last Known Good State
 
-**NONE** — First deployment attempt. Infrastructure (VPC, RDS, ECS, ALB) is healthy. Container image is the blocker.
+**Local Build Passing** — After applying ESM-safe Prisma import patterns and fixing implicit `any` types.
 
 ---
 
 ## Current Hypothesis (Verified)
 
-**Backed by logs (Run 20660601237):**
-```
-apps/api/node_modules/@prisma/client -> symlink to .pnpm store
-/app/node_modules/.pnpm/@prisma+client@5.22.0.../node_modules/.prisma ← actual location
-```
-
-pnpm stores all packages in `.pnpm/` and creates symlinks. Docker COPY doesn't dereference symlinks.
+**ESM-Safe Pattern:**
+Using `import prismaPkg from '@prisma/client'` followed by destructuring and type casting ensures compatibility with `NodeNext` resolution while maintaining access to Prisma's runtime values and types.
 
 ---
 
 ## Next Allowed Action
 
-**Wait for user approval to implement fix plan.**
+**Merge PR #115 and trigger CD with `deploy=false` to verify the fix in the pipeline.**
 
 ---
 

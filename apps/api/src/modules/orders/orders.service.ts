@@ -12,7 +12,12 @@ import {
   FulfillmentType,
 } from '../../types/order.types.js';
 import { prisma } from '../../lib/db.js';
-import { Decimal } from '@prisma/client/runtime/library';
+import prismaPkg from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+const prismaMod = prismaPkg as unknown as any;
+const { Decimal } = prismaMod;
+type Decimal = any;
 import { auditService, ActorRole } from '../../lib/audit.js';
 import { notificationService } from '../../lib/notifications.js';
 

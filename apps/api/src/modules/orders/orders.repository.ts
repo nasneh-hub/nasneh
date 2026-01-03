@@ -9,7 +9,12 @@ import {
   OrderStatus,
   FulfillmentType,
 } from '../../types/order.types.js';
-import { Decimal } from '@prisma/client/runtime/library';
+import prismaPkg from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+const prismaMod = prismaPkg as unknown as any;
+const { Decimal } = prismaMod;
+type Decimal = any;
 
 // ===========================================
 // Types for internal use

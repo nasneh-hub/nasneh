@@ -13,7 +13,12 @@ import {
   PayableType,
   PaymentQueryInput,
 } from '../../types/payment.types.js';
-import { Decimal } from '@prisma/client/runtime/library';
+import prismaPkg from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+const prismaMod = prismaPkg as unknown as any;
+const { Decimal } = prismaMod;
+type Decimal = any;
 import { v4 as uuidv4 } from 'uuid';
 
 // ===========================================

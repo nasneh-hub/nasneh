@@ -5,8 +5,13 @@
  */
 
 import { prisma } from '../../lib/db.js';
-import type { Prisma } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import prismaPkg from '@prisma/client';
+import type * as PrismaTypes from '@prisma/client';
+
+const prismaMod = prismaPkg as unknown as any;
+const { Decimal } = prismaMod;
+type Prisma = any;
+type Decimal = any;
 
 // ===========================================
 // Repository
@@ -72,7 +77,7 @@ export const addressesRepository = {
   /**
    * Update address
    */
-  async update(addressId: string, data: Prisma.AddressUpdateInput) {
+  async update(addressId: string, data: PrismaTypes.Prisma.AddressUpdateInput) {
     return prisma.address.update({
       where: { id: addressId },
       data,
