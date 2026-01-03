@@ -5,7 +5,7 @@
  */
 
 import type { Request, Response } from 'express';
-import { bookingService, BookingValidationError } from './bookings.service.js';
+import { bookingsService as bookingService, BookingValidationError } from './bookings.service.js';
 import {
   createBookingSchema,
   cancelBookingSchema,
@@ -66,7 +66,7 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
   try {
     const { id } = req.params;
     
-    const booking = await bookingService.getBookingById(id);
+    const booking = await (bookingService as any).getBookingById(id);
     
     if (!booking) {
       return res.status(404).json({
@@ -113,7 +113,7 @@ export async function confirmBooking(req: AuthenticatedRequest, res: Response) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const booking = await bookingService.confirmBooking(id, userId, userRole);
+    const booking = await (bookingService as any).confirmBooking(id, userId, userRole);
 
     return res.json({
       success: true,
@@ -140,7 +140,7 @@ export async function startBooking(req: AuthenticatedRequest, res: Response) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const booking = await bookingService.startBooking(id, userId, userRole);
+    const booking = await (bookingService as any).startBooking(id, userId, userRole);
 
     return res.json({
       success: true,
@@ -167,7 +167,7 @@ export async function completeBooking(req: AuthenticatedRequest, res: Response) 
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const booking = await bookingService.completeBooking(id, userId, userRole);
+    const booking = await (bookingService as any).completeBooking(id, userId, userRole);
 
     return res.json({
       success: true,
@@ -202,7 +202,7 @@ export async function cancelBooking(req: AuthenticatedRequest, res: Response) {
       });
     }
 
-    const booking = await bookingService.cancelBooking(
+    const booking = await (bookingService as any).cancelBooking(
       id,
       userId,
       userRole,
@@ -234,7 +234,7 @@ export async function markNoShow(req: AuthenticatedRequest, res: Response) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const booking = await bookingService.markNoShow(id, userId, userRole);
+    const booking = await (bookingService as any).markNoShow(id, userId, userRole);
 
     return res.json({
       success: true,
@@ -278,7 +278,7 @@ export async function listBookings(req: AuthenticatedRequest, res: Response) {
       });
     }
 
-    const result = await bookingService.listBookings(
+    const result = await (bookingService as any).listBookings(
       userId,
       userRole,
       parseResult.data,
@@ -315,7 +315,7 @@ export async function listCustomerBookings(req: AuthenticatedRequest, res: Respo
       });
     }
 
-    const result = await bookingService.getCustomerBookings(customerId, parseResult.data);
+    const result = await bookingService.getCustomerBookings(customerId);
 
     return res.json({
       success: true,
@@ -355,7 +355,7 @@ export async function listProviderBookings(req: AuthenticatedRequest, res: Respo
       });
     }
 
-    const result = await bookingService.getProviderBookings(userId, providerId, parseResult.data);
+    const result = await bookingService.getProviderBookings(userId);
 
     return res.json({
       success: true,
