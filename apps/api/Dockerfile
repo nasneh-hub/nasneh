@@ -32,6 +32,16 @@ COPY packages/ ./packages/
 # This creates /app/node_modules/@prisma/client/ with generated code
 RUN pnpm --filter ./apps/api exec prisma generate
 
+# DEBUG: Show where Prisma client was actually generated
+RUN echo "=== Checking /app/node_modules/ for Prisma ===" && \
+    ls -la /app/node_modules/ | grep -i prisma || echo "No prisma in /app/node_modules/"
+RUN echo "=== Checking /app/node_modules/@prisma/ ===" && \
+    ls -la /app/node_modules/@prisma/ || echo "No @prisma directory"
+RUN echo "=== Checking /app/node_modules/.prisma/ ===" && \
+    ls -la /app/node_modules/.prisma/ || echo "No .prisma directory"
+RUN echo "=== Checking /app/node_modules/.pnpm/ for prisma ===" && \
+    find /app/node_modules/.pnpm -name "*prisma*" -type d | head -n 20 || echo "No prisma in .pnpm"
+
 # Build TypeScript (now has access to generated Prisma types)
 # This creates /app/apps/api/dist/
 RUN pnpm --filter ./apps/api... build
@@ -40,9 +50,14 @@ RUN pnpm --filter ./apps/api... build
 # This creates /app/out with ONLY production dependencies
 RUN pnpm --filter ./apps/api... deploy --prod /app/out
 
+# DEBUG: Show what's in /app/out/node_modules/ after deploy
+RUN echo "=== Checking /app/out/node_modules/ after deploy ===" && \
+    ls -la /app/out/node_modules/ | grep -i prisma || echo "No prisma in /app/out/node_modules/"
+
 # Manually copy the generated Prisma Client to the production bundle
 # pnpm deploy doesn't copy generated artifacts, so we do it manually
-RUN cp -r /app/node_modules/@prisma /app/out/node_modules/
+# TEMPORARILY DISABLED FOR DEBUGGING - will fix after seeing debug output
+# RUN cp -r /app/node_modules/@prisma /app/out/node_modules/
 
 # Copy the built dist directory to the production bundle
 RUN cp -r /app/apps/api/dist /app/out/
