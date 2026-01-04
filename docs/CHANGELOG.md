@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### 🏗️ Infrastructure (infra)
 
 ### 🧪 Tests (test)
+- **#140:** automation test v3 after APP_ID fix
 
 ### ⚙️ Refactors (refactor)
 
@@ -106,6 +107,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#44:** Update PROJECT_STATUS.md with Sprint 1 completion summary
 
 ### 🧪 Tests (test)
+- **#140:** automation test v3 after APP_ID fix
 - **#68:** Add comprehensive service API tests
 - **#67:** Add comprehensive booking API tests
 - **#23:** Add comprehensive OTP verify endpoint tests
