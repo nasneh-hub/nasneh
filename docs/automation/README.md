@@ -17,17 +17,21 @@ Before installing these workflows, you need:
 |------|---------|
 | `PULL_REQUEST_TEMPLATE.md` | Structured PR descriptions |
 | `workflows/pr-title-check.yml` | Validates PR titles follow conventional commits |
-| `workflows/auto-changelog.yml` | Auto-updates `docs/CHANGELOG.md` on PR merge |
-| `workflows/auto-timeline.yml` | Auto-updates `docs/MEMORY/PROJECT_TIMELINE.md` on PR merge |
+| `workflows/auto-docs.yml` | Auto-updates both `docs/CHANGELOG.md` and `docs/MEMORY/PROJECT_TIMELINE.md` on PR merge |
+| `workflows/auto-changelog.yml` | (Legacy) Separate changelog workflow |
+| `workflows/auto-timeline.yml` | (Legacy) Separate timeline workflow |
 
 ## Installation
 
 After merging this PR, manually copy the files to `.github/`:
 
 ```bash
-# Copy workflows (overwrite existing)
-cp docs/automation/workflows/auto-changelog.yml .github/workflows/
-cp docs/automation/workflows/auto-timeline.yml .github/workflows/
+# Copy unified workflow (recommended)
+cp docs/automation/workflows/auto-docs.yml .github/workflows/
+
+# Remove old separate workflows
+rm -f .github/workflows/auto-changelog.yml
+rm -f .github/workflows/auto-timeline.yml
 
 # Commit and push
 git add .github/
