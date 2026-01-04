@@ -141,13 +141,3 @@ Always read MEMORY files at session start. Always update MEMORY files at session
 
 **Reference:** [Link to related docs]
 ```
-
-<!-- Automation Test: This comment verifies the documentation automation workflows are working. -->
-
-<- [ ] Verify endpoints no longer return Automation Test 2: Verifying bypass rule fix -->
-
-< Final automation test: 2026-01-04T09:53:30Z -->
-
-< Test v3 clean: 2026-01-04T10:13:57Z -->
-
-< Unified workflow test: 2026-01-04T10:32:34Z -->

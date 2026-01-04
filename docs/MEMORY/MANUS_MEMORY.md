@@ -391,3 +391,73 @@ Add migration step to CD pipeline:
 | | `/api/v1/admin/reviews/:id/reject` | POST | 2 | #66 | ✅ **Working (Protected)** |
 | | `/api/v1/users/me/reviews` | GET | 2 | #66 | ✅ **Working (Protected)** |
 | **Upload** | `/api/v1/upload` | POST | 1 | #36 | ✅ **Working (Protected)** |
+
+
+---
+
+## Repository Automation (Phase 5 & 6 — Jan 2026)
+
+**Status:** All automation workflows are installed and active.
+
+### Active Workflows
+
+| Workflow | File | Trigger | Purpose |
+|----------|------|---------|---------|
+| **PR Title Check** | `pr-title-check.yml` | PR open/edit | Validates conventional commit format |
+| **Auto Docs** | `auto-docs.yml` | PR merge | Updates CHANGELOG.md + PROJECT_TIMELINE.md |
+| **Auto Labels** | `labeler.yml` | PR open/sync | Labels PRs by files changed |
+| **PR Size Check** | `pr-size.yml` | PR open/sync | Warns about large PRs |
+| **Stale Bot** | `stale.yml` | Daily 9AM | Marks/closes inactive issues/PRs |
+| **Release Notes** | `release-notes.yml` | Tag push (v*) | Generates GitHub Release notes |
+| **Dependabot** | `dependabot.yml` | Weekly Monday | Creates PRs for dependency updates |
+
+### PR Title Format (Required)
+
+```
+type(scope): description
+```
+
+**Valid Types:** `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`, `perf`
+
+**Valid Scopes:** `auth`, `api`, `payments`, `orders`, `bookings`, `services`, `users`, `cart`, `reviews`, `ui`, `infra`, `docs`, `governance`, `deps`
+
+**Examples:**
+- ✅ `feat(auth): add password reset`
+- ✅ `fix(payments): resolve timeout issue`
+- ✅ `docs(api): update endpoint documentation`
+- ❌ `fixed stuff`
+- ❌ `Update file`
+
+### What Happens Automatically
+
+1. **On PR Open:**
+   - Title validated against conventional commit format
+   - Labels added based on files changed
+   - Size label added (XS/S/M/L/XL)
+   - Warning comment if PR is too large (>1000 lines)
+
+2. **On PR Merge:**
+   - CHANGELOG.md updated with PR entry
+   - PROJECT_TIMELINE.md updated with timestamp
+
+3. **On Tag Push (v*.*.*):**
+   - GitHub Release created with auto-generated notes
+   - Commits grouped by type (features, fixes, etc.)
+
+4. **Daily:**
+   - Stale issues marked after 30 days
+   - Stale PRs marked after 21 days
+   - Closed after additional 7/14 days
+
+5. **Weekly (Monday 9AM):**
+   - Dependabot creates PRs for outdated dependencies
+
+### GitHub App
+
+Automation uses `nasneh-automation` GitHub App for:
+- Bypassing branch protection rules
+- Creating commits attributed to the App
+- Scoped permissions (Contents: Read/Write only)
+
+**App ID:** 2591137 (stored in `vars.APP_ID`)
+**Private Key:** Stored in `secrets.APP_PRIVATE_KEY`
