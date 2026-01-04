@@ -12,6 +12,18 @@
 
 ---
 
+## ⭐ Current Roadmap
+
+| Metric | Value |
+|--------|-------|
+| **MVP Readiness** | 65% |
+| **Current Phase** | Sprint 3 |
+| **Target Launch** | Feb 2, 2026 |
+
+**See:** [SPECS/MASTER_ROADMAP.md](SPECS/MASTER_ROADMAP.md) for the active sprint plan.
+
+---
+
 ## Quick Facts
 
 | Item | Value |
@@ -85,6 +97,7 @@
 
 | Document | Contains |
 |----------|----------|
+| `SPECS/MASTER_ROADMAP.md` | **⭐ Sprint plan & timeline (START HERE)** |
 | `SPECS/PRD_MASTER.md` | What to build |
 | `SPECS/TECHNICAL_SPEC.md` | How to build |
 | `SPECS/DESIGN_SYSTEM.md` | How it looks |
@@ -97,7 +110,7 @@
 
 **Session Start Protocol:**
 1. Read this file (00_START_HERE.md)
-2. Read MEMORY/PROJECT_TIMELINE.md (last 10 entries)
+2. Read SPECS/MASTER_ROADMAP.md (current sprint tasks)
 3. Read MEMORY/MANUS_MEMORY.md (if you are Manus)
 4. Check assigned tasks in ClickUp
 5. Confirm: "Read updates. Ready to work on [task]."
@@ -139,4 +152,4 @@
 
 ---
 
-**Ready? Start by reading SPECS/PRD_MASTER.md**
+**Ready? Start by reading SPECS/MASTER_ROADMAP.md**

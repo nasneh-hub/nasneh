@@ -29,14 +29,28 @@
 
 ---
 
+## Key Documents
+
+| Document | Purpose | Priority |
+|----------|---------|----------|
+| **Master Roadmap** | Sprint plan & timeline to MVP | **Check FIRST** |
+| PRD | Product requirements | Reference |
+| Technical Spec | Architecture & APIs | Reference |
+| Design System | UI/UX guidelines | Reference |
+
+**Path:** `docs/SPECS/MASTER_ROADMAP.md` — Check this FIRST for sprint tasks.
+
+---
+
 ## Files to Read First (Every Task)
 
 1. `/docs/00_START_HERE.md` — Quick facts and rules
-2. `/docs/SPECS/PRD_MASTER.md` — What to build (MVP scope)
-3. `/docs/SPECS/TECHNICAL_SPEC.md` — How to build (architecture)
-4. `/docs/SPECS/DESIGN_SYSTEM.md` — How it looks (UI rules)
-5. `/docs/GOVERNANCE/AI_OPERATING_RULES.md` — Rules for AI agents
-6. `/docs/MEMORY/PROJECT_TIMELINE.md` — Project history (read last 10 entries)
+2. `/docs/SPECS/MASTER_ROADMAP.md` — **Current sprint tasks (START HERE)**
+3. `/docs/SPECS/PRD_MASTER.md` — What to build (MVP scope)
+4. `/docs/SPECS/TECHNICAL_SPEC.md` — How to build (architecture)
+5. `/docs/SPECS/DESIGN_SYSTEM.md` — How it looks (UI rules)
+6. `/docs/GOVERNANCE/AI_OPERATING_RULES.md` — Rules for AI agents
+7. `/docs/MEMORY/PROJECT_TIMELINE.md` — Project history (read last 10 entries)
 
 ---
 

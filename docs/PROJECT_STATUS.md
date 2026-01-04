@@ -103,19 +103,29 @@ curl /api/v1/products
 - Manually copies the generated Prisma client files from the `.pnpm` store to the correct location in the final production `node_modules`.
 
 ---
+## ⭐ Current Roadmap
+
+**See:** [SPECS/MASTER_ROADMAP.md](SPECS/MASTER_ROADMAP.md) for the active sprint plan.
+
+| Metric | Value |
+|--------|-------|
+| **MVP Readiness** | 65% |
+| **Current Phase** | Sprint 3 |
+| **Target Launch** | Feb 2, 2026 |
+
+---
 
 ## Next Steps
 
-### Immediate (Pre-Sprint 3)
-- [ ] Review Sprint 3 tasks in ClickUp
-- [ ] Test additional API endpoints
-- [ ] Add seed data for testing
-- [ ] Review security configurations
+### Sprint 3: Core API Completion (Jan 5-11)
+- [ ] [S3-01] Categories API
+- [ ] [S3-02] Onboarding & Delivery DB Models
+- [ ] [S3-03] Vendor/Provider Application APIs
+- [ ] [S3-04] Admin Application Review APIs
+- [ ] [S3-05] Admin Dashboard Stats API
+- [ ] [S3-06] Driver & Delivery APIs
 
-### Sprint 3 Planning
-- Check ClickUp Sprint 3 board for prioritized tasks
-- Focus on core business logic implementation
-- Continue with API development
+**Full details:** [SPECS/MASTER_ROADMAP.md](SPECS/MASTER_ROADMAP.md)
 
 ---
 

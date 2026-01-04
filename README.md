@@ -3,15 +3,24 @@
 > Multi-category marketplace platform for Bahrain
 > "مني الك ومنك الي" (From me to you, from you to me)
 
-## Documentation
+## 📋 Key Documents
 
-Start here: [docs/00_START_HERE.md](./docs/00_START_HERE.md)
+| Document | Purpose | Link |
+|----------|---------|------|
+| **Master Roadmap** | Sprint plan & timeline to MVP | [docs/SPECS/MASTER_ROADMAP.md](docs/SPECS/MASTER_ROADMAP.md) |
+| PRD | Product requirements | [docs/SPECS/PRD_MASTER.md](docs/SPECS/PRD_MASTER.md) |
+| Technical Spec | Architecture & APIs | [docs/SPECS/TECHNICAL_SPEC.md](docs/SPECS/TECHNICAL_SPEC.md) |
+| Design System | UI/UX guidelines | [docs/SPECS/DESIGN_SYSTEM.md](docs/SPECS/DESIGN_SYSTEM.md) |
 
-| Document | Description |
-|----------|-------------|
-| [PRD](./docs/PRD_MASTER.md) | Product Requirements |
-| [Technical Spec](./docs/TECHNICAL_SPEC.md) | Architecture & APIs |
-| [Design System](./docs/DESIGN_SYSTEM.md) | UI/UX Guidelines |
+**Start here:** [docs/00_START_HERE.md](./docs/00_START_HERE.md)
+
+## Current Status
+
+| Metric | Value |
+|--------|-------|
+| **MVP Readiness** | 65% |
+| **Current Phase** | Sprint 3 |
+| **Target Launch** | Feb 2, 2026 |
 
 ## Project Structure
 
