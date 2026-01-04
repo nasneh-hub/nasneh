@@ -5,6 +5,14 @@
 
 ---
 
+## 2026-01-04
+
+| Time | Event | Evidence | Author |
+|------|-------|----------|--------|
+| 10:22:21 | Fixed (ci): merge changelog and timeline into unified auto-docs workflow | PR #141 | @nasneh-hub |
+
+---
+
 ## 2026-01-03
 
 ### Session: Final Manual Memory Update (Phase 4)
