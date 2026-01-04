@@ -9,19 +9,22 @@ jobs:
   update-timeline:
     name: Update Timeline
     runs-on: ubuntu-latest
-    # Only run if PR was merged (not just closed)
     if: github.event.pull_request.merged == true
     
-    permissions:
-      contents: write
-      pull-requests: read
-    
     steps:
+      - name: Generate App Token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
+          ref: main
       
       - name: Update Timeline
         uses: actions/github-script@v7
@@ -32,13 +35,11 @@ jobs:
             const pr = context.payload.pull_request;
             const prNumber = pr.number;
             const prTitle = pr.title;
-            const prUrl = pr.html_url;
             const mergedAt = new Date(pr.merged_at);
             const author = pr.user.login;
             
             console.log(`Processing PR #${prNumber}: ${prTitle}`);
             
-            // Parse conventional commit title
             const match = prTitle.match(/^([a-z]+)(?:\(([a-z0-9-]+)\))?:\s*(.+)$/i);
             if (!match) {
               console.log('PR title does not match conventional commit format, skipping...');
@@ -48,88 +49,68 @@ jobs:
             const type = match[1].toLowerCase();
             const scope = match[2] ? match[2].toLowerCase() : null;
             const description = match[3];
-            
-            // Format date as YYYY-MM-DD
             const dateStr = mergedAt.toISOString().split('T')[0];
             
-            // Map type to human-readable action
             const typeMap = {
-              'feat': 'Added',
-              'fix': 'Fixed',
-              'docs': 'Documented',
-              'refactor': 'Refactored',
-              'test': 'Tested',
-              'chore': 'Maintained',
-              'ci': 'Updated CI/CD',
-              'perf': 'Optimized',
-              'build': 'Built',
-              'style': 'Styled',
-              'revert': 'Reverted'
+              'feat': 'Added', 'fix': 'Fixed', 'docs': 'Documented',
+              'refactor': 'Refactored', 'test': 'Tested', 'chore': 'Maintained',
+              'ci': 'Updated CI/CD', 'perf': 'Optimized', 'build': 'Built',
+              'style': 'Styled', 'revert': 'Reverted'
             };
             
             const action = typeMap[type] || 'Changed';
             const scopeStr = scope ? ` (${scope})` : '';
             
-            // Read current timeline
             const timelinePath = 'docs/MEMORY/PROJECT_TIMELINE.md';
             let timeline = fs.readFileSync(timelinePath, 'utf8');
             
-            // Check if today's date section exists
             const dateSectionRegex = new RegExp(`## ${dateStr}\\n`, 'g');
             const hasDateSection = dateSectionRegex.test(timeline);
             
-            // Create the new entry
             const newEntry = `| ${mergedAt.toISOString().split('T')[1].split('.')[0]} | ${action}${scopeStr}: ${description} | PR #${prNumber} | @${author} |`;
             
             if (hasDateSection) {
-              // Find the date section and add entry to the table
-              // Look for the table under this date
               const dateTableRegex = new RegExp(`(## ${dateStr}\\n[\\s\\S]*?\\| Time \\| Event \\| Evidence \\| Author \\|\\n\\|[^\\n]+\\|\\n)`, 'g');
-              
               if (dateTableRegex.test(timeline)) {
-                // Reset regex
                 timeline = timeline.replace(
                   new RegExp(`(## ${dateStr}\\n[\\s\\S]*?\\| Time \\| Event \\| Evidence \\| Author \\|\\n\\|[^\\n]+\\|\\n)`),
                   `$1${newEntry}\n`
                 );
               } else {
-                // Date exists but no table, add one
                 timeline = timeline.replace(
                   new RegExp(`(## ${dateStr}\\n)`),
                   `$1\n| Time | Event | Evidence | Author |\n|------|-------|----------|--------|\n${newEntry}\n`
                 );
               }
             } else {
-              // Create new date section
-              // Find the first existing date section (## YYYY-MM-DD)
               const firstDateMatch = timeline.match(/## \d{4}-\d{2}-\d{2}\n/);
-              
               const newSection = `## ${dateStr}\n\n| Time | Event | Evidence | Author |\n|------|-------|----------|--------|\n${newEntry}\n\n---\n\n`;
-              
               if (firstDateMatch) {
                 const insertPos = timeline.indexOf(firstDateMatch[0]);
                 timeline = timeline.slice(0, insertPos) + newSection + timeline.slice(insertPos);
               } else {
-                // No date sections exist, add after the header
                 const headerEnd = timeline.indexOf('---\n\n') + 5;
                 timeline = timeline.slice(0, headerEnd) + '\n' + newSection + timeline.slice(headerEnd);
               }
             }
             
-            // Write updated timeline
             fs.writeFileSync(timelinePath, timeline);
-            console.log(`✅ Added entry for PR #${prNumber} to PROJECT_TIMELINE.md`);
+            console.log(`Added entry for PR #${prNumber} to PROJECT_TIMELINE.md`);
             
-            // Set output for commit step
             core.exportVariable('PR_NUMBER', prNumber);
             core.exportVariable('DATE_STR', dateStr);
       
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
       - name: Commit Changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.name "${{ steps.app-token.outputs.app-slug }}[bot]"
+          git config --local user.email "${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
           
-          # Check if there are changes to commit
           if git diff --quiet docs/MEMORY/PROJECT_TIMELINE.md; then
             echo "No changes to commit"
             exit 0
@@ -138,3 +119,5 @@ jobs:
           git add docs/MEMORY/PROJECT_TIMELINE.md
           git commit -m "docs(timeline): auto-update for PR #$PR_NUMBER ($DATE_STR) [skip ci]"
           git push
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
