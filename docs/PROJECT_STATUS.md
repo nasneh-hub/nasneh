@@ -1,6 +1,6 @@
 # Project Status
 
-**Current release/tag:** v0.4.0-migration-complete
+**Current release/tag:** v0.2.0 (AI Governance System)
 
 ---
 
@@ -12,11 +12,11 @@
 - **Status:** `/health` = 200 OK, `/api/v1/products` = 200 OK (empty data)
 
 **Latest PRs:**
-- #120: Fixed database provider mismatch (mysql → postgresql)
-- #121: Added initial schema migration files
-- #124: Moved prisma to dependencies
-- #125: Removed `--prod` flag to include CLI tools
-- #126: Updated migration script path
+- #131: AI Governance System - Folder structure and reorganization
+- #130: Comprehensive /docs audit report
+- #129: Fixed payment routes (mounted in index.ts)
+- #128: API audit report for Sprint 1 & 2
+- #127: CD stabilization documentation
 
 ---
 
