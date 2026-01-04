@@ -1,0 +1,84 @@
+# Stale Bot Workflow
+# Automatically marks and closes stale issues and PRs
+# Docs: https://github.com/actions/stale
+
+name: Stale Bot
+
+on:
+  schedule:
+    # Run daily at 9:00 AM Riyadh time (6:00 AM UTC)
+    - cron: '0 6 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark Stale Issues and PRs
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Mark stale issues and PRs
+        uses: actions/stale@v9
+        with:
+          # General settings
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Issue settings
+          stale-issue-message: |
+            👋 This issue has been automatically marked as stale because it has not had recent activity.
+            
+            It will be closed in **7 days** if no further activity occurs.
+            
+            If this issue is still relevant:
+            - Add a comment with an update
+            - Remove the `stale` label
+            
+            Thank you for your contributions! 🙏
+          
+          stale-issue-label: 'stale'
+          days-before-issue-stale: 30
+          days-before-issue-close: 7
+          close-issue-message: |
+            🔒 This issue has been automatically closed due to inactivity.
+            
+            If you believe this issue is still relevant, please feel free to reopen it or create a new issue with updated information.
+          
+          # PR settings
+          stale-pr-message: |
+            👋 This pull request has been automatically marked as stale because it has not had recent activity.
+            
+            It will be closed in **14 days** if no further activity occurs.
+            
+            If this PR is still needed:
+            - Rebase on the latest main branch
+            - Address any review comments
+            - Remove the `stale` label
+            
+            Thank you for your contributions! 🙏
+          
+          stale-pr-label: 'stale'
+          days-before-pr-stale: 21
+          days-before-pr-close: 14
+          close-pr-message: |
+            🔒 This pull request has been automatically closed due to inactivity.
+            
+            If you'd like to continue working on this, please feel free to reopen it or create a new PR.
+          
+          # Exempt labels - items with these labels won't be marked stale
+          exempt-issue-labels: 'pinned,security,bug,P0,P1,in-progress,blocked'
+          exempt-pr-labels: 'pinned,security,P0,P1,in-progress,blocked,do-not-close'
+          
+          # Exempt assignees - assigned items won't be marked stale
+          exempt-all-assignees: true
+          
+          # Only process a limited number per run to avoid rate limits
+          operations-per-run: 100
+          
+          # Remove stale label when updated
+          remove-stale-when-updated: true
+          
+          # Don't close issues/PRs with certain labels
+          close-issue-reason: 'not_planned'
