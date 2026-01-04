@@ -1,0 +1,114 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate-pr-title:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title Format
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            
+            // Conventional commit regex
+            // Format: type(scope): description
+            const conventionalCommitRegex = /^(feat|fix|docs|refactor|test|chore|ci|perf|revert|build|style)(\([a-z0-9-]+\))?: .{3,}/i;
+            
+            // Valid types
+            const validTypes = [
+              'feat',     // New feature
+              'fix',      // Bug fix
+              'docs',     // Documentation
+              'refactor', // Code refactoring
+              'test',     // Tests
+              'chore',    // Maintenance
+              'ci',       // CI/CD
+              'perf',     // Performance
+              'revert',   // Revert changes
+              'build',    // Build system
+              'style'     // Code style
+            ];
+            
+            // Valid scopes
+            const validScopes = [
+              'auth',       // Authentication
+              'api',        // API general
+              'payments',   // Payments
+              'orders',     // Orders
+              'bookings',   // Bookings
+              'services',   // Services
+              'users',      // Users
+              'cart',       // Cart
+              'reviews',    // Reviews
+              'ui',         // UI components
+              'infra',      // Infrastructure
+              'docs',       // Documentation
+              'governance', // AI Governance
+              'deps',       // Dependencies
+              'db',         // Database
+              'docker',     // Docker
+              'cd',         // CD pipeline
+              'ci',         // CI pipeline
+              'memory',     // Memory files
+              'automation'  // Automation
+            ];
+            
+            console.log(`Checking PR title: "${title}"`);
+            
+            // Check if title matches conventional commit format
+            if (!conventionalCommitRegex.test(title)) {
+              core.setFailed(`
+            ❌ PR title does not follow conventional commit format.
+            
+            Expected format: type(scope): description
+            
+            Valid types: ${validTypes.join(', ')}
+            Valid scopes: ${validScopes.join(', ')}
+            
+            Examples:
+            ✅ feat(auth): add password reset endpoint
+            ✅ fix(payments): resolve timeout on webhook
+            ✅ docs(api): update API documentation
+            ✅ chore(deps): update dependencies
+            
+            Your title: "${title}"
+            
+            Please update your PR title to follow the conventional commit format.
+              `);
+              return;
+            }
+            
+            // Extract type and scope
+            const match = title.match(/^([a-z]+)(?:\(([a-z0-9-]+)\))?:/i);
+            if (match) {
+              const type = match[1].toLowerCase();
+              const scope = match[2] ? match[2].toLowerCase() : null;
+              
+              // Validate type
+              if (!validTypes.includes(type)) {
+                core.setFailed(`
+            ❌ Invalid type: "${type}"
+            
+            Valid types: ${validTypes.join(', ')}
+                `);
+                return;
+              }
+              
+              // Validate scope if provided
+              if (scope && !validScopes.includes(scope)) {
+                core.warning(`
+            ⚠️ Unknown scope: "${scope}"
+            
+            Known scopes: ${validScopes.join(', ')}
+            
+            This is a warning only. The PR can still be merged.
+                `);
+              }
+            }
+            
+            console.log('✅ PR title is valid!');
