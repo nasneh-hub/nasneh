@@ -141,3 +141,5 @@ Always read MEMORY files at session start. Always update MEMORY files at session
 
 **Reference:** [Link to related docs]
 ```
+
+<!-- Automation Test: This comment verifies the documentation automation workflows are working. -->
