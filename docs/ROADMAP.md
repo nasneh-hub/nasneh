@@ -15,10 +15,14 @@
 - [x] DevOps Gate: AWS infrastructure deployed
 - [x] API: 86 endpoints built and tested
 
+### ✅ Recently Completed
+- [x] Payment routes fix (PR #129)
+- [x] Documentation reorganization (PR #131)
+- [x] AI Governance System established
+
 ### 🔄 In Progress
 - [ ] Sprint 2.6: Pre-Production Verification
-- [ ] Payment routes fix (PR #129)
-- [ ] Documentation reorganization
+- [ ] End-to-end API testing with auth
 
 ### ⏳ Upcoming
 - [ ] Sprint 3: Vendor/Provider Onboarding APIs
