@@ -461,3 +461,46 @@ Automation uses `nasneh-automation` GitHub App for:
 
 **App ID:** 2591137 (stored in `vars.APP_ID`)
 **Private Key:** Stored in `secrets.APP_PRIVATE_KEY`
+
+
+---
+
+## Pending Dependabot Updates (2026-01-04)
+
+**Status:** 16 Dependabot PRs created with failing CI. Need review later.
+
+### Safe (CI Actions) — Priority 1
+| PR | Package | Update |
+|----|---------|--------|
+| #146 | stale | 9 → 10 |
+| #147 | action-gh-release | 1 → 2 |
+| #148 | labeler | 5 → 6 |
+| #149 | cache | 4 → 5 |
+| #150 | docker/build-push-action | 5 → 6 |
+| #151 | upload-artifact | 4 → 6 |
+
+### Breaking Changes Risk — Priority 2 ⚠️
+| PR | Package | Update | Risk |
+|----|---------|--------|------|
+| #155 | prisma | 5.22 → 7.2 | Major version |
+| #161 | @prisma/client | 5.22 → 7.2 | Major version |
+| #153 | zod | 3.25 → 4.3 | Major version |
+| #154 | vitest | 1.6 → 4.0 | Major version |
+
+### Other Updates — Priority 3
+| PR | Package |
+|----|---------|
+| #152 | @aws-sdk/client-s3 |
+| #156 | dotenv |
+| #157 | body-parser |
+| #158 | @types/node |
+| #159 | react-dom |
+| #160 | express |
+
+### Action Required
+- [ ] Schedule "Dependency Update Sprint" when appropriate
+- [ ] Check CI failures before merging
+- [ ] Handle breaking changes (prisma, zod, vitest) carefully
+- [ ] Test thoroughly after major version updates
+
+**Link:** https://github.com/nasneh-hub/nasneh/pulls?q=is%3Aopen+is%3Apr+author%3Aapp%2Fdependabot
