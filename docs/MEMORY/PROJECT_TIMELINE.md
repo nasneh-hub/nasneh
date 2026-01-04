@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:32:05 | Updated CI/CD (automation): switch to unified auto-docs workflow | PR #142 | @nasneh-hub |
 | 10:22:21 | Fixed (ci): merge changelog and timeline into unified auto-docs workflow | PR #141 | @nasneh-hub |
 
 ---
