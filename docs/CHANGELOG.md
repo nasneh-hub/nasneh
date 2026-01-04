@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### ✨ Features (feat)
 
 ### 🐛 Bug Fixes (fix)
+- **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
 - **#132:** Final manual update of memory files (pending)
@@ -33,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#141:** merge changelog and timeline into unified auto-docs workflow
 - **#129:** Mount payment routes in main application
 - **#126:** Update prisma path after removing --prod flag
 - **#125:** Remove --prod flag to include prisma CLI in production image
@@ -94,6 +96,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#141:** merge changelog and timeline into unified auto-docs workflow
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
