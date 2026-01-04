@@ -1,9 +1,9 @@
 # Nasneh Roadmap
 
 ## Current Status
-- **Version:** 0.1.0
-- **Phase:** Post-Sprint 2, Pre-Production Verification
-- **Last Updated:** 2026-01-03
+- **Version:** 0.2.0
+- **Phase:** AI Governance Complete, Ready for Sprint 3
+- **Last Updated:** 2026-01-04
 
 ---
 
