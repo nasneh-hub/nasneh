@@ -143,3 +143,5 @@ Always read MEMORY files at session start. Always update MEMORY files at session
 ```
 
 <!-- Automation Test: This comment verifies the documentation automation workflows are working. -->
+
+<- [ ] Verify endpoints no longer return Automation Test 2: Verifying bypass rule fix -->
