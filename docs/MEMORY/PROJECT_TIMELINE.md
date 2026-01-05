@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 11:54:00 | Added (db): add onboarding and delivery models | PR #168 | @nasneh-hub |
 | 11:38:18 | Added (api): implement categories API | PR #167 | @nasneh-hub |
 | 11:34:00 | Documented: add Master Roadmap links across all documentation | PR #166 | @nasneh-hub |
 
