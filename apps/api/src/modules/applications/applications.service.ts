@@ -186,3 +186,182 @@ export class ProviderApplicationsService {
 // Export singleton instances
 export const vendorApplicationsService = new VendorApplicationsService();
 export const providerApplicationsService = new ProviderApplicationsService();
+
+
+// ===========================================
+// Admin Service (for both Vendor & Provider)
+// ===========================================
+
+import { prisma } from '../../lib/db.js';
+import { UserRole, SubscriptionPlan } from '@prisma/client';
+
+export class AdminApplicationsService {
+  /**
+   * Approve vendor application
+   * Creates Vendor record and updates User role
+   */
+  async approveVendorApplication(applicationId: string, notes?: string) {
+    const application = await vendorApplicationsRepository.findById(applicationId);
+
+    if (!application) {
+      throw new ApplicationNotFoundError();
+    }
+
+    if (application.status !== ApplicationStatus.PENDING) {
+      throw new Error('Application is not pending');
+    }
+
+    // Use transaction to ensure atomicity
+    const result = await prisma.$transaction(async (tx) => {
+      // Update application status
+      const updatedApplication = await tx.vendorApplication.update({
+        where: { id: applicationId },
+        data: {
+          status: ApplicationStatus.APPROVED,
+          notes,
+        },
+      });
+
+      // Create Vendor record
+      const vendor = await tx.vendor.create({
+        data: {
+          userId: application.userId,
+          storeName: application.businessName,
+          storeDescription: application.description,
+          category: application.category,
+          subscriptionPlan: SubscriptionPlan.BASIC,
+          status: 'APPROVED',
+        },
+      });
+
+      // Update User role
+      await tx.user.update({
+        where: { id: application.userId },
+        data: { role: UserRole.VENDOR },
+      });
+
+      return { application: updatedApplication, vendor };
+    });
+
+    return {
+      success: true,
+      data: result,
+      message: 'Vendor application approved successfully',
+    };
+  }
+
+  /**
+   * Reject vendor application
+   */
+  async rejectVendorApplication(applicationId: string, notes?: string) {
+    const application = await vendorApplicationsRepository.findById(applicationId);
+
+    if (!application) {
+      throw new ApplicationNotFoundError();
+    }
+
+    if (application.status !== ApplicationStatus.PENDING) {
+      throw new Error('Application is not pending');
+    }
+
+    const updatedApplication = await vendorApplicationsRepository.update(
+      applicationId,
+      {
+        status: ApplicationStatus.REJECTED,
+        notes,
+      }
+    );
+
+    return {
+      success: true,
+      data: updatedApplication,
+      message: 'Vendor application rejected',
+    };
+  }
+
+  /**
+   * Approve provider application
+   * Creates ServiceProvider record and updates User role
+   */
+  async approveProviderApplication(applicationId: string, notes?: string) {
+    const application = await providerApplicationsRepository.findById(applicationId);
+
+    if (!application) {
+      throw new ApplicationNotFoundError();
+    }
+
+    if (application.status !== ApplicationStatus.PENDING) {
+      throw new Error('Application is not pending');
+    }
+
+    // Use transaction to ensure atomicity
+    const result = await prisma.$transaction(async (tx) => {
+      // Update application status
+      const updatedApplication = await tx.providerApplication.update({
+        where: { id: applicationId },
+        data: {
+          status: ApplicationStatus.APPROVED,
+          notes,
+        },
+      });
+
+      // Create ServiceProvider record
+      const provider = await tx.serviceProvider.create({
+        data: {
+          userId: application.userId,
+          businessName: application.businessName,
+          description: application.description,
+          category: application.category,
+          subscriptionPlan: SubscriptionPlan.BASIC,
+          status: 'APPROVED',
+        },
+      });
+
+      // Update User role
+      await tx.user.update({
+        where: { id: application.userId },
+        data: { role: UserRole.PROVIDER },
+      });
+
+      return { application: updatedApplication, provider };
+    });
+
+    return {
+      success: true,
+      data: result,
+      message: 'Provider application approved successfully',
+    };
+  }
+
+  /**
+   * Reject provider application
+   */
+  async rejectProviderApplication(applicationId: string, notes?: string) {
+    const application = await providerApplicationsRepository.findById(applicationId);
+
+    if (!application) {
+      throw new ApplicationNotFoundError();
+    }
+
+    if (application.status !== ApplicationStatus.PENDING) {
+      throw new Error('Application is not pending');
+    }
+
+    const updatedApplication = await providerApplicationsRepository.update(
+      applicationId,
+      {
+        status: ApplicationStatus.REJECTED,
+        notes,
+      }
+    );
+
+    return {
+      success: true,
+      data: updatedApplication,
+      message: 'Provider application rejected',
+    };
+  }
+}
+
+// Export singleton instance
+export const adminApplicationsService = new AdminApplicationsService();
