@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
 - **#141:** merge changelog and timeline into unified auto-docs workflow
@@ -78,6 +79,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#167:** implement categories API
 - **#121:** Add database migrations and automation
 
 ---
@@ -85,6 +87,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#167:** implement categories API
 - **#66:** Implement review CRUD API with RBAC
 - **#64:** Implement single-vendor cart API
 - **#63:** Implement address management CRUD with RBAC
