@@ -19,6 +19,7 @@ import { cartRouter } from './modules/cart/index.js';
 import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/reviews/index.js';
 import { paymentsRoutes } from './modules/payments/index.js';
 import categoriesRoutes from './modules/categories/categories.routes.js';
+import { vendorApplicationsRouter, providerApplicationsRouter } from './modules/applications/index.js';
 import { notFoundHandler, errorHandler } from './middleware/index.js';
 
 // ===========================================
@@ -64,6 +65,10 @@ app.use(`${apiPrefix}/auth`, authRoutes);
 
 // Categories routes (public)
 app.use(`${apiPrefix}/categories`, categoriesRoutes);
+
+// Application routes (protected)
+app.use(`${apiPrefix}/vendor-applications`, vendorApplicationsRouter);
+app.use(`${apiPrefix}/provider-applications`, providerApplicationsRouter);
 
 // Products routes (public)
 app.use(`${apiPrefix}/products`, publicProductsRouter);
