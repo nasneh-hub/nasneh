@@ -117,8 +117,65 @@ After merging any PR to main:
 | Manual deploy | Via `workflow_dispatch` only |
 | Approval | Explicit approval required before enabling auto-deploy |
 
-**Rationale:** Staging infrastructure is not yet fully provisioned. Auto-deploy could fail or cause issues until all modules are deployed and secrets are configured.
+***Rationale:** Staging infrastructure is not yet fully provisioned. Auto-deploy could fail or cause issues until all modules are deployed and secrets are configured.
 
+---
+
+## AWS Permissions for Manus Agent
+
+**IAM User:** `manus-dev`  
+**Purpose:** Allow AI agent to monitor and verify AWS infrastructure
+
+### Granted Permissions (Jan 5, 2026)
+
+Custom inline policy attached to `manus-dev` user:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DescribeServices",
+        "ecs:DescribeTasks",
+        "ecs:DescribeClusters",
+        "ecs:ListTasks"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:FilterLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticloadbalancing:DescribeTargetGroups",
+        "elasticloadbalancing:DescribeTargetHealth"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+### Use Cases
+
+- **ECS Monitoring:** Check service status, task definitions, and running tasks
+- **Log Analysis:** View CloudWatch logs for debugging and verification
+- **Load Balancer Health:** Verify target health and routing configuration
+
+### Security Notes
+
+- Read-only permissions only (no write/delete capabilities)
+- No access to secrets, databases, or S3 buckets
+- Scoped to monitoring and observability tasks only
 
 ---
 
