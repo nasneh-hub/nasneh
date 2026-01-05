@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#171:** implement admin dashboard stats API
 - **#170:** implement admin application review APIs
 - **#169:** implement vendor and provider application APIs
 - **#168:** add onboarding and delivery models
@@ -82,6 +83,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#171:** implement admin dashboard stats API
 - **#170:** implement admin application review APIs
 - **#169:** implement vendor and provider application APIs
 - **#168:** add onboarding and delivery models
@@ -93,6 +95,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#171:** implement admin dashboard stats API
 - **#170:** implement admin application review APIs
 - **#169:** implement vendor and provider application APIs
 - **#168:** add onboarding and delivery models
