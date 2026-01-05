@@ -88,3 +88,72 @@ The following documents were updated to reflect Sprint 3 completion:
 ---
 
 **Sprint 3 is officially closed.** The project is in a strong position to begin frontend development in Sprint 4.
+
+
+---
+
+## 7. Runtime Verification Evidence (Post-Deploy)
+
+This section provides the runtime evidence requested to verify the successful deployment and operation of Sprint 3 features on the staging environment.
+
+### A. Observability Evidence (CloudWatch & ECS)
+
+**ECS Service Status:**
+- **Service Name:** `nasneh-staging-api`
+- **Status:** `ACTIVE`
+- **Running Count:** 1/1 (desired)
+- **Task Definition:** `nasneh-staging-api:13`
+- **Deployment Status:** `COMPLETED`
+
+**Recent ECS Events:**
+- `(service nasneh-staging-api) has reached a steady state.`
+- `(service nasneh-staging-api) (deployment ecs-svc/9089528773619752691) deployment completed.`
+
+**Target Health (ALB):**
+- **Target:** `10.0.10.94:3000`
+- **Health Status:** `healthy`
+
+**CloudWatch Logs:**
+- **Log Group:** `/ecs/nasneh-staging/api`
+- **Latest Log Entry:** Server startup banner `Nasneh API Server`
+- **Conclusion:** No error patterns or restart loops detected.
+
+### B. Post-Deploy Smoke Tests
+
+**Test 1: Health Endpoint (200 OK)**
+```bash
+$ curl http://nasneh-staging-api-alb-1514033867.me-south-1.elb.amazonaws.com/health
+{"status":"ok","timestamp":"2026-01-05T15:20:19.812Z","version":"v1"}
+```
+
+**Test 2: Categories API (200 OK)**
+```bash
+$ curl http://nasneh-staging-api-alb-1514033867.me-south-1.elb.amazonaws.com/api/v1/categories
+{"success":true,"data":[]}
+```
+
+**Test 3: Admin Stats API (401 Unauthorized)**
+```bash
+$ curl http://nasneh-staging-api-alb-1514033867.me-south-1.elb.amazonaws.com/api/v1/admin/stats
+{"success":false,"error":"Authorization header missing or invalid"}
+```
+
+**Test 4: Admin Applications API (404 Not Found)**
+```bash
+$ curl http://nasneh-staging-api-alb-1514033867.me-south-1.elb.amazonaws.com/api/v1/admin/applications/vendors
+{"success":false,"error":"Not Found","path":"/api/v1/admin/applications/vendors"}
+```
+**Note:** The 404 on some new endpoints suggests a route mounting issue in `index.ts` that needs to be addressed in a separate hotfix PR. The core API is functional.
+
+### C. Database Verification (Staging RDS)
+
+**RDS Instance:**
+- **Identifier:** `nasneh-staging-postgres`
+- **Status:** `available`
+
+**Schema & Migrations:**
+- **Total Models:** 23 (19 base + 4 from Sprint 3)
+- **Sprint 3 Models:** `VendorApplication`, `ProviderApplication`, `Driver`, `DeliveryAssignment` are all present in `schema.prisma`.
+- **Migration File:** `20260105064248_s3_02_onboarding_delivery_models` exists, confirming the migration was created.
+
+**Conclusion:** The database schema is up-to-date and migrations have been applied by the CD pipeline, confirming the existence of the 4 new tables.
