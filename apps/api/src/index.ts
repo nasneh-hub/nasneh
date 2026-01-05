@@ -21,6 +21,7 @@ import { paymentsRoutes } from './modules/payments/index.js';
 import categoriesRoutes from './modules/categories/categories.routes.js';
 import { vendorApplicationsRouter, providerApplicationsRouter, adminVendorApplicationsRouter, adminProviderApplicationsRouter } from './modules/applications/index.js';
 import { adminRouter } from './modules/admin/index.js';
+import { adminDriversRouter, adminDeliveriesRouter, driverRouter } from './modules/drivers/index.js';
 import { notFoundHandler, errorHandler } from './middleware/index.js';
 
 // ===========================================
@@ -75,6 +76,11 @@ app.use(`${apiPrefix}/provider-applications`, providerApplicationsRouter);
 app.use(`${apiPrefix}/admin`, adminRouter);
 app.use(`${apiPrefix}/admin/vendor-applications`, adminVendorApplicationsRouter);
 app.use(`${apiPrefix}/admin/provider-applications`, adminProviderApplicationsRouter);
+app.use(`${apiPrefix}/admin/drivers`, adminDriversRouter);
+app.use(`${apiPrefix}/admin/deliveries`, adminDeliveriesRouter);
+
+// Driver routes (driver only)
+app.use(`${apiPrefix}/driver`, driverRouter);
 
 // Products routes (public)
 app.use(`${apiPrefix}/products`, publicProductsRouter);
