@@ -20,6 +20,7 @@ import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/
 import { paymentsRoutes } from './modules/payments/index.js';
 import categoriesRoutes from './modules/categories/categories.routes.js';
 import { vendorApplicationsRouter, providerApplicationsRouter, adminVendorApplicationsRouter, adminProviderApplicationsRouter } from './modules/applications/index.js';
+import { adminRouter } from './modules/admin/index.js';
 import { notFoundHandler, errorHandler } from './middleware/index.js';
 
 // ===========================================
@@ -70,7 +71,8 @@ app.use(`${apiPrefix}/categories`, categoriesRoutes);
 app.use(`${apiPrefix}/vendor-applications`, vendorApplicationsRouter);
 app.use(`${apiPrefix}/provider-applications`, providerApplicationsRouter);
 
-// Admin application routes (admin only)
+// Admin routes (admin only)
+app.use(`${apiPrefix}/admin`, adminRouter);
 app.use(`${apiPrefix}/admin/vendor-applications`, adminVendorApplicationsRouter);
 app.use(`${apiPrefix}/admin/provider-applications`, adminProviderApplicationsRouter);
 
