@@ -5,6 +5,14 @@
 
 ---
 
+## 2026-01-05
+
+| Time | Event | Evidence | Author |
+|------|-------|----------|--------|
+| 11:34:00 | Documented: add Master Roadmap links across all documentation | PR #166 | @nasneh-hub |
+
+---
+
 ## 2026-01-04
 
 | Time | Event | Evidence | Author |
