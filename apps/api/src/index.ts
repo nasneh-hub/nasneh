@@ -18,6 +18,7 @@ import { myAddressesRouter, userAddressesRouter } from './modules/addresses/inde
 import { cartRouter } from './modules/cart/index.js';
 import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/reviews/index.js';
 import { paymentsRoutes } from './modules/payments/index.js';
+import categoriesRoutes from './modules/categories/categories.routes.js';
 import { notFoundHandler, errorHandler } from './middleware/index.js';
 
 // ===========================================
@@ -60,6 +61,9 @@ const apiPrefix = `/api/${config.apiVersion}`;
 
 // Auth routes
 app.use(`${apiPrefix}/auth`, authRoutes);
+
+// Categories routes (public)
+app.use(`${apiPrefix}/categories`, categoriesRoutes);
 
 // Products routes (public)
 app.use(`${apiPrefix}/products`, publicProductsRouter);
