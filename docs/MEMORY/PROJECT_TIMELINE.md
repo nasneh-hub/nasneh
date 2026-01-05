@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 12:15:20 | Added (api): implement admin application review APIs | PR #170 | @nasneh-hub |
 | 12:02:59 | Added (api): implement vendor and provider application APIs | PR #169 | @nasneh-hub |
 | 11:54:00 | Added (db): add onboarding and delivery models | PR #168 | @nasneh-hub |
 | 11:38:18 | Added (api): implement categories API | PR #167 | @nasneh-hub |
