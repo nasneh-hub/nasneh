@@ -207,3 +207,37 @@ Always read MEMORY files at session start. Always update MEMORY files at session
 
 **Reference:** [Link to related docs]
 ```
+
+
+---
+
+## Git Branch Conflicts (2026-01-05)
+
+### Problem
+PR #174 had merge conflicts because it was created from an outdated branch.
+
+### Root Cause
+Created new PR without pulling latest changes from main after PR #173 was merged.
+
+### Prevention
+Before creating any new PR:
+```bash
+git checkout main
+git pull origin main
+git checkout -b new-branch
+```
+
+---
+
+## Smoke Test Path Accuracy (2026-01-05)
+
+### Problem
+Smoke tests returned 404 for endpoints that actually exist.
+
+### Root Cause
+Tested wrong paths:
+- ❌ `/api/v1/admin/applications/vendors`
+- ✅ `/api/v1/admin/vendor-applications`
+
+### Prevention
+Always verify endpoint paths from route files before testing. Keep an official "Route Map" document updated.
