@@ -321,7 +321,9 @@ Add migration step to CD pipeline:
 
 ---
 
-## Complete API Inventory (Jan 3, 2026 Audit)
+## Complete API Inventory (Updated Jan 5, 2026 - Sprint 3 Complete)
+
+**Total Endpoints:** 101 (86 from Sprint 1-2 + 15 from Sprint 3)
 
 **Status:** Source of Truth for all existing API endpoints as of Sprint 2 completion.
 
@@ -405,6 +407,21 @@ Add migration step to CD pipeline:
 | | `/api/v1/admin/reviews/:id/reject` | POST | 2 | #66 | ✅ **Working (Protected)** |
 | | `/api/v1/users/me/reviews` | GET | 2 | #66 | ✅ **Working (Protected)** |
 | **Upload** | `/api/v1/upload` | POST | 1 | #36 | ✅ **Working (Protected)** |
+| **Categories** | `/api/v1/categories` | GET | 3 | #167 | ⏳ **Pending Deploy** |
+| **Applications** | `/api/v1/vendor-applications` | POST | 3 | #169 | ⏳ **Pending Deploy** |
+| | `/api/v1/vendor-applications/me` | GET | 3 | #169 | ⏳ **Pending Deploy** |
+| | `/api/v1/provider-applications` | POST | 3 | #169 | ⏳ **Pending Deploy** |
+| | `/api/v1/provider-applications/me` | GET | 3 | #169 | ⏳ **Pending Deploy** |
+| **Admin - Applications** | `/api/v1/admin/vendor-applications` | GET | 3 | #170 | ⏳ **Pending Deploy** |
+| | `/api/v1/admin/vendor-applications/:id` | PATCH | 3 | #170 | ⏳ **Pending Deploy** |
+| | `/api/v1/admin/provider-applications` | GET | 3 | #170 | ⏳ **Pending Deploy** |
+| | `/api/v1/admin/provider-applications/:id` | PATCH | 3 | #170 | ⏳ **Pending Deploy** |
+| **Admin - Platform** | `/api/v1/admin/stats` | GET | 3 | #171 | ⏳ **Pending Deploy** |
+| **Admin - Drivers** | `/api/v1/admin/drivers` | POST | 3 | #172 | ⏳ **Pending Deploy** |
+| | `/api/v1/admin/drivers` | GET | 3 | #172 | ⏳ **Pending Deploy** |
+| **Admin - Deliveries** | `/api/v1/admin/deliveries` | POST | 3 | #172 | ⏳ **Pending Deploy** |
+| **Driver Operations** | `/api/v1/driver/deliveries` | GET | 3 | #172 | ⏳ **Pending Deploy** |
+| | `/api/v1/driver/deliveries/:id` | PATCH | 3 | #172 | ⏳ **Pending Deploy** |
 
 
 ---
