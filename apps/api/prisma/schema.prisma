@@ -60,8 +60,8 @@ enum ProductStatus {
 // ===========================================
 
 enum ProviderCategory {
-  HOME        // Home services (cleaning, repairs, etc.)
-  PERSONAL    // Personal services (beauty, fitness, etc.)
+  HOME // Home services (cleaning, repairs, etc.)
+  PERSONAL // Personal services (beauty, fitness, etc.)
   PROFESSIONAL // Professional services (consulting, etc.)
 }
 
@@ -73,9 +73,9 @@ enum ProviderStatus {
 }
 
 enum ServiceType {
-  APPOINTMENT     // Time-based appointments
-  DELIVERY_DATE   // Service delivered on specific date
-  PICKUP_DROPOFF  // Customer drops off, picks up later
+  APPOINTMENT // Time-based appointments
+  DELIVERY_DATE // Service delivered on specific date
+  PICKUP_DROPOFF // Customer drops off, picks up later
 }
 
 enum ServiceStatus {
@@ -101,16 +101,19 @@ model User {
   updatedAt     DateTime   @updatedAt @map("updated_at")
 
   // Relations
-  vendor        Vendor?
-  provider      ServiceProvider?
-  addresses     Address[]
-  customerOrders Order[]  @relation("CustomerOrders")
-  driverOrders   Order[]  @relation("DriverOrders")
-  auditLogs      AuditLog[]
-  refundsCreated Refund[]
-  customerBookings Booking[] @relation("CustomerBookings")
-  cart             Cart?
-  reviews          Review[]
+  vendor               Vendor?
+  provider             ServiceProvider?
+  driver               Driver?
+  addresses            Address[]
+  customerOrders       Order[]               @relation("CustomerOrders")
+  driverOrders         Order[]               @relation("DriverOrders")
+  auditLogs            AuditLog[]
+  refundsCreated       Refund[]
+  customerBookings     Booking[]             @relation("CustomerBookings")
+  cart                 Cart?
+  reviews              Review[]
+  vendorApplications   VendorApplication[]
+  providerApplications ProviderApplication[]
 
   @@map("users")
 }
@@ -118,7 +121,7 @@ model User {
 model Address {
   id          String   @id @default(uuid())
   userId      String   @map("user_id")
-  label       String   // e.g., "Home", "Work"
+  label       String // e.g., "Home", "Work"
   addressLine String   @map("address_line")
   area        String
   block       String?
@@ -133,7 +136,7 @@ model Address {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("addresses")
 }
@@ -157,10 +160,10 @@ model Vendor {
   updatedAt             DateTime         @updatedAt @map("updated_at")
 
   // Relations
-  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products              Product[]
-  orders                Order[]
-  carts                 Cart[]
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products Product[]
+  orders   Order[]
+  carts    Cart[]
 
   @@map("vendors")
 }
@@ -184,7 +187,7 @@ model ServiceProvider {
   updatedAt             DateTime         @updatedAt @map("updated_at")
 
   // Relations
-  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   services              Service[]
   bookings              Booking[]
   availabilityRules     AvailabilityRule[]
@@ -199,25 +202,25 @@ model ServiceProvider {
 // ===========================================
 
 model Category {
-  id          String     @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
-  nameAr      String?    @map("name_ar")
-  slug        String     @unique
-  description String?    @db.Text
-  imageUrl    String?    @map("image_url")
-  parentId    String?    @map("parent_id")
-  sortOrder   Int        @default(0) @map("sort_order")
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  nameAr      String?  @map("name_ar")
+  slug        String   @unique
+  description String?  @db.Text
+  imageUrl    String?  @map("image_url")
+  parentId    String?  @map("parent_id")
+  sortOrder   Int      @default(0) @map("sort_order")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Self-relation for subcategories
-  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children    Category[] @relation("CategoryHierarchy")
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
 
   // Relations
-  products    Product[]
-  services    Service[]
+  products Product[]
+  services Service[]
 
   @@map("categories")
 }
@@ -227,25 +230,25 @@ model Category {
 // ===========================================
 
 model Product {
-  id          String        @id @default(uuid())
-  vendorId    String        @map("vendor_id")
-  categoryId  String?       @map("category_id")
-  name        String
-  nameAr      String?       @map("name_ar")
-  description String?       @db.Text
-  descriptionAr String?     @map("description_ar") @db.Text
-  price       Decimal       @db.Decimal(10, 3) // BHD 3 decimals
-  images      Json          @default("[]") // Array of image URLs
-  isAvailable Boolean       @default(true) @map("is_available")
-  status      ProductStatus @default(ACTIVE)
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  id            String        @id @default(uuid())
+  vendorId      String        @map("vendor_id")
+  categoryId    String?       @map("category_id")
+  name          String
+  nameAr        String?       @map("name_ar")
+  description   String?       @db.Text
+  descriptionAr String?       @map("description_ar") @db.Text
+  price         Decimal       @db.Decimal(10, 3) // BHD 3 decimals
+  images        Json          @default("[]") // Array of image URLs
+  isAvailable   Boolean       @default(true) @map("is_available")
+  status        ProductStatus @default(ACTIVE)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
 
   // Relations
-  vendor      Vendor        @relation(fields: [vendorId], references: [id], onDelete: Cascade)
-  category    Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  orderItems  OrderItem[]
-  cartItems   CartItem[]
+  vendor     Vendor      @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  category   Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orderItems OrderItem[]
+  cartItems  CartItem[]
 
   @@index([vendorId])
   @@index([categoryId])
@@ -278,9 +281,9 @@ model Service {
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
   // Relations
-  provider        ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  category        Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  bookings        Booking[]
+  provider ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  category Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  bookings Booking[]
 
   @@index([providerId])
   @@index([categoryId])
@@ -288,7 +291,6 @@ model Service {
   @@index([status, isAvailable])
   @@map("services")
 }
-
 
 // ===========================================
 // Orders Enums
@@ -332,11 +334,12 @@ model Order {
   updatedAt       DateTime        @updatedAt @map("updated_at")
 
   // Relations
-  customer        User            @relation("CustomerOrders", fields: [customerId], references: [id])
-  vendor          Vendor          @relation(fields: [vendorId], references: [id])
-  driver          User?           @relation("DriverOrders", fields: [driverId], references: [id])
-  items           OrderItem[]
-  refunds         Refund[]
+  customer User                @relation("CustomerOrders", fields: [customerId], references: [id])
+  vendor   Vendor              @relation(fields: [vendorId], references: [id])
+  driver   User?               @relation("DriverOrders", fields: [driverId], references: [id])
+  items    OrderItem[]
+  refunds  Refund[]
+  delivery DeliveryAssignment?
 
   @@index([customerId])
   @@index([vendorId])
@@ -358,8 +361,8 @@ model OrderItem {
   createdAt   DateTime @default(now()) @map("created_at")
 
   // Relations
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
@@ -384,20 +387,20 @@ enum ActorRole {
 // ===========================================
 
 model AuditLog {
-  id          String    @id @default(uuid())
-  actorId     String?   @map("actor_id")
-  actorRole   ActorRole @map("actor_role")
-  action      String    // e.g., "order.status_changed", "payment.refunded"
-  entityType  String    @map("entity_type") // e.g., "order", "payment", "user"
-  entityId    String    @map("entity_id")
-  diff        Json?     // Before/after changes
-  metadata    Json?     // Additional context
-  ipAddress   String?   @map("ip_address")
-  userAgent   String?   @map("user_agent") @db.Text
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id         String    @id @default(uuid())
+  actorId    String?   @map("actor_id")
+  actorRole  ActorRole @map("actor_role")
+  action     String // e.g., "order.status_changed", "payment.refunded"
+  entityType String    @map("entity_type") // e.g., "order", "payment", "user"
+  entityId   String    @map("entity_id")
+  diff       Json? // Before/after changes
+  metadata   Json? // Additional context
+  ipAddress  String?   @map("ip_address")
+  userAgent  String?   @map("user_agent") @db.Text
+  createdAt  DateTime  @default(now()) @map("created_at")
 
   // Relations
-  actor       User?     @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
 
   @@index([actorId])
   @@index([entityType, entityId])
@@ -462,7 +465,7 @@ model Payment {
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
   // Relations
-  refunds         Refund[]
+  refunds Refund[]
 
   @@index([idempotencyKey])
   @@index([payableType, payableId])
@@ -490,10 +493,10 @@ model Refund {
   createdAt     DateTime     @default(now()) @map("created_at")
 
   // Relations
-  payment       Payment      @relation(fields: [paymentId], references: [id])
-  order         Order?       @relation(fields: [orderId], references: [id])
-  booking       Booking?     @relation("BookingRefunds", fields: [bookingId], references: [id])
-  createdBy     User         @relation(fields: [createdById], references: [id])
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  order     Order?   @relation(fields: [orderId], references: [id])
+  booking   Booking? @relation("BookingRefunds", fields: [bookingId], references: [id])
+  createdBy User     @relation(fields: [createdById], references: [id])
 
   @@index([paymentId])
   @@index([orderId])
@@ -501,7 +504,6 @@ model Refund {
   @@index([createdAt])
   @@map("refunds")
 }
-
 
 // ===========================================
 // Booking Enums
@@ -521,38 +523,38 @@ enum BookingStatus {
 // ===========================================
 
 model Booking {
-  id              String        @id @default(uuid())
-  bookingNumber   String        @unique @map("booking_number")
-  customerId      String        @map("customer_id")
-  providerId      String        @map("provider_id")
-  serviceId       String        @map("service_id")
-  
+  id            String @id @default(uuid())
+  bookingNumber String @unique @map("booking_number")
+  customerId    String @map("customer_id")
+  providerId    String @map("provider_id")
+  serviceId     String @map("service_id")
+
   // Scheduling
-  scheduledDate   DateTime      @map("scheduled_date") @db.Date
-  scheduledTime   DateTime?     @map("scheduled_time") @db.Time(0) // For appointment type
-  endTime         DateTime?     @map("end_time") @db.Time(0) // Calculated from duration
-  
+  scheduledDate DateTime  @map("scheduled_date") @db.Date
+  scheduledTime DateTime? @map("scheduled_time") @db.Time(0) // For appointment type
+  endTime       DateTime? @map("end_time") @db.Time(0) // Calculated from duration
+
   // Pricing (snapshot at booking time)
-  price           Decimal       @db.Decimal(10, 3) // BHD 3 decimals
-  commission      Decimal       @db.Decimal(10, 3)
-  total           Decimal       @db.Decimal(10, 3)
-  
+  price      Decimal @db.Decimal(10, 3) // BHD 3 decimals
+  commission Decimal @db.Decimal(10, 3)
+  total      Decimal @db.Decimal(10, 3)
+
   // Status and details
-  status          BookingStatus @default(PENDING)
-  serviceAddress  Json?         @map("service_address") // For home services
-  notes           String?       @db.Text
-  cancellationReason String?    @map("cancellation_reason") @db.Text
-  cancelledAt     DateTime?     @map("cancelled_at")
-  cancelledBy     String?       @map("cancelled_by") // user_id who cancelled
-  
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
+  status             BookingStatus @default(PENDING)
+  serviceAddress     Json?         @map("service_address") // For home services
+  notes              String?       @db.Text
+  cancellationReason String?       @map("cancellation_reason") @db.Text
+  cancelledAt        DateTime?     @map("cancelled_at")
+  cancelledBy        String?       @map("cancelled_by") // user_id who cancelled
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  customer        User          @relation("CustomerBookings", fields: [customerId], references: [id])
-  provider        ServiceProvider @relation(fields: [providerId], references: [id])
-  service         Service       @relation(fields: [serviceId], references: [id])
-  refunds         Refund[]      @relation("BookingRefunds")
+  customer User            @relation("CustomerBookings", fields: [customerId], references: [id])
+  provider ServiceProvider @relation(fields: [providerId], references: [id])
+  service  Service         @relation(fields: [serviceId], references: [id])
+  refunds  Refund[]        @relation("BookingRefunds")
 
   @@index([customerId])
   @@index([providerId])
@@ -562,7 +564,6 @@ model Booking {
   @@index([bookingNumber])
   @@map("bookings")
 }
-
 
 // ===========================================
 // Availability Enums
@@ -579,8 +580,8 @@ enum DayOfWeek {
 }
 
 enum OverrideType {
-  AVAILABLE    // Override to make available (e.g., working on a holiday)
-  UNAVAILABLE  // Override to make unavailable (e.g., vacation day)
+  AVAILABLE // Override to make available (e.g., working on a holiday)
+  UNAVAILABLE // Override to make unavailable (e.g., vacation day)
 }
 
 // ===========================================
@@ -591,17 +592,17 @@ enum OverrideType {
 
 // Weekly recurring availability rules
 model AvailabilityRule {
-  id          String      @id @default(uuid())
-  providerId  String      @map("provider_id")
-  dayOfWeek   DayOfWeek   @map("day_of_week")
-  startTime   DateTime    @map("start_time") @db.Time(0) // e.g., 09:00
-  endTime     DateTime    @map("end_time") @db.Time(0)   // e.g., 17:00
-  isActive    Boolean     @default(true) @map("is_active")
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
+  id         String    @id @default(uuid())
+  providerId String    @map("provider_id")
+  dayOfWeek  DayOfWeek @map("day_of_week")
+  startTime  DateTime  @map("start_time") @db.Time(0) // e.g., 09:00
+  endTime    DateTime  @map("end_time") @db.Time(0) // e.g., 17:00
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
 
   // Relations
-  provider    ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  provider ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, dayOfWeek, startTime, endTime])
   @@index([providerId])
@@ -611,19 +612,19 @@ model AvailabilityRule {
 
 // Date-specific overrides (holidays, vacations, special hours)
 model AvailabilityOverride {
-  id          String       @id @default(uuid())
-  providerId  String       @map("provider_id")
-  date        DateTime     @db.Date
-  type        OverrideType
+  id         String       @id @default(uuid())
+  providerId String       @map("provider_id")
+  date       DateTime     @db.Date
+  type       OverrideType
   // If AVAILABLE, these define the available hours (null = use weekly rule times)
-  startTime   DateTime?    @map("start_time") @db.Time(0)
-  endTime     DateTime?    @map("end_time") @db.Time(0)
-  reason      String?      // e.g., "Holiday", "Vacation", "Special event"
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
+  startTime  DateTime?    @map("start_time") @db.Time(0)
+  endTime    DateTime?    @map("end_time") @db.Time(0)
+  reason     String? // e.g., "Holiday", "Vacation", "Special event"
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
 
   // Relations
-  provider    ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  provider ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, date, startTime])
   @@index([providerId])
@@ -638,34 +639,33 @@ model AvailabilitySettings {
   timezone            String   @default("Asia/Bahrain") // IANA timezone
   slotDurationMinutes Int      @default(30) @map("slot_duration_minutes") // Default slot size
   bufferBeforeMinutes Int      @default(0) @map("buffer_before_minutes") // Break before appointment
-  bufferAfterMinutes  Int      @default(0) @map("buffer_after_minutes")  // Break after appointment
+  bufferAfterMinutes  Int      @default(0) @map("buffer_after_minutes") // Break after appointment
   minAdvanceHours     Int      @default(24) @map("min_advance_hours") // Minimum booking notice
-  maxAdvanceDays      Int      @default(30) @map("max_advance_days")  // How far ahead can book
+  maxAdvanceDays      Int      @default(30) @map("max_advance_days") // How far ahead can book
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
   // Relations
-  provider            ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  provider ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@map("availability_settings")
 }
-
 
 // ===========================================
 // Shopping Cart
 // ===========================================
 
 model Cart {
-  id        String     @id @default(uuid())
-  userId    String     @unique @map("user_id") // One cart per user
-  vendorId  String?    @map("vendor_id") // Locked to single vendor when items exist
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id") // One cart per user
+  vendorId  String?  @map("vendor_id") // Locked to single vendor when items exist
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  vendor    Vendor?    @relation(fields: [vendorId], references: [id], onDelete: SetNull)
-  items     CartItem[]
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vendor Vendor?    @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+  items  CartItem[]
 
   @@index([userId])
   @@index([vendorId])
@@ -681,15 +681,14 @@ model CartItem {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId]) // One entry per product per cart
   @@index([cartId])
   @@index([productId])
   @@map("cart_items")
 }
-
 
 // ===========================================
 // Reviews
@@ -714,18 +713,128 @@ model Review {
   reviewerId     String         @map("reviewer_id")
   reviewableType ReviewableType @map("reviewable_type")
   reviewableId   String         @map("reviewable_id")
-  rating         Int            // 1-5
+  rating         Int // 1-5
   comment        String?        @db.Text
   status         ReviewStatus   @default(PENDING)
   createdAt      DateTime       @default(now()) @map("created_at")
   updatedAt      DateTime       @updatedAt @map("updated_at")
 
   // Relations
-  reviewer       User           @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewer User @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
 
   @@unique([reviewerId, reviewableType, reviewableId]) // One review per user per reviewable
   @@index([reviewerId])
   @@index([reviewableType, reviewableId])
   @@index([status])
   @@map("reviews")
+}
+
+// ===========================================
+// Application & Driver Enums (S3-02)
+// ===========================================
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DriverStatus {
+  AVAILABLE
+  BUSY
+  OFFLINE
+  SUSPENDED
+}
+
+enum DeliveryStatus {
+  ASSIGNED
+  PICKED_UP
+  DELIVERED
+  CANCELLED
+}
+
+// ===========================================
+// Vendor & Provider Applications (S3-02)
+// ===========================================
+
+model VendorApplication {
+  id           String            @id @default(uuid())
+  userId       String            @map("user_id")
+  businessName String            @map("business_name")
+  crNumber     String?           @map("cr_number") // Commercial Registration Number
+  category     VendorCategory
+  description  String?           @db.Text
+  status       ApplicationStatus @default(PENDING)
+  notes        String?           @db.Text // Admin notes
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("vendor_applications")
+}
+
+model ProviderApplication {
+  id             String            @id @default(uuid())
+  userId         String            @map("user_id")
+  businessName   String            @map("business_name")
+  category       ProviderCategory
+  qualifications String?           @db.Text // Professional qualifications, certifications
+  description    String?           @db.Text
+  status         ApplicationStatus @default(PENDING)
+  notes          String?           @db.Text // Admin notes
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("provider_applications")
+}
+
+// ===========================================
+// Driver & Delivery (S3-02)
+// ===========================================
+
+model Driver {
+  id            String       @id @default(uuid())
+  userId        String       @unique @map("user_id")
+  vehicleType   String       @map("vehicle_type") // e.g., "Motorcycle", "Car", "Van"
+  vehiclePlate  String?      @map("vehicle_plate")
+  licenseNumber String       @map("license_number")
+  status        DriverStatus @default(OFFLINE)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  user       User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries DeliveryAssignment[]
+
+  @@index([status])
+  @@map("drivers")
+}
+
+model DeliveryAssignment {
+  id           String         @id @default(uuid())
+  orderId      String         @unique @map("order_id")
+  driverId     String         @map("driver_id")
+  status       DeliveryStatus @default(ASSIGNED)
+  pickupTime   DateTime?      @map("pickup_time")
+  deliveryTime DateTime?      @map("delivery_time")
+  notes        String?        @db.Text
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driver Driver @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([driverId])
+  @@index([status])
+  @@map("delivery_assignments")
 }
