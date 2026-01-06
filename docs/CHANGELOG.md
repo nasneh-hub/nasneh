@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#176:** Copy Tokens (ar/en/terminology) - S3.8-02
 - **#175:** Design Tokens (tokens.css) - S3.8-01
 - **#172:** implement driver and delivery APIs
 - **#171:** implement admin dashboard stats API
@@ -89,6 +90,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#176:** Copy Tokens (ar/en/terminology) - S3.8-02
 - **#175:** Design Tokens (tokens.css) - S3.8-01
 - **#172:** implement driver and delivery APIs
 - **#171:** implement admin dashboard stats API
@@ -103,6 +105,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#176:** Copy Tokens (ar/en/terminology) - S3.8-02
 - **#175:** Design Tokens (tokens.css) - S3.8-01
 - **#172:** implement driver and delivery APIs
 - **#171:** implement admin dashboard stats API

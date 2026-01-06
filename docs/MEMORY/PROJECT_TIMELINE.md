@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 09:46:03 | Added (ui): Copy Tokens (ar/en/terminology) - S3.8-02 | PR #176 | @nasneh-hub |
 | 08:52:18 | Added (ui): Design Tokens (tokens.css) - S3.8-01 | PR #175 | @nasneh-hub |
 
 ---
