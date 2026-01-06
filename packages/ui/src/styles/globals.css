@@ -1,0 +1,120 @@
+/**
+ * Nasneh Global Styles
+ * 
+ * Imports design tokens and sets up base styles.
+ * Import this file in your app's root layout.
+ */
+
+/* Import design tokens (THE SOURCE OF TRUTH) */
+@import './tokens.css';
+
+/* ============================================
+ * BASE STYLES
+ * ============================================ */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+ * TYPOGRAPHY
+ * ============================================ */
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+}
+
+p {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.6;
+}
+
+small {
+  font-size: var(--font-size-small);
+}
+
+/* ============================================
+ * LINKS
+ * ============================================ */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+ * FOCUS STATES
+ * Use ring instead of border
+ * ============================================ */
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ring-offset) var(--bg-primary),
+              0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
+}
+
+/* ============================================
+ * DARK MODE
+ * ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+  }
+}
+
+/* ============================================
+ * RTL SUPPORT
+ * ============================================ */
+
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+}

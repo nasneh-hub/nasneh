@@ -1,0 +1,211 @@
+/**
+ * Nasneh Design Tokens
+ * 
+ * THE SINGLE SOURCE OF TRUTH for all design values.
+ * 
+ * Source: docs/SPECS/DESIGN_SYSTEM.md
+ * Version: 3.0
+ * Last Updated: January 2026
+ * 
+ * CRITICAL RULES:
+ * - ALL color values MUST come from this file
+ * - NO hex colors allowed anywhere else in the codebase
+ * - NO Tailwind color classes (bg-white, text-black, etc.)
+ * - Use CSS variables: var(--bg-primary), var(--text-primary), etc.
+ */
+
+:root {
+  /* ============================================
+   * TYPOGRAPHY
+   * Source: DESIGN_SYSTEM.md Section 4.1
+   * ============================================ */
+  --font-family-primary: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  
+  /* Font Sizes - Section 4.2 */
+  --font-size-h1: 2rem;        /* 32px */
+  --font-size-h2: 1.5rem;      /* 24px */
+  --font-size-h3: 1.25rem;     /* 20px */
+  --font-size-h4: 1.125rem;    /* 18px */
+  --font-size-body: 1rem;      /* 16px */
+  --font-size-small: 0.875rem; /* 14px */
+  --font-size-caption: 0.75rem;/* 12px */
+  
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* ============================================
+   * SPACING
+   * Source: DESIGN_SYSTEM.md Section 5
+   * Base Unit: 4px
+   * ============================================ */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 0.75rem;   /* 12px */
+  --spacing-lg: 1rem;      /* 16px */
+  --spacing-xl: 1.5rem;    /* 24px */
+  --spacing-2xl: 2rem;     /* 32px */
+  --spacing-3xl: 3rem;     /* 48px */
+  --spacing-4xl: 4rem;     /* 64px */
+  
+  /* ============================================
+   * BORDER RADIUS
+   * Source: DESIGN_SYSTEM.md Section 6
+   * Standard: 12px for EVERYTHING
+   * Exception: rounded-full for icon buttons
+   * ============================================ */
+  --radius-standard: 0.75rem;  /* 12px - USE FOR EVERYTHING */
+  --radius-full: 9999px;       /* rounded-full - ONLY for icon buttons */
+  
+  /* ============================================
+   * COMPONENT HEIGHTS
+   * Source: DESIGN_SYSTEM.md Section 8
+   * ============================================ */
+  --height-xs: 2rem;      /* 32px - Compact buttons */
+  --height-sm: 2.5rem;    /* 40px - Small inputs */
+  --height-md: 3rem;      /* 48px - Default (buttons, inputs) */
+  --height-lg: 3.5rem;    /* 56px - Large buttons */
+  
+  /* ============================================
+   * COLORS - LIGHT MODE
+   * Source: DESIGN_SYSTEM.md Section 3
+   * Mono Palette (Primary) - Section 3.1
+   * ============================================ */
+  
+  /* Background Colors */
+  --bg-primary: #FFFFFF;      /* Page background */
+  --bg-secondary: #FAFAFA;    /* Section background */
+  --bg-tertiary: #F5F5F5;     /* Card background */
+  --bg-hover: #F3F4F6;        /* Hover states */
+  
+  /* Input Backgrounds */
+  --input-bg: #F5F5F5;        /* Default input background */
+  --input-bg-error: #FEE2E2;  /* Error state */
+  --input-bg-success: #D1FAE5;/* Success state */
+  
+  /* Text Colors */
+  --text-primary: #000000;    /* Main text */
+  --text-secondary: #6B7280;  /* Secondary text */
+  --text-tertiary: #9CA3AF;   /* Placeholder text */
+  
+  /* ============================================
+   * SEMANTIC COLORS (Status Only)
+   * Source: DESIGN_SYSTEM.md Section 3.2
+   * Use ONLY for status indicators, badges, alerts
+   * ============================================ */
+  --color-success: #10B981;   /* Completed, approved */
+  --color-warning: #F59E0B;   /* Pending, attention */
+  --color-danger: #EF4444;    /* Error, cancelled */
+  --color-info: #3B82F6;      /* Information */
+  
+  /* ============================================
+   * SHADOWS
+   * Subtle shadows for depth (no borders)
+   * ============================================ */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  
+  /* ============================================
+   * FOCUS RING
+   * Use ring instead of border for focus states
+   * ============================================ */
+  --ring-width: 2px;
+  --ring-offset: 2px;
+  --ring-color: #000000;      /* Black ring for focus */
+}
+
+/* ============================================
+ * DARK MODE
+ * Source: DESIGN_SYSTEM.md Section 11
+ * ============================================ */
+.dark {
+  /* Background Colors */
+  --bg-primary: #0A0A0A;      /* Page background */
+  --bg-secondary: #111111;    /* Section background */
+  --bg-tertiary: #1A1A1A;     /* Card background */
+  --bg-hover: #1F1F1F;        /* Hover states */
+  
+  /* Input Backgrounds */
+  --input-bg: #262626;        /* Default input background */
+  --input-bg-error: #450A0A;  /* Error state */
+  --input-bg-success: #052E16;/* Success state */
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;    /* Main text */
+  --text-secondary: #9CA3AF;  /* Secondary text */
+  --text-tertiary: #6B7280;   /* Placeholder text */
+  
+  /* Semantic Colors (adjusted for dark mode) */
+  --color-success: #34D399;   /* Brighter green for dark bg */
+  --color-warning: #FCD34D;   /* Brighter yellow for dark bg */
+  --color-danger: #F87171;    /* Brighter red for dark bg */
+  --color-info: #60A5FA;      /* Brighter blue for dark bg */
+  
+  /* Focus Ring */
+  --ring-color: #FFFFFF;      /* White ring for dark mode */
+}
+
+/* ============================================
+ * RESPONSIVE BREAKPOINTS
+ * Source: DESIGN_SYSTEM.md Section 12
+ * Mobile-first approach
+ * ============================================ */
+/* 
+  sm:  640px   - Mobile landscape
+  md:  768px   - Tablet
+  lg:  1024px  - Laptop
+  xl:  1280px  - Desktop
+  2xl: 1536px  - Large desktop
+*/
+
+/* ============================================
+ * USAGE EXAMPLES
+ * ============================================ */
+/*
+  Button:
+  .button {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-radius: var(--radius-standard);
+    height: var(--height-md);
+    padding: 0 var(--spacing-lg);
+  }
+  
+  Input:
+  .input {
+    background: var(--input-bg);
+    border-radius: var(--radius-standard);
+    height: var(--height-md);
+  }
+  
+  Card:
+  .card {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-standard);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+  }
+*/
+
+/* ============================================
+ * FORBIDDEN PATTERNS
+ * ============================================ */
+/*
+  ❌ NEVER use:
+  - Hex colors directly (#FFFFFF, #000000)
+  - Tailwind color classes (bg-white, text-black)
+  - border-* classes
+  - rounded-sm, rounded-md, rounded-lg
+  - Multiple fonts
+  - Gradients
+  - Decorative colors
+  
+  ✅ ALWAYS use:
+  - CSS variables from this file
+  - var(--bg-primary), var(--text-primary), etc.
+  - var(--radius-standard) for all components
+  - var(--radius-full) ONLY for icon buttons
+*/
