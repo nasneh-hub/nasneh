@@ -120,7 +120,19 @@ curl /api/v1/products
 
 ## Next Steps
 
-### Sprint 3: Core API Completion (Jan 5) — ✅ COMPLETE
+### Sprint 3.8: UI Foundation (Jan 6-8) - 🚧 IN PROGRESS
+
+- [ ] [S3.8-01] Design Tokens (3 SP)
+- [ ] [S3.8-02] Copy Tokens (4 SP)
+- [ ] [S3.8-03] Vazirmatn Fonts (1 SP)
+- [ ] [S3.8-04] UI Law Document (2 SP)
+- [ ] [S3.8-05] BRAND_VOICE.md (1 SP)
+- [ ] [S3.8-06] Component Specs (3 SP)
+- [ ] [S3.8-07] CI Lint Rules (3 SP)
+- [ ] [S3.8-08] Docs + CODEOWNERS (2 SP)
+- [ ] [S3.8-09] Audit & Gap Analysis (2 SP)
+
+## Sprint 3: Core API Completion (Jan 5) — ✅ COMPLETE
 - [x] [S3-01] Categories API (2 SP) — PR #167
 - [x] [S3-02] Onboarding & Delivery DB Models (2 SP) — PR #168
 - [x] [S3-03] Vendor/Provider Application APIs (6 SP) — PR #169

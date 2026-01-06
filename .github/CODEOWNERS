@@ -1,0 +1,14 @@
+# These owners will be automatically requested for review when someone opens a pull request.
+
+# Critical infrastructure and configuration
+.github/workflows/ @nasneh-hub
+
+# UI components and design system
+packages/ui/ @nasneh-hub
+docs/SPECS/ @nasneh-hub
+
+# API and database schema
+apps/api/ @nasneh-hub
+
+# Documentation
+docs/ @nasneh-hub

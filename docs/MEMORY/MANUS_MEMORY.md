@@ -15,6 +15,18 @@
 
 ---
 
+## UI Law Quick Reference
+
+| Law | Rule | Source |
+|:---|:---|:---|
+| **Law #1** | NO BORDERS ANYWHERE | [UI_LAW.md](../SPECS/UI_LAW.md) |
+| **Law #2** | ONLY rounded-xl (12px) OR rounded-full | [UI_LAW.md](../SPECS/UI_LAW.md) |
+| **Law #3** | ONLY MONO COLORS (Except Semantic) | [UI_LAW.md](../SPECS/UI_LAW.md) |
+| **Law #4** | ONLY Vazirmatn Font | [UI_LAW.md](../SPECS/UI_LAW.md) |
+| **Law #5** | ONLY @nasneh/ui Components | [UI_LAW.md](../SPECS/UI_LAW.md) |
+
+---
+
 ## Key Technical Decisions
 
 | Decision | Choice | Source |
@@ -378,7 +390,9 @@ Add migration step to CD pipeline:
 
 ---
 
-## Complete API Inventory (Updated Jan 5, 2026 - Sprint 3 Complete)
+## Complet## API Inventory
+
+**Status:** 101 endpoints across 16 modules(Updated Jan 5, 2026 - Sprint 3 Complete)
 
 **Total Endpoints:** 101 (86 from Sprint 1-2 + 15 from Sprint 3)
 

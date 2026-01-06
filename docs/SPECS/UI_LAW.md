@@ -337,7 +337,9 @@ import { Button, Input, Card } from '@nasneh/ui';
 
 ---
 
-## Related Documents
+## Related Documentation
+
+- **Component Specs:** `COMPONENT_SPECS.md` - Detailed specs for all 12 core components
 
 - **Design System:** `docs/SPECS/DESIGN_SYSTEM.md` - Full design specifications
 - **Brand Voice:** `docs/SPECS/BRAND_VOICE.md` - Copy and terminology rules

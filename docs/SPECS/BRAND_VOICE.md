@@ -6,7 +6,13 @@
 **Location:** `docs/SPECS/BRAND_VOICE.md`
 * * *
 
-## 1\. Core Philosophy
+### Related Documentation
+
+- **UI Law:** `UI_LAW.md` - The 5 strict laws for UI development
+
+---
+
+## 1. Core Philosophy
 
 ### Nasneh = Local
 

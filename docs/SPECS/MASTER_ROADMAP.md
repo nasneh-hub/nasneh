@@ -190,6 +190,22 @@ This section provides the complete technical specifications for every task requi
 
 ---
 
+### Sprint 3.8: UI Foundation (Jan 6-8) - 🚧 IN PROGRESS
+
+| Task ID | Description | SP | Status |
+|:---|:---|:---:|:---|
+| S3.8-01 | Create Design Tokens (`tokens.css`) | 3 | ✅ Done |
+| S3.8-02 | Create Copy Tokens (`ar.ts`, `en.ts`) | 4 | ✅ Done |
+| S3.8-03 | Add Vazirmatn Fonts | 1 | ✅ Done |
+| S3.8-04 | Create UI Law Document | 2 | ✅ Done |
+| S3.8-05 | Create BRAND_VOICE.md | 1 | ✅ Done |
+| S3.8-06 | Create Component Specs (12 Core) | 3 | ✅ Done |
+| S3.8-07 | Create CI Lint Rules | 3 | ✅ Done |
+| S3.8-08 | Update All Documentation Links | 2 | 🚧 In Progress |
+| S3.8-09 | Manus Audit & Gap Analysis | 2 | 🚧 In Progress |
+
+---
+
 ### Sprint 4: Frontend Foundation & Auth (Jan 12 - Jan 18)
 
 *   **Goal:** Build the foundational UI/UX and implement the complete authentication flow for both web apps.

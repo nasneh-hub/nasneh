@@ -40,6 +40,16 @@
 
 - 
 
+## UI Law Checklist (For UI Changes Only)
+
+<!-- Skip this section if your PR does not touch UI code -->
+
+- [ ] **Law #1: NO BORDERS** - Used backgrounds/shadows instead
+- [ ] **Law #2: ONLY rounded-xl or rounded-full** - No other radius values used
+- [ ] **Law #3: ONLY MONO COLORS** - Color used only for semantic status
+- [ ] **Law #4: ONLY Vazirmatn Font** - No other fonts used
+- [ ] **Law #5: ONLY @nasneh/ui Components** - No custom or third-party components
+
 ## Testing
 
 <!-- How was this tested? -->

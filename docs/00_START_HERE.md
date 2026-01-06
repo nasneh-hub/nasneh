@@ -16,7 +16,7 @@
 
 | Metric | Value |
 |--------|-------|
-| **MVP Readiness** | 65% |
+| **MVP Readiness** | 85% |
 | **Current Phase** | Sprint 3 |
 | **Target Launch** | Feb 2, 2026 |
 
@@ -57,6 +57,10 @@
 | Payments | Amazon Payment Services (APS) |
 
 ---
+
+## UI Law (CRITICAL)
+
+**MUST READ:** [`SPECS/UI_LAW.md`](SPECS/UI_LAW.md) - The 5 strict laws for UI development.
 
 ## Design Rules (CRITICAL)
 
