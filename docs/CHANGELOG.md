@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### 🚀 CI/CD (ci)
+- **#181:** add UI Law enforcement workflow
 - **#145:** install Phase 6 automation
 - **#144:** add dependabot, release notes, labels, stale bot, and PR size check
 - **#142:** switch to unified auto-docs workflow
