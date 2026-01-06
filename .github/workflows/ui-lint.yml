@@ -1,0 +1,451 @@
+
+cd /workspaces/nasneh && git checkout main && git pull origin main && git checkout -b ci/s3.8-07-ui-lint && mkdir -p .github/workflows && cat > .github/workflows/ui-lint.yml << 'WORKFLOW_EOF'
+
+name: 🚨 UI Law Enforcement
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**/*.tsx'
+      - 'apps/**/*.ts'
+      - 'apps/**/*.css'
+      - 'packages/ui/**/*.tsx'
+      - 'packages/ui/**/*.ts'
+      - 'packages/ui/**/*.css'
+
+jobs:
+  ui-law-check:
+    name: UI Law Compliance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: 'Law 3: Check for Hex Colors'
+        id: check-hex-colors
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for hex colors (#FFFFFF, #000, etc.)..."
+          
+          # Search for hex colors in code (not in comments)
+          VIOLATIONS=$(grep -r -n -E '(#[0-9A-Fa-f]{3,8})' \
+            --include="*.tsx" --include="*.ts" --include="*.css" \
+            apps/ packages/ui/ \
+            | grep -v -E '(//|/\*|\*)' \
+            | grep -v 'tokens.css' \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Hex colors found"
+            echo ""
+            echo "Hex colors are forbidden. Use CSS variables from tokens.css instead."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
+            echo ""
+            echo "✅ Correct: var(--text-primary)"
+            echo "❌ Wrong: #000000"
+            exit 1
+          else
+            echo "✅ PASS: No hex colors found"
+          fi
+
+      - name: 'Law 3: Check for Tailwind Color Classes'
+        id: check-tailwind-colors
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for Tailwind color classes (bg-white, text-black, etc.)..."
+          
+          # Search for Tailwind color classes (except semantic colors)
+          VIOLATIONS=$(grep -r -n -E '(bg|text|border)-(white|black|gray|red|blue|green|yellow|purple|pink|indigo|orange)-[0-9]{2,3}' \
+            --include="*.tsx" --include="*.ts" --include="*.css" \
+            apps/ packages/ui/ \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Tailwind color classes found"
+            echo ""
+            echo "Tailwind color classes are forbidden. Use CSS variables from tokens.css instead."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
+            echo ""
+            echo "✅ Correct: var(--bg-primary)"
+            echo "❌ Wrong: bg-gray-100"
+            exit 1
+          else
+            echo "✅ PASS: No Tailwind color classes found"
+          fi
+
+      - name: 'Law 3: Check for Inline Styles'
+        id: check-inline-styles
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for inline styles (style={{...}})..."
+          
+          # Search for inline styles
+          VIOLATIONS=$(grep -r -n -E 'style=\{\{' \
+            --include="*.tsx" --include="*.ts" \
+            apps/ packages/ui/ \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Inline styles found"
+            echo ""
+            echo "Inline styles are forbidden. Use CSS classes with tokens.css variables."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
+            echo ""
+            echo "✅ Correct: className=\"text-primary\""
+            echo "❌ Wrong: style={{ color: '#000' }}"
+            exit 1
+          else
+            echo "✅ PASS: No inline styles found"
+          fi
+
+      - name: 'Law 1: Check for Border Classes'
+        id: check-borders
+        continue-on-error: true
+        run: |
+          echo "�� Checking for border classes (border-*, border, etc.)..."
+          
+          # Search for border classes
+          VIOLATIONS=$(grep -r -n -E '\bborder(-[a-z]+)?\b' \
+            --include="*.tsx" --include="*.ts" --include="*.css" \
+            apps/ packages/ui/ \
+            | grep -v 'border-radius' \
+            | grep -v 'node_modules' \
+            | grep -v 'tokens.css' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Border classes found"
+            echo ""
+            echo "Borders are FORBIDDEN. Use backgrounds, shadows, or spacing instead."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #1"
+            echo ""
+            echo "✅ Correct: bg-tertiary shadow-sm"
+            echo "❌ Wrong: border border-gray-300"
+            exit 1
+          else
+            echo "✅ PASS: No border classes found"
+          fi
+
+      - name: 'Law 2: Check for Invalid Border Radius'
+        id: check-border-radius
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for invalid border radius (only rounded-xl and rounded-full allowed)..."
+          
+          # Search for invalid rounded classes
+          VIOLATIONS=$(grep -r -n -E 'rounded-(none|sm|md|lg|2xl|3xl)' \
+            --include="*.tsx" --include="*.ts" --include="*.css" \
+            apps/ packages/ui/ \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Invalid border radius found"
+            echo ""
+            echo "Only rounded-xl (standard) and rounded-full (icon buttons/avatar) are allowed."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #2"
+            echo ""
+            echo "✅ Correct: rounded-xl (standard), rounded-full (icon buttons)"
+            echo "❌ Wrong: rounded-sm, rounded-md, rounded-lg"
+            exit 1
+          else
+            echo "✅ PASS: Only valid border radius found"
+          fi
+
+      - name: 'Brand Voice: Forbidden Terminology Check'
+        id: check-forbidden-terms
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for forbidden terminology..."
+          
+          # Search for forbidden terms (excluding /copy/ and terminology.ts)
+          VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|customer|buyer|seller|vendor|merchant|cheap|budget|local)' \
+            --include="*.tsx" --include="*.ts" \
+            apps/ packages/ui/ \
+            | grep -v '/copy/' \
+            | grep -v 'terminology.ts' \
+            | grep -v 'node_modules' \
+            | grep -v -E '(//|/\*|\*)' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Forbidden terminology found"
+            echo ""
+            echo "These terms are forbidden:"
+            echo "  Arabic: زبون، بائع، محلي، رخيص"
+            echo "  English: customer, buyer, seller, vendor, merchant, cheap, budget, local"
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/BRAND_VOICE.md - Section 4"
+            echo ""
+            echo "✅ Correct: Use copy tokens (ar.ui.supporter, ar.ui.nasneh)"
+            echo "❌ Wrong: Hardcoded forbidden terms"
+            exit 1
+          else
+            echo "✅ PASS: No forbidden terminology found"
+          fi
+
+      - name: 'Copy Tokens: Check for Hardcoded Arabic Text'
+        id: check-hardcoded-arabic
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for hardcoded Arabic text..."
+          
+          # Search for Arabic text (excluding copy tokens and comments)
+          VIOLATIONS=$(grep -r -n -P '[\p{Arabic}]+' \
+            --include="*.tsx" --include="*.ts" \
+            apps/ packages/ui/ \
+            | grep -v '/copy/' \
+            | grep -v 'terminology.ts' \
+            | grep -v 'BRAND_VOICE.md' \
+            | grep -v 'node_modules' \
+            | grep -v -E '(//|/\*|\*)' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Hardcoded Arabic text found"
+            echo ""
+            echo "All Arabic text must come from copy tokens (ar.ts)."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/BRAND_VOICE.md - Section 12"
+            echo ""
+            echo "✅ Correct: {ar.ui.welcome}"
+            echo "❌ Wrong: \"مرحباً\""
+            exit 1
+          else
+            echo "✅ PASS: No hardcoded Arabic text found"
+          fi
+
+      - name: 'Copy Tokens: Check for Common Hardcoded English'
+        id: check-hardcoded-english
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for common hardcoded English UI text..."
+          
+          # Search for common UI text (warning only)
+          VIOLATIONS=$(grep -r -n -E '("(Save|Delete|Edit|Cancel|Submit|Confirm|Back|Next|Loading|Error|Success|Welcome|Login|Logout|Profile|Settings|Search|Filter|Sort|View|Add|Remove|Update|Create)"|>(Save|Delete|Edit|Cancel|Submit|Confirm|Back|Next|Loading|Error|Success|Welcome|Login|Logout|Profile|Settings|Search|Filter|Sort|View|Add|Remove|Update|Create)<)' \
+            --include="*.tsx" --include="*.ts" \
+            apps/ packages/ui/ \
+            | grep -v '/copy/' \
+            | grep -v 'node_modules' \
+            | grep -v -E '(//|/\*|\*)' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "⚠️ WARNING: Common hardcoded English UI text found"
+            echo ""
+            echo "Consider using copy tokens for better i18n support."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/BRAND_VOICE.md - Section 12"
+            echo ""
+            echo "✅ Recommended: {en.ui.save}"
+            echo "⚠️ Found: \"Save\""
+            echo ""
+            echo "Note: This is a warning only, not blocking."
+          else
+            echo "✅ PASS: No common hardcoded English found"
+          fi
+
+      - name: 'Law 4: Check for Non-Vazirmatn Fonts'
+        id: check-font-family
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for non-Vazirmatn fonts..."
+          
+          # Search for fontFamily that's not Vazirmatn or var(--font)
+          VIOLATIONS=$(grep -r -n -E "fontFamily.*['\"](?!Vazirmatn|var\(--font)" \
+            --include="*.tsx" --include="*.ts" --include="*.css" \
+            apps/ packages/ui/ \
+            | grep -v 'node_modules' \
+            | grep -v 'tokens.css' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: Non-Vazirmatn fonts found"
+            echo ""
+            echo "Only Vazirmatn font is allowed."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #4"
+            echo ""
+            echo "✅ Correct: fontFamily: 'var(--font-family-primary)'"
+            echo "❌ Wrong: fontFamily: 'Arial'"
+            exit 1
+          else
+            echo "✅ PASS: Only Vazirmatn font found"
+          fi
+
+      - name: 'Law 5: Check for External UI Libraries'
+        id: check-external-libs
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for external UI library imports..."
+          
+          # Search for imports from external UI libraries
+          VIOLATIONS=$(grep -r -n -E "from ['\"](@mui|antd|react-bootstrap|chakra-ui|mantine|shadcn|@radix-ui|@headlessui)" \
+            --include="*.tsx" --include="*.ts" \
+            apps/ packages/ui/ \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: External UI library imports found"
+            echo ""
+            echo "Only @nasneh/ui components are allowed."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #5"
+            echo ""
+            echo "✅ Correct: import { Button } from '@nasneh/ui'"
+            echo "❌ Wrong: import { Button } from 'antd'"
+            exit 1
+          else
+            echo "✅ PASS: Only @nasneh/ui components imported"
+          fi
+
+      - name: 'Design System: Check for Hardcoded CSS Values'
+        id: check-css-tokens
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for hardcoded CSS values..."
+          
+          # Search for hardcoded values (warning only)
+          VIOLATIONS=$(grep -r -n -E "(height|padding|margin|font-size|border-radius):\\s*[0-9]+(px|rem|em)" \
+            --include="*.css" \
+            apps/ packages/ui/ \
+            | grep -v 'tokens.css' \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "⚠️ WARNING: Hardcoded CSS values found"
+            echo ""
+            echo "Consider using CSS variables from tokens.css for consistency."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: packages/ui/src/styles/tokens.css"
+            echo ""
+            echo "✅ Recommended: height: var(--height-md)"
+            echo "⚠️ Found: height: 48px"
+            echo ""
+            echo "Note: This is a warning only, not blocking."
+            echo "      Hardcoded values are OK for animations or special cases."
+          else
+            echo "✅ PASS: CSS variables used consistently"
+          fi
+
+      - name: 'Law 5: Check for className Prop on @nasneh/ui Components'
+        id: check-classname-prop
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking for className prop on @nasneh/ui components..."
+          
+          # Search for className on UI components
+          VIOLATIONS=$(grep -r -n -E "<(Button|Input|Card|Badge|Dialog|SegmentedControl|Table|Select|Tabs|Avatar|Toast|Skeleton).*className=" \
+            --include="*.tsx" \
+            apps/ packages/ui/src/components/ \
+            | grep -v 'node_modules' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: className prop found on @nasneh/ui components"
+            echo ""
+            echo "className prop is not allowed on @nasneh/ui components to prevent style overrides."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Law #5"
+            echo "📖 See: docs/SPECS/COMPONENT_SPECS.md - Props Interface"
+            echo ""
+            echo "✅ Correct: <Button variant=\"primary\">Click</Button>"
+            echo "❌ Wrong: <Button className=\"my-styles\">Click</Button>"
+            exit 1
+          else
+            echo "✅ PASS: No className prop on @nasneh/ui components"
+          fi
+
+      - name: 'Summary: UI Law Compliance Report'
+        if: always()
+        run: |
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🚨 UI LAW ENFORCEMENT SUMMARY"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "Checks performed:"
+          echo ""
+          echo "  1. ✓ Hex Colors (Law #3)"
+          echo "  2. ✓ Tailwind Color Classes (Law #3)"
+          echo "  3. ✓ Inline Styles (Law #3)"
+          echo "  4. ✓ Border Classes (Law #1)"
+          echo "  5. ✓ Invalid Border Radius (Law #2)"
+          echo "  6. ✓ Forbidden Terminology (Brand Voice)"
+          echo "  7. ✓ Hardcoded Arabic Text (Copy Tokens)"
+          echo "  8. ✓ Hardcoded English Text (Copy Tokens) [Warning]"
+          echo "  9. ✓ Non-Vazirmatn Fonts (Law #4)"
+          echo " 10. ✓ External UI Libraries (Law #5)"
+          echo " 11. ✓ Hardcoded CSS Values (Design System) [Warning]"
+          echo " 12. ✓ className Prop on UI Components (Law #5)"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "📖 Documentation:"
+          echo "  - UI Law: docs/SPECS/UI_LAW.md"
+          echo "  - Brand Voice: docs/SPECS/BRAND_VOICE.md"
+          echo "  - Component Specs: docs/SPECS/COMPONENT_SPECS.md"
+          echo "  - Design Tokens: packages/ui/src/styles/tokens.css"
+          echo "  - Copy Tokens: packages/ui/src/copy/"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          
+          # Check if any critical checks failed
+          if [ "${{ steps.check-hex-colors.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-tailwind-colors.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-inline-styles.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-borders.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-border-radius.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-forbidden-terms.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-hardcoded-arabic.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-font-family.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-external-libs.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-classname-prop.outcome }}" == "failure" ]; then
+            echo "❌ UI LAW VIOLATIONS DETECTED"
+            echo ""
+            echo "This PR cannot be merged until all violations are fixed."
+            echo ""
+            exit 1
+          else
+            echo "✅ ALL CHECKS PASSED"
+            echo ""
+            echo "This PR complies with all UI Laws and Design System rules."
+            echo ""
+          fi
+
