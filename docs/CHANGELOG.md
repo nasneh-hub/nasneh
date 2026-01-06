@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 🔧 Chores (chore)
+- **#184:** remove temporary files from root
+
 ### 🚀 CI/CD (ci)
 - **#181:** add UI Law enforcement workflow
 - **#145:** install Phase 6 automation
