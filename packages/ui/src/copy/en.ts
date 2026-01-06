@@ -1,0 +1,344 @@
+/**
+ * Nasneh English Copy Tokens
+ * 
+ * THE SINGLE SOURCE OF TRUTH for all English UI text.
+ * 
+ * Source: docs/SPECS/BRAND_VOICE.md
+ * Version: 2.0
+ * Last Updated: January 2026
+ * 
+ * CRITICAL RULES:
+ * - ALL English text MUST come from this file
+ * - NO hardcoded English strings in components
+ * - Use: import { en } from '@nasneh/ui/copy'
+ * - Structure MUST match ar.ts exactly
+ */
+
+export const en = {
+  /**
+   * Base UI Vocabulary
+   * Source: Brand Voice Doc Section 4
+   */
+  ui: {
+    // Greetings
+    welcome: 'Welcome',
+    hi: 'Hi there',
+    hello: 'Hello',
+    
+    // Core Terms (Nasneh as noun)
+    nasneh: 'Nasneh',
+    ourNasneh: 'Our Nasneh',
+    allNasneh: 'All Nasneh',
+    featuredNasneh: 'Featured Nasneh',
+    
+    // Community Terms
+    supporters: 'Supporters',
+    community: 'Community',
+    guests: 'Guests',
+    partners: 'Partners',
+    
+    // Quality Terms
+    quality: 'Quality',
+    crafted: 'Crafted',
+    premium: 'Premium',
+    
+    // Growth Terms
+    empowerment: 'Empowerment',
+    growth: 'We grow together',
+    sustainability: 'Sustainability',
+    
+    // Actions
+    browse: 'Browse',
+    search: 'Search',
+    filter: 'Filter',
+    sort: 'Sort',
+    view: 'View',
+    edit: 'Edit',
+    delete: 'Delete',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    save: 'Save',
+    back: 'Back',
+    next: 'Next',
+    previous: 'Previous',
+    close: 'Close',
+    
+    // Status
+    active: 'Active',
+    inactive: 'Inactive',
+    pending: 'Pending',
+    approved: 'Approved',
+    rejected: 'Rejected',
+    completed: 'Completed',
+    cancelled: 'Cancelled',
+    
+    // Common
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    warning: 'Warning',
+    info: 'Info',
+  },
+
+  /**
+   * Platform Categories
+   * Source: Brand Voice Doc Section 2
+   */
+  categories: {
+    freshFood: 'Fresh Food',
+    foodProducts: 'Food Products',
+    crafts: 'Crafts & Goods',
+    foodTrucks: 'Food Trucks',
+    services: 'Services',
+    
+    // Full description
+    allCategories: 'Fresh food, products, crafts, food trucks & services from Bahrain\'s Nasneh',
+  },
+
+  /**
+   * Taglines & Slogans
+   * Source: Brand Voice Doc Section 6
+   */
+  taglines: {
+    primary: 'From us, for us',
+    primaryArabic: 'منّا وفينا',
+    secondary: 'Our people\'s marketplace',
+    supportNasneh: 'Support Nasneh',
+    growTogether: 'We grow together',
+    qualityProud: 'Quality that makes you proud',
+    becomeNasneh: 'Become a Nasneh',
+  },
+
+  /**
+   * CTAs (Calls to Action)
+   * Source: Brand Voice Doc Section 7
+   */
+  cta: {
+    shopNow: 'Shop Now',
+    orderNow: 'Order Now',
+    joinWaitlist: 'Join Waitlist',
+    becomeNasneh: 'Become a Nasneh',
+    browseNasneh: 'Browse Nasneh',
+    supportNasneh: 'Support Nasneh',
+  },
+
+  /**
+   * Authentication
+   */
+  auth: {
+    // Welcome
+    welcome: 'Welcome to Nasneh! 🙌',
+    login: 'Log In',
+    signup: 'Sign Up',
+    logout: 'Log Out',
+    
+    // Forms
+    email: 'Email',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    phone: 'Phone',
+    forgotPassword: 'Forgot Password?',
+    resetPassword: 'Reset Password',
+    
+    // Messages
+    loginSuccess: 'Logged in successfully',
+    signupSuccess: 'Welcome to Nasneh! 🙌',
+    logoutSuccess: 'Logged out successfully',
+    passwordResetSent: 'Password reset link sent',
+  },
+
+  /**
+   * System Messages - Success
+   * Source: Brand Voice Doc Section 8
+   */
+  success: {
+    orderPlaced: 'Order placed! Thanks for your support 🎉',
+    paymentSuccess: 'Payment successful ✓',
+    accountCreated: 'Welcome to Nasneh! 🙌',
+    becameNasneh: 'Congrats! You\'re now a Nasneh 🎉',
+    profileUpdated: 'Profile updated',
+    itemAdded: 'Item added',
+    itemRemoved: 'Item removed',
+    changesSaved: 'Changes saved',
+  },
+
+  /**
+   * System Messages - Errors
+   * Source: Brand Voice Doc Section 8
+   */
+  errors: {
+    paymentFailed: 'Payment failed. Please try again.',
+    outOfStock: 'Sorry, currently unavailable.',
+    networkError: 'Check connection and try again.',
+    invalidEmail: 'Invalid email address',
+    invalidPhone: 'Invalid phone number',
+    passwordTooShort: 'Password too short',
+    passwordMismatch: 'Passwords don\'t match',
+    requiredField: 'This field is required',
+    somethingWrong: 'Something went wrong. Please try again.',
+  },
+
+  /**
+   * Push Notifications
+   * Source: Brand Voice Doc Section 8
+   */
+  notifications: {
+    orderConfirmed: '🎉 Order confirmed! Nasneh is preparing your order',
+    outForDelivery: '🚗 Your order is on the way!',
+    delivered: '✅ Delivered! Thanks for your support',
+    readyForPickup: '📍 Your order is ready for pickup!',
+  },
+
+  /**
+   * Milestone Messages - For Nasneh (Vendors)
+   * Source: Brand Voice Doc Section 9
+   */
+  milestones: {
+    nasneh: {
+      firstSale: 'Congrats on your first order! This is the beginning, we grow together 🎉',
+      hundredOrders: '100 orders! Your craft reaches everywhere 🚀',
+      firstFiveStar: 'First 5-star review! Your quality shines ✨',
+      oneYear: 'One year with us! Thanks for your trust 💙',
+    },
+    
+    customer: {
+      firstOrder: 'First order! Welcome to the Nasneh family 🙌',
+      tenthOrder: 'Your 10th order! Thanks for your continued support 💙',
+    },
+  },
+
+  /**
+   * Apologies
+   * Source: Brand Voice Doc Section 9
+   */
+  apologies: {
+    deliveryDelay: 'We apologize for the delay. Your order is our priority and we\'re following up personally.',
+    orderIssue: 'We apologize for any inconvenience. Our team will contact you.',
+  },
+
+  /**
+   * Seasonal Messages
+   * Source: Brand Voice Doc Section 9
+   */
+  seasonal: {
+    ramadan: 'Ramadan Kareem! Happy Ramadan 🌙',
+    nationalDay: 'Happy National Day! Proud to be part of Bahrain\'s success 🇧🇭',
+  },
+
+  /**
+   * Orders & Shopping
+   */
+  orders: {
+    myOrders: 'My Orders',
+    orderDetails: 'Order Details',
+    orderNumber: 'Order Number',
+    orderDate: 'Order Date',
+    orderStatus: 'Order Status',
+    orderTotal: 'Order Total',
+    trackOrder: 'Track Order',
+    cancelOrder: 'Cancel Order',
+    reorder: 'Reorder',
+    
+    // Cart
+    cart: 'Cart',
+    addToCart: 'Add to Cart',
+    removeFromCart: 'Remove from Cart',
+    emptyCart: 'Cart is empty',
+    checkout: 'Checkout',
+    
+    // Delivery
+    delivery: 'Delivery',
+    deliveryAddress: 'Delivery Address',
+    deliveryFee: 'Delivery Fee',
+    deliveryTime: 'Delivery Time',
+    pickup: 'Pickup',
+    
+    // Payment
+    payment: 'Payment',
+    paymentMethod: 'Payment Method',
+    total: 'Total',
+    subtotal: 'Subtotal',
+  },
+
+  /**
+   * Nasneh Dashboard (Vendor)
+   */
+  dashboard: {
+    dashboard: 'Dashboard',
+    myProducts: 'My Products',
+    myOrders: 'My Orders',
+    myServices: 'My Services',
+    analytics: 'Analytics',
+    settings: 'Settings',
+    profile: 'Profile',
+    
+    // Stats
+    totalSales: 'Total Sales',
+    totalOrders: 'Total Orders',
+    activeProducts: 'Active Products',
+    rating: 'Rating',
+  },
+
+  /**
+   * Products & Services
+   */
+  products: {
+    product: 'Product',
+    products: 'Products',
+    service: 'Service',
+    services: 'Services',
+    
+    price: 'Price',
+    description: 'Description',
+    category: 'Category',
+    availability: 'Availability',
+    inStock: 'In Stock',
+    outOfStock: 'Out of Stock',
+    
+    addProduct: 'Add Product',
+    editProduct: 'Edit Product',
+    deleteProduct: 'Delete Product',
+  },
+
+  /**
+   * Reviews & Ratings
+   */
+  reviews: {
+    reviews: 'Reviews',
+    rating: 'Rating',
+    writeReview: 'Write Review',
+    noReviews: 'No reviews yet',
+    stars: 'stars',
+  },
+
+  /**
+   * Common UI Elements
+   */
+  common: {
+    yes: 'Yes',
+    no: 'No',
+    ok: 'OK',
+    done: 'Done',
+    skip: 'Skip',
+    continue: 'Continue',
+    learnMore: 'Learn More',
+    seeAll: 'See All',
+    showMore: 'Show More',
+    showLess: 'Show Less',
+    readMore: 'Read More',
+    
+    // Time
+    today: 'Today',
+    yesterday: 'Yesterday',
+    tomorrow: 'Tomorrow',
+    now: 'Now',
+    
+    // Validation
+    required: 'Required',
+    optional: 'Optional',
+    invalid: 'Invalid',
+    valid: 'Valid',
+  },
+} as const;
+
+export type EnCopy = typeof en;
