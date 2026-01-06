@@ -1,0 +1,37 @@
+# A. Observability Evidence (CloudWatch & ECS)
+
+## ECS Service Status
+- Service Name: nasneh-staging-api
+- Status: ACTIVE
+- Running Count: 1/1 (desired)
+- Task Definition: nasneh-staging-api:13
+- Deployment Status: COMPLETED
+- Rollout State: ECS deployment completed successfully
+
+## Recent ECS Events (Last 5)
+1. [2026-01-05 08:42:59] Service has reached a steady state
+2. [2026-01-05 08:42:59] Deployment ecs-svc/9089528773619752691 completed
+3. [2026-01-05 08:41:58] Task set has begun draining connections on 1 tasks
+4. [2026-01-05 08:41:58] Deregistered 1 targets in target group
+5. [2026-01-05 08:41:47] Stopped 1 running tasks (old version)
+
+## Target Health (ALB)
+- Target: 10.0.10.94:3000
+- Availability Zone: me-south-1a
+- Health Status: **healthy**
+- Health Check Port: 3000
+- Administrative Override: No override active
+
+## CloudWatch Logs
+- Log Group: /ecs/nasneh-staging/api
+- Storage: 689 KB
+- Latest Log Stream: api/api/f33cbfdca1174e3c8884be131b9f8e36
+- Latest Log Entry: Server startup banner showing "Nasneh API Server" on port 3000
+- No error patterns detected in recent logs
+- No restart loops detected
+
+## Conclusion
+✅ ECS service is healthy and stable
+✅ Target group shows all targets healthy
+✅ No errors or restart loops in CloudWatch logs
+✅ Deployment completed successfully at 08:42:59 UTC+3

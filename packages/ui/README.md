@@ -1,23 +1,33 @@
 # @nasneh/ui
 
-Shared UI components for Nasneh applications.
+This package is the **Single Source of Truth** for all UI components in the Nasneh platform.
 
-## Design Rules
+## Core Principles
 
-All components MUST follow the Design System:
+- **Consistency:** All components follow the same design language.
+- **Accessibility:** All components are accessible by default.
+- **Performance:** Components are optimized for speed.
 
-- Font: Vazirmatn ONLY
-- Colors: Mono (Black/White/Gray) + semantic for status
-- Borders: NEVER use borders
-- Radius: 12px (rounded-xl) everywhere
-- Heights: 32px / 40px / 48px / 56px
+## Related Documentation
 
-## Usage
+- **UI Law:** [`../../docs/SPECS/UI_LAW.md`](../../docs/SPECS/UI_LAW.md)
+- **Design System:** [`../../docs/SPECS/DESIGN_SYSTEM.md`](../../docs/SPECS/DESIGN_SYSTEM.md)
+- **Component Specs:** [`../../docs/SPECS/COMPONENT_SPECS.md`](../../docs/SPECS/COMPONENT_SPECS.md)
+
+## How to Use
 
 ```tsx
-import { Button, Input, Card } from '@nasneh/ui';
+import { Button, Input } from '@nasneh/ui';
+
+function MyComponent() {
+  return (
+    <div>
+      <Input placeholder="Enter your name" />
+      <Button>Submit</Button>
+    </div>
+  );
+}
 ```
-
-## Documentation
-
-See `/docs/DESIGN_SYSTEM.md` for complete guidelines.
+```
+```
+```

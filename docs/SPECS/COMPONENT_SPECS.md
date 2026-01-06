@@ -2000,3 +2000,10 @@ import { Skeleton } from '@nasneh/ui';
 ---
 
 **Document End**
+
+
+---
+
+## Related Documentation
+
+- **Design Tokens:** `../../packages/ui/src/styles/tokens.css` - The actual CSS variable values

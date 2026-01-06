@@ -6,6 +6,16 @@
 
 ---
 
+## Implementation Notice
+
+This document describes the *design theory*. For the actual implementation, see:
+
+- **CSS Variables:** [`packages/ui/src/styles/tokens.css`](../../packages/ui/src/styles/tokens.css)
+- **Copy & Terminology:** [`packages/ui/src/copy/`](../../packages/ui/src/copy/)
+- **Component Specs:** [`COMPONENT_SPECS.md`](COMPONENT_SPECS.md)
+
+---
+
 ## 1. Core Principles
 
 ### Design Philosophy

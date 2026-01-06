@@ -1,19 +1,28 @@
 # Glossary
 
-> 🚧 **Status:** Placeholder - To be completed when needed
+**Last Updated:** January 2026
 
-## Purpose
-This file will contain a glossary of project-specific terms and definitions.
+## N
 
-## Planned Content
-- [ ] Nasneh
-- [ ] Vendor
-- [ ] Service Provider
-- [ ] Driver
-- [ ] APS
+- **Nasneh:** Our sellers/vendors. The core of our community. (Source: `BRAND_VOICE.md`)
+- **Nasneh (as adjective):** Belonging to our community, local. (e.g., "Nasneh products")
 
----
+## S
 
-**Created:** 2026-01-03
-**Last Updated:** 2026-01-03
-**Status:** Placeholder
+- **Supporter:** Our customers. They support our Nasneh. (Source: `BRAND_VOICE.md`)
+
+## V
+
+- **Vendor:** A seller of products (home kitchens, crafts). See `Nasneh`.
+
+## P
+
+- **Provider:** A seller of services. See `Nasneh`.
+
+## D
+
+- **Driver:** A person who delivers orders.
+
+## A
+
+- **APS:** Amazon Payment Services. Our payment gateway.

@@ -1,54 +1,49 @@
 # Nasneh Roadmap
 
+**Last Updated:** January 2026
+
 ## Current Status
-- **Version:** 0.2.0
-- **Phase:** AI Governance Complete, Ready for Sprint 3
-- **Last Updated:** 2026-01-04
+- **Version:** 0.3.0 (Pre-UI)
+- **Phase:** Sprint 3.8 (UI Foundation)
+- **MVP Readiness:** 85%
 
 ---
 
 ## Phase 1: MVP (Current)
 
 ### ✅ Completed
-- [x] Sprint 1: Core modules (Auth, Products, Orders, Payments)
-- [x] Sprint 2: Extended modules (Services, Bookings, Cart, Reviews)
-- [x] DevOps Gate: AWS infrastructure deployed
-- [x] API: 86 endpoints built and tested
+- [x] Sprint 1: Core Modules (Auth, Products, Orders)
+- [x] Sprint 2: Extended Modules (Services, Bookings, Cart)
+- [x] Sprint 3: Backend Foundation (Onboarding & Delivery APIs)
 
-### ✅ Recently Completed
-- [x] Payment routes fix (PR #129)
-- [x] Documentation reorganization (PR #131)
-- [x] AI Governance System established
-
-### 🔄 In Progress
-- [ ] Sprint 2.6: Pre-Production Verification
-- [ ] End-to-end API testing with auth
+### 🚧 In Progress
+- [ ] **Sprint 3.8: UI Foundation**
+  - [x] Design Tokens
+  - [x] Copy Tokens
+  - [x] Fonts
+  - [x] UI Law
+  - [x] Brand Voice
+  - [x] Component Specs
+  - [ ] CI Lint Rules
+  - [ ] Documentation Links
+  - [ ] Final Audit
 
 ### ⏳ Upcoming
-- [ ] Sprint 3: Vendor/Provider Onboarding APIs
-- [ ] Sprint 4: Delivery Coordination APIs
-- [ ] Sprint 5: Admin Dashboard APIs
+- [ ] **Sprint 4: Frontend Foundation & Auth**
+- [ ] Sprint 5: Vendor & Provider Portals
+- [ ] Sprint 6: Customer Experience
 - [ ] Soft Launch: Bahrain
 
 ---
 
 ## Phase 2: Growth (Q2-Q3 2026)
 
-### Planned Features
-- [ ] Automated payouts
-- [ ] Advanced analytics
-- [ ] Loyalty program
-- [ ] Mobile apps (iOS + Android)
+- [ ] Automated Payouts
+- [ ] Advanced Analytics
+- [ ] Loyalty Program
+- [ ] Mobile Apps (iOS + Android)
 
 ---
 
-## Phase 3: Expansion (Q4 2026+)
-
-### Planned Features
-- [ ] GCC expansion (Saudi, UAE)
-- [ ] Multi-language support
-- [ ] Advanced AI features
-
----
-
-**For detailed requirements:** See SPECS/PRD_MASTER.md
+**For detailed requirements:** See `SPECS/PRD_MASTER.md`
+**For sprint plan:** See `SPECS/MASTER_ROADMAP.md`
