@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:46:10 | Documented: add Component Specifications for 12 core components | PR #180 | @nasneh-hub |
 | 10:10:37 | Documented (brand): Brand Voice Document - S3.8-05 | PR #179 | @nasneh-hub |
 | 10:05:00 | Documented (ui): UI Law Document - S3.8-04 | PR #178 | @nasneh-hub |
 | 09:59:52 | Added (ui): Vazirmatn Font Files - S3.8-03 | PR #177 | @nasneh-hub |
