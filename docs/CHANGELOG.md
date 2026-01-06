@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 📚 Documentation (docs)
+- **#186:** update project status and add missing links
+
 ---
 
 ## [0.3.0] - 2026-01-06

@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 14:31:24 | Documented (readme): update project status and add missing links | PR #186 | @nasneh-hub |
 | 13:56:13 | Maintained (cleanup): remove temporary files from root | PR #184 | @nasneh-hub |
 | 12:27:54 | Documented (governance): comprehensive documentation audit and gap fixes | PR #182 | @nasneh-hub |
 | 11:21:15 | Updated CI/CD: add UI Law enforcement workflow | PR #181 | @nasneh-hub |
