@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
+- **#182:** comprehensive documentation audit and gap fixes
 - **#180:** add Component Specifications for 12 core components
 - **#179:** Brand Voice Document - S3.8-05
 - **#178:** UI Law Document - S3.8-04
@@ -54,6 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.2.0] - 2026-01-03
 
 ### 📚 Documentation (docs)
+- **#182:** comprehensive documentation audit and gap fixes
 - **#180:** add Component Specifications for 12 core components
 - **#179:** Brand Voice Document - S3.8-05
 - **#178:** UI Law Document - S3.8-04
@@ -154,6 +156,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
+- **#182:** comprehensive documentation audit and gap fixes
 - **#180:** add Component Specifications for 12 core components
 - **#179:** Brand Voice Document - S3.8-05
 - **#178:** UI Law Document - S3.8-04
