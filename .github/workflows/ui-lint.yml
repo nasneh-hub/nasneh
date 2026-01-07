@@ -190,7 +190,9 @@ jobs:
             | grep -v '/copy/' \
             | grep -v 'terminology.ts' \
             | grep -v 'node_modules' \
-            | grep -v -E '(//|/\*|\*)' || true)
+            | grep -v -E "href=['\"/]" \
+            | grep -v -E "^[^:]+:[0-9]+:\s*(VENDOR|CUSTOMER|SELLER|MERCHANT):" \
+            | grep -v -E "roles\.(vendor|customer|seller|merchant)" || true)
           
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ VIOLATION: Forbidden terminology found"
