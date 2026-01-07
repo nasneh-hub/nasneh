@@ -98,7 +98,17 @@ export async function verifyOtp(
     const result = await authService.verifyOtp(phone, otp, metadata);
 
     res.status(200).json(result);
-  } catch (error) {
+  } catch (error: any) {
+    // Handle client errors (invalid OTP, expired, etc.)
+    if (error.statusCode === 400) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+        ...(error.attemptsRemaining !== undefined && { attemptsRemaining: error.attemptsRemaining }),
+      });
+      return;
+    }
+    // Let global error handler deal with 500s
     next(error);
   }
 }
