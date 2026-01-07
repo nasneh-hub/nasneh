@@ -137,14 +137,42 @@ export const en = {
     password: 'Password',
     confirmPassword: 'Confirm Password',
     phone: 'Phone',
+    phoneNumber: 'Phone Number',
+    phonePlaceholder: '3XXXXXXX',
     forgotPassword: 'Forgot Password?',
     resetPassword: 'Reset Password',
+    
+    // OTP Flow
+    sendOtp: 'Send Verification Code',
+    verifyOtp: 'Verify Code',
+    enterOtp: 'Enter Verification Code',
+    otpSent: 'Verification code sent',
+    otpSentTo: 'Verification code sent to',
+    resendOtp: 'Resend Code',
+    resendIn: 'Resend in',
+    changePhone: 'Change Number',
+    otpExpiry: 'Code expires in',
+    minutes: 'minutes',
+    seconds: 'seconds',
+    
+    // OTP Errors
+    invalidOtp: 'Invalid verification code',
+    expiredOtp: 'Code has expired',
+    tooManyAttempts: 'Too many attempts. Try again later',
+    otpRequired: 'Please enter the verification code',
     
     // Messages
     loginSuccess: 'Logged in successfully',
     signupSuccess: 'Welcome to Nasneh! 🙌',
     logoutSuccess: 'Logged out successfully',
     passwordResetSent: 'Password reset link sent',
+    
+    // Terms
+    termsAndPrivacy: 'Terms & Privacy',
+    byLoggingIn: 'By logging in, you agree to our',
+    termsOfService: 'Terms of Service',
+    and: 'and',
+    privacyPolicy: 'Privacy Policy',
   },
 
   /**
