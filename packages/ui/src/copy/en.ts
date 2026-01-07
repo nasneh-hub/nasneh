@@ -289,7 +289,7 @@ export const en = {
   },
 
   /**
-   * Nasneh Dashboard (Vendor)
+   * Nasneh Dashboard (Unified)
    */
   dashboard: {
     dashboard: 'Dashboard',
@@ -305,6 +305,45 @@ export const en = {
     totalOrders: 'Total Orders',
     activeProducts: 'Active Products',
     rating: 'Rating',
+    
+    // Login
+    loginTitle: 'Dashboard Login',
+    loginSubtitle: 'Sign in to manage your account',
+    backToWebsite: 'Back to Website',
+    
+    // Role Selection
+    selectRole: 'Select Your Role',
+    selectRoleSubtitle: 'You have multiple roles. Choose which role to enter with.',
+    switchRole: 'Switch Role',
+    currentRole: 'Current Role',
+    
+    // Roles
+    roles: {
+      admin: 'Admin',
+      adminDesc: 'Manage the platform and users',
+      vendor: 'Nasneh',
+      vendorDesc: 'Manage your products and orders',
+      provider: 'Service Provider',
+      providerDesc: 'Manage your services and bookings',
+      driver: 'Driver',
+      driverDesc: 'Manage deliveries',
+    },
+    
+    // Sidebar
+    home: 'Home',
+    orders: 'Orders',
+    products: 'Products',
+    services: 'Services',
+    bookings: 'Bookings',
+    deliveries: 'Deliveries',
+    users: 'Users',
+    applications: 'Applications',
+    reports: 'Reports',
+    
+    // Unauthorized
+    unauthorized: 'Unauthorized',
+    unauthorizedMessage: 'You do not have permission to access this page',
+    goBack: 'Go Back',
   },
 
   /**

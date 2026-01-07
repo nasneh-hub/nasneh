@@ -289,7 +289,7 @@ export const ar = {
   },
 
   /**
-   * Nasneh Dashboard (Vendor)
+   * Nasneh Dashboard (Unified)
    */
   dashboard: {
     dashboard: 'لوحة التحكم',
@@ -305,6 +305,45 @@ export const ar = {
     totalOrders: 'إجمالي الطلبات',
     activeProducts: 'المنتجات النشطة',
     rating: 'التقييم',
+    
+    // Login
+    loginTitle: 'دخول لوحة التحكم',
+    loginSubtitle: 'سجل دخولك لإدارة حسابك',
+    backToWebsite: 'العودة للموقع',
+    
+    // Role Selection
+    selectRole: 'اختر دورك',
+    selectRoleSubtitle: 'لديك أكثر من دور. اختر الدور الذي تريد الدخول به.',
+    switchRole: 'تغيير الدور',
+    currentRole: 'الدور الحالي',
+    
+    // Roles
+    roles: {
+      admin: 'مدير النظام',
+      adminDesc: 'إدارة المنصة والمستخدمين',
+      vendor: 'ناسنه',
+      vendorDesc: 'إدارة منتجاتك وطلباتك',
+      provider: 'مقدم خدمة',
+      providerDesc: 'إدارة خدماتك وحجوزاتك',
+      driver: 'سائق',
+      driverDesc: 'إدارة التوصيلات',
+    },
+    
+    // Sidebar
+    home: 'الرئيسية',
+    orders: 'الطلبات',
+    products: 'المنتجات',
+    services: 'الخدمات',
+    bookings: 'الحجوزات',
+    deliveries: 'التوصيلات',
+    users: 'المستخدمين',
+    applications: 'الطلبات',
+    reports: 'التقارير',
+    
+    // Unauthorized
+    unauthorized: 'غير مصرح',
+    unauthorizedMessage: 'ليس لديك صلاحية الوصول لهذه الصفحة',
+    goBack: 'العودة',
   },
 
   /**
