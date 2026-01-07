@@ -152,7 +152,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       flex
       items-center
       justify-center
-      bg-black/50
+      bg-[rgb(0_0_0/0.5)]
       backdrop-blur-sm
       p-4
     `.replace(/\s+/g, ' ').trim();

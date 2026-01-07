@@ -61,10 +61,10 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     // Variant styles - semantic colors for status
     const variantStyles = {
       default: 'bg-[var(--bg-tertiary)] text-[color:var(--text-primary)]',
-      success: 'bg-[var(--color-success)] text-white',
+      success: 'bg-[var(--color-success)] text-[color:var(--color-text-inverse)]',
       warning: 'bg-[var(--color-warning)] text-[color:var(--text-primary)]',
-      danger: 'bg-[var(--color-danger)] text-white',
-      info: 'bg-[var(--color-info)] text-white',
+      danger: 'bg-[var(--color-danger)] text-[color:var(--color-text-inverse)]',
+      info: 'bg-[var(--color-info)] text-[color:var(--color-text-inverse)]',
     };
     
     // Size styles

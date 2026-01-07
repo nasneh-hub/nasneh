@@ -159,7 +159,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       `,
       destructive: `
         bg-[var(--color-danger)] 
-        text-white 
+        text-[color:var(--color-text-inverse)] 
         hover:opacity-90 
         active:opacity-80
       `,
