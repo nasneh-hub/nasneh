@@ -44,34 +44,43 @@ export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 
 // =============================================================================
+// Additional Components (S4-01b)
+// =============================================================================
+
+// Avatar - User/vendor photos with fallback
+export { Avatar } from './components/avatar';
+export type { AvatarProps } from './components/avatar';
+
+// SegmentedControl - 2-6 option selection
+export { SegmentedControl } from './components/segmented-control';
+export type { SegmentedControlProps, SegmentedControlOption } from './components/segmented-control';
+
+// Tabs - Page navigation
+export { Tabs } from './components/tabs';
+export type { TabsProps, TabItem } from './components/tabs';
+
+// Toast - Notifications
+export { Toast, toast } from './components/toast';
+export type { ToastProps } from './components/toast';
+
+// Select - Dropdown for 7+ options
+export { Select } from './components/select';
+export type { SelectProps, SelectOption } from './components/select';
+
+// Table - Data lists
+export { Table } from './components/table';
+export type { TableProps, TableColumn } from './components/table';
+
+// =============================================================================
 // Logo Component (Pre-existing)
 // =============================================================================
+
 export { Logo } from './components/logo';
 export type { LogoProps } from './components/logo';
 
 // =============================================================================
 // Assets
 // =============================================================================
+
 export { LOGO_PATHS } from './assets/logo';
 export type { LogoVariant } from './assets/logo';
-
-// =============================================================================
-// Future Components (S4-01b)
-// =============================================================================
-// export { Select } from './components/select';
-// export type { SelectProps } from './components/select';
-
-// export { Table } from './components/table';
-// export type { TableProps } from './components/table';
-
-// export { Tabs } from './components/tabs';
-// export type { TabsProps } from './components/tabs';
-
-// export { Avatar } from './components/avatar';
-// export type { AvatarProps } from './components/avatar';
-
-// export { Toast, toast } from './components/toast';
-// export type { ToastProps } from './components/toast';
-
-// export { SegmentedControl } from './components/segmented-control';
-// export type { SegmentedControlProps } from './components/segmented-control';
