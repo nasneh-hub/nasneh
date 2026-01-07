@@ -294,13 +294,22 @@ jobs:
           NEW_IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest"
           echo "Updating image to: $NEW_IMAGE"
           
-          # Update the image in the container definition
-          jq --arg IMAGE "$NEW_IMAGE" \
-            '.containerDefinitions[0].image = $IMAGE' \
-            task-definition-clean.json > task-definition-updated.json
+          # Update ONLY the API container image, preserve all other containers (e.g., Redis)
+          jq --arg IMAGE "$NEW_IMAGE" --arg CONTAINER_NAME "${{ env.CONTAINER_NAME }}" '
+            .containerDefinitions = [.containerDefinitions[] | 
+              if .name == $CONTAINER_NAME then 
+                .image = $IMAGE 
+              else 
+                . 
+              end
+            ]
+          ' task-definition-clean.json > task-definition-updated.json
           
           echo "Updated task definition:"
-          cat task-definition-updated.json | jq '.containerDefinitions[0].image'
+          echo "API container image:"
+          cat task-definition-updated.json | jq --arg CONTAINER_NAME "${{ env.CONTAINER_NAME }}" '.containerDefinitions[] | select(.name == $CONTAINER_NAME) | .image'
+          echo "All container images:"
+          cat task-definition-updated.json | jq '.containerDefinitions[] | {name: .name, image: .image}'
           
           # Register new task definition revision
           NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
