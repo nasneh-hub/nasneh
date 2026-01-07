@@ -606,3 +606,104 @@ Automation uses `nasneh-automation` GitHub App for:
 - [ ] Test thoroughly after major version updates
 
 **Link:** https://github.com/nasneh-hub/nasneh/pulls?q=is%3Aopen+is%3Apr+author%3Aapp%2Fdependabot
+
+---
+
+## 🎉 Sprint 4 Complete (2026-01-08)
+
+**Duration:** Jan 6-8, 2026 (3 days)  
+**Story Points:** 24/24 (100%)  
+**PRs Merged:** 12 (#199-#210, plus CI fixes)
+
+### Achievements
+
+#### Design System & Shared UI (S4-01)
+- Built 12 core components in `@nasneh/ui` package
+- All components follow strict UI Laws (no borders, mono colors, Vazirmatn font)
+- Components: Button, Input, Card, Badge, Skeleton, Dialog, Avatar, SegmentedControl, Tabs, Toast, Select, Table
+
+#### Customer Phone + OTP Login Flow (S4-02)
+- Login page with phone input (RTL, Vazirmatn font)
+- OTP verification page with 6-digit input
+- AuthContext with JWT token management
+- Protected routes with automatic redirect
+
+#### Customer Profile & Address Management (S4-03)
+- Profile page with user info display
+- Address list with CRUD operations
+- Add/Edit address form with validation
+- Integration with backend API
+
+#### Dashboard Login & Role Switching (S4-04)
+- Dashboard login page with phone input
+- OTP verification for dashboard users
+- Role selection page for multi-role users
+- Role-based navigation (ADMIN, VENDOR, PROVIDER, DRIVER)
+- RoleGuard component for access control
+
+### UI Law CI Enforcement
+
+Implemented strict CI checks for UI Laws:
+
+| Check | Rule | Status |
+|-------|------|--------|
+| Hex Colors | No #FFFFFF, #000, etc. | ✅ Enforced |
+| Tailwind Colors | No bg-white, text-black, etc. | ✅ Enforced |
+| Inline Styles | No style={{...}} | ✅ Enforced |
+| Border Classes | No border-* classes | ✅ Enforced |
+| Border Radius | Only rounded-xl, rounded-full | ✅ Enforced |
+| Forbidden Terms | No زبون، بائع، customer, vendor in UI | ✅ Enforced |
+| Hardcoded Arabic | Must use copy tokens | ✅ Enforced |
+| Font Family | Only Vazirmatn | ✅ Enforced |
+| External UI Libs | No @mui, antd, chakra-ui | ✅ Enforced |
+| className Prop | No className on @nasneh/ui components | ✅ Enforced |
+
+### Key PRs
+
+| PR | Description | SP |
+|----|-------------|-----|
+| #199 | First 6 core components | 3 |
+| #201 | Add modification rules to tokens.css | 1 |
+| #203 | Add remaining 6 core components | 4 |
+| #204 | Customer Phone + OTP Login Flow | 5 |
+| #208 | Customer Profile & Address Management | 5 |
+| #210 | Dashboard Login & Role Switching | 6 |
+
+### CI Fixes During Sprint 4
+
+Multiple CI workflow fixes were needed for the UI Law enforcement:
+
+| PR | Fix |
+|----|-----|
+| #206 | Add word boundaries to prevent localStorage false positive |
+| #209 | Exclude Arabic punctuation from hardcoded text check |
+| #211 | Exclude route paths and TypeScript keys |
+| #212 | Improve comment exclusions |
+| #213 | Restore proper workflow structure |
+| #214 | Add `\s*` to href pattern for optional spaces |
+
+### Lessons Learned
+
+1. **UI Law CI is Critical:** Strict enforcement catches violations early
+2. **Regex Patterns Need Testing:** Always test grep patterns with real code samples
+3. **Route Paths Contain Role Names:** `/vendor`, `/admin` routes trigger forbidden terminology check - need exclusions
+4. **Copy Tokens Work:** All Arabic text comes from centralized ar.ts file
+
+### Statistics
+
+| Metric | Value |
+|--------|-------|
+| **Total Lines Added** | ~3,500 |
+| **New Components** | 12 |
+| **New Pages** | 10 (customer-web + dashboard) |
+| **PRs Merged** | 12+ |
+| **Story Points** | 24 |
+| **Duration** | 3 days |
+| **MVP Progress** | 85% → 95% |
+
+### Next: Sprint 5
+
+**Focus:** Frontend Core Features  
+**Story Points:** 24  
+**Goal:** Product browsing, cart, checkout, booking flow
+
