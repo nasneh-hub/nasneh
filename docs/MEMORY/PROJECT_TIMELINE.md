@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 19:39:33 | Added (ui): add remaining 6 core components | PR #203 | @nasneh-hub |
 | 19:04:33 | Documented (ui): add modification rules to tokens.css | PR #201 | @nasneh-hub |
 | 18:57:40 | Added (ui): add 6 core components (Button, Input, Card, Badge, Skeleton, Dialog) | PR #199 | @nasneh-hub |
 | 18:50:06 | Fixed (ci): scope ui-lint to frontend files only, eliminate false positives | PR #200 | @nasneh-hub |
