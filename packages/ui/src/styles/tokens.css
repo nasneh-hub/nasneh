@@ -12,6 +12,12 @@
  * - NO hex colors allowed anywhere else in the codebase
  * - NO Tailwind color classes (bg-white, text-black, etc.)
  * - Use CSS variables: var(--bg-primary), var(--text-primary), etc.
+ * 
+ * MODIFICATION RULES:
+ * - Adding new tokens REQUIRES owner approval
+ * - Do NOT add colors directly in component code
+ * - Workflow: Request approval → Add to tokens.css → Use via var(--)
+ * - This file is PROTECTED - changes require @nasneh-hub review
  */
 
 :root {
