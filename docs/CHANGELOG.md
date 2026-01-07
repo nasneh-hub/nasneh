@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### 🐛 Bug Fixes (fix)
+- **#189:** remove waitForDelivery to prevent OTP timeout
 - **#187:** remove accidental bash command from ui-lint.yml
 
 ### 📚 Documentation (docs)
@@ -40,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#189:** remove waitForDelivery to prevent OTP timeout
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
@@ -88,6 +90,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#189:** remove waitForDelivery to prevent OTP timeout
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 - **#129:** Mount payment routes in main application
 - **#126:** Update prisma path after removing --prod flag
@@ -168,6 +171,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#189:** remove waitForDelivery to prevent OTP timeout
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
