@@ -83,7 +83,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <aside className="fixed top-0 right-0 w-64 h-full bg-[var(--bg-primary)] shadow-lg z-40">
         {/* Logo */}
-        <div className="p-4 border-b border-[var(--bg-tertiary)]">
+        <div className="p-4 shadow-sm">
           <Logo variant="auto" />
         </div>
 

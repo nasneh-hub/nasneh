@@ -155,7 +155,8 @@ export default function VerifyPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--bg-secondary)] p-4">
-      <Card padding="lg" className="w-full max-w-md">
+      <Card padding="lg">
+        <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <Logo variant="auto" />
@@ -231,6 +232,7 @@ export default function VerifyPage() {
           >
             {ar.ui.back}
           </button>
+        </div>
         </div>
       </Card>
     </div>

@@ -20,7 +20,8 @@ export default function UnauthorizedPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--bg-secondary)] p-4">
-      <Card padding="lg" className="w-full max-w-md text-center">
+      <Card padding="lg">
+        <div className="w-full max-w-md text-center">
         <div className="flex justify-center mb-6">
           <Logo variant="auto" />
         </div>
@@ -38,6 +39,7 @@ export default function UnauthorizedPage() {
         <Button variant="default" onClick={handleGoBack}>
           {ar.dashboard.goBack}
         </Button>
+        </div>
       </Card>
     </div>
   );
