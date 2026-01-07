@@ -4,15 +4,21 @@
 
 ---
 
-## 🟢 Current State (Now) — 2026-01-08 00:15 UTC+3
+## 🟢 Current State (Now) — 2026-01-08 01:00 UTC+3
 
-- **🎯 Sprint 4 Frontend Foundation IN PROGRESS** — OTP Login Flow complete!
+- **🎯 Sprint 4 Frontend Foundation IN PROGRESS** — Profile & Addresses complete!
 - **✅ [S4-01] Design System & Shared UI COMPLETE** — 12/12 core components built
 - **✅ [S4-02] Customer Phone + OTP Login Flow COMPLETE** — Full auth flow implemented
+- **✅ [S4-03] Customer Profile & Address Management COMPLETE** — Profile + Addresses pages
 - **✅ UI Law Compliance** — All components pass strict CI enforcement
-- **Status:** customer-web app has working phone/OTP authentication
+- **Status:** customer-web app has profile management and address CRUD
+
+**Sprint 4 Progress: 18/24 SP (75%)**
 
 **Sprint 4 PRs:**
+- #208: Customer Profile & Address Management (Profile, Addresses list, Add/Edit Address)
+- #207: Remove localStorage workaround (UI Law regex fix applied)
+- #205: Fix UI Law regex patterns (word boundaries for localStorage, CardContent)
 - #204: Customer Phone + OTP Login Flow (Login, Verify, Home pages + Auth Context)
 - #203: Add remaining 6 core components (Avatar, SegmentedControl, Tabs, Toast, Select, Table)
 - #201: Add modification rules to tokens.css
