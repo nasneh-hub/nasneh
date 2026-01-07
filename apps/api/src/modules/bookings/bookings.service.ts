@@ -114,6 +114,20 @@ export const bookingsService = {
     });
   },
 
+  /**
+   * Get a single booking by ID
+   */
+  async getBookingById(id: string) {
+    return await prisma.booking.findUnique({
+      where: { id },
+      include: {
+        service: true,
+        customer: true,
+        provider: true,
+      },
+    });
+  },
+
   async getCustomerBookings(customerId: string) {
     return bookingRepository.findMany({ 
       customerId,

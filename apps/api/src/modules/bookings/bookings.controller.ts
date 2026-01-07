@@ -66,7 +66,7 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
   try {
     const { id } = req.params;
     
-    const booking = await (bookingService as any).getBookingById(id);
+    const booking = await bookingService.getBookingById(id);
     
     if (!booking) {
       return res.status(404).json({
