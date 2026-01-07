@@ -46,8 +46,24 @@ export class OtpDeliveryService {
   /**
    * Deliver OTP to phone number
    * Following the WhatsApp → SMS fallback flow
+   * 
+   * MOCK MODE (Staging Only):
+   * - When OTP_MOCK_ENABLED=true, skips actual delivery
+   * - Logs OTP to CloudWatch for testing
+   * - Only works for test numbers (+97317000000)
+   * - BLOCKED in production (hard fail)
    */
   async deliver(phone: string, otp: string): Promise<OtpDeliveryResult> {
+    // Safety check: Block mock mode in production
+    if (config.otp.mockEnabled && config.isProduction) {
+      console.error('[OTP Delivery] FATAL: Mock mode enabled in production!');
+      throw new Error('OTP_MOCK_ENABLED cannot be true in production');
+    }
+
+    // Mock mode for staging/testing
+    if (config.otp.mockEnabled) {
+      return this.deliverMock(phone, otp);
+    }
     let channel: OtpChannel = OtpChannel.WHATSAPP;
     let fallbackUsed = false;
     let fallbackReason: string | undefined;
@@ -210,6 +226,44 @@ export class OtpDeliveryService {
     return {
       success: false,
       error: 'SMS not configured',
+    };
+  }
+
+  /**
+   * Mock OTP delivery (staging only)
+   * - Generates OTP normally
+   * - Stores in Redis normally
+   * - Skips WhatsApp/SMS sending
+   * - Logs OTP for test numbers only
+   */
+  private deliverMock(phone: string, otp: string): OtpDeliveryResult {
+    const isTestNumber = phone === '+97317000000';
+
+    // Only log OTP for known test numbers
+    if (isTestNumber) {
+      console.log(`[STAGING OTP MOCK] phone=${phone.slice(0, 7)}****${phone.slice(-4)} otp=${otp}`);
+    } else {
+      console.log(`[STAGING OTP MOCK] phone=${phone.slice(0, 7)}**** otp=****** (hidden for non-test number)`);
+    }
+
+    const mockMessageId = `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+    // Log delivery
+    this.logDelivery({
+      phone,
+      channel: OtpChannel.MOCK,
+      status: OtpStatus.DELIVERED,
+      timestamp: new Date(),
+      fallbackUsed: false,
+      messageId: mockMessageId,
+      deliveryStatus: 'mock',
+    });
+
+    return {
+      success: true,
+      channel: OtpChannel.MOCK,
+      fallbackUsed: false,
+      messageId: mockMessageId,
     };
   }
 

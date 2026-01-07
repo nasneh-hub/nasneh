@@ -33,6 +33,7 @@ export enum UserStatus {
 export enum OtpChannel {
   WHATSAPP = 'whatsapp',
   SMS = 'sms',
+  MOCK = 'mock', // Staging only - for testing without actual delivery
 }
 
 export enum OtpStatus {
