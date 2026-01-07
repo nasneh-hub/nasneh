@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 16:38:00 | Fixed (users): add authMiddleware to users routes | PR #196 | @nasneh-hub |
 | 15:59:39 | Documented (audit): document Sprint 3.9 infrastructure fixes and lessons learned | PR #195 | @nasneh-hub |
 | 16:30:00 | Documented (audit): Sprint 3.9 infrastructure fixes and lessons learned | PR #195 | @nasneh-hub |
 | 16:00:00 | Fixed (cd): add fallback logic for ACTIVE task definition | PR #194 | @nasneh-hub |
