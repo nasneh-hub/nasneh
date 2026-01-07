@@ -9,6 +9,9 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 16:30:00 | Documented (audit): Sprint 3.9 infrastructure fixes and lessons learned | PR #195 | @nasneh-hub |
+| 16:00:00 | Fixed (cd): add fallback logic for ACTIVE task definition | PR #194 | @nasneh-hub |
+| 15:45:00 | Fixed (cd): preserve Redis sidecar container in task definition updates | PR #194 | @nasneh-hub |
 | 15:11:55 | Fixed (auth): use ESM import for crypto in token repository | PR #194 | @nasneh-hub |
 | 14:07:23 | Fixed (auth): return 400 for invalid OTP and use fixed OTP for test number in staging | PR #193 | @nasneh-hub |
 | 11:42:25 | Fixed (bookings): add missing getBookingById function | PR #192 | @nasneh-hub |

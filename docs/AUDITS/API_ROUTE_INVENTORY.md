@@ -30,8 +30,8 @@ timeout 5 curl -s -o /dev/null -w "%{http_code}" [METHOD] [URL] [HEADERS] [BODY]
 | # | Method | Path | Auth | Role | Module | Status | HTTP Code | Notes |
 |:--|:-------|:-----|:-----|:-----|:-------|:-------|:----------|:------|
 | 1 | GET | `/health` | No | Public | health | ✅ Working | 200 | Health check endpoint |
-| 2 | POST | `/api/v1/auth/request-otp` | No | Public | auth | ⏱️ Timeout | - | Hangs (possible rate limiting) |
-| 3 | POST | `/api/v1/auth/verify-otp` | No | Public | auth | ⚠️ Bad Request | 400 | Requires `phone` and `otp` in body |
+| 2 | POST | `/api/v1/auth/request-otp` | No | Public | auth | ✅ Working | 200 | Returns mock channel indicator (staging) |
+| 3 | POST | `/api/v1/auth/verify-otp` | No | Public | auth | ✅ Working | 200/400 | Returns tokens (200) or error (400) - FIXED from 500 |
 | 4 | POST | `/api/v1/auth/refresh` | Yes | Public | auth | ⚠️ Bad Request | 400 | Requires refresh token in cookie/body |
 | 5 | POST | `/api/v1/auth/logout` | Yes | Public | auth | ✅ Working | 200 | Logs out current session |
 | 6 | POST | `/api/v1/auth/logout-all` | Yes | Customer | auth | ⚠️ Auth Required | 401 | Requires valid JWT token |
@@ -42,7 +42,7 @@ timeout 5 curl -s -o /dev/null -w "%{http_code}" [METHOD] [URL] [HEADERS] [BODY]
 | 11 | GET | `/api/v1/categories/slug/:slug` | No | Public | categories | ⚠️ Not Found | 404 | Valid route, test slug not found |
 | 12 | GET | `/api/v1/bookings` | Yes | Customer | bookings | ⚠️ Auth Required | 401 | Requires valid JWT token |
 | 13 | POST | `/api/v1/bookings` | Yes | Customer | bookings | ⚠️ Bad Request | 400 | Requires auth + booking body |
-| 14 | GET | `/api/v1/bookings/:id` | Yes | Customer | bookings | 🔴 Server Error | 500 | Endpoint exists but has error |
+| 14 | GET | `/api/v1/bookings/:id` | Yes | Customer | bookings | ⚠️ Not Found | 404 | Valid route, Redis working - FIXED from 500 |
 | 15 | POST | `/api/v1/bookings/:id/confirm` | Yes | Provider | bookings | ⚠️ Auth Required | 401 | Requires provider auth |
 | 16 | POST | `/api/v1/bookings/:id/start` | Yes | Provider | bookings | ⚠️ Auth Required | 401 | Requires provider auth |
 | 17 | POST | `/api/v1/bookings/:id/complete` | Yes | Provider | bookings | ⚠️ Auth Required | 401 | Requires provider auth |
@@ -150,10 +150,19 @@ timeout 10 curl -s -w "%{http_code}" -X POST http://nasneh-staging-api-alb-15140
 **Total Implemented Endpoints:** 31 (100% of code-defined routes)
 
 **Working Status:**
-- **Fully functional:** 3 endpoints (9.7%)
+- **Fully functional:** 5 endpoints (16.1%) - IMPROVED from 3
 - **Implemented but require auth/body:** 26 endpoints (83.9%)
-- **Has issues:** 2 endpoints (6.5%)
-  - 1 timeout (request-otp)
-  - 1 server error (bookings/:id)
+- **Has issues:** 0 endpoints (0%) - ALL FIXED! ✅
 
-**Recommendation:** Fix the 2 issues before moving to production. All other endpoints are correctly implemented and respond as expected.
+**Fixed Issues (2026-01-07):**
+1. ✅ **OTP request-otp timeout** - FIXED: Now returns 200 with mock channel indicator
+2. ✅ **OTP verify-otp 500 error** - FIXED: ESM/CommonJS issue resolved, now returns 200 with tokens
+3. ✅ **Bookings/:id 500 error** - FIXED: Redis sidecar preserved in CD workflow, now returns 404
+
+**Infrastructure Improvements:**
+- Redis sidecar now persists across deployments (CD workflow fixed)
+- OTP mock mode working correctly in staging environment
+- All authentication endpoints functioning as expected
+- Rate limiting working (5 requests per 45 min per phone)
+
+**Recommendation:** API is ready for Sprint 4 (Frontend Foundation). All critical issues resolved. ✅
