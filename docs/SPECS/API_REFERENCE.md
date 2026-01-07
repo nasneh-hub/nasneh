@@ -48,7 +48,18 @@ These endpoints are currently deployed on staging and have been tested with evid
 | GET | `/api/v1/auth/sessions` | Yes | Get all active sessions |
 | GET | `/api/v1/auth/me` | Yes | Get current authenticated user |
 
-**Example: Request OTP**
+#### POST /api/v1/auth/request-otp
+
+Request an OTP code for phone number authentication.
+
+**Staging Mock Mode:**
+- When `OTP_MOCK_ENABLED=true` and `ENVIRONMENT=staging`:
+  - Test number `+97317000000` receives fixed OTP `123456`
+  - Other numbers receive random OTP (logged in CloudWatch but hidden for security)
+  - Response includes `"channel": "mock"` indicator
+- Rate limiting: 5 requests per 45 minutes per phone number
+
+**Request:**
 ```bash
 POST /api/v1/auth/request-otp
 Content-Type: application/json
@@ -58,7 +69,39 @@ Content-Type: application/json
 }
 ```
 
-**Example: Verify OTP**
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "OTP generated and logged (staging mock mode)",
+  "channel": "mock",
+  "fallbackUsed": false,
+  "expiresIn": 300
+}
+```
+
+**Response (429 Rate Limited):**
+```json
+{
+  "success": false,
+  "error": "Too many OTP requests for this phone number",
+  "retryAfter": 2001,
+  "message": "Rate limit exceeded. Try again in 34 minute(s)."
+}
+```
+
+---
+
+#### POST /api/v1/auth/verify-otp
+
+Verify an OTP code and receive authentication tokens.
+
+**Staging Mock Mode:**
+- Test number `+97317000000` must use OTP `123456`
+- Other numbers use the OTP from CloudWatch logs: `/ecs/nasneh-staging/api`
+- Maximum 5 attempts per OTP request
+
+**Request:**
 ```bash
 POST /api/v1/auth/verify-otp
 Content-Type: application/json
@@ -69,17 +112,45 @@ Content-Type: application/json
 }
 ```
 
-**Response (200):**
+**Response (200 OK):**
 ```json
 {
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "uuid",
-    "phone": "+97317000000",
-    "role": "CUSTOMER"
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "a1b2c3d4e5f6...",
+    "expiresIn": 900,
+    "user": {
+      "id": "usr_...",
+      "phone": "+97317000000",
+      "role": "customer"
+    }
   }
 }
+```
+
+**Response (400 Bad Request - Wrong OTP):**
+```json
+{
+  "success": false,
+  "error": "Invalid OTP. 4 attempt(s) remaining.",
+  "attemptsRemaining": 4
+}
+```
+
+**Response (400 Bad Request - No OTP Found):**
+```json
+{
+  "success": false,
+  "error": "No OTP found for this phone number. Please request a new one."
+}
+```
+
+---
+
+#### Other Auth Endpoints
+
+For other authentication endpoints (refresh, logout, logout-all, sessions, me), see the existing implementation. These endpoints require JWT authentication via the `Authorization: Bearer <token>` header
 ```
 
 ---

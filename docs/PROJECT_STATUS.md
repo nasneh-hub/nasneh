@@ -4,13 +4,31 @@
 
 ---
 
-## 🟢 Current State (Now) — 2026-01-05 12:40 UTC+3
+## 🟢 Current State (Now) — 2026-01-07 16:30 UTC+3
+
+- **🎯 Sprint 3.9 Infrastructure Audit COMPLETE!** — Critical fixes deployed
+- **✅ Redis Sidecar Preserved** — CD workflow no longer overwrites Redis container
+- **✅ OTP Flow Working** — verify-otp ESM/CommonJS issue fixed
+- **✅ CD Workflow Enhanced** — Fallback logic for ACTIVE task definition
+- **Status:** API healthy, Redis working, OTP mock mode verified
+
+**Sprint 3.9 PRs:**
+- #194: Redis sidecar + OTP verify-otp + CD gating fixes
+- #193: OTP mock mode - return 400 for invalid OTP
+- #192: Add missing getBookingById function
+- #191: Use ENVIRONMENT variable for OTP mock safety
+- #190: Add OTP mock mode for staging
+- #189: Remove waitForDelivery to prevent OTP timeout
+- #188: API route inventory and reference documentation
+
+---
+
+## 🎉 Sprint 3 Complete (2026-01-05)
 
 - **🎉 Sprint 3 COMPLETE!** — All 6 tasks done (24/24 Story Points)
 - **✅ 15 New Endpoints Added** — Categories, Applications, Admin, Drivers
 - **✅ 4 New Database Models** — VendorApplication, ProviderApplication, Driver, DeliveryAssignment
 - **✅ 4 New Modules** — categories, applications, admin, drivers
-- **Status:** API healthy, TypeScript compiling, all PRs merged
 
 **Sprint 3 PRs:**
 - #172: Driver & Delivery APIs (6 SP)
@@ -19,6 +37,157 @@
 - #169: Vendor & Provider Application APIs (6 SP)
 - #168: Onboarding & Delivery DB Models (2 SP)
 - #167: Categories API (2 SP)
+
+---
+
+## 🔧 Sprint 3.9 Infrastructure Stabilization (2026-01-07)
+
+### Redis Sidecar Preservation Fix
+
+**Problem:** CD workflow was overwriting Redis container with API image during deployment, causing 500 errors on Redis-dependent endpoints like `/api/v1/bookings/:id`.
+
+**Root Cause:** The task definition update logic in `.github/workflows/cd.yml` was only specifying the API container in the `containers` array. AWS ECS interprets this as "replace ALL containers with this list", effectively removing the Redis sidecar:
+
+```yaml
+# OLD (broken)
+containers: |
+  [
+    {
+      "name": "api",
+      "image": "${{ steps.login-ecr.outputs.registry }}/nasneh-staging-api:${{ github.sha }}"
+    }
+  ]
+```
+
+**Solution:** Updated the workflow to explicitly include both containers in the task definition update:
+
+```yaml
+# NEW (working)
+containers: |
+  [
+    {
+      "name": "api",
+      "image": "${{ steps.login-ecr.outputs.registry }}/nasneh-staging-api:${{ github.sha }}"
+    },
+    {
+      "name": "redis",
+      "image": "redis:7-alpine",
+      "essential": false,
+      "portMappings": [{"containerPort": 6379, "protocol": "tcp"}],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "redis-cli ping || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      }
+    }
+  ]
+```
+
+**Verification:**
+- GET `/api/v1/bookings/:id` now returns 404 (not found) instead of 500 (Redis error)
+- Redis health checks passing in ECS task definition revision 24
+- Both containers running successfully in staging environment
+
+**Impact:** Redis-dependent endpoints now work correctly across deployments.
+
+**PR:** #194
+
+---
+
+### OTP verify-otp 500 Error Fix
+
+**Problem:** POST `/api/v1/auth/verify-otp` returned 500 error even with correct OTP.
+
+**Root Cause:** ESM vs CommonJS conflict in `apps/api/src/modules/auth/token.repository.ts`. The file used `require('crypto')` which is a CommonJS construct, but TypeScript's `NodeNext` module resolution treats `.ts` files as ESM modules:
+
+```typescript
+// OLD (broken in ESM)
+const crypto = require('crypto');
+```
+
+**Solution:** Changed to proper ESM import:
+
+```typescript
+// NEW (working)
+import crypto from 'crypto';
+```
+
+**Verification:**
+- POST `/api/v1/auth/verify-otp` with correct OTP returns 200 + tokens ✅
+- POST `/api/v1/auth/verify-otp` with wrong OTP returns 400 + error message ✅
+- Token generation and validation working correctly ✅
+
+**Testing Results:**
+```bash
+# Correct OTP
+curl -X POST .../auth/verify-otp -d '{"phone": "+97317000000", "otp": "123456"}'
+# Response: {"success":true,"data":{"accessToken":"eyJ...","refreshToken":"a1b..."}}
+
+# Wrong OTP
+curl -X POST .../auth/verify-otp -d '{"phone": "+97317000000", "otp": "999999"}'
+# Response: {"success":false,"error":"Invalid OTP. 4 attempt(s) remaining.","attemptsRemaining":4}
+```
+
+**Impact:** OTP authentication flow now works end-to-end.
+
+**PR:** #194
+
+---
+
+### CD Workflow Gating Enhancement
+
+**Problem:** Deployment could fail if ACTIVE task definition doesn't exist yet (first deployment scenario).
+
+**Solution:** Added fallback logic in `.github/workflows/cd.yml` to use the latest task definition if ACTIVE not found:
+
+```bash
+# Get ACTIVE task definition, fallback to latest if not found
+ACTIVE_TASK_DEF=$(aws ecs describe-services ... | jq -r '.services[0].taskDefinition // empty')
+if [ -z "$ACTIVE_TASK_DEF" ]; then
+  echo "No ACTIVE task definition found, using latest..."
+  ACTIVE_TASK_DEF=$(aws ecs list-task-definitions ... | jq -r '.taskDefinitionArns[-1]')
+fi
+```
+
+**Impact:** More robust deployment process that handles edge cases gracefully.
+
+**PR:** #194
+
+---
+
+### OTP Mock Mode Verification
+
+**Status:** ✅ Confirmed working in staging environment
+
+**Configuration:**
+- `OTP_MOCK_ENABLED=true` (staging only)
+- `ENVIRONMENT=staging` (safety check)
+- Test number: `+97317000000`
+- Fixed OTP: `123456`
+
+**Behavior:**
+- Test number `+97317000000` receives fixed OTP `123456` ✅
+- Non-test numbers receive random OTP (hidden in logs for security) ✅
+- Mock mode only enabled when both env vars are set ✅
+- Rate limiting working (5 requests per 45 min per phone) ✅
+
+**CloudWatch Logs Evidence:**
+```
+[STAGING OTP MOCK] phone=+973170****0000 otp=123456
+[OTP Delivery Log] {"phone":"+973170****","channel":"mock","status":"delivered"}
+```
+
+**Testing Results:**
+
+| Endpoint | Method | Status | Response |
+|----------|--------|--------|----------|
+| `/api/v1/auth/request-otp` | POST | 200 | Mock channel indicator |
+| `/api/v1/auth/verify-otp` (correct) | POST | 200 | Returns tokens |
+| `/api/v1/auth/verify-otp` (wrong) | POST | 400 | Returns error + attempts remaining |
+
+**PRs:** #190, #191, #193 (already merged)
 
 ---
 

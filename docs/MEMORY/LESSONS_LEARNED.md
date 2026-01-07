@@ -4,6 +4,112 @@
 
 ---
 
+## CD Workflow Container Preservation (2026-01-07)
+
+### Problem
+After deploying infrastructure with Redis sidecar, the CD workflow was overwriting the Redis container with the API image during deployments, causing 500 errors on Redis-dependent endpoints like `/api/v1/bookings/:id`.
+
+### Root Cause
+The task definition update logic in `.github/workflows/cd.yml` was only specifying the API container in the `containers` array. AWS ECS interprets this as "replace ALL containers with this list", effectively removing the Redis sidecar from the task definition.
+
+### Solution
+Updated the workflow to explicitly include both containers in the task definition update:
+```yaml
+containers: |
+  [
+    {
+      "name": "api",
+      "image": "${{ steps.login-ecr.outputs.registry }}/nasneh-staging-api:${{ github.sha }}"
+    },
+    {
+      "name": "redis",
+      "image": "redis:7-alpine",
+      "essential": false,
+      "portMappings": [{"containerPort": 6379, "protocol": "tcp"}],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "redis-cli ping || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      }
+    }
+  ]
+```
+
+### Prevention
+When updating ECS task definitions with multiple containers:
+1. Always specify ALL containers in the update, not just the ones being changed
+2. Test deployment workflow after infrastructure changes that add/modify containers
+3. Verify all containers are running after deployment: `aws ecs describe-tasks`
+4. Check container logs for both containers: `aws logs tail /ecs/{service}/{container}`
+5. Monitor ECS task health checks to catch missing containers early
+
+**Reference:** PR #194
+
+---
+
+## ESM vs CommonJS in TypeScript NodeNext (2026-01-07)
+
+### Problem
+POST `/api/v1/auth/verify-otp` returned 500 error with message "Cannot use require() in ESM module" even though the code compiled successfully.
+
+### Root Cause
+The file `apps/api/src/modules/auth/token.repository.ts` used `require('crypto')` which is a CommonJS construct. TypeScript's `NodeNext` module resolution treats `.ts` files as ESM modules by default, and `require()` is not available in ESM.
+
+### Solution
+Changed to proper ESM import:
+```typescript
+// Before (broken)
+const crypto = require('crypto');
+
+// After (working)
+import crypto from 'crypto';
+```
+
+### Prevention
+When using TypeScript with `"module": "NodeNext"` or `"moduleResolution": "NodeNext"`:
+1. Always use `import` statements, never `require()`
+2. Use `import type` for type-only imports to avoid runtime overhead
+3. For CommonJS modules, use: `import pkg from 'package'; const { fn } = pkg;`
+4. Enable `esModuleInterop: true` in `tsconfig.json` for better compatibility
+5. Test all endpoints after TypeScript configuration changes
+6. Watch for "Cannot use require()" errors in CloudWatch logs
+
+**Reference:** PR #194, POSTMORTEM_2026-01-02_CD.md
+
+---
+
+## ECS Task Definition Gating (2026-01-07)
+
+### Problem
+CD workflow could fail if ACTIVE task definition doesn't exist yet (first deployment scenario or after service recreation).
+
+### Root Cause
+The workflow assumed an ACTIVE task definition always exists by querying the running service's task definition. However, on first deployment or after service recreation, there may be no running tasks yet, causing the query to return empty.
+
+### Solution
+Added fallback logic to use the latest task definition if ACTIVE not found:
+```bash
+ACTIVE_TASK_DEF=$(aws ecs describe-services ... | jq -r '.services[0].taskDefinition // empty')
+if [ -z "$ACTIVE_TASK_DEF" ]; then
+  echo "No ACTIVE task definition found, using latest..."
+  ACTIVE_TASK_DEF=$(aws ecs list-task-definitions ... | jq -r '.taskDefinitionArns[-1]')
+fi
+```
+
+### Prevention
+When writing deployment scripts that reference running resources:
+1. Always handle the case where the resource doesn't exist yet
+2. Provide sensible fallbacks (e.g., latest version, default configuration)
+3. Log which fallback was used for debugging and audit purposes
+4. Test deployment on a clean environment with no existing resources
+5. Consider idempotent deployment patterns that work regardless of current state
+
+**Reference:** PR #194
+
+---
+
 ## pnpm deploy --prod Behavior (2026-01-03)
 
 ### Problem
