@@ -106,6 +106,7 @@ export class OtpRepository {
   async isValid(phone: string, otp: string): Promise<{
     valid: boolean;
     error?: string;
+    attemptsRemaining?: number;
     stored?: StoredOtp;
   }> {
     const stored = await this.get(phone);
@@ -142,6 +143,7 @@ export class OtpRepository {
       return {
         valid: false,
         error: `Invalid OTP. ${remaining} attempt(s) remaining.`,
+        attemptsRemaining: remaining,
         stored,
       };
     }

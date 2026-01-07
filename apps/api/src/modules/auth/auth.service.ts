@@ -46,8 +46,15 @@ const otpLogs: OtpLogEntry[] = [];
 export class AuthService {
   /**
    * Generate a 6-digit OTP
+   * For staging mock mode with test number +97317000000, returns fixed OTP "123456"
    */
-  private generateOtp(): string {
+  private generateOtp(phone?: string): string {
+    // Fixed OTP for test number in staging mock mode
+    if (config.otp.mockEnabled && 
+        config.environment === 'staging' && 
+        phone === '+97317000000') {
+      return '123456';
+    }
     return crypto.randomInt(100000, 999999).toString();
   }
 
@@ -88,7 +95,7 @@ export class AuthService {
    * 3. If not delivered/failed, fallback to SMS
    */
   async requestOtp(phone: string): Promise<OtpRequestResponse> {
-    const otp = this.generateOtp();
+    const otp = this.generateOtp(phone);
     const expiresAt = Date.now() + config.otp.expiryMinutes * 60 * 1000;
 
     // Use OTP delivery service for WhatsApp → SMS fallback
@@ -137,7 +144,10 @@ export class AuthService {
     const validation = await otpRepository.isValid(phone, otp);
 
     if (!validation.valid) {
-      throw new Error(validation.error);
+      const error: any = new Error(validation.error);
+      error.statusCode = 400; // Client error, not server error
+      error.attemptsRemaining = validation.attemptsRemaining;
+      throw error;
     }
 
     await otpRepository.delete(phone);
