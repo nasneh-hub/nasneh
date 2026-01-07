@@ -276,8 +276,19 @@ jobs:
 
       - name: Download current task definition
         run: |
+          # Get ACTIVE task definition from running service (not latest revision)
+          # This ensures we use the working configuration as base, not a failed revision
+          ACTIVE_TASK_DEF=$(aws ecs describe-services \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].taskDefinition' \
+            --output text)
+          
+          echo "Active task definition: $ACTIVE_TASK_DEF"
+          
+          # Download ACTIVE task definition
           aws ecs describe-task-definition \
-            --task-definition ${{ env.ECS_TASK_DEFINITION }} \
+            --task-definition "$ACTIVE_TASK_DEF" \
             --query 'taskDefinition' \
             > task-definition.json
           
@@ -285,8 +296,8 @@ jobs:
           jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' \
             task-definition.json > task-definition-clean.json
           
-          echo "Current task definition:"
-          cat task-definition-clean.json | jq '.containerDefinitions[0].image'
+          echo "Current task definition containers:"
+          cat task-definition-clean.json | jq '.containerDefinitions[] | {name: .name, image: .image}'
 
       - name: Update task definition with new image
         id: task-def
