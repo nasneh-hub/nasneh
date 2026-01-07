@@ -87,5 +87,22 @@ Violations of these rules will be documented in MEMORY/LESSONS_LEARNED.md to pre
 
 ---
 
-**Last Updated:** 2026-01-03
+## API Endpoint Documentation
+
+### Rule: API Inventory and Reference Sync
+
+**When:** When implementing a new API endpoint or completing a sprint.
+
+**Requirements:**
+1.  **Evidence-Based Testing:** Test all endpoints on staging environment using `curl` and document actual HTTP status codes.
+2.  **Update Inventory:** Document all findings in `docs/AUDITS/API_ROUTE_INVENTORY.md` with evidence (status codes, error messages).
+3.  **Update Reference:** Update `docs/SPECS/API_REFERENCE.md` to reflect implemented vs planned endpoints.
+4.  **Provide Examples:** Include request/response examples for all new endpoints.
+5.  **Verify Against Roadmap:** Cross-check with `docs/SPECS/MASTER_ROADMAP.md` to ensure alignment.
+
+**Rationale:** Ensures API documentation is always accurate, up-to-date, and reflects the actual deployed state. Prevents discrepancies between code and documentation.
+
+---
+
+**Last Updated:** 2026-01-07
 **Approved By:** Owner (Sayed Mustafa)
