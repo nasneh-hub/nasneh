@@ -1,0 +1,15 @@
+@import '@nasneh/ui/styles/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RTL Support */
+html {
+  direction: rtl;
+}
+
+/* Vazirmatn Font */
+body {
+  font-family: var(--font-family-primary), system-ui, sans-serif;
+}
