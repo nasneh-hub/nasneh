@@ -281,7 +281,7 @@ jobs:
           ACTIVE_TASK_DEF=$(aws ecs describe-services \
             --cluster ${{ env.ECS_CLUSTER }} \
             --services ${{ env.ECS_SERVICE }} \
-            --query 'services[0].taskDefinition' \
+            --query 'services[0].deployments[?status==`ACTIVE`].taskDefinition | [0]' \
             --output text)
           
           echo "Active task definition: $ACTIVE_TASK_DEF"
@@ -305,15 +305,15 @@ jobs:
           NEW_IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:staging-latest"
           echo "Updating image to: $NEW_IMAGE"
           
-          # Update ONLY the API container image, preserve all other containers (e.g., Redis)
+          # Update ONLY the API container image by NAME, preserve all other containers
           jq --arg IMAGE "$NEW_IMAGE" --arg CONTAINER_NAME "${{ env.CONTAINER_NAME }}" '
-            .containerDefinitions = [.containerDefinitions[] | 
+            .containerDefinitions |= map(
               if .name == $CONTAINER_NAME then 
                 .image = $IMAGE 
               else 
                 . 
               end
-            ]
+            )
           ' task-definition-clean.json > task-definition-updated.json
           
           echo "Updated task definition:"
@@ -321,6 +321,17 @@ jobs:
           cat task-definition-updated.json | jq --arg CONTAINER_NAME "${{ env.CONTAINER_NAME }}" '.containerDefinitions[] | select(.name == $CONTAINER_NAME) | .image'
           echo "All container images:"
           cat task-definition-updated.json | jq '.containerDefinitions[] | {name: .name, image: .image}'
+          
+          # Safety gate: Verify Redis container image is correct
+          REDIS_IMAGE=$(cat task-definition-updated.json | jq -r '.containerDefinitions[] | select(.name == "redis") | .image')
+          echo "Redis container image: $REDIS_IMAGE"
+          if [[ "$REDIS_IMAGE" != "redis:7-alpine" ]]; then
+            echo "❌ ERROR: Redis container image is corrupted!"
+            echo "Expected: redis:7-alpine"
+            echo "Got: $REDIS_IMAGE"
+            exit 1
+          fi
+          echo "✅ Redis container image verified: redis:7-alpine"
           
           # Register new task definition revision
           NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
