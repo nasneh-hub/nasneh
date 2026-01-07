@@ -329,6 +329,60 @@ export const ar = {
   },
 
   /**
+   * Profile & Addresses
+   */
+  profile: {
+    // Profile
+    myProfile: 'ملفي الشخصي',
+    editProfile: 'تعديل الملف الشخصي',
+    name: 'الاسم',
+    fullName: 'الاسم الكامل',
+    email: 'البريد الإلكتروني',
+    phone: 'رقم الجوال',
+    phoneReadOnly: 'رقم الجوال (لا يمكن تغييره)',
+    saveChanges: 'حفظ التغييرات',
+    profileUpdated: 'تم تحديث الملف الشخصي',
+    
+    // Addresses
+    myAddresses: 'عناويني',
+    addresses: 'العناوين',
+    addAddress: 'إضافة عنوان',
+    editAddress: 'تعديل العنوان',
+    deleteAddress: 'حذف العنوان',
+    noAddresses: 'لا توجد عناوين محفوظة',
+    addFirstAddress: 'أضف عنوانك الأول',
+    
+    // Address Fields
+    addressLabel: 'تسمية العنوان',
+    labelHome: 'المنزل',
+    labelWork: 'العمل',
+    labelOther: 'آخر',
+    governorate: 'المحافظة',
+    area: 'المنطقة',
+    block: 'المجمع',
+    road: 'الطريق',
+    building: 'المبنى',
+    floor: 'الطابق',
+    apartment: 'الشقة',
+    additionalNotes: 'ملاحظات إضافية',
+    setAsDefault: 'تعيين كعنوان افتراضي',
+    defaultAddress: 'العنوان الافتراضي',
+    
+    // Governorates
+    capitalGovernorate: 'محافظة العاصمة',
+    muharraqGovernorate: 'محافظة المحرق',
+    northernGovernorate: 'المحافظة الشمالية',
+    southernGovernorate: 'المحافظة الجنوبية',
+    
+    // Messages
+    addressAdded: 'تم إضافة العنوان',
+    addressUpdated: 'تم تحديث العنوان',
+    addressDeleted: 'تم حذف العنوان',
+    confirmDeleteAddress: 'هل أنت متأكد من حذف هذا العنوان؟',
+    setAsDefaultSuccess: 'تم تعيين العنوان الافتراضي',
+  },
+
+  /**
    * Reviews & Ratings
    */
   reviews: {
