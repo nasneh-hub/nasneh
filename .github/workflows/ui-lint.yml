@@ -192,7 +192,7 @@ jobs:
             | grep -v 'terminology.ts' \
             | grep -v 'node_modules' \
             | grep -v -E '//.*\b(vendor|customer|local|User)\b' \
-            | grep -v -E "href[:=]['\"/]" \
+            | grep -v -E "href[:=]\s*['\"/]" \
             | grep -v -E "^[^:]+:[0-9]+:\s*(VENDOR|CUSTOMER|SELLER|MERCHANT):" \
             | grep -v -E "roles\.(vendor|customer|seller|merchant)" || true)
           
