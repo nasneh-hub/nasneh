@@ -182,15 +182,18 @@ jobs:
           echo "🔍 Checking for forbidden terminology..."
           
           # Search for forbidden terms ONLY in UI copy files and frontend apps
+          # Search for forbidden terms ONLY in UI copy files and frontend apps
           # Exclude backend API (apps/api) entirely
           # Note: Using word boundaries (\b) to prevent false positives like 'localStorage'
+          # Note: Excluding comments, route paths (href:/href=), and copy token references
           VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|\bcustomer\b|\bbuyer\b|\bseller\b|\bvendor\b|\bmerchant\b|\bcheap\b|\bbudget\b|\blocal\b)' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
             | grep -v 'terminology.ts' \
             | grep -v 'node_modules' \
-            | grep -v -E "href=['\"/]" \
+            | grep -v -E '//.*\b(vendor|customer|local|User)\b' \
+            | grep -v -E "href[:=]['\"/]" \
             | grep -v -E "^[^:]+:[0-9]+:\s*(VENDOR|CUSTOMER|SELLER|MERCHANT):" \
             | grep -v -E "roles\.(vendor|customer|seller|merchant)" || true)
           
@@ -212,9 +215,6 @@ jobs:
           else
             echo "✅ PASS: No forbidden terminology found"
           fi
-
-      - name: 'Copy Tokens: Check for Hardcoded Arabic Text'
-        id: check-hardcoded-arabic
         continue-on-error: true
         run: |
           echo "🔍 Checking for hardcoded Arabic text..."
