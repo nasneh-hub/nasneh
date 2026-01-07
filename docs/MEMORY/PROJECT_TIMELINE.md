@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 08:20:00 | Documented (api): add API route inventory and update API reference | PR #188 | @nasneh-hub |
 | 05:39:56 | Fixed (ci): remove accidental bash command from ui-lint.yml | PR #187 | @nasneh-hub |
 
 ---
