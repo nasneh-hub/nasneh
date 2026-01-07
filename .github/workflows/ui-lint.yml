@@ -182,7 +182,6 @@ jobs:
           echo "🔍 Checking for forbidden terminology..."
           
           # Search for forbidden terms ONLY in UI copy files and frontend apps
-          # Search for forbidden terms ONLY in UI copy files and frontend apps
           # Exclude backend API (apps/api) entirely
           # Note: Using word boundaries (\b) to prevent false positives like 'localStorage'
           # Note: Excluding comments, route paths (href:/href=), and copy token references
@@ -215,6 +214,9 @@ jobs:
           else
             echo "✅ PASS: No forbidden terminology found"
           fi
+
+      - name: 'Copy Tokens: Check for Hardcoded Arabic Text'
+        id: check-hardcoded-arabic
         continue-on-error: true
         run: |
           echo "🔍 Checking for hardcoded Arabic text..."
