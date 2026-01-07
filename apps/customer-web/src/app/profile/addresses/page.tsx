@@ -143,7 +143,7 @@ export default function AddressesPage() {
       addr.block && `${ar.profile.block} ${addr.block}`,
       addr.area,
     ].filter(Boolean);
-    return parts.join('، ');
+    return parts.join(', ');
   };
 
   const getLabelText = (label: string) => {
