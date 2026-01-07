@@ -13,8 +13,8 @@
  */
 
 // Export copy tokens
-export { ar } from './ar.js';
-export { en } from './en.js';
+export { ar } from './ar';
+export { en } from './en';
 
 // Export terminology
 export {
@@ -23,13 +23,13 @@ export {
   BRAND_REPLACEMENTS,
   hasForbiddenTerms,
   replaceForbiddenTerms,
-} from './terminology.js';
+} from './terminology';
 
 // Export types
-export type { ArCopy } from './ar.js';
-export type { EnCopy } from './en.js';
+export type { ArCopy } from './ar';
+export type { EnCopy } from './en';
 export type {
   ForbiddenTerms,
   ApprovedTerms,
   BrandReplacements,
-} from './terminology.js';
+} from './terminology';

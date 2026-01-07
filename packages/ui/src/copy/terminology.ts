@@ -127,7 +127,6 @@ export const APPROVED_TERMS = {
     // Actions
     shop: 'Shop',
     browse: 'Browse',
-    support: 'Support',
     become: 'Become a Nasneh',
   },
   
@@ -163,7 +162,6 @@ export const APPROVED_TERMS = {
     // Actions
     shop: 'تسوّق',
     browse: 'تصفح',
-    support: 'ادعم',
     become: 'صير ناسنه',
   },
 } as const;

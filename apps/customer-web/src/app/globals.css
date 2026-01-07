@@ -1,0 +1,22 @@
+@import '@nasneh/ui/styles/tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+html {
+  direction: rtl;
+}
+
+body {
+  font-family: var(--font-family-primary);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Focus ring utility */
+.focus-ring {
+  outline: none;
+  ring: var(--ring-width) solid var(--ring-color);
+  ring-offset: var(--ring-offset);
+}
