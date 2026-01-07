@@ -91,7 +91,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Logo variant="full" size="lg" />
+          <Logo variant="auto" size="lg" />
         </div>
 
         {/* Login Card */}
@@ -125,7 +125,7 @@ export default function LoginPage() {
                     value={phone}
                     onChange={handlePhoneChange}
                     placeholder={ar.auth.phonePlaceholder}
-                    error={!!error}
+                    error={error || undefined}
                     disabled={isSubmitting}
                     autoComplete="tel"
                     className="flex-1"
@@ -141,7 +141,7 @@ export default function LoginPage() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                variant="primary"
+                variant="default"
                 size="lg"
                 disabled={isSubmitting || !phone}
                 className="w-full"

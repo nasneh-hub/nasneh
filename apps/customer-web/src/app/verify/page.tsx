@@ -240,7 +240,7 @@ export default function VerifyPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Logo variant="full" size="lg" />
+          <Logo variant="auto" size="lg" />
         </div>
 
         {/* Verify Card */}
@@ -307,7 +307,7 @@ export default function VerifyPage() {
             {/* Submit Button */}
             <Button
               type="button"
-              variant="primary"
+              variant="default"
               size="lg"
               disabled={isSubmitting || otp.join('').length !== OTP_LENGTH}
               onClick={() => handleSubmit()}

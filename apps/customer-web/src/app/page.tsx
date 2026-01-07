@@ -28,7 +28,7 @@ export default function HomePage() {
       {/* Header */}
       <header className="bg-[var(--bg-primary)] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Logo variant="full" size="md" />
+          <Logo variant="auto" size="md" />
           
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
@@ -40,7 +40,7 @@ export default function HomePage() {
               </Button>
             </div>
           ) : (
-            <Button variant="primary" size="sm" onClick={() => router.push('/login')}>
+            <Button variant="default" size="sm" onClick={() => router.push('/login')}>
               {ar.auth.login}
             </Button>
           )}
@@ -74,7 +74,7 @@ export default function HomePage() {
               <p className="text-[color:var(--text-secondary)] mb-6">
                 {ar.taglines.secondary}
               </p>
-              <Button variant="primary" size="lg" onClick={() => router.push('/login')}>
+              <Button variant="default" size="lg" onClick={() => router.push('/login')}>
                 {ar.cta.browseNasneh}
               </Button>
             </div>

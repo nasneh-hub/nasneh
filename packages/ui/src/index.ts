@@ -53,14 +53,14 @@ export type { AvatarProps } from './components/avatar';
 
 // SegmentedControl - 2-6 option selection
 export { SegmentedControl } from './components/segmented-control';
-export type { SegmentedControlProps, SegmentedControlOption } from './components/segmented-control';
+export type { SegmentedControlProps, SegmentOption as SegmentedControlOption } from './components/segmented-control';
 
 // Tabs - Page navigation
 export { Tabs } from './components/tabs';
 export type { TabsProps, TabItem } from './components/tabs';
 
 // Toast - Notifications
-export { Toast, toast } from './components/toast';
+export { Toast, ToastContainer } from './components/toast';
 export type { ToastProps } from './components/toast';
 
 // Select - Dropdown for 7+ options
