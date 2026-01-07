@@ -1,6 +1,3 @@
-
-cd /workspaces/nasneh && git checkout main && git pull origin main && git checkout -b ci/s3.8-07-ui-lint && mkdir -p .github/workflows && cat > .github/workflows/ui-lint.yml << 'WORKFLOW_EOF'
-
 name: 🚨 UI Law Enforcement
 
 on:
