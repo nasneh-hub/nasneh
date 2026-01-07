@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#190:** add OTP mock mode for staging
 
 ### 🐛 Bug Fixes (fix)
+- **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
 - **#196:** add authMiddleware to users routes
 - **#194:** use ESM import for crypto in token repository
 - **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
@@ -50,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
 - **#196:** add authMiddleware to users routes
 - **#194:** use ESM import for crypto in token repository
 - **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
@@ -106,6 +108,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
 - **#196:** add authMiddleware to users routes
 - **#194:** use ESM import for crypto in token repository
 - **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
@@ -192,6 +195,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
 - **#196:** add authMiddleware to users routes
 - **#194:** use ESM import for crypto in token repository
 - **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging

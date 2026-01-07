@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 17:25:10 | Fixed (api): add authMiddleware to 4 modules (addresses, bookings, cart, reviews) | PR #197 | @nasneh-hub |
 | 16:38:00 | Fixed (users): add authMiddleware to users routes | PR #196 | @nasneh-hub |
 | 15:59:39 | Documented (audit): document Sprint 3.9 infrastructure fixes and lessons learned | PR #195 | @nasneh-hub |
 | 16:30:00 | Documented (audit): Sprint 3.9 infrastructure fixes and lessons learned | PR #195 | @nasneh-hub |
