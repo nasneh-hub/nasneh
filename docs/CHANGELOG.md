@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#187:** remove accidental bash command from ui-lint.yml
 
 ### 📚 Documentation (docs)
+- **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
 - **#186:** update project status and add missing links
 
@@ -56,6 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
+- **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
 - **#182:** comprehensive documentation audit and gap fixes
 - **#180:** add Component Specifications for 12 core components
@@ -83,6 +85,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.2.0] - 2026-01-03
 
 ### 📚 Documentation (docs)
+- **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
 - **#182:** comprehensive documentation audit and gap fixes
 - **#180:** add Component Specifications for 12 core components
@@ -195,6 +198,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
+- **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
 - **#182:** comprehensive documentation audit and gap fixes
 - **#180:** add Component Specifications for 12 core components
