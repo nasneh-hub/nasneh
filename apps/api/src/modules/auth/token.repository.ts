@@ -9,6 +9,7 @@
  * - Atomic operations for thread safety
  */
 
+import { createHash } from 'crypto';
 import { getRedisClient } from '../../lib/redis.js';
 import { config } from '../../config/env.js';
 
@@ -49,8 +50,7 @@ export class TokenRepository {
    * We don't store the raw token, only its hash
    */
   private hashToken(token: string): string {
-    const crypto = require('crypto');
-    return crypto.createHash('sha256').update(token).digest('hex');
+    return createHash('sha256').update(token).digest('hex');
   }
 
   /**
