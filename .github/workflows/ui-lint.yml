@@ -183,7 +183,8 @@ jobs:
           
           # Search for forbidden terms ONLY in UI copy files and frontend apps
           # Exclude backend API (apps/api) entirely
-          VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|customer|buyer|seller|vendor|merchant|cheap|budget|local)' \
+          # Note: Using word boundaries (\b) to prevent false positives like 'localStorage'
+          VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|\bcustomer\b|\bbuyer\b|\bseller\b|\bvendor\b|\bmerchant\b|\bcheap\b|\bbudget\b|\blocal\b)' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
@@ -373,7 +374,8 @@ jobs:
           
           # Search for className on UI components in consumer apps only (not in component definitions)
           # Only check apps, not packages/ui/src (where components are defined)
-          VIOLATIONS=$(grep -r -n -E "<(Button|Input|Card|Badge|Dialog|SegmentedControl|Table|Select|Tabs|Avatar|Toast|Skeleton)[^>]*className=" \
+          # Note: Using word boundary (\b) after component name to prevent matching CardContent, CardHeader, etc.
+          VIOLATIONS=$(grep -r -n -E "<(Button|Input|Card|Badge|Dialog|SegmentedControl|Table|Select|Tabs|Avatar|Toast|Skeleton)\b[^>]*className=" \
             --include="*.tsx" \
             apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v 'node_modules' || true)
