@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### ✨ Features (feat)
+- **#190:** add OTP mock mode for staging
+
 ### 🐛 Bug Fixes (fix)
 - **#189:** remove waitForDelivery to prevent OTP timeout
 - **#187:** remove accidental bash command from ui-lint.yml
