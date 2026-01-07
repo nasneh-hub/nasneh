@@ -217,8 +217,12 @@ jobs:
         run: |
           echo "🔍 Checking for hardcoded Arabic text..."
           
-          # Search for Arabic text in frontend code only (excluding copy tokens and comments)
-          VIOLATIONS=$(grep -r -n -P '[\p{Arabic}]+' \
+          # Search for Arabic LETTERS only (U+0621-U+064A = ء to ي), excluding:
+          # - Arabic punctuation: ، (comma), ؛ (semicolon), ؟ (question mark)
+          # - Arabic-Indic digits: ٠-٩
+          # - Arabic extended characters and diacritics
+          # This allows using Arabic punctuation marks in code without triggering violations
+          VIOLATIONS=$(grep -r -n -P '[\x{0621}-\x{064A}]+' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
