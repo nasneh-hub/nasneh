@@ -6,7 +6,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./copy": "./src/copy/index.ts"
+    "./copy": "./src/copy/index.ts",
+    "./styles/tokens.css": "./src/styles/tokens.css"
   },
   "scripts": {
     "lint": "echo 'TODO: eslint .'"
