@@ -274,7 +274,7 @@ jobs:
           echo "Describing service ${{ env.ECS_SERVICE }}..."
           aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].{status:status,runningCount:runningCount,desiredCount:desiredCount}'
 
-      - name: Download current task definition
+            - name: Download current task definition
         run: |
           # Get ACTIVE task definition from running service (not latest revision)
           # This ensures we use the working configuration as base, not a failed revision
@@ -286,7 +286,26 @@ jobs:
           
           echo "Active task definition: $ACTIVE_TASK_DEF"
           
-          # Download ACTIVE task definition
+          # If no ACTIVE deployment, use the service's current task definition
+          if [ -z "$ACTIVE_TASK_DEF" ] || [ "$ACTIVE_TASK_DEF" = "None" ] || [ "$ACTIVE_TASK_DEF" = "null" ]; then
+            echo "No ACTIVE deployment found, using service taskDefinition..."
+            ACTIVE_TASK_DEF=$(aws ecs describe-services \
+              --region "$AWS_REGION" \
+              --cluster "${{ env.ECS_CLUSTER }}" \
+              --services "${{ env.ECS_SERVICE }}" \
+              --query 'services[0].taskDefinition' \
+              --output text)
+          fi
+          
+          # Hard guard (don't continue with empty/None)
+          if [ -z "$ACTIVE_TASK_DEF" ] || [ "$ACTIVE_TASK_DEF" = "None" ] || [ "$ACTIVE_TASK_DEF" = "null" ]; then
+            echo "FATAL: Could not resolve task definition ARN (check cluster/service/region)."
+            exit 1
+          fi
+          
+          echo "Using task definition: $ACTIVE_TASK_DEF"
+          
+          # Download task definition
           aws ecs describe-task-definition \
             --task-definition "$ACTIVE_TASK_DEF" \
             --query 'taskDefinition' \
