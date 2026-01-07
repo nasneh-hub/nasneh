@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 21:59:25 | Fixed (ci): restore proper workflow structure with comment exclusions | PR #213 | @nasneh-hub |
 | 21:48:05 | Fixed (ci): improve forbidden terminology exclusions for comments and ro… | PR #212 | @nasneh-hub |
 | 21:33:20 | Fixed (ci): exclude route paths and TypeScript keys from forbidden termi… | PR #211 | @nasneh-hub |
 | 21:08:38 | Fixed (ci): exclude Arabic punctuation from hardcoded text check | PR #209 | @nasneh-hub |
