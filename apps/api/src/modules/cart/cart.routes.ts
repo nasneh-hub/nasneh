@@ -2,9 +2,11 @@
  * Cart Routes
  * 
  * Cart management endpoints.
+ * All routes require authentication.
  */
 
 import { Router, type Router as RouterType } from 'express';
+import { authMiddleware } from '../../middleware/auth.middleware.js';
 import {
   getCart,
   addItem,
@@ -20,18 +22,18 @@ import {
 const cartRouter: RouterType = Router();
 
 // GET /cart - Get current user's cart
-cartRouter.get('/', getCart);
+cartRouter.get('/', authMiddleware, getCart);
 
 // POST /cart/items - Add item to cart
-cartRouter.post('/items', addItem);
+cartRouter.post('/items', authMiddleware, addItem);
 
 // PATCH /cart/items/:id - Update item quantity
-cartRouter.patch('/items/:id', updateItem);
+cartRouter.patch('/items/:id', authMiddleware, updateItem);
 
 // DELETE /cart/items/:id - Remove item from cart
-cartRouter.delete('/items/:id', removeItem);
+cartRouter.delete('/items/:id', authMiddleware, removeItem);
 
 // DELETE /cart - Clear entire cart
-cartRouter.delete('/', clearCart);
+cartRouter.delete('/', authMiddleware, clearCart);
 
 export { cartRouter };

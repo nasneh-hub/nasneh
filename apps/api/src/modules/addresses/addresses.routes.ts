@@ -2,9 +2,12 @@
  * Addresses Routes
  * 
  * Address management endpoints.
+ * All routes require authentication.
  */
 
 import { Router, type Router as RouterType } from 'express';
+import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
+import { UserRole } from '../../types/auth.types.js';
 import {
   listMyAddresses,
   createMyAddress,
@@ -23,22 +26,22 @@ import {
 const myAddressesRouter: RouterType = Router();
 
 // GET /users/me/addresses - List my addresses
-myAddressesRouter.get('/', listMyAddresses);
+myAddressesRouter.get('/', authMiddleware, listMyAddresses);
 
 // POST /users/me/addresses - Create address
-myAddressesRouter.post('/', createMyAddress);
+myAddressesRouter.post('/', authMiddleware, createMyAddress);
 
 // GET /users/me/addresses/:id - Get specific address
-myAddressesRouter.get('/:id', getMyAddress);
+myAddressesRouter.get('/:id', authMiddleware, getMyAddress);
 
 // PATCH /users/me/addresses/:id - Update address
-myAddressesRouter.patch('/:id', updateMyAddress);
+myAddressesRouter.patch('/:id', authMiddleware, updateMyAddress);
 
 // DELETE /users/me/addresses/:id - Delete address
-myAddressesRouter.delete('/:id', deleteMyAddress);
+myAddressesRouter.delete('/:id', authMiddleware, deleteMyAddress);
 
 // POST /users/me/addresses/:id/default - Set as default
-myAddressesRouter.post('/:id/default', setMyDefaultAddress);
+myAddressesRouter.post('/:id/default', authMiddleware, setMyDefaultAddress);
 
 // ===========================================
 // Admin User Addresses Routes (mounted at /users/:userId/addresses)
@@ -47,9 +50,9 @@ myAddressesRouter.post('/:id/default', setMyDefaultAddress);
 const userAddressesRouter: RouterType = Router({ mergeParams: true });
 
 // GET /users/:userId/addresses - List user's addresses (admin only)
-userAddressesRouter.get('/', listUserAddresses);
+userAddressesRouter.get('/', authMiddleware, requireRoles(UserRole.ADMIN), listUserAddresses);
 
 // POST /users/:userId/addresses - Create address for user (admin only)
-userAddressesRouter.post('/', createUserAddress);
+userAddressesRouter.post('/', authMiddleware, requireRoles(UserRole.ADMIN), createUserAddress);
 
 export { myAddressesRouter, userAddressesRouter };
