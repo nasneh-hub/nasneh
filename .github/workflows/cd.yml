@@ -274,7 +274,7 @@ jobs:
           echo "Describing service ${{ env.ECS_SERVICE }}..."
           aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }} --query 'services[0].{status:status,runningCount:runningCount,desiredCount:desiredCount}'
 
-            - name: Download current task definition
+      - name: Download current task definition
         run: |
           # Get ACTIVE task definition from running service (not latest revision)
           # This ensures we use the working configuration as base, not a failed revision
