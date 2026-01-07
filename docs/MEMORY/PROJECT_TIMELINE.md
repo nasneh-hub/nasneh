@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 20:41:44 | Fixed (ci): add word boundaries to UI Law regex patterns | PR #206 | @nasneh-hub |
 | 20:16:14 | Added (customer-web): implement phone + OTP login flow | PR #204 | @nasneh-hub |
 | 19:39:33 | Added (ui): add remaining 6 core components | PR #203 | @nasneh-hub |
 | 19:04:33 | Documented (ui): add modification rules to tokens.css | PR #201 | @nasneh-hub |
