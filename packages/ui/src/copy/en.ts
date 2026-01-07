@@ -329,6 +329,60 @@ export const en = {
   },
 
   /**
+   * Profile & Addresses
+   */
+  profile: {
+    // Profile
+    myProfile: 'My Profile',
+    editProfile: 'Edit Profile',
+    name: 'Name',
+    fullName: 'Full Name',
+    email: 'Email',
+    phone: 'Phone',
+    phoneReadOnly: 'Phone (cannot be changed)',
+    saveChanges: 'Save Changes',
+    profileUpdated: 'Profile updated',
+    
+    // Addresses
+    myAddresses: 'My Addresses',
+    addresses: 'Addresses',
+    addAddress: 'Add Address',
+    editAddress: 'Edit Address',
+    deleteAddress: 'Delete Address',
+    noAddresses: 'No saved addresses',
+    addFirstAddress: 'Add your first address',
+    
+    // Address Fields
+    addressLabel: 'Address Label',
+    labelHome: 'Home',
+    labelWork: 'Work',
+    labelOther: 'Other',
+    governorate: 'Governorate',
+    area: 'Area',
+    block: 'Block',
+    road: 'Road',
+    building: 'Building',
+    floor: 'Floor',
+    apartment: 'Apartment',
+    additionalNotes: 'Additional Notes',
+    setAsDefault: 'Set as default address',
+    defaultAddress: 'Default Address',
+    
+    // Governorates
+    capitalGovernorate: 'Capital Governorate',
+    muharraqGovernorate: 'Muharraq Governorate',
+    northernGovernorate: 'Northern Governorate',
+    southernGovernorate: 'Southern Governorate',
+    
+    // Messages
+    addressAdded: 'Address added',
+    addressUpdated: 'Address updated',
+    addressDeleted: 'Address deleted',
+    confirmDeleteAddress: 'Are you sure you want to delete this address?',
+    setAsDefaultSuccess: 'Default address set',
+  },
+
+  /**
    * Reviews & Ratings
    */
   reviews: {
