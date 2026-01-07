@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 22:13:06 | Added (dashboard): add login and role switching flow | PR #210 | @nasneh-hub |
 | 21:59:25 | Fixed (ci): restore proper workflow structure with comment exclusions | PR #213 | @nasneh-hub |
 | 21:48:05 | Fixed (ci): improve forbidden terminology exclusions for comments and ro… | PR #212 | @nasneh-hub |
 | 21:33:20 | Fixed (ci): exclude route paths and TypeScript keys from forbidden termi… | PR #211 | @nasneh-hub |
