@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 11:42:25 | Fixed (bookings): add missing getBookingById function | PR #192 | @nasneh-hub |
 | 11:00:14 | Fixed (auth): use ENVIRONMENT variable for OTP mock mode safety check | PR #191 | @nasneh-hub |
 | 10:04:42 | Added (auth): add OTP mock mode for staging | PR #190 | @nasneh-hub |
 | 08:43:19 | Fixed (auth): remove waitForDelivery to prevent OTP timeout | PR #189 | @nasneh-hub |

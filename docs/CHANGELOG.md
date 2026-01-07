@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#190:** add OTP mock mode for staging
 
 ### 🐛 Bug Fixes (fix)
+- **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
 - **#187:** remove accidental bash command from ui-lint.yml
@@ -45,6 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
 - **#141:** merge changelog and timeline into unified auto-docs workflow
@@ -95,6 +97,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
 - **#141:** merge changelog and timeline into unified auto-docs workflow
@@ -177,6 +180,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
 - **#141:** merge changelog and timeline into unified auto-docs workflow
