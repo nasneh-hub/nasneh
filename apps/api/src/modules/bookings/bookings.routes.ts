@@ -2,9 +2,12 @@
  * Bookings Routes
  * 
  * Customer and provider booking endpoints including status transitions and listing.
+ * All routes require authentication.
  */
 
 import { Router, type Router as RouterType } from 'express';
+import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
+import { UserRole } from '../../types/auth.types.js';
 import {
   createBooking,
   getBooking,
@@ -28,17 +31,17 @@ const router: RouterType = Router();
 // - CUSTOMER: only own bookings
 // - PROVIDER: only bookings for their provider account
 // - ADMIN: all bookings
-router.get('/', listBookings);
+router.get('/', authMiddleware, listBookings);
 
 // ===========================================
 // Booking CRUD
 // ===========================================
 
 // POST /bookings - Create a new booking
-router.post('/', createBooking);
+router.post('/', authMiddleware, createBooking);
 
 // GET /bookings/:id - Get booking details
-router.get('/:id', getBooking);
+router.get('/:id', authMiddleware, getBooking);
 
 // ===========================================
 // Status Transition Endpoints
@@ -46,23 +49,23 @@ router.get('/:id', getBooking);
 
 // POST /bookings/:id/confirm - Confirm a pending booking
 // Allowed: Provider, Admin
-router.post('/:id/confirm', confirmBooking);
+router.post('/:id/confirm', authMiddleware, confirmBooking);
 
 // POST /bookings/:id/start - Start a confirmed booking
 // Allowed: Provider, Admin
-router.post('/:id/start', startBooking);
+router.post('/:id/start', authMiddleware, startBooking);
 
 // POST /bookings/:id/complete - Complete an in-progress booking
 // Allowed: Provider, Admin
-router.post('/:id/complete', completeBooking);
+router.post('/:id/complete', authMiddleware, completeBooking);
 
 // POST /bookings/:id/cancel - Cancel a booking
 // Allowed: Customer (PENDING/CONFIRMED), Provider, Admin
-router.post('/:id/cancel', cancelBooking);
+router.post('/:id/cancel', authMiddleware, cancelBooking);
 
 // POST /bookings/:id/no-show - Mark booking as no-show
 // Allowed: Provider, Admin
-router.post('/:id/no-show', markNoShow);
+router.post('/:id/no-show', authMiddleware, markNoShow);
 
 export default router;
 
@@ -73,7 +76,7 @@ export default router;
 export const customerBookingRoutes: RouterType = Router();
 
 // GET /customer/bookings - List customer's own bookings
-customerBookingRoutes.get('/bookings', listCustomerBookings);
+customerBookingRoutes.get('/bookings', authMiddleware, listCustomerBookings);
 
 // ===========================================
 // Provider-specific routes (for /provider prefix)
@@ -82,4 +85,4 @@ customerBookingRoutes.get('/bookings', listCustomerBookings);
 export const providerBookingRoutes: RouterType = Router();
 
 // GET /provider/bookings - List provider's bookings
-providerBookingRoutes.get('/bookings', listProviderBookings);
+providerBookingRoutes.get('/bookings', authMiddleware, requireRoles(UserRole.PROVIDER, UserRole.ADMIN), listProviderBookings);
