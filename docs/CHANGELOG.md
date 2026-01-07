@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+---
+
+## [0.3.5] - 2026-01-07
+
 ### ✨ Features (feat)
 - **#190:** add OTP mock mode for staging
 
@@ -28,6 +32,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#186:** update project status and add missing links
 
 ---
+
+---
+
 
 ## [0.3.0] - 2026-01-06
 
