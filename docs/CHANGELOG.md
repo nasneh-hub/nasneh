@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 🐛 Bug Fixes (fix)
+- **#200:** scope ui-lint to frontend files only, eliminate false positives
+
 ---
 
 ## [0.3.5] - 2026-01-07
