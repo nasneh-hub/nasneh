@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Card, CardContent, Logo } from '@nasneh/ui';
+import { Button, Card, Logo } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
 import { useAuth } from '@/context/auth-context';
 
@@ -50,8 +50,8 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         {isAuthenticated ? (
-          <Card>
-            <CardContent className="p-8 text-center">
+          <Card padding="lg">
+            <div className="text-center">
               <h1 className="text-2xl font-bold mb-4 text-[color:var(--text-primary)]">
                 {ar.auth.welcome}
               </h1>
@@ -63,11 +63,11 @@ export default function HomePage() {
                   {ar.auth.phone}: <span className="font-medium text-[color:var(--text-primary)]" dir="ltr">{user?.phone}</span>
                 </p>
               </div>
-            </CardContent>
+            </div>
           </Card>
         ) : (
-          <Card>
-            <CardContent className="p-8 text-center">
+          <Card padding="lg">
+            <div className="text-center">
               <h1 className="text-2xl font-bold mb-4 text-[color:var(--text-primary)]">
                 {ar.ui.welcome}
               </h1>
@@ -77,7 +77,7 @@ export default function HomePage() {
               <Button variant="primary" size="lg" onClick={() => router.push('/login')}>
                 {ar.cta.browseNasneh}
               </Button>
-            </CardContent>
+            </div>
           </Card>
         )}
       </main>

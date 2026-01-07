@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Card, CardContent, Logo } from '@nasneh/ui';
+import { Button, Card, Logo } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
 import { verifyOtp, requestOtp } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
@@ -244,8 +244,7 @@ export default function VerifyPage() {
         </div>
 
         {/* Verify Card */}
-        <Card>
-          <CardContent className="p-6">
+        <Card padding="lg">
             <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
               {ar.auth.verifyOtp}
             </h1>
@@ -342,7 +341,6 @@ export default function VerifyPage() {
                 {ar.auth.changePhone}
               </button>
             </div>
-          </CardContent>
         </Card>
       </div>
     </div>

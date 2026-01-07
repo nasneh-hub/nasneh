@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Card, CardContent, Logo } from '@nasneh/ui';
+import { Button, Input, Card, Logo } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
 import { requestOtp } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
@@ -95,8 +95,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Card */}
-        <Card>
-          <CardContent className="p-6">
+        <Card padding="lg">
             <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
               {ar.auth.login}
             </h1>
@@ -162,7 +161,6 @@ export default function LoginPage() {
                 {ar.auth.privacyPolicy}
               </a>
             </p>
-          </CardContent>
         </Card>
       </div>
     </div>
