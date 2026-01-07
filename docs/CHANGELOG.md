@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#190:** add OTP mock mode for staging
 
 ### 🐛 Bug Fixes (fix)
+- **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
 - **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
@@ -46,6 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
 - **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
@@ -97,6 +99,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
 - **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout
@@ -180,6 +183,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#193:** return 400 for invalid OTP and use fixed OTP for test number in staging
 - **#192:** add missing getBookingById function
 - **#191:** use ENVIRONMENT variable for OTP mock mode safety check
 - **#189:** remove waitForDelivery to prevent OTP timeout

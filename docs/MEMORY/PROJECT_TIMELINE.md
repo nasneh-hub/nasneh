@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 14:07:23 | Fixed (auth): return 400 for invalid OTP and use fixed OTP for test number in staging | PR #193 | @nasneh-hub |
 | 11:42:25 | Fixed (bookings): add missing getBookingById function | PR #192 | @nasneh-hub |
 | 11:00:14 | Fixed (auth): use ENVIRONMENT variable for OTP mock mode safety check | PR #191 | @nasneh-hub |
 | 10:04:42 | Added (auth): add OTP mock mode for staging | PR #190 | @nasneh-hub |
