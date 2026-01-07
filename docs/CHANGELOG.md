@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#199:** add 6 core components (Button, Input, Card, Badge, Skeleton, Dialog)
 
 ### 🐛 Bug Fixes (fix)
+- **#211:** exclude route paths and TypeScript keys from forbidden termi…
 - **#209:** exclude Arabic punctuation from hardcoded text check
 - **#206:** add word boundaries to UI Law regex patterns
 - **#200:** scope ui-lint to frontend files only, eliminate false positives
@@ -36,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#190:** add OTP mock mode for staging
 
 ### 🐛 Bug Fixes (fix)
+- **#211:** exclude route paths and TypeScript keys from forbidden termi…
 - **#209:** exclude Arabic punctuation from hardcoded text check
 - **#206:** add word boundaries to UI Law regex patterns
 - **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
@@ -84,6 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#211:** exclude route paths and TypeScript keys from forbidden termi…
 - **#209:** exclude Arabic punctuation from hardcoded text check
 - **#206:** add word boundaries to UI Law regex patterns
 - **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
@@ -145,6 +148,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#211:** exclude route paths and TypeScript keys from forbidden termi…
 - **#209:** exclude Arabic punctuation from hardcoded text check
 - **#206:** add word boundaries to UI Law regex patterns
 - **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)
@@ -240,6 +244,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#211:** exclude route paths and TypeScript keys from forbidden termi…
 - **#209:** exclude Arabic punctuation from hardcoded text check
 - **#206:** add word boundaries to UI Law regex patterns
 - **#197:** add authMiddleware to 4 modules (addresses, bookings, cart, reviews)

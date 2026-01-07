@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 21:33:20 | Fixed (ci): exclude route paths and TypeScript keys from forbidden termi… | PR #211 | @nasneh-hub |
 | 21:08:38 | Fixed (ci): exclude Arabic punctuation from hardcoded text check | PR #209 | @nasneh-hub |
 | 21:00:23 | Added (customer-web): add profile and address management pages | PR #208 | @nasneh-hub |
 | 20:46:00 | Refactored (auth): remove localStorage workaround | PR #207 | @nasneh-hub |
