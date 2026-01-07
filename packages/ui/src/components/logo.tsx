@@ -46,12 +46,13 @@ export const Logo: React.FC<LogoProps> = ({
   label,
 }) => {
   // Determine fill color based on props
+  // Using CSS variable references for black/white variants
   const fillColor = color 
     ? color 
     : variant === 'black' 
-      ? '#000000' 
+      ? 'var(--color-text-primary)' 
       : variant === 'white' 
-        ? '#FFFFFF' 
+        ? 'var(--color-text-inverse)' 
         : 'currentColor';
 
   // If no label, logo is decorative (aria-hidden)

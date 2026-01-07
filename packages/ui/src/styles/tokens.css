@@ -89,6 +89,7 @@
   --text-primary: #000000;    /* Main text */
   --text-secondary: #6B7280;  /* Secondary text */
   --text-tertiary: #9CA3AF;   /* Placeholder text */
+  --color-text-inverse: #FFFFFF; /* Text on colored backgrounds */
   
   /* ============================================
    * SEMANTIC COLORS (Status Only)
@@ -137,6 +138,7 @@
   --text-primary: #FFFFFF;    /* Main text */
   --text-secondary: #9CA3AF;  /* Secondary text */
   --text-tertiary: #6B7280;   /* Placeholder text */
+  --color-text-inverse: #000000; /* Text on colored backgrounds (dark mode) */
   
   /* Semantic Colors (adjusted for dark mode) */
   --color-success: #34D399;   /* Brighter green for dark bg */
