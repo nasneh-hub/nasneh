@@ -12,7 +12,7 @@ import { z } from 'zod';
 const envSchema = z.object({
   // Server
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  ENVIRONMENT: z.enum(['development', 'staging', 'production']).default('development'),
+  APP_ENVIRONMENT: z.enum(['development', 'staging', 'production']).default('development'),
   PORT: z.string().default('4000'),
   API_VERSION: z.string().default('v1'),
 
@@ -96,7 +96,7 @@ export const config = {
   isDevelopment: env.NODE_ENV === 'development',
   isProduction: env.NODE_ENV === 'production',
   isTest: env.NODE_ENV === 'test',
-  environment: env.ENVIRONMENT as 'development' | 'staging' | 'production',
+  environment: env.APP_ENVIRONMENT as 'development' | 'staging' | 'production',
   port: parseInt(env.PORT, 10),
   apiVersion: env.API_VERSION,
 
