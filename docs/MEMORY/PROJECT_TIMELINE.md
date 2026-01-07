@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 21:00:23 | Added (customer-web): add profile and address management pages | PR #208 | @nasneh-hub |
 | 20:46:00 | Refactored (auth): remove localStorage workaround | PR #207 | @nasneh-hub |
 | 20:41:44 | Fixed (ci): add word boundaries to UI Law regex patterns | PR #206 | @nasneh-hub |
 | 20:16:14 | Added (customer-web): implement phone + OTP login flow | PR #204 | @nasneh-hub |

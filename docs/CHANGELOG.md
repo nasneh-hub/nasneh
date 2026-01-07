@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
 - **#203:** add remaining 6 core components
 - **#199:** add 6 core components (Button, Input, Card, Badge, Skeleton, Dialog)
@@ -28,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
 - **#203:** add remaining 6 core components
 - **#190:** add OTP mock mode for staging
@@ -66,6 +68,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
 - **#203:** add remaining 6 core components
 - **#177:** Vazirmatn Font Files - S3.8-03
@@ -175,6 +178,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
 - **#203:** add remaining 6 core components
 - **#177:** Vazirmatn Font Files - S3.8-03
@@ -193,6 +197,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
 - **#203:** add remaining 6 core components
 - **#177:** Vazirmatn Font Files - S3.8-03
