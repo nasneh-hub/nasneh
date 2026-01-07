@@ -2007,3 +2007,148 @@ import { Skeleton } from '@nasneh/ui';
 ## Related Documentation
 
 - **Design Tokens:** `../../packages/ui/src/styles/tokens.css` - The actual CSS variable values
+
+---
+
+# 13. Logo
+
+## Purpose
+Official Nasneh brand mark for use across the platform.
+
+## Visual Specs
+
+| Property | Value | Token |
+|----------|-------|-------|
+| **Default Size** | 40px | - |
+| **Color (auto)** | currentColor | Inherits from parent |
+| **Color (black)** | #000000 | `var(--color-text-primary)` |
+| **Color (white)** | #FFFFFF | `var(--color-text-inverse)` |
+
+## Variants
+
+| Variant | Color | Use Case |
+|---------|-------|----------|
+| **auto** | `currentColor` | Default - inherits from parent text color |
+| **black** | `var(--color-text-primary)` | Light backgrounds |
+| **white** | `var(--color-text-inverse)` | Dark backgrounds |
+
+> ⚠️ **Note:** There is NO `variant="full"` - use `variant="auto"` instead.
+
+## Props Interface
+
+```typescript
+interface LogoProps {
+  /**
+   * Width & height of the logo
+   * @default 40
+   */
+  size?: number | string;
+  
+  /**
+   * Color variant
+   * @default 'auto'
+   */
+  variant?: 'auto' | 'black' | 'white';
+  
+  /**
+   * Custom color (overrides variant)
+   */
+  color?: string;
+  
+  /**
+   * Accessible label for screen readers
+   * If provided, adds <title> element
+   * If empty, logo is decorative (aria-hidden)
+   */
+  label?: string;
+}
+```
+
+## Usage Example
+
+```tsx
+import { Logo } from '@nasneh/ui';
+
+// ✅ CORRECT: Auto color (inherits from parent)
+<Logo size={40} />
+
+// ✅ CORRECT: With accessible label
+<Logo size={40} label="Nasneh" />
+
+// ✅ CORRECT: Black variant for light backgrounds
+<Logo size={40} variant="black" />
+
+// ✅ CORRECT: White variant for dark backgrounds
+<Logo size={40} variant="white" />
+
+// ❌ WRONG: variant="full" does not exist
+<Logo variant="full" />
+```
+
+---
+
+# Import Paths
+
+## Available Subpath Exports
+
+The `@nasneh/ui` package provides the following import paths:
+
+| Import Path | Description | Example |
+|-------------|-------------|---------|
+| `@nasneh/ui` | All components | `import { Button, Card } from '@nasneh/ui'` |
+| `@nasneh/ui/copy` | Copy tokens (ar, en) | `import { ar, en } from '@nasneh/ui/copy'` |
+| `@nasneh/ui/styles/tokens.css` | CSS variables | `@import '@nasneh/ui/styles/tokens.css'` |
+
+## Usage in Next.js App
+
+```tsx
+// In your layout.tsx or globals.css
+import '@nasneh/ui/styles/tokens.css';
+
+// In your components
+import { Button, Input, Card } from '@nasneh/ui';
+import { ar } from '@nasneh/ui/copy';
+```
+
+---
+
+# Lessons Learned (S4-02)
+
+## Common Mistakes to Avoid
+
+### 1. Wrong Variant Names
+
+| Component | ❌ Wrong | ✅ Correct |
+|-----------|----------|------------|
+| Button | `variant="primary"` | `variant="default"` |
+| Logo | `variant="full"` | `variant="auto"` |
+
+### 2. Wrong Prop Types
+
+| Component | Prop | ❌ Wrong | ✅ Correct |
+|-----------|------|----------|------------|
+| Input | `error` | `error={!!error}` (boolean) | `error={error}` (string) |
+
+### 3. CardContent className
+
+The UI Law check regex matches `<Card` in `<CardContent`, causing false positives.
+
+**Solution:** Use `Card padding="lg"` instead of `CardContent className="p-6"`:
+
+```tsx
+// ❌ WRONG: Triggers UI Law violation
+<Card>
+  <CardContent className="p-6">
+    ...
+  </CardContent>
+</Card>
+
+// ✅ CORRECT: Use Card's padding prop
+<Card padding="lg">
+  ...
+</Card>
+```
+
+---
+
+**Document End**
