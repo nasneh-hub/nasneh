@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 🐛 Bug Fixes (fix)
+- **#187:** remove accidental bash command from ui-lint.yml
+
 ### 📚 Documentation (docs)
 - **#186:** update project status and add missing links
 
