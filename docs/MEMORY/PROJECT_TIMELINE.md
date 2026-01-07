@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 17:46:56 | Documented (audit): complete API inventory with all 78 endpoints tested | PR #198 | @nasneh-hub |
 | 17:25:10 | Fixed (api): add authMiddleware to 4 modules (addresses, bookings, cart, reviews) | PR #197 | @nasneh-hub |
 | 16:38:00 | Fixed (users): add authMiddleware to users routes | PR #196 | @nasneh-hub |
 | 15:59:39 | Documented (audit): document Sprint 3.9 infrastructure fixes and lessons learned | PR #195 | @nasneh-hub |
