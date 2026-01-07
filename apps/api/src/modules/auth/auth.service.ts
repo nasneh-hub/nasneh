@@ -107,11 +107,19 @@ export class AuthService {
       channel: deliveryResult.channel,
     });
 
+    // Determine response message based on channel
+    let message: string;
+    if (deliveryResult.channel === OtpChannel.MOCK) {
+      message = 'OTP generated and logged (staging mock mode)';
+    } else if (deliveryResult.fallbackUsed) {
+      message = 'OTP sent via SMS (WhatsApp unavailable)';
+    } else {
+      message = 'OTP sent via WhatsApp';
+    }
+
     return {
       success: true,
-      message: deliveryResult.fallbackUsed
-        ? 'OTP sent via SMS (WhatsApp unavailable)'
-        : 'OTP sent via WhatsApp',
+      message,
       channel: deliveryResult.channel,
       fallbackUsed: deliveryResult.fallbackUsed,
       expiresIn: config.otp.expiryMinutes * 60,

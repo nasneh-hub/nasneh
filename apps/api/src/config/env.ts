@@ -45,6 +45,7 @@ const envSchema = z.object({
   OTP_MAX_ATTEMPTS: z.string().default('5'),
   OTP_RESEND_COOLDOWN_SECONDS: z.string().default('60'),
   OTP_WHATSAPP_TIMEOUT_SECONDS: z.string().default('10'),
+  OTP_MOCK_ENABLED: z.string().default('false'),
 
   // Rate Limiting
   RATE_LIMIT_WINDOW_MS: z.string().default('60000'),
@@ -110,6 +111,7 @@ export const config = {
     maxAttempts: parseInt(env.OTP_MAX_ATTEMPTS, 10),
     resendCooldownSeconds: parseInt(env.OTP_RESEND_COOLDOWN_SECONDS, 10),
     whatsappTimeoutSeconds: parseInt(env.OTP_WHATSAPP_TIMEOUT_SECONDS, 10),
+    mockEnabled: env.OTP_MOCK_ENABLED === 'true',
   },
 
   // Rate Limiting
