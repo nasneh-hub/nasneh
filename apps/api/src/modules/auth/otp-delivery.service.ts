@@ -54,8 +54,8 @@ export class OtpDeliveryService {
    * - BLOCKED in production (hard fail)
    */
   async deliver(phone: string, otp: string): Promise<OtpDeliveryResult> {
-    // Safety check: Block mock mode in production
-    if (config.otp.mockEnabled && config.isProduction) {
+    // Safety check: Block mock mode ONLY in actual production
+    if (config.otp.mockEnabled && config.environment === 'production') {
       console.error('[OTP Delivery] FATAL: Mock mode enabled in production!');
       throw new Error('OTP_MOCK_ENABLED cannot be true in production');
     }
