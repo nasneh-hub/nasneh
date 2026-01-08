@@ -7,28 +7,15 @@ applications:
           commands:
             - corepack enable
             - corepack prepare pnpm@8.15.0 --activate
-            - cd $CODEBUILD_SRC_DIR/nasneh && pnpm install --frozen-lockfile=false
+            - cd ../.. && pnpm install --frozen-lockfile=false
         build:
           commands:
-            - cd $CODEBUILD_SRC_DIR/nasneh && pnpm turbo run build --filter=@nasneh/dashboard
-            - cd $CODEBUILD_SRC_DIR/nasneh/apps/dashboard
-            - rm -rf deploy
-            - mkdir -p deploy
-            # keep a safe copy of static before we overwrite with standalone
-            - cp -R .next/static deploy/_static || true
-            # copy standalone output (monorepo standalone nests under apps/dashboard)
-            - cp -R .next/standalone/apps/dashboard/* deploy/
-            # restore static into deploy/.next/static
-            - mkdir -p deploy/.next/static
-            - cp -R deploy/_static/* deploy/.next/static/ || true
-            - rm -rf deploy/_static
-            # copy public if not already present
-            - cp -R public deploy/ 2>/dev/null || true
+            - cd ../.. && pnpm turbo run build --filter=@nasneh/dashboard
       artifacts:
-        baseDirectory: deploy
+        baseDirectory: .next
         files:
           - '**/*'
       cache:
         paths:
-          - $CODEBUILD_SRC_DIR/nasneh/node_modules/**/*
-          - $CODEBUILD_SRC_DIR/nasneh/.pnpm-store/**/*
+          - ../../node_modules/**/*
+          - ../../.pnpm-store/**/*
