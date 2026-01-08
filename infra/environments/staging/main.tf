@@ -201,6 +201,10 @@ module "compute" {
   # Health check
   health_check_path = "/health"
 
+  # SSL/TLS Configuration
+  enable_https    = true
+  certificate_arn = aws_acm_certificate_validation.api.certificate_arn
+
   # Environment variables (non-sensitive placeholders)
   environment_variables = {
     APP_NAME      = "nasneh-api"
