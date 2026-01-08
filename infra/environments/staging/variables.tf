@@ -108,7 +108,7 @@ variable "alert_email" {
 variable "enable_frontend" {
   description = "Enable frontend ECS services (customer-web and dashboard)"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "customer_web_image" {
