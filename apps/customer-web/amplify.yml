@@ -5,25 +5,24 @@ applications:
       phases:
         preBuild:
           commands:
-            # Navigate to monorepo root
-            - cd ../..
             # Enable corepack for pnpm
             - corepack enable
             - corepack prepare pnpm@8.15.0 --activate
-            # Install dependencies
-            - pnpm install --frozen-lockfile
+            # Diagnostics: verify paths before install
+            - echo "CODEBUILD_SRC_DIR=$CODEBUILD_SRC_DIR"
+            - ls -la $CODEBUILD_SRC_DIR/nasneh/package.json
+            # Install dependencies from monorepo root (using -C flag, no cd)
+            - pnpm -C $CODEBUILD_SRC_DIR/nasneh install --frozen-lockfile
         build:
           commands:
-            # Navigate to monorepo root
-            - cd ../..
-            # Build using turbo (handles @nasneh/ui dependency automatically)
-            - pnpm turbo run build --filter=@nasneh/customer-web
+            # Build using turbo from monorepo root (using -C flag, no cd)
+            - pnpm -C $CODEBUILD_SRC_DIR/nasneh turbo run build --filter=@nasneh/customer-web
       artifacts:
         baseDirectory: .next
         files:
           - '**/*'
       cache:
         paths:
-          - ../../node_modules/**/*
-          - ../../.pnpm-store/**/*
+          - $CODEBUILD_SRC_DIR/nasneh/node_modules/**/*
+          - $HOME/.pnpm-store/**/*
           - .next/cache/**/*
