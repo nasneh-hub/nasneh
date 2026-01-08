@@ -1,0 +1,29 @@
+version: 1
+applications:
+  - appRoot: apps/customer-web
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            # Navigate to monorepo root
+            - cd ../..
+            # Enable corepack for pnpm
+            - corepack enable
+            - corepack prepare pnpm@8.15.0 --activate
+            # Install dependencies
+            - pnpm install --frozen-lockfile
+        build:
+          commands:
+            # Navigate to monorepo root
+            - cd ../..
+            # Build using turbo (handles @nasneh/ui dependency automatically)
+            - pnpm turbo run build --filter=@nasneh/customer-web
+      artifacts:
+        baseDirectory: .next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - ../../node_modules/**/*
+          - ../../.pnpm-store/**/*
+          - .next/cache/**/*
