@@ -99,3 +99,8 @@ output "availability_zones" {
   description = "List of availability zones used"
   value       = var.availability_zones
 }
+
+output "frontend_security_group_id" {
+  description = "ID of the frontend security group"
+  value       = aws_security_group.frontend.id
+}

@@ -220,6 +220,18 @@ module "compute" {
   database_secret_arn = module.secrets.database_secret_arn
   external_secret_arn = module.secrets.external_secret_arn
 
+  # Frontend ECS Services (customer-web + dashboard)
+  enable_frontend            = var.enable_frontend
+  frontend_cpu               = 256
+  frontend_memory            = 512
+  frontend_desired_count     = 1
+  customer_web_image         = var.customer_web_image
+  dashboard_image            = var.dashboard_image
+  customer_web_domain        = "staging.nasneh.com"
+  dashboard_domain           = "staging-dashboard.nasneh.com"
+  frontend_security_group_id = module.networking.frontend_security_group_id
+  api_url                    = "https://api-staging.nasneh.com"
+
   tags = local.common_tags
 
   depends_on = [module.secrets]

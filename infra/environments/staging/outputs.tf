@@ -266,3 +266,16 @@ output "amplify_apps_summary" {
 #   value       = module.cache.endpoint
 #   sensitive   = true
 # }
+
+# -----------------------------------------------------------------------------
+# Frontend Outputs
+# -----------------------------------------------------------------------------
+output "customer_web_service_name" {
+  description = "Name of the customer-web ECS service"
+  value       = var.enable_frontend ? module.compute.customer_web_service_name : null
+}
+
+output "dashboard_service_name" {
+  description = "Name of the dashboard ECS service"
+  value       = var.enable_frontend ? module.compute.dashboard_service_name : null
+}

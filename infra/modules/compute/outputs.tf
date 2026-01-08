@@ -103,3 +103,26 @@ output "target_group_arn_suffix" {
   description = "ARN suffix of the target group (for CloudWatch metrics)"
   value       = aws_lb_target_group.api.arn_suffix
 }
+
+# -----------------------------------------------------------------------------
+# Frontend Outputs
+# -----------------------------------------------------------------------------
+output "customer_web_service_name" {
+  description = "Name of the customer-web ECS service"
+  value       = var.enable_frontend ? aws_ecs_service.customer_web[0].name : null
+}
+
+output "dashboard_service_name" {
+  description = "Name of the dashboard ECS service"
+  value       = var.enable_frontend ? aws_ecs_service.dashboard[0].name : null
+}
+
+output "customer_web_target_group_arn" {
+  description = "ARN of the customer-web target group"
+  value       = var.enable_frontend ? aws_lb_target_group.customer_web[0].arn : null
+}
+
+output "dashboard_target_group_arn" {
+  description = "ARN of the dashboard target group"
+  value       = var.enable_frontend ? aws_lb_target_group.dashboard[0].arn : null
+}

@@ -129,3 +129,34 @@ resource "aws_security_group" "cache" {
     Name = "${var.name_prefix}-cache-sg"
   })
 }
+
+# -----------------------------------------------------------------------------
+# Frontend Security Group
+# -----------------------------------------------------------------------------
+resource "aws_security_group" "frontend" {
+  name        = "${var.name_prefix}-frontend-sg"
+  description = "Security group for frontend ECS services"
+  vpc_id      = aws_vpc.main.id
+
+  # Allow inbound from ALB
+  ingress {
+    description     = "Allow traffic from ALB"
+    from_port       = 3000
+    to_port         = 3000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb.id]
+  }
+
+  # Allow all outbound
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.name_prefix}-frontend-sg"
+  })
+}

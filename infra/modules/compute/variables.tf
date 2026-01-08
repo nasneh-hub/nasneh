@@ -198,3 +198,72 @@ variable "enable_https" {
   type        = bool
   default     = false
 }
+
+# -----------------------------------------------------------------------------
+# Frontend Variables
+# -----------------------------------------------------------------------------
+variable "enable_frontend" {
+  description = "Enable frontend ECS services (customer-web and dashboard)"
+  type        = bool
+  default     = false
+}
+
+variable "frontend_cpu" {
+  description = "CPU units for frontend containers (256 = 0.25 vCPU)"
+  type        = number
+  default     = 256
+}
+
+variable "frontend_memory" {
+  description = "Memory for frontend containers in MB"
+  type        = number
+  default     = 512
+}
+
+variable "frontend_desired_count" {
+  description = "Desired number of frontend container instances"
+  type        = number
+  default     = 1
+}
+
+variable "customer_web_image" {
+  description = "Docker image for customer-web app"
+  type        = string
+  default     = ""
+}
+
+variable "dashboard_image" {
+  description = "Docker image for dashboard app"
+  type        = string
+  default     = ""
+}
+
+variable "customer_web_domain" {
+  description = "Domain for customer-web app (for ALB host-based routing)"
+  type        = string
+  default     = "staging.nasneh.com"
+}
+
+variable "dashboard_domain" {
+  description = "Domain for dashboard app (for ALB host-based routing)"
+  type        = string
+  default     = "staging-dashboard.nasneh.com"
+}
+
+variable "frontend_security_group_id" {
+  description = "Security group ID for frontend services"
+  type        = string
+  default     = ""
+}
+
+variable "api_url" {
+  description = "API URL for frontend apps"
+  type        = string
+  default     = ""
+}
+
+variable "enable_https" {
+  description = "Enable HTTPS listener on ALB"
+  type        = bool
+  default     = false
+}

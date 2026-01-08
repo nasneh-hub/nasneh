@@ -101,3 +101,24 @@ variable "alert_email" {
   type        = string
   default     = ""
 }
+
+# -----------------------------------------------------------------------------
+# Frontend Variables
+# -----------------------------------------------------------------------------
+variable "enable_frontend" {
+  description = "Enable frontend ECS services (customer-web and dashboard)"
+  type        = bool
+  default     = false
+}
+
+variable "customer_web_image" {
+  description = "Docker image for customer-web app"
+  type        = string
+  default     = "339712742092.dkr.ecr.me-south-1.amazonaws.com/nasneh-staging-customer-web:latest"
+}
+
+variable "dashboard_image" {
+  description = "Docker image for dashboard app"
+  type        = string
+  default     = "339712742092.dkr.ecr.me-south-1.amazonaws.com/nasneh-staging-dashboard:latest"
+}
