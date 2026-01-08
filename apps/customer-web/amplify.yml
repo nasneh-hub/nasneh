@@ -11,12 +11,14 @@ applications:
             # Diagnostics: verify paths before install
             - echo "CODEBUILD_SRC_DIR=$CODEBUILD_SRC_DIR"
             - ls -la $CODEBUILD_SRC_DIR/nasneh/package.json
-            # Install dependencies from monorepo root (using -C flag, no cd)
-            - pnpm -C $CODEBUILD_SRC_DIR/nasneh install --frozen-lockfile
+            # Navigate to monorepo root and install dependencies
+            - cd $CODEBUILD_SRC_DIR/nasneh
+            - pnpm install --frozen-lockfile
         build:
           commands:
-            # Build using turbo from monorepo root (using -C flag, no cd)
-            - pnpm -C $CODEBUILD_SRC_DIR/nasneh turbo run build --filter=@nasneh/customer-web
+            # Navigate to monorepo root and build
+            - cd $CODEBUILD_SRC_DIR/nasneh
+            - pnpm turbo run build --filter=@nasneh/customer-web
       artifacts:
         baseDirectory: .next
         files:
