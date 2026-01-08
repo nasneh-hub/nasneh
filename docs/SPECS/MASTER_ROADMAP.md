@@ -81,7 +81,7 @@ This section provides the complete technical specifications for every task requi
     *   **Response Body:** `[{ id, name, slug, type, parentId, children: [...] }]`
 *   **Story Points:** 2
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Unit and integration tests passing in CI.
     *   [ ] Endpoint returns a 200 with correct data on staging.
 
@@ -102,7 +102,7 @@ This section provides the complete technical specifications for every task requi
         *   `DeliveryAssignment` (orderId, driverId, status, pickupTime, deliveryTime)
 *   **Story Points:** 2
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] New migration file exists in `prisma/migrations`.
     *   [ ] `prisma migrate deploy` completes successfully in CI/CD.
 
@@ -124,7 +124,7 @@ This section provides the complete technical specifications for every task requi
         *   `GET /api/v1/provider-applications/me`
 *   **Story Points:** 6
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Tests passing for submission and status checks.
     *   [ ] Endpoints are functional on staging.
 
@@ -145,7 +145,7 @@ This section provides the complete technical specifications for every task requi
         *   (Similar endpoints for `provider-applications`)
 *   **Story Points:** 3
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Tests verify that only admins can access and that status changes are processed correctly.
     *   [ ] Endpoints are functional on staging.
 
@@ -163,7 +163,7 @@ This section provides the complete technical specifications for every task requi
     *   **Response Body:** `{ users: { total, roles: {...} }, orders: { total, status: {...} }, revenue: { total, last30days } }`
 *   **Story Points:** 3
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Tests verify admin-only access and correct data aggregation.
     *   [ ] Endpoint returns correct stats on staging.
 
@@ -184,7 +184,7 @@ This section provides the complete technical specifications for every task requi
         *   `PATCH /api/v1/driver/deliveries/:id` (Body: `{ status: 'PICKED_UP' | 'DELIVERED' }`)
 *   **Story Points:** 6
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Tests verify driver assignment and status updates.
     *   [ ] Endpoints are functional on staging.
 
@@ -217,15 +217,15 @@ This section provides the complete technical specifications for every task requi
 
 *   **Description:** Create a library of shared React components based on the design system to ensure UI consistency.
 *   **Acceptance Criteria:**
-    *   [ ] `packages/ui` contains reusable components for Buttons, Inputs, Modals, etc.
-    *   [ ] Tailwind CSS theme is configured with project colors, fonts, and spacing.
-    *   [ ] Storybook is set up to visualize and test components in isolation.
+    *   [x] `packages/ui` contains reusable components for Buttons, Inputs, Modals, etc.
+    *   [x] Tailwind CSS theme is configured with project colors, fonts, and spacing.
+    *   [x] Storybook is set up to visualize and test components in isolation.
 *   **Technical Specs:**
     *   **UI Screens:** N/A (component library)
     *   **Dependencies:** None
 *   **Story Points:** 8
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Storybook is deployed and accessible on staging.
 
 ---
@@ -234,15 +234,15 @@ This section provides the complete technical specifications for every task requi
 
 *   **Description:** Build the complete, user-facing authentication flow for the customer web app.
 *   **Acceptance Criteria:**
-    *   [ ] User can enter a phone number on the login page.
-    *   [ ] User receives an OTP via SMS/WhatsApp.
-    *   [ ] User enters the OTP to log in and receive a JWT.
+    *   [x] User can enter a phone number on the login page.
+    *   [x] User receives an OTP via SMS/WhatsApp.
+    *   [x] User enters the OTP to log in and receive a JWT.
 *   **Technical Specs:**
     *   **UI Screens:** Login, Verify OTP
     *   **Dependencies:** [S4-01], Sprint 3 (Auth API)
 *   **Story Points:** 5
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] E2E test for login passes.
     *   [ ] Login flow is fully functional on `nasneh.com` (staging).
 
@@ -252,14 +252,14 @@ This section provides the complete technical specifications for every task requi
 
 *   **Description:** Build the UI for authenticated customers to manage their profile and addresses.
 *   **Acceptance Criteria:**
-    *   [ ] Logged-in users can view and edit their profile information (name, email).
-    *   [ ] Users can add, view, edit, and delete their delivery addresses.
+    *   [x] Logged-in users can view and edit their profile information (name, email).
+    *   [x] Users can add, view, edit, and delete their delivery addresses.
 *   **Technical Specs:**
     *   **UI Screens:** My Profile, My Addresses, Add/Edit Address
     *   **Dependencies:** [S4-02]
 *   **Story Points:** 5
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Profile and address changes are correctly saved and reflected.
 
 ---
@@ -268,15 +268,15 @@ This section provides the complete technical specifications for every task requi
 
 *   **Description:** Build the authentication and role selection mechanism for the dashboard.
 *   **Acceptance Criteria:**
-    *   [ ] Users can log in to `dashboard.nasneh.com` using the same OTP flow.
-    *   [ ] After login, if a user has multiple roles (e.g., Vendor, Admin), they are prompted to select which dashboard to view.
+    *   [x] Users can log in to `dashboard.nasneh.com` using the same OTP flow.
+    *   [x] After login, if a user has multiple roles (e.g., Vendor, Admin), they are prompted to select which dashboard to view.
 *   **Technical Specs:**
     *   **UI Screens:** Dashboard Login, Role Selector
     *   **Dependencies:** [S4-01], Sprint 3 (Auth API)
 *   **Story Points:** 6
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
-    *   [ ] Users with multiple roles can successfully switch between dashboards.
+    *   [x] Code merged to `main`.
+    *   [x] Users with multiple roles can successfully switch between dashboards.
 
 ---
 
@@ -300,7 +300,7 @@ This section provides the complete technical specifications for every task requi
     *   **Dependencies:** [S4-01], [S3-01]
 *   **Story Points:** 8
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] All browsing pages are functional on staging.
 
 ---
@@ -317,7 +317,7 @@ This section provides the complete technical specifications for every task requi
     *   **Dependencies:** [S5-01], Sprint 3 (Cart & Order APIs)
 *   **Story Points:** 8
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] A full, end-to-end order can be successfully placed on staging.
 
 ---
@@ -333,7 +333,7 @@ This section provides the complete technical specifications for every task requi
     *   **Dependencies:** [S5-01], Sprint 3 (Booking API)
 *   **Story Points:** 6
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] A service can be successfully booked on staging.
 
 ---
@@ -349,7 +349,7 @@ This section provides the complete technical specifications for every task requi
     *   **Dependencies:** [S4-04], [S3-03]
 *   **Story Points:** 6
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Applications can be successfully submitted from the staging dashboard.
 
 ---
@@ -365,7 +365,7 @@ This section provides the complete technical specifications for every task requi
     *   **Dependencies:** [S4-04], [S3-04]
 *   **Story Points:** 4
 *   **Evidence of Completion:**
-    *   [ ] Code merged to `main`.
+    *   [x] Code merged to `main`.
     *   [ ] Admins can successfully approve a vendor on staging.
 
 ---

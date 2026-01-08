@@ -16,8 +16,8 @@
 
 | Metric | Value |
 |--------|-------|
-| **MVP Readiness** | 85% |
-| **Current Phase** | Sprint 3 |
+| **MVP Readiness** | 95% |
+| **Current Phase** | Sprint 5 |
 | **Target Launch** | Feb 2, 2026 |
 
 **See:** [SPECS/MASTER_ROADMAP.md](SPECS/MASTER_ROADMAP.md) for the active sprint plan.
@@ -49,7 +49,7 @@
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Next.js 14+, TypeScript, Tailwind, Shadcn UI |
+| Frontend | Next.js 14+, TypeScript, Tailwind, @nasneh/ui |
 | Backend | Node.js, Express, Prisma |
 | Database | PostgreSQL |
 | Cache | Redis |
