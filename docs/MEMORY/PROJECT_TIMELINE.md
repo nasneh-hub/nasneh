@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 18:50:20 | Fixed (docker): preserve workspace structure in builder stage | PR #221 | @nasneh-hub |
 | 10:33:34 | Added (infra): add Terraform Amplify module for frontend apps | PR #219 | @nasneh-hub |
 | 10:27:41 | Added (ci): add amplify.yml build configs for frontend apps | PR #218 | @nasneh-hub |
 | 10:20:28 | Added (infra): enable HTTPS on ALB and add dashboard next.config.js | PR #217 | @nasneh-hub |

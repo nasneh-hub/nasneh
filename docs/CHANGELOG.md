@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 🐛 Bug Fixes (fix)
+- **#221:** preserve workspace structure in builder stage
+
 ### ✨ Features (feat)
 - **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
