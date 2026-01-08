@@ -261,9 +261,3 @@ variable "api_url" {
   type        = string
   default     = ""
 }
-
-variable "enable_https" {
-  description = "Enable HTTPS listener on ALB"
-  type        = bool
-  default     = false
-}

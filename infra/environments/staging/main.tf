@@ -99,6 +99,130 @@ resource "aws_route53_record" "api_staging" {
 }
 
 # =============================================================================
+# SSL/TLS - FRONTEND CERTIFICATES
+# =============================================================================
+
+# ACM certificate for staging.nasneh.com (customer-web)
+resource "aws_acm_certificate" "customer_web" {
+  domain_name       = "staging.nasneh.com"
+  validation_method = "DNS"
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-customer-web-cert"
+  })
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# DNS validation record for customer-web certificate
+resource "aws_route53_record" "customer_web_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.customer_web.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.main.zone_id
+}
+
+# Wait for customer-web certificate validation
+resource "aws_acm_certificate_validation" "customer_web" {
+  certificate_arn         = aws_acm_certificate.customer_web.arn
+  validation_record_fqdns = [for record in aws_route53_record.customer_web_cert_validation : record.fqdn]
+}
+
+# ACM certificate for staging-dashboard.nasneh.com (dashboard)
+resource "aws_acm_certificate" "dashboard" {
+  domain_name       = "staging-dashboard.nasneh.com"
+  validation_method = "DNS"
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-dashboard-cert"
+  })
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# DNS validation record for dashboard certificate
+resource "aws_route53_record" "dashboard_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.dashboard.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.main.zone_id
+}
+
+# Wait for dashboard certificate validation
+resource "aws_acm_certificate_validation" "dashboard" {
+  certificate_arn         = aws_acm_certificate.dashboard.arn
+  validation_record_fqdns = [for record in aws_route53_record.dashboard_cert_validation : record.fqdn]
+}
+
+# =============================================================================
+# ALB LISTENER CERTIFICATES (SNI)
+# =============================================================================
+
+resource "aws_lb_listener_certificate" "customer_web" {
+  listener_arn    = module.compute.https_listener_arn
+  certificate_arn = aws_acm_certificate_validation.customer_web.certificate_arn
+}
+
+resource "aws_lb_listener_certificate" "dashboard" {
+  listener_arn    = module.compute.https_listener_arn
+  certificate_arn = aws_acm_certificate_validation.dashboard.certificate_arn
+}
+
+# =============================================================================
+# ROUTE53 - FRONTEND DNS RECORDS
+# =============================================================================
+
+# Route53 A record for staging.nasneh.com pointing to ALB
+resource "aws_route53_record" "customer_web" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "staging.nasneh.com"
+  type    = "A"
+
+  alias {
+    name                   = module.compute.alb_dns_name
+    zone_id                = module.compute.alb_zone_id
+    evaluate_target_health = true
+  }
+}
+
+# Route53 A record for staging-dashboard.nasneh.com pointing to ALB
+resource "aws_route53_record" "dashboard" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "staging-dashboard.nasneh.com"
+  type    = "A"
+
+  alias {
+    name                   = module.compute.alb_dns_name
+    zone_id                = module.compute.alb_zone_id
+    evaluate_target_health = true
+  }
+}
+
+# =============================================================================
 # NETWORKING MODULE
 # =============================================================================
 # VPC, Subnets, Internet Gateway, NAT Gateway, Route Tables, Security Groups

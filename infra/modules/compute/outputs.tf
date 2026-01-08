@@ -25,6 +25,11 @@ output "target_group_arn" {
   value       = aws_lb_target_group.api.arn
 }
 
+output "https_listener_arn" {
+  description = "ARN of the HTTPS listener"
+  value       = length(aws_lb_listener.https) > 0 ? aws_lb_listener.https[0].arn : null
+}
+
 # -----------------------------------------------------------------------------
 # ECS Outputs
 # -----------------------------------------------------------------------------
