@@ -77,7 +77,7 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy to Amazon ECS
-        uses: aws-actions/amazon-ecs-deploy-action@v2
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
