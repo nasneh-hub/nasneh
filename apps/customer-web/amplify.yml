@@ -12,13 +12,13 @@ applications:
           commands:
             - cd $CODEBUILD_SRC_DIR/nasneh && pnpm turbo run build --filter=@nasneh/customer-web
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/customer-web
-            - rm -rf deploy
-            - cp -R .next/standalone deploy
+            - rm -rf deploy && mkdir -p deploy
+            - cp -R .next/standalone/* deploy/
             - cp -R .next/static deploy/apps/customer-web/.next/static
             - cp .next/required-server-files.json deploy/apps/customer-web/
             - cp -R public deploy/apps/customer-web/ 2>/dev/null || true
       artifacts:
-        baseDirectory: deploy/apps/customer-web
+        baseDirectory: deploy
         files:
           - '**/*'
       cache:
