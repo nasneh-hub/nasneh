@@ -137,8 +137,11 @@ module "compute" {
 
   # Environment variables (non-sensitive placeholders)
   environment_variables = {
-    APP_NAME    = "nasneh-api"
-    ENVIRONMENT = var.environment
+    APP_NAME      = "nasneh-api"
+    ENVIRONMENT   = var.environment
+    # CORS: Frontend URLs (must match actual deployed URLs)
+    FRONTEND_URL  = "https://staging.nasneh.com"
+    DASHBOARD_URL = "https://staging-dashboard.nasneh.com"
   }
 
   # Secrets from Secrets Manager
