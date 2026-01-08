@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#207:** remove localStorage workaround
 
 ### 📚 Documentation (docs)
+- **#214:** update documentation for Sprint 4 completion
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
@@ -56,6 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#187:** remove accidental bash command from ui-lint.yml
 
 ### 📚 Documentation (docs)
+- **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
@@ -108,6 +110,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
+- **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
@@ -137,6 +140,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.2.0] - 2026-01-03
 
 ### 📚 Documentation (docs)
+- **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
@@ -273,6 +277,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
+- **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
 - **#188:** add API route inventory and update API reference
