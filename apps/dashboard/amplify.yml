@@ -12,7 +12,7 @@ applications:
           commands:
             - cd $CODEBUILD_SRC_DIR/nasneh && pnpm turbo run build --filter=@nasneh/dashboard
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/dashboard
-            - rm -rf deploy && mkdir -p deploy
+            - rm -rf deploy && mkdir -p deploy/.next
             - cp -R .next/standalone/apps/dashboard/* deploy/
             - cp -R .next/static deploy/.next/static
             - cp .next/required-server-files.json deploy/
