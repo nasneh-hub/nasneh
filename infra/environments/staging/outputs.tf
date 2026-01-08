@@ -209,6 +209,25 @@ output "monitoring_enabled" {
 }
 
 # =============================================================================
+# DNS & SSL OUTPUTS
+# =============================================================================
+
+output "route53_zone_id" {
+  description = "Route53 hosted zone ID for nasneh.com"
+  value       = data.aws_route53_zone.main.zone_id
+}
+
+output "api_certificate_arn" {
+  description = "ARN of the ACM certificate for API"
+  value       = aws_acm_certificate.api.arn
+}
+
+output "api_staging_url" {
+  description = "API staging URL (HTTPS)"
+  value       = "https://api-staging.nasneh.com"
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented

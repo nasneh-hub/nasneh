@@ -33,6 +33,72 @@ provider "aws" {
 }
 
 # =============================================================================
+# DNS - ROUTE53 HOSTED ZONE
+# =============================================================================
+# Reference existing hosted zone for nasneh.com (created manually in AWS Console)
+
+data "aws_route53_zone" "main" {
+  name         = "nasneh.com"
+  private_zone = false
+}
+
+# =============================================================================
+# SSL/TLS - ACM CERTIFICATE
+# =============================================================================
+# ACM certificate for api-staging.nasneh.com
+# Certificate must be in the same region as ALB (me-south-1)
+
+resource "aws_acm_certificate" "api" {
+  domain_name       = "api-staging.nasneh.com"
+  validation_method = "DNS"
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-api-cert"
+  })
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# DNS validation record for ACM certificate
+resource "aws_route53_record" "api_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.api.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.main.zone_id
+}
+
+# Wait for certificate validation
+resource "aws_acm_certificate_validation" "api" {
+  certificate_arn         = aws_acm_certificate.api.arn
+  validation_record_fqdns = [for record in aws_route53_record.api_cert_validation : record.fqdn]
+}
+
+# Route53 A record for api-staging.nasneh.com pointing to ALB
+resource "aws_route53_record" "api_staging" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "api-staging.nasneh.com"
+  type    = "A"
+
+  alias {
+    name                   = module.compute.alb_dns_name
+    zone_id                = module.compute.alb_zone_id
+    evaluate_target_health = true
+  }
+}
+
+# =============================================================================
 # NETWORKING MODULE
 # =============================================================================
 # VPC, Subnets, Internet Gateway, NAT Gateway, Route Tables, Security Groups
