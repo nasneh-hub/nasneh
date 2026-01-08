@@ -19,12 +19,19 @@ applications:
             # Navigate to monorepo root and build
             - cd $CODEBUILD_SRC_DIR/nasneh
             - pnpm turbo run build --filter=@nasneh/dashboard
-            # Prepare standalone artifacts
+            # Prepare standalone artifacts for Amplify SSR
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/dashboard
+            # 1) Ensure Amplify finds server trace files in .next/server
+            - rm -rf .next/server || true
+            - cp -R .next/standalone/.next/server .next/
+            # 2) Copy static correctly (avoid copying into itself)
+            - mkdir -p .next/static
+            - cp -R .next/standalone/.next/static/* .next/static/ || true
+            # 3) Copy standalone runtime files to app root (for runtime)
             - cp -R .next/standalone/* .
-            # Copy required server files for Amplify
+            # 4) Keep required-server-files.json at root
             - cp .next/required-server-files.json ./required-server-files.json
-            # Copy public folder
+            # 5) Copy public if exists
             - cp -R public . 2>/dev/null || true
       artifacts:
         baseDirectory: .
