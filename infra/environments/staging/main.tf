@@ -315,3 +315,28 @@ module "monitoring" {
 
   depends_on = [module.compute]
 }
+
+
+# =============================================================================
+# AMPLIFY MODULE
+# =============================================================================
+# AWS Amplify for frontend deployment (customer-web + dashboard)
+# Note: After terraform apply, connect GitHub via AWS Console for auto-deploy
+
+module "amplify" {
+  source = "../../modules/amplify"
+
+  name_prefix = local.name_prefix
+  environment = var.environment
+
+  # API URL for frontend apps
+  api_url = "https://api-staging.nasneh.com"
+
+  # Custom domains (disabled initially - enable after verifying Amplify works)
+  enable_custom_domains = false
+  root_domain           = "nasneh.com"
+
+  tags = local.common_tags
+
+  depends_on = [aws_acm_certificate_validation.api]
+}
