@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### ✨ Features (feat)
+- **#216:** add ACM certificate and Route53 for api-staging.nasneh.com
+
 ### 📚 Documentation (docs)
 - **#215:** add environment variables contract
 
