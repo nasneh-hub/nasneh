@@ -5,37 +5,30 @@ applications:
       phases:
         preBuild:
           commands:
-            # Enable corepack for pnpm
             - corepack enable
             - corepack prepare pnpm@8.15.0 --activate
-            # Diagnostics: verify paths before install
-            - echo "CODEBUILD_SRC_DIR=$CODEBUILD_SRC_DIR"
-            - ls -la $CODEBUILD_SRC_DIR/nasneh/package.json
-            # Navigate to monorepo root and install dependencies
-            - cd $CODEBUILD_SRC_DIR/nasneh
-            - pnpm install --frozen-lockfile
+            - pnpm -C $CODEBUILD_SRC_DIR/nasneh install --frozen-lockfile=false
         build:
           commands:
-            # Navigate to monorepo root and build
-            - cd $CODEBUILD_SRC_DIR/nasneh
-            - pnpm turbo run build --filter=@nasneh/customer-web
-            # Prepare standalone artifacts for Amplify SSR
+            - pnpm -C $CODEBUILD_SRC_DIR/nasneh turbo run build --filter=@nasneh/customer-web
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/customer-web
-            # 1) Copy standalone output to app root
-            - cp -R .next/standalone/* .
-            # 2) Ensure required-server-files.json is at root
-            - cp .next/required-server-files.json ./required-server-files.json
-            # 3) Ensure NEXT static assets are present at .next/static (source is the original build output)
-            - mkdir -p .next/static
-            - cp -R .next/static/* .next/static/ 2>/dev/null || true
-            # 4) Copy public if exists
-            - cp -R public . 2>/dev/null || true
+            - rm -rf deploy
+            - mkdir -p deploy
+            # keep a safe copy of static before we overwrite with standalone
+            - cp -R .next/static deploy/_static || true
+            # copy standalone output (monorepo standalone nests under apps/customer-web)
+            - cp -R .next/standalone/apps/customer-web/* deploy/
+            # restore static into deploy/.next/static
+            - mkdir -p deploy/.next/static
+            - cp -R deploy/_static/* deploy/.next/static/ || true
+            - rm -rf deploy/_static
+            # copy public if not already present
+            - cp -R public deploy/ 2>/dev/null || true
       artifacts:
-        baseDirectory: .
+        baseDirectory: deploy
         files:
           - '**/*'
       cache:
         paths:
           - $CODEBUILD_SRC_DIR/nasneh/node_modules/**/*
-          - $HOME/.pnpm-store/**/*
-          - .next/cache/**/*
+          - $CODEBUILD_SRC_DIR/nasneh/.pnpm-store/**/*
