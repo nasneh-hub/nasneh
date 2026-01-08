@@ -19,8 +19,13 @@ applications:
             # Navigate to monorepo root and build
             - cd $CODEBUILD_SRC_DIR/nasneh
             - pnpm turbo run build --filter=@nasneh/dashboard
+            # Prepare standalone artifacts
+            - cd $CODEBUILD_SRC_DIR/nasneh/apps/dashboard
+            - cp -R .next/standalone/* .
+            - cp -R .next/static .next/static
+            - cp -R public . 2>/dev/null || true
       artifacts:
-        baseDirectory: .next
+        baseDirectory: .
         files:
           - '**/*'
       cache:
