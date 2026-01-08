@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 19:52:22 | Added (infra): add DNS and TLS for frontend apps with SNI | PR #226 | @nasneh-hub |
 | 19:09:20 | Fixed (nextjs): add public directories for Docker build | PR #225 | @nasneh-hub |
 | 19:05:43 | Fixed (nextjs): add standalone output mode for Docker deployment | PR #224 | @nasneh-hub |
 | 19:01:12 | Fixed (docker): copy entire deps stage to preserve all node_modules | PR #223 | @nasneh-hub |
