@@ -228,6 +228,35 @@ output "api_staging_url" {
 }
 
 # =============================================================================
+# AMPLIFY OUTPUTS
+# =============================================================================
+
+output "customer_web_app_id" {
+  description = "Amplify App ID for customer-web"
+  value       = module.amplify.customer_web_app_id
+}
+
+output "customer_web_staging_url" {
+  description = "Staging URL for customer-web"
+  value       = module.amplify.customer_web_staging_url
+}
+
+output "dashboard_app_id" {
+  description = "Amplify App ID for dashboard"
+  value       = module.amplify.dashboard_app_id
+}
+
+output "dashboard_staging_url" {
+  description = "Staging URL for dashboard"
+  value       = module.amplify.dashboard_staging_url
+}
+
+output "amplify_apps_summary" {
+  description = "Summary of all Amplify apps and their URLs"
+  value       = module.amplify.amplify_apps_summary
+}
+
+# =============================================================================
 # FUTURE MODULE OUTPUTS (Placeholders)
 # =============================================================================
 # Uncomment as modules are implemented
