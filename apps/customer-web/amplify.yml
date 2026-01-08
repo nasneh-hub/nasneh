@@ -21,18 +21,14 @@ applications:
             - pnpm turbo run build --filter=@nasneh/customer-web
             # Prepare standalone artifacts for Amplify SSR
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/customer-web
-            # 1) Copy server trace files from correct monorepo path
-            - rm -rf .next/server || true
-            - mkdir -p .next
-            - cp -R .next/standalone/apps/customer-web/.next/server .next/server
-            # 2) Copy static from correct path
-            - mkdir -p .next/static
-            - cp -R .next/standalone/apps/customer-web/.next/static/* .next/static/ || true
-            # 3) Copy standalone runtime files to app root
+            # 1) Copy standalone output to app root
             - cp -R .next/standalone/* .
-            # 4) Keep required-server-files.json at root
+            # 2) Ensure required-server-files.json is at root
             - cp .next/required-server-files.json ./required-server-files.json
-            # 5) Copy public if exists
+            # 3) Ensure NEXT static assets are present at .next/static (source is the original build output)
+            - mkdir -p .next/static
+            - cp -R .next/static/* .next/static/ 2>/dev/null || true
+            # 4) Copy public if exists
             - cp -R public . 2>/dev/null || true
       artifacts:
         baseDirectory: .
