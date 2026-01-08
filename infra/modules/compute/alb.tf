@@ -68,18 +68,24 @@ resource "aws_lb_listener" "http" {
 }
 
 # -----------------------------------------------------------------------------
-# HTTPS Listener (Port 443) - Placeholder
-# Uncomment when SSL certificate is configured
+# HTTPS Listener (Port 443)
+# Conditionally created when enable_https = true and certificate_arn is provided
 # -----------------------------------------------------------------------------
-# resource "aws_lb_listener" "https" {
-#   load_balancer_arn = aws_lb.api.arn
-#   port              = 443
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-#   certificate_arn   = var.certificate_arn
-#
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.api.arn
-#   }
-# }
+resource "aws_lb_listener" "https" {
+  count = var.enable_https && var.certificate_arn != "" ? 1 : 0
+
+  load_balancer_arn = aws_lb.api.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = var.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.api.arn
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.name_prefix}-https-listener"
+  })
+}

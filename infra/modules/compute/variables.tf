@@ -183,3 +183,18 @@ variable "enable_secrets" {
   type        = bool
   default     = false
 }
+# -----------------------------------------------------------------------------
+# SSL/TLS Configuration
+# -----------------------------------------------------------------------------
+
+variable "certificate_arn" {
+  description = "ARN of the ACM certificate for HTTPS listener (leave empty to disable HTTPS)"
+  type        = string
+  default     = ""
+}
+
+variable "enable_https" {
+  description = "Whether to enable HTTPS listener on ALB"
+  type        = bool
+  default     = false
+}
