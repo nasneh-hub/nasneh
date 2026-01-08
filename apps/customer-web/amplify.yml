@@ -22,8 +22,9 @@ applications:
             # Prepare standalone artifacts
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/customer-web
             - cp -R .next/standalone/* .
-            - mkdir -p .next/static
-            - cp -R .next/standalone/.next/static/* .next/static/ || true
+            # Copy required server files for Amplify
+            - cp .next/required-server-files.json ./required-server-files.json
+            # Copy public folder
             - cp -R public . 2>/dev/null || true
       artifacts:
         baseDirectory: .
