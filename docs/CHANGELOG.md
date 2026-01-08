@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### ✨ Features (feat)
+- **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#216:** add ACM certificate and Route53 for api-staging.nasneh.com
 
 ### 📚 Documentation (docs)
@@ -26,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
 - **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
@@ -48,6 +50,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
 - **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
@@ -93,6 +96,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
 - **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
@@ -214,6 +218,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
 - **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow
@@ -234,6 +239,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
 - **#208:** add profile and address management pages
 - **#204:** implement phone + OTP login flow

@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:20:28 | Added (infra): enable HTTPS on ALB and add dashboard next.config.js | PR #217 | @nasneh-hub |
 | 10:14:21 | Added (infra): add ACM certificate and Route53 for api-staging.nasneh.com | PR #216 | @nasneh-hub |
 | 09:54:46 | Documented (ops): add environment variables contract | PR #215 | @nasneh-hub |
 | 05:53:17 | Documented (memory): update documentation for Sprint 4 completion | PR #214 | @nasneh-hub |
