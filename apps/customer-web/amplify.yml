@@ -7,10 +7,10 @@ applications:
           commands:
             - corepack enable
             - corepack prepare pnpm@8.15.0 --activate
-            - pnpm -C $CODEBUILD_SRC_DIR/nasneh install --frozen-lockfile=false
+            - cd $CODEBUILD_SRC_DIR/nasneh && pnpm install --frozen-lockfile=false
         build:
           commands:
-            - pnpm -C $CODEBUILD_SRC_DIR/nasneh turbo run build --filter=@nasneh/customer-web
+            - cd $CODEBUILD_SRC_DIR/nasneh && pnpm turbo run build --filter=@nasneh/customer-web
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/customer-web
             - rm -rf deploy
             - mkdir -p deploy
