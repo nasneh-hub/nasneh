@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### ✨ Features (feat)
+- **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
 - **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#216:** add ACM certificate and Route53 for api-staging.nasneh.com
@@ -28,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
 - **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
@@ -52,6 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
 - **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
@@ -99,6 +102,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
 - **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
@@ -222,6 +226,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
 - **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
@@ -244,6 +249,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#219:** add Terraform Amplify module for frontend apps
 - **#218:** add amplify.yml build configs for frontend apps
 - **#217:** enable HTTPS on ALB and add dashboard next.config.js
 - **#210:** add login and role switching flow
