@@ -12,7 +12,7 @@ applications:
           commands:
             - cd $CODEBUILD_SRC_DIR/nasneh && pnpm turbo run build --filter=@nasneh/customer-web
       artifacts:
-        baseDirectory: .next
+        baseDirectory: .next/standalone/apps/customer-web
         files:
           - '**/*'
       cache:
