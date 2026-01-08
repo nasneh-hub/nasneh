@@ -22,7 +22,8 @@ applications:
             # Prepare standalone artifacts
             - cd $CODEBUILD_SRC_DIR/nasneh/apps/dashboard
             - cp -R .next/standalone/* .
-            - cp -R .next/static .next/static
+            - mkdir -p .next/static
+            - cp -R .next/standalone/.next/static/* .next/static/ || true
             - cp -R public . 2>/dev/null || true
       artifacts:
         baseDirectory: .
