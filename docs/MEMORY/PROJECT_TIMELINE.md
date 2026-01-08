@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 18:57:12 | Fixed (docker): copy per-package node_modules from deps stage | PR #222 | @nasneh-hub |
 | 18:50:20 | Fixed (docker): preserve workspace structure in builder stage | PR #221 | @nasneh-hub |
 | 10:33:34 | Added (infra): add Terraform Amplify module for frontend apps | PR #219 | @nasneh-hub |
 | 10:27:41 | Added (ci): add amplify.yml build configs for frontend apps | PR #218 | @nasneh-hub |

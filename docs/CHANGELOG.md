@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### 🐛 Bug Fixes (fix)
+- **#222:** copy per-package node_modules from deps stage
 - **#221:** preserve workspace structure in builder stage
 
 ### ✨ Features (feat)
@@ -42,6 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#199:** add 6 core components (Button, Input, Card, Badge, Skeleton, Dialog)
 
 ### 🐛 Bug Fixes (fix)
+- **#222:** copy per-package node_modules from deps stage
 - **#213:** restore proper workflow structure with comment exclusions
 - **#212:** improve forbidden terminology exclusions for comments and ro…
 - **#211:** exclude route paths and TypeScript keys from forbidden termi…
@@ -67,6 +69,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#190:** add OTP mock mode for staging
 
 ### 🐛 Bug Fixes (fix)
+- **#222:** copy per-package node_modules from deps stage
 - **#213:** restore proper workflow structure with comment exclusions
 - **#212:** improve forbidden terminology exclusions for comments and ro…
 - **#211:** exclude route paths and TypeScript keys from forbidden termi…
@@ -123,6 +126,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#222:** copy per-package node_modules from deps stage
 - **#213:** restore proper workflow structure with comment exclusions
 - **#212:** improve forbidden terminology exclusions for comments and ro…
 - **#211:** exclude route paths and TypeScript keys from forbidden termi…
@@ -189,6 +193,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#222:** copy per-package node_modules from deps stage
 - **#213:** restore proper workflow structure with comment exclusions
 - **#212:** improve forbidden terminology exclusions for comments and ro…
 - **#211:** exclude route paths and TypeScript keys from forbidden termi…
@@ -295,6 +300,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#222:** copy per-package node_modules from deps stage
 - **#213:** restore proper workflow structure with comment exclusions
 - **#212:** improve forbidden terminology exclusions for comments and ro…
 - **#211:** exclude route paths and TypeScript keys from forbidden termi…
