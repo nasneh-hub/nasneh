@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 17:05:51 | Added (customer-web): implement home, categories, and search pages | PR #256 | @nasneh-hub |
 | 15:32:27 | Refactored (ui): remove all remaining inline styles from customer-web | PR #255 | @nasneh-hub |
 | 14:45:11 | Refactored (ui): remove all inline styles from header, footer, and placeholder pages | PR #254 | @nasneh-hub |
 | 14:12:14 | Added (customer-web): integrate NavigationMenu into header with centered desktop navigation | PR #253 | @nasneh-hub |
