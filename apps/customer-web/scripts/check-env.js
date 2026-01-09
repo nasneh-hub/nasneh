@@ -20,6 +20,14 @@ console.log(`   API URL: ${API_URL || '(not set)'}`);
 
 // Check if API_URL is set
 if (!API_URL) {
+  // In development, allow missing API_URL (will use fallback)
+  if (APP_ENV === 'development') {
+    console.warn('\n⚠️  WARNING: NEXT_PUBLIC_API_URL is not set');
+    console.warn('   Using default development configuration.');
+    console.log('✅ Environment configuration validated (development mode)\n');
+    process.exit(0);
+  }
+  
   console.error('\n❌ ERROR: NEXT_PUBLIC_API_URL is not set');
   console.error('   Please set this environment variable before building.');
   console.error('   Example: NEXT_PUBLIC_API_URL=https://api-staging.nasneh.com/api/v1');
