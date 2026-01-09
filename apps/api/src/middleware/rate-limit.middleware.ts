@@ -101,7 +101,7 @@ export const otpRateLimit = rateLimit({
       return null;
     }
     // Bypass rate limit for test numbers in staging
-    if (config.env === 'staging' && phone === '+97336000000') {
+    if (config.environment === 'staging' && phone === '+97336000000') {
       return null; // Skip rate limiting
     }
     return `otp:${phone}`;
@@ -131,7 +131,7 @@ export async function otpCooldown(
     }
 
     // Bypass cooldown for test numbers in staging
-    if (config.env === 'staging' && phone === '+97336000000') {
+    if (config.environment === 'staging' && phone === '+97336000000') {
       (req as any).setCooldown = async () => {}; // No-op
       next();
       return;
