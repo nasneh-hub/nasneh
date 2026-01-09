@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 13:09:34 | Fixed (header): remove dead UI elements (globe/theme/hamburger) | PR #248 | @nasneh-hub |
 | 12:25:01 | Added (customer-web): complete profile area with API integration + fix footer hardcoded text | PR #247 | @nasneh-hub |
 | 11:46:07 | Added (customer-web): UI corrections - English LTR, country switcher, Go Back button | PR #246 | @nasneh-hub |
 | 10:38:51 | Added (customer-web): UI corrections + standardization | PR #245 | @nasneh-hub |
