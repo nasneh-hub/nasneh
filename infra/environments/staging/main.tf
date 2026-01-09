@@ -354,7 +354,7 @@ module "compute" {
   customer_web_domain        = "staging.nasneh.com"
   dashboard_domain           = "staging-dashboard.nasneh.com"
   frontend_security_group_id = module.networking.frontend_security_group_id
-  api_url                    = "https://api-staging.nasneh.com"
+  api_url                    = "https://api-staging.nasneh.com/api/v1"
 
   tags = local.common_tags
 
