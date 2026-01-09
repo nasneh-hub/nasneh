@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#221:** preserve workspace structure in builder stage
 
 ### ✨ Features (feat)
+- **#249:** implement theme toggle with next-themes
 - **#247:** complete profile area with API integration + fix footer hardcoded text
 - **#246:** UI corrections - English LTR, country switcher, Go Back button
 - **#245:** UI corrections + standardization
@@ -59,6 +60,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#249:** implement theme toggle with next-themes
 - **#247:** complete profile area with API integration + fix footer hardcoded text
 - **#246:** UI corrections - English LTR, country switcher, Go Back button
 - **#245:** UI corrections + standardization
@@ -105,6 +107,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#249:** implement theme toggle with next-themes
 - **#247:** complete profile area with API integration + fix footer hardcoded text
 - **#246:** UI corrections - English LTR, country switcher, Go Back button
 - **#245:** UI corrections + standardization
@@ -175,6 +178,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#249:** implement theme toggle with next-themes
 - **#247:** complete profile area with API integration + fix footer hardcoded text
 - **#246:** UI corrections - English LTR, country switcher, Go Back button
 - **#245:** UI corrections + standardization
@@ -335,6 +339,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#249:** implement theme toggle with next-themes
 - **#247:** complete profile area with API integration + fix footer hardcoded text
 - **#246:** UI corrections - English LTR, country switcher, Go Back button
 - **#245:** UI corrections + standardization
@@ -366,6 +371,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#249:** implement theme toggle with next-themes
 - **#247:** complete profile area with API integration + fix footer hardcoded text
 - **#246:** UI corrections - English LTR, country switcher, Go Back button
 - **#245:** UI corrections + standardization
