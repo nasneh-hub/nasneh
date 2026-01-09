@@ -103,7 +103,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
           fontWeight: 'var(--font-weight-medium)',
           color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
           textDecoration: 'none',
-          borderRadius: 'var(--radius-lg)',
+          borderRadius: 'var(--radius)',
           transition: 'all 0.2s ease',
           cursor: 'pointer',
           ...style,
