@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 03:48:14 | Changed: use config.environment instead of config.env | PR #230 | @nasneh-hub |
 | 03:43:48 | Added (api): bypass rate limit for test numbers in staging | PR #229 | @nasneh-hub |
 | 03:36:59 | Changed: add logging to diagnose OTP test number issue | PR #228 | @nasneh-hub |
 | 03:30:47 | Fixed (auth): update staging test phone number to valid Bahrain mobile | PR #227 | @nasneh-hub |

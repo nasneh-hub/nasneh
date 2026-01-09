@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### 📝 Other
+- **#230:** use config.environment instead of config.env
 - **#228:** add logging to diagnose OTP test number issue
 
 ### 🐛 Bug Fixes (fix)
