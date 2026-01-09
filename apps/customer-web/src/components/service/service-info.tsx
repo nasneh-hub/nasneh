@@ -44,7 +44,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
       {/* Price */}
       <div>
         <div className="text-3xl font-bold text-mono-12">
-          {service.price.toFixed(3)} {en.common.currency}
+          {service.price.toFixed(3)} {en.currency.bd}
         </div>
       </div>
 
@@ -98,7 +98,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
       {/* Category */}
       {service.category && (
         <div>
-          <div className="text-sm text-mono-11 mb-2">{en.categories.category}</div>
+            <div className="text-sm text-mono-11 mb-2">{en.navigation.categories}</div>
           <Link
             href={`/category/${service.category.slug}`}
             className="inline-flex items-center gap-2 rounded-xl bg-mono-2 px-4 py-2 text-sm font-medium text-mono-12 hover:bg-mono-3"
