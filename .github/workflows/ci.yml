@@ -140,6 +140,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build
+        env:
+          NEXT_PUBLIC_API_URL: https://api-staging.nasneh.com/api/v1
+          NEXT_PUBLIC_APP_ENV: staging
         run: pnpm build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
