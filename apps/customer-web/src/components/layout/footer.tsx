@@ -3,33 +3,34 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@nasneh/ui';
+import { en } from '@nasneh/ui/copy';
 
 export function Footer() {
   const router = useRouter();
 
   const footerLinks = {
     marketplace: [
-      { name: 'Kitchens', href: '/kitchens' },
-      { name: 'Craft', href: '/craft' },
-      { name: 'Products', href: '/products' },
-      { name: 'Food Trucks', href: '/food-trucks' },
-      { name: 'Services', href: '/services' },
+      { name: en.footer.kitchens, href: '/kitchens' },
+      { name: en.footer.craft, href: '/craft' },
+      { name: en.footer.products, href: '/products' },
+      { name: en.footer.foodTrucks, href: '/food-trucks' },
+      { name: en.footer.services, href: '/services' },
     ],
     company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'How It Works', href: '/how-it-works' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Press', href: '/press' },
+      { name: en.footer.aboutUs, href: '/about' },
+      { name: en.footer.howItWorks, href: '/how-it-works' },
+      { name: en.footer.careers, href: '/careers' },
+      { name: en.footer.press, href: '/press' },
     ],
     support: [
-      { name: 'Help Center', href: '/support' },
-      { name: 'Safety', href: '/safety' },
-      { name: 'Contact Us', href: '/contact' },
+      { name: en.footer.helpCenter, href: '/support' },
+      { name: en.footer.safety, href: '/safety' },
+      { name: en.footer.contactUs, href: '/contact' },
     ],
     legal: [
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Cookie Policy', href: '/cookies' },
+      { name: en.footer.termsOfService, href: '/terms' },
+      { name: en.footer.privacyPolicy, href: '/privacy' },
+      { name: en.footer.cookiePolicy, href: '/cookies' },
     ],
   };
 
@@ -62,7 +63,7 @@ export function Footer() {
                 lineHeight: '1.6',
               }}
             >
-              From us, for us — Your marketplace for homemade food, handcrafted products, and trusted services
+              {en.taglines.primary}
             </p>
           </div>
 
@@ -76,7 +77,7 @@ export function Footer() {
                 marginBottom: 'var(--spacing-md)',
               }}
             >
-              Marketplace
+              {en.footer.marketplace}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               {footerLinks.marketplace.map((link) => (
@@ -116,7 +117,7 @@ export function Footer() {
                 marginBottom: 'var(--spacing-md)',
               }}
             >
-              Company
+              {en.footer.company}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               {footerLinks.company.map((link) => (
@@ -156,7 +157,7 @@ export function Footer() {
                 marginBottom: 'var(--spacing-md)',
               }}
             >
-              Support
+              {en.footer.support}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               {footerLinks.support.map((link) => (
@@ -196,7 +197,7 @@ export function Footer() {
                 marginBottom: 'var(--spacing-md)',
               }}
             >
-              Legal
+              {en.footer.legal}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               {footerLinks.legal.map((link) => (
@@ -230,26 +231,18 @@ export function Footer() {
         {/* Bottom Bar */}
         <div
           style={{
+            paddingTop: 'var(--spacing-xl)',
             borderTop: `1px solid var(--border-primary)`,
-            paddingTop: 'var(--spacing-lg)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 'var(--spacing-md)',
           }}
         >
-          <p
+          <div
             style={{
-              color: 'var(--text-tertiary)',
-              fontSize: 'var(--font-size-small)',
-              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 'var(--spacing-md)',
             }}
           >
-            © {new Date().getFullYear()} Nasneh. All rights reserved.
-          </p>
-
-          <div style={{ display: 'flex', gap: 'var(--spacing-md)' }}>
             <p
               style={{
                 color: 'var(--text-tertiary)',
@@ -257,7 +250,15 @@ export function Footer() {
                 margin: 0,
               }}
             >
-              Made with care in Bahrain
+            <p
+              style={{
+                color: 'var(--text-tertiary)',
+                fontSize: 'var(--font-size-small)',
+                margin: 0,
+              }}
+            >
+              {en.footer.madeIn} {en.footer.bahrain}
+            </p>
             </p>
           </div>
         </div>
