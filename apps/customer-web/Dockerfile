@@ -35,6 +35,15 @@ COPY apps/customer-web ./apps/customer-web
 COPY packages ./packages
 COPY turbo.json ./
 
+# Build args for Next.js public environment variables
+# Must be passed via docker build --build-arg
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_APP_ENV
+
+# Convert build args to environment variables for Next.js build
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_APP_ENV=$NEXT_PUBLIC_APP_ENV
+
 # Build the application
 RUN pnpm turbo run build --filter=@nasneh/customer-web
 
