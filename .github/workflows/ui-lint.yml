@@ -106,12 +106,13 @@ jobs:
           echo "Pattern: NEXT_PUBLIC_.*localhost"
           echo ""
           
-          # Search for localhost in .env files (exclude .env.local and .env.development)
+          # Search for localhost in .env files (exclude .env.local, .env.development, and .env.example)
           VIOLATIONS=$(grep -r -n -E 'NEXT_PUBLIC_.*localhost' \
             --include=".env*" \
             apps/ 2>/dev/null \
             | grep -v '.env.local' \
-            | grep -v '.env.development' || true)
+            | grep -v '.env.development' \
+            | grep -v '.env.example' || true)
           
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ VIOLATION: localhost found in NEXT_PUBLIC_* env vars"
