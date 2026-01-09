@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 14:12:14 | Added (customer-web): integrate NavigationMenu into header with centered desktop navigation | PR #253 | @nasneh-hub |
 | 13:53:57 | Added (ui): add NavigationMenu component to @nasneh/ui (PR4-A) | PR #252 | @nasneh-hub |
 | 13:46:02 | Added (header): add Globe dropdown for language/currency/country settings | PR #251 | @nasneh-hub |
 | 13:39:10 | Fixed (footer): remove nested p tag causing hydration error | PR #250 | @nasneh-hub |
