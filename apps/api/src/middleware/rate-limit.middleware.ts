@@ -100,6 +100,10 @@ export const otpRateLimit = rateLimit({
     if (!phone || typeof phone !== 'string') {
       return null;
     }
+    // Bypass rate limit for test numbers in staging
+    if (config.env === 'staging' && phone === '+97336000000') {
+      return null; // Skip rate limiting
+    }
     return `otp:${phone}`;
   },
   errorMessage: 'Too many OTP requests for this phone number',
@@ -122,6 +126,13 @@ export async function otpCooldown(
     const phone = req.body?.phone;
 
     if (!phone || typeof phone !== 'string') {
+      next();
+      return;
+    }
+
+    // Bypass cooldown for test numbers in staging
+    if (config.env === 'staging' && phone === '+97336000000') {
+      (req as any).setCooldown = async () => {}; // No-op
       next();
       return;
     }
