@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 18:02:01 | Added (customer-web): add product detail page | PR #258 | @nasneh-hub |
 | 17:39:23 | Added (customer-web): implement listing pages with filters, sort, and pagination | PR #257 | @nasneh-hub |
 | 17:05:51 | Added (customer-web): implement home, categories, and search pages | PR #256 | @nasneh-hub |
 | 15:32:27 | Refactored (ui): remove all remaining inline styles from customer-web | PR #255 | @nasneh-hub |
