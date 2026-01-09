@@ -46,13 +46,13 @@ const otpLogs: OtpLogEntry[] = [];
 export class AuthService {
   /**
    * Generate a 6-digit OTP
-   * For staging mock mode with test number +97317000000, returns fixed OTP "123456"
+   * For staging mock mode with test number +97336000000, returns fixed OTP "123456"
    */
   private generateOtp(phone?: string): string {
     // Fixed OTP for test number in staging mock mode
     if (config.otp.mockEnabled && 
         config.environment === 'staging' && 
-        phone === '+97317000000') {
+        phone === '+97336000000') {
       return '123456';
     }
     return crypto.randomInt(100000, 999999).toString();
