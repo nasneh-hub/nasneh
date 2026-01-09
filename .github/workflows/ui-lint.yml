@@ -184,17 +184,13 @@ jobs:
           # Search for forbidden terms ONLY in UI copy files and frontend apps
           # Exclude backend API (apps/api) entirely
           # Note: Using word boundaries (\b) to prevent false positives like 'localStorage'
-          # Note: Excluding comments, route paths (href:/href=), and copy token references
           VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|\bcustomer\b|\bbuyer\b|\bseller\b|\bvendor\b|\bmerchant\b|\bcheap\b|\bbudget\b|\blocal\b)' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
             | grep -v 'terminology.ts' \
             | grep -v 'node_modules' \
-            | grep -v -E '//.*\b(vendor|customer|local|User)\b' \
-            | grep -v -E "href[:=]\s*['\"/]" \
-            | grep -v -E "^[^:]+:[0-9]+:\s*(VENDOR|CUSTOMER|SELLER|MERCHANT):" \
-            | grep -v -E "roles\.(vendor|customer|seller|merchant)" || true)
+            | grep -v -E '(//|/\*|\*)' || true)
           
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ VIOLATION: Forbidden terminology found"
@@ -221,12 +217,8 @@ jobs:
         run: |
           echo "🔍 Checking for hardcoded Arabic text..."
           
-          # Search for Arabic LETTERS only (U+0621-U+064A = ء to ي), excluding:
-          # - Arabic punctuation: ، (comma), ؛ (semicolon), ؟ (question mark)
-          # - Arabic-Indic digits: ٠-٩
-          # - Arabic extended characters and diacritics
-          # This allows using Arabic punctuation marks in code without triggering violations
-          VIOLATIONS=$(grep -r -n -P '[\x{0621}-\x{064A}]+' \
+          # Search for Arabic text in frontend code only (excluding copy tokens and comments)
+          VIOLATIONS=$(grep -r -n -P '[\p{Arabic}]+' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
