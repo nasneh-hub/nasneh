@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Badge, Dialog } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
-import { useAuth, getAccessToken } from '../../../context/auth-context';
+import { useAuth, getAccessToken } from '@/context/auth-context';
 
 interface Address {
   id: string;

@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Vazirmatn } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/auth-context';
-import { Header } from '@/components/layout/header';
 
 const vazirmatn = Vazirmatn({
   subsets: ['arabic', 'latin'],
@@ -26,10 +25,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={vazirmatn.variable}>
       <body className="min-h-screen bg-[var(--bg-primary)] text-[color:var(--text-primary)]">
         <AuthProvider>
-          <Header />
-          <main style={{ paddingTop: 'var(--spacing-lg)' }}>
-            {children}
-          </main>
+          {children}
         </AuthProvider>
       </body>
     </html>

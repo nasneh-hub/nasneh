@@ -10,17 +10,11 @@ interface AppShellProps {
  * AppShell Component
  * 
  * Simple container for page content.
- * Header is rendered in root layout, not here.
+ * Header is rendered in (app) layout, not here.
  */
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div
-      style={{
-        maxWidth: '1280px',
-        margin: '0 auto',
-        padding: '0 var(--spacing-lg)',
-      }}
-    >
+    <div className="max-w-screen-xl mx-auto px-6">
       {children}
     </div>
   );
