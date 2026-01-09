@@ -9,6 +9,8 @@ on:
       - 'apps/dashboard/**/*.ts'
       - 'packages/ui/src/**/*.tsx'
       - 'packages/ui/src/**/*.ts'
+      - 'apps/**/.env*'
+      - '.github/workflows/ui-lint.yml'
 
 # Define frontend paths as environment variable for reuse
 env:
@@ -23,403 +25,110 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 'Law 3: Check for Hex Colors'
+      - name: 'Check #1: Hex Colors (Except tokens.css)'
         id: check-hex-colors
         continue-on-error: true
         run: |
-          echo "🔍 Checking for hex colors (#FFFFFF, #000, etc.)..."
+          echo "🔍 Check #1: Scanning for hex colors (except tokens.css)..."
+          echo ""
+          echo "Rule: NO hex colors anywhere except packages/ui/src/styles/tokens.css"
+          echo "Pattern: #([0-9a-fA-F]{3,8})"
+          echo ""
           
-          # Search for hex colors in frontend code only (not in comments or tokens.css)
+          # Search for hex colors in frontend code (exclude tokens.css)
           VIOLATIONS=$(grep -r -n -E '#[0-9A-Fa-f]{3,8}' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v -E '(//|/\*|\*)' \
             | grep -v 'tokens.css' \
-            | grep -v 'node_modules' || true)
+            | grep -v 'node_modules' \
+            | grep -v -E '(//|/\*|\*)' || true)
           
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ VIOLATION: Hex colors found"
             echo ""
-            echo "Hex colors are forbidden. Use CSS variables from tokens.css instead."
+            echo "Hex colors are forbidden outside tokens.css."
+            echo "Use shadcn semantic classes instead (bg-background, text-foreground, etc.)"
             echo ""
             echo "Violations:"
             echo "$VIOLATIONS"
             echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
+            echo "📖 See: docs/SPECS/UI_LAW.md - Check #1"
             echo ""
-            echo "✅ Correct: var(--text-primary)"
-            echo "❌ Wrong: #000000"
-            exit 1
-          else
-            echo "✅ PASS: No hex colors found"
-          fi
-
-      - name: 'Law 3: Check for Tailwind Color Classes'
-        id: check-tailwind-colors
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for Tailwind color classes (bg-white, text-black, etc.)..."
-          
-          # Search for Tailwind color classes in frontend code only
-          VIOLATIONS=$(grep -r -n -E '(bg|text|border)-(white|black|gray|red|blue|green|yellow|purple|pink|indigo|orange)-[0-9]{2,3}' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'node_modules' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Tailwind color classes found"
-            echo ""
-            echo "Tailwind color classes are forbidden. Use CSS variables from tokens.css instead."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
-            echo ""
-            echo "✅ Correct: var(--bg-primary)"
-            echo "❌ Wrong: bg-gray-100"
-            exit 1
-          else
-            echo "✅ PASS: No Tailwind color classes found"
-          fi
-
-      - name: 'Law 3: Check for Inline Styles with Hardcoded Colors'
-        id: check-inline-styles
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for inline styles with hardcoded colors..."
-          echo ""
-          echo "Note: Inline styles are ALLOWED if they use CSS variables (var(--...))."
-          echo "      Only hardcoded values (#000, rgb(), hsl(), px values) are forbidden."
-          echo ""
-          
-          # Search for inline styles with hardcoded color values (hex, rgb, hsl)
-          # Allow inline styles that ONLY use var(--...) CSS variables
-          VIOLATIONS=$(grep -r -n -E 'style=\{\{[^}]*(#[0-9A-Fa-f]{3,8}|rgb\(|hsl\(|rgba\(|hsla\()' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'node_modules' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Inline styles with hardcoded colors found"
-            echo ""
-            echo "Inline styles must use CSS variables from tokens.css only."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
-            echo ""
-            echo "✅ Correct: style={{ color: 'var(--text-primary)' }}"
-            echo "✅ Correct: style={{ background: 'var(--bg-secondary)' }}"
+            echo "✅ Correct: className=\"text-foreground\""
             echo "❌ Wrong: style={{ color: '#000' }}"
-            echo "❌ Wrong: style={{ background: 'rgb(255, 255, 255)' }}"
             exit 1
           else
-            echo "✅ PASS: No hardcoded colors in inline styles"
-            echo "   (Inline styles with CSS variables are allowed)"
+            echo "✅ PASS: No hex colors found outside tokens.css"
           fi
 
-      - name: 'Law 1: Check for Border Classes'
-        id: check-borders
+      - name: 'Check #2: Tailwind Palette Colors'
+        id: check-tailwind-palette
         continue-on-error: true
         run: |
-          echo "🔍 Checking for border classes (border-*, border, etc.)..."
-          
-          # Search for border Tailwind classes in tsx/ts files only (not CSS)
-          # Exclude border-box (valid CSS property) and comments
-          VIOLATIONS=$(grep -r -n -E '\bborder(-[a-z0-9]+)?\b' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'border-box' \
-            | grep -v 'border-radius' \
-            | grep -v 'borderRadius' \
-            | grep -v 'node_modules' \
-            | grep -v -E '(//|/\*|\*)' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Border classes found"
-            echo ""
-            echo "Borders are FORBIDDEN. Use backgrounds, shadows, or spacing instead."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #1"
-            echo ""
-            echo "✅ Correct: bg-tertiary shadow-sm"
-            echo "❌ Wrong: border border-gray-300"
-            exit 1
-          else
-            echo "✅ PASS: No border classes found"
-          fi
-
-      - name: 'Law 2: Check for Invalid Border Radius'
-        id: check-border-radius
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for invalid border radius (only rounded-xl and rounded-full allowed)..."
-          
-          # Search for invalid rounded classes in tsx/ts files only (not CSS or tokens.css)
-          VIOLATIONS=$(grep -r -n -E 'rounded-(none|sm|md|lg|2xl|3xl)' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'node_modules' \
-            | grep -v -E '(//|/\*|\*)' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Invalid border radius found"
-            echo ""
-            echo "Only rounded-xl (standard) and rounded-full (icon buttons/avatar) are allowed."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #2"
-            echo ""
-            echo "✅ Correct: rounded-xl (standard), rounded-full (icon buttons)"
-            echo "❌ Wrong: rounded-sm, rounded-md, rounded-lg"
-            exit 1
-          else
-            echo "✅ PASS: Only valid border radius found"
-          fi
-
-      - name: 'Brand Voice: Forbidden Terminology Check'
-        id: check-forbidden-terms
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for forbidden terminology..."
-          
-          # Search for forbidden terms ONLY in UI copy files and frontend apps
-          # Exclude backend API (apps/api) entirely
-          # Note: Using word boundaries (\b) to prevent false positives like 'localStorage'
-          # Note: Excluding comments, route paths (href:/href=), and copy token references
-          VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|\bcustomer\b|\bbuyer\b|\bseller\b|\bvendor\b|\bmerchant\b|\bcheap\b|\bbudget\b|\blocal\b)' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v '/copy/' \
-            | grep -v 'terminology.ts' \
-            | grep -v 'node_modules' \
-            | grep -v -E '//.*\b(vendor|customer|local|User)\b' \
-            | grep -v -E "href[:=]\s*['\"/]" \
-            | grep -v -E "^[^:]+:[0-9]+:\s*(VENDOR|CUSTOMER|SELLER|MERCHANT):" \
-            | grep -v -E "roles\.(vendor|customer|seller|merchant)" || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Forbidden terminology found"
-            echo ""
-            echo "These terms are forbidden:"
-            echo "  Arabic: زبون، بائع، محلي، رخيص"
-            echo "  English: customer, buyer, seller, vendor, merchant, cheap, budget, local"
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/BRAND_VOICE.md - Section 4"
-            echo ""
-            echo "✅ Correct: Use copy tokens (ar.ui.supporter, ar.ui.nasneh)"
-            echo "❌ Wrong: Hardcoded forbidden terms"
-            exit 1
-          else
-            echo "✅ PASS: No forbidden terminology found"
-          fi
-
-      - name: 'Copy Tokens: Check for Hardcoded Arabic Text'
-        id: check-hardcoded-arabic
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for hardcoded Arabic text..."
-          
-          # Search for Arabic LETTERS only (U+0621-U+064A = ء to ي), excluding:
-          # - Arabic punctuation: ، (comma), ؛ (semicolon), ؟ (question mark)
-          # - Arabic-Indic digits: ٠-٩
-          # - Arabic extended characters and diacritics
-          # This allows using Arabic punctuation marks in code without triggering violations
-          VIOLATIONS=$(grep -r -n -P '[\x{0621}-\x{064A}]+' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v '/copy/' \
-            | grep -v 'terminology.ts' \
-            | grep -v 'BRAND_VOICE.md' \
-            | grep -v 'node_modules' \
-            | grep -v -E '(//|/\*|\*)' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Hardcoded Arabic text found"
-            echo ""
-            echo "All Arabic text must come from copy tokens (ar.ts)."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/BRAND_VOICE.md - Section 12"
-            echo ""
-            echo "✅ Correct: {ar.ui.welcome}"
-            echo "❌ Wrong: \"مرحباً\""
-            exit 1
-          else
-            echo "✅ PASS: No hardcoded Arabic text found"
-          fi
-
-      - name: 'Copy Tokens: Check for Common Hardcoded English'
-        id: check-hardcoded-english
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for common hardcoded English UI text..."
-          
-          # Search for common UI text in frontend code only (warning only)
-          VIOLATIONS=$(grep -r -n -E '("(Save|Delete|Edit|Cancel|Submit|Confirm|Back|Next|Loading|Error|Success|Welcome|Login|Logout|Profile|Settings|Search|Filter|Sort|View|Add|Remove|Update|Create)"|>(Save|Delete|Edit|Cancel|Submit|Confirm|Back|Next|Loading|Error|Success|Welcome|Login|Logout|Profile|Settings|Search|Filter|Sort|View|Add|Remove|Update|Create)<)' \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v '/copy/' \
-            | grep -v 'node_modules' \
-            | grep -v -E '(//|/\*|\*)' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "⚠️ WARNING: Common hardcoded English UI text found"
-            echo ""
-            echo "Consider using copy tokens for better i18n support."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/BRAND_VOICE.md - Section 12"
-            echo ""
-            echo "✅ Recommended: {en.ui.save}"
-            echo "⚠️ Found: \"Save\""
-            echo ""
-            echo "Note: This is a warning only, not blocking."
-          else
-            echo "✅ PASS: No common hardcoded English found"
-          fi
-
-      - name: 'Law 4: Check for Non-Vazirmatn Fonts'
-        id: check-font-family
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for non-Vazirmatn fonts..."
-          
-          # Search for fontFamily in frontend code only that's not Vazirmatn or var(--font)
-          VIOLATIONS=$(grep -r -n -E "fontFamily.*['\"](?!Vazirmatn|var\(--font)" \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'node_modules' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Non-Vazirmatn fonts found"
-            echo ""
-            echo "Only Vazirmatn font is allowed."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #4"
-            echo ""
-            echo "✅ Correct: fontFamily: 'var(--font-family-primary)'"
-            echo "❌ Wrong: fontFamily: 'Arial'"
-            exit 1
-          else
-            echo "✅ PASS: Only Vazirmatn font found"
-          fi
-
-      - name: 'Law 5: Check for External UI Libraries'
-        id: check-external-libs
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for external UI library imports..."
+          echo "🔍 Check #2: Scanning for Tailwind palette colors..."
           echo ""
-          echo "Note: @radix-ui primitives are ALLOWED (used by shadcn/ui internally)."
-          echo "      Only high-level UI libraries (MUI, Ant Design, etc.) are forbidden."
+          echo "Rule: NO Tailwind color palette classes (bg-slate-*, text-gray-*, etc.)"
+          echo "Pattern: (bg|text|border|ring)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]{2,3}"
           echo ""
           
-          # Search for imports from external UI libraries in frontend code only
-          # Allow @radix-ui (used by shadcn/ui) but block other libraries
-          VIOLATIONS=$(grep -r -n -E "from ['\"](@mui|antd|react-bootstrap|chakra-ui|mantine)" \
-            --include="*.tsx" --include="*.ts" \
-            packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'node_modules' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: External UI library imports found"
-            echo ""
-            echo "Only @nasneh/ui components are allowed."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #5"
-            echo ""
-            echo "✅ Correct: import { Button } from '@nasneh/ui'"
-            echo "✅ Allowed: import * as Dialog from '@radix-ui/react-dialog' (shadcn primitive)"
-            echo "❌ Wrong: import { Button } from 'antd'"
-            exit 1
-          else
-            echo "✅ PASS: Only @nasneh/ui components imported"
-            echo "   (@radix-ui primitives are allowed)"
-          fi
-
-      - name: 'Design System: Check for Hardcoded CSS Values'
-        id: check-css-tokens
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for hardcoded CSS values..."
-          
-          # This check is a warning only, skip CSS files entirely
-          # Only check tsx/ts files for inline hardcoded values
-          VIOLATIONS=$(grep -r -n -E "(height|padding|margin|fontSize|borderRadius):\s*['\"]?[0-9]+(px|rem|em)" \
+          # Search for Tailwind palette color classes in frontend code
+          VIOLATIONS=$(grep -r -n -E '\b(bg|text|border|ring)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]{2,3}\b' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v 'node_modules' \
             | grep -v -E '(//|/\*|\*)' || true)
           
           if [ -n "$VIOLATIONS" ]; then
-            echo "⚠️ WARNING: Hardcoded CSS values found"
+            echo "❌ VIOLATION: Tailwind palette colors found"
             echo ""
-            echo "Consider using CSS variables from tokens.css for consistency."
-            echo ""
-            echo "Violations:"
-            echo "$VIOLATIONS"
-            echo ""
-            echo "📖 See: packages/ui/src/styles/tokens.css"
-            echo ""
-            echo "✅ Recommended: height: var(--height-md)"
-            echo "⚠️ Found: height: 48px"
-            echo ""
-            echo "Note: This is a warning only, not blocking."
-          else
-            echo "✅ PASS: CSS variables used consistently"
-          fi
-
-      - name: 'Law 5: Check for className Prop on @nasneh/ui Components'
-        id: check-classname-prop
-        continue-on-error: true
-        run: |
-          echo "🔍 Checking for className prop on @nasneh/ui components..."
-          
-          # Search for className on UI components in consumer apps only (not in component definitions)
-          # Only check apps, not packages/ui/src (where components are defined)
-          # Note: Using word boundary (\b) after component name to prevent matching CardContent, CardHeader, etc.
-          VIOLATIONS=$(grep -r -n -E "<(Button|Input|Card|Badge|Dialog|SegmentedControl|Table|Select|Tabs|Avatar|Toast|Skeleton)\b[^>]*className=" \
-            --include="*.tsx" \
-            apps/customer-web apps/dashboard 2>/dev/null \
-            | grep -v 'node_modules' || true)
-          
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: className prop found on @nasneh/ui components"
-            echo ""
-            echo "className prop is not allowed on @nasneh/ui components to prevent style overrides."
+            echo "Tailwind color palette classes are forbidden."
+            echo "Use shadcn semantic classes instead (bg-primary, text-muted, etc.)"
             echo ""
             echo "Violations:"
             echo "$VIOLATIONS"
             echo ""
-            echo "📖 See: docs/SPECS/UI_LAW.md - Law #5"
-            echo "📖 See: docs/SPECS/COMPONENT_SPECS.md - Props Interface"
+            echo "📖 See: docs/SPECS/UI_LAW.md - Check #2"
             echo ""
-            echo "✅ Correct: <Button variant=\"primary\">Click</Button>"
-            echo "❌ Wrong: <Button className=\"my-styles\">Click</Button>"
+            echo "✅ Correct: className=\"bg-primary\""
+            echo "❌ Wrong: className=\"bg-blue-500\""
             exit 1
           else
-            echo "✅ PASS: No className prop on @nasneh/ui components"
+            echo "✅ PASS: No Tailwind palette colors found"
+          fi
+
+      - name: 'Check #3: No Localhost in Staging/Prod'
+        id: check-localhost
+        continue-on-error: true
+        run: |
+          echo "🔍 Check #3: Scanning for localhost in NEXT_PUBLIC_* env vars..."
+          echo ""
+          echo "Rule: NO localhost in any NEXT_PUBLIC_* environment variables"
+          echo "Pattern: NEXT_PUBLIC_.*localhost"
+          echo ""
+          
+          # Search for localhost in .env files (exclude .env.local and .env.development)
+          VIOLATIONS=$(grep -r -n -E 'NEXT_PUBLIC_.*localhost' \
+            --include=".env*" \
+            apps/ 2>/dev/null \
+            | grep -v '.env.local' \
+            | grep -v '.env.development' || true)
+          
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ VIOLATION: localhost found in NEXT_PUBLIC_* env vars"
+            echo ""
+            echo "Localhost is forbidden in staging/production environment variables."
+            echo "Use proper domain names instead."
+            echo ""
+            echo "Violations:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "📖 See: docs/SPECS/UI_LAW.md - Check #3"
+            echo ""
+            echo "✅ Correct: NEXT_PUBLIC_API_URL=https://api.nasneh.com"
+            echo "❌ Wrong: NEXT_PUBLIC_API_URL=http://localhost:3000"
+            exit 1
+          else
+            echo "✅ PASS: No localhost found in NEXT_PUBLIC_* env vars"
           fi
 
       - name: 'Summary: UI Law Compliance Report'
@@ -427,62 +136,40 @@ jobs:
         run: |
           echo ""
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "🚨 UI LAW ENFORCEMENT SUMMARY"
+          echo "🚨 UI LAW ENFORCEMENT (v2.0 - Shadcn-First)"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
-          echo "Scan scope: Frontend only"
+          echo "Scope:"
           echo "  - packages/ui/src/**/*.{ts,tsx}"
           echo "  - apps/customer-web/**/*.{ts,tsx}"
           echo "  - apps/dashboard/**/*.{ts,tsx}"
-          echo ""
-          echo "Excluded:"
-          echo "  - apps/api/** (backend)"
-          echo "  - *.css files (use tokens.css)"
-          echo "  - docs/**"
+          echo "  - apps/**/.env*"
           echo ""
           echo "Checks performed:"
           echo ""
-          echo "  1. ✓ Hex Colors (Law #3)"
-          echo "  2. ✓ Tailwind Color Classes (Law #3)"
-          echo "  3. ✓ Inline Styles with Hardcoded Colors (Law #3)"
-          echo "  4. ✓ Border Classes (Law #1)"
-          echo "  5. ✓ Invalid Border Radius (Law #2)"
-          echo "  6. ✓ Forbidden Terminology (Brand Voice)"
-          echo "  7. ✓ Hardcoded Arabic Text (Copy Tokens)"
-          echo "  8. ✓ Hardcoded English Text (Copy Tokens) [Warning]"
-          echo "  9. ✓ Non-Vazirmatn Fonts (Law #4)"
-          echo " 10. ✓ External UI Libraries (Law #5)"
-          echo " 11. ✓ Hardcoded CSS Values (Design System) [Warning]"
-          echo " 12. ✓ className Prop on UI Components (Law #5)"
+          echo "  1. ✓ Hex Colors (except tokens.css)"
+          echo "  2. ✓ Tailwind Palette Colors"
+          echo "  3. ✓ No Localhost in Staging/Prod"
           echo ""
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
           echo "📖 Documentation:"
-          echo "  - UI Law: docs/SPECS/UI_LAW.md"
-          echo "  - Brand Voice: docs/SPECS/BRAND_VOICE.md"
-          echo "  - Component Specs: docs/SPECS/COMPONENT_SPECS.md"
+          echo "  - UI Law: docs/SPECS/UI_LAW.md (v2.0)"
           echo "  - Design Tokens: packages/ui/src/styles/tokens.css"
-          echo "  - Copy Tokens: packages/ui/src/copy/"
           echo ""
-          echo "🔧 shadcn/ui Compatibility:"
-          echo "  - ✅ Inline styles with CSS variables allowed"
-          echo "  - ✅ @radix-ui primitives allowed (used by shadcn)"
-          echo "  - ❌ Hardcoded colors in inline styles forbidden"
+          echo "🎨 Shadcn-First Policy:"
+          echo "  - ✅ Use shadcn semantic classes (bg-background, text-foreground, etc.)"
+          echo "  - ✅ Use Tailwind for layout (flex, grid, gap-*, p-*, rounded-*, etc.)"
+          echo "  - ❌ NO hex colors outside tokens.css"
+          echo "  - ❌ NO Tailwind palette colors (bg-slate-*, text-gray-*, etc.)"
           echo ""
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
           
-          # Check if any critical checks failed
+          # Check if any step failed
           if [ "${{ steps.check-hex-colors.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-tailwind-colors.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-inline-styles.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-borders.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-border-radius.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-forbidden-terms.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-hardcoded-arabic.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-font-family.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-external-libs.outcome }}" == "failure" ] || \
-             [ "${{ steps.check-classname-prop.outcome }}" == "failure" ]; then
+             [ "${{ steps.check-tailwind-palette.outcome }}" == "failure" ] || \
+             [ "${{ steps.check-localhost.outcome }}" == "failure" ]; then
             echo "❌ UI LAW VIOLATIONS DETECTED"
             echo ""
             echo "This PR cannot be merged until all violations are fixed."
@@ -491,6 +178,6 @@ jobs:
           else
             echo "✅ ALL CHECKS PASSED"
             echo ""
-            echo "This PR complies with all UI Laws and Design System rules."
+            echo "No UI Law violations detected. PR is ready for review."
             echo ""
           fi
