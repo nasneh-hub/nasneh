@@ -1,6 +1,6 @@
-# Nasneh UI Law
+# Nasneh UI Law (Shadcn-First)
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Last Updated:** January 2026  
 **Status:** ENFORCED — Violations will cause PR rejection
 
@@ -8,414 +8,314 @@
 
 ## Purpose
 
-This document defines **5 STRICT LAWS** that govern all UI development in the Nasneh platform. These laws are **NON-NEGOTIABLE** and enforced through automated CI checks.
+This document defines the **RELAXED UI LAW** that governs all UI development in the Nasneh platform. The new policy embraces **shadcn/ui components as-is** while preserving Nasneh brand identity through a **Single Source of Truth**: `packages/ui/src/styles/tokens.css`.
 
-**Source:** `docs/SPECS/DESIGN_SYSTEM.md`
-
----
-
-## The 5 Laws
-
-### Law #1: NO BORDERS ANYWHERE
-
-**Rule:** Borders are forbidden. Use backgrounds, shadows, or spacing instead.
-
-#### ❌ CANNOT
-```tsx
-// Borders for containers
-<div className="border border-gray-300">...</div>
-<div style={{ border: '1px solid #ccc' }}>...</div>
-
-// Borders for inputs
-<input className="border-2 border-black" />
-
-// Borders for validation
-<input className="border-red-500" />  // Error state
-<input className="border-green-500" />  // Success state
-
-// Borders for focus
-<button className="focus:border-blue-500">...</button>
-```
-
-#### ✅ CAN
-```tsx
-// Use backgrounds for containers
-<div className="bg-tertiary shadow-sm">...</div>
-<div style={{ background: 'var(--bg-tertiary)' }}>...</div>
-
-// Use backgrounds for inputs
-<input style={{ background: 'var(--input-bg)' }} />
-
-// Use backgrounds for validation
-<input style={{ background: 'var(--input-bg-error)' }} />  // Error
-<input style={{ background: 'var(--input-bg-success)' }} />  // Success
-
-// Use ring for focus
-<button className="focus:ring-2">...</button>
-<button style={{ boxShadow: '0 0 0 2px var(--ring-color)' }}>...</button>
-```
-
-#### Why?
-Borders create visual clutter and conflict with our mono design system. Backgrounds and shadows provide cleaner separation.
-
-#### Exceptions
-**NONE.** This law has no exceptions.
+**Philosophy:** Reduce friction for UI work by allowing shadcn semantic utilities freely, while enforcing brand consistency through CSS variables only.
 
 ---
 
-### Law #2: ONLY rounded-xl (12px) OR rounded-full
+## The New Rules
 
-**Rule:** All components use `rounded-xl` (12px). Icon buttons use `rounded-full`. Nothing else.
+### ✅ ALLOWED
 
-#### ❌ CANNOT
+#### 1. Shadcn/UI Components As-Is
+- Copy/paste shadcn/ui components **literally without editing** their internal color logic
+- Use shadcn semantic utility classes freely:
+  - `bg-background`, `text-foreground`, `border-border`
+  - `bg-primary`, `text-primary-foreground`
+  - `bg-muted`, `text-muted-foreground`
+  - `bg-card`, `text-card-foreground`
+  - `ring-ring`, `bg-accent`, `text-accent-foreground`
+  - `bg-secondary`, `text-secondary-foreground`
+  - `bg-destructive`, `text-destructive-foreground`
+
+#### 2. Tailwind for Layout Only
+- Flexbox: `flex`, `flex-col`, `flex-row`, `items-*`, `justify-*`
+- Grid: `grid`, `grid-cols-*`, `grid-rows-*`
+- Spacing: `gap-*`, `p-*`, `m-*`, `space-*`
+- Sizing: `w-*`, `h-*`, `min-w-*`, `max-w-*`
+- Border radius: `rounded-*` (all variants allowed)
+- Shadows: `shadow-*`
+- Positioning: `absolute`, `relative`, `fixed`, `sticky`, `top-*`, `left-*`
+- Z-index: `z-*`
+- Display: `block`, `inline`, `hidden`
+
+#### 3. CSS Modules for Complex Styling
+- Allowed for complex positioning, z-index, transitions, animations
+- **NO colors inside CSS Modules** — colors MUST come from tokens.css
+
 ```tsx
-// Other radius values
-<div className="rounded-sm">...</div>   // 2px - FORBIDDEN
-<div className="rounded-md">...</div>   // 6px - FORBIDDEN
-<div className="rounded-lg">...</div>   // 8px - FORBIDDEN
-<div className="rounded-2xl">...</div>  // 16px - FORBIDDEN
-<div className="rounded-3xl">...</div>  // 24px - FORBIDDEN
+// ✅ CORRECT: CSS Module for layout/animation
+import styles from './component.module.css';
 
-// Custom radius
-<div style={{ borderRadius: '8px' }}>...</div>
-<div style={{ borderRadius: '16px' }}>...</div>
-
-// Mixed radius
-<div className="rounded-t-lg rounded-b-xl">...</div>
+<div className={styles.container}>
+  <div className="bg-background text-foreground">
+    Content
+  </div>
+</div>
 ```
 
-#### ✅ CAN
-```tsx
-// Standard radius for ALL components
-<div className="rounded-xl">...</div>
-<button className="rounded-xl">...</button>
-<input className="rounded-xl" />
-<div style={{ borderRadius: 'var(--radius-standard)' }}>...</div>
-
-// Full radius ONLY for icon buttons
-<button className="rounded-full">
-  <Icon />
-</button>
-<button style={{ borderRadius: 'var(--radius-full)' }}>
-  <Icon />
-</button>
-```
-
-#### Why?
-Consistent radius creates visual harmony. 12px is the perfect balance between modern and friendly.
-
-#### Exceptions
-**ONLY** icon buttons can use `rounded-full`. Everything else MUST use `rounded-xl`.
-
----
-
-### Law #3: ONLY MONO COLORS (Except Semantic Status)
-
-**Rule:** 95% of UI uses mono colors (black/white/gray). Color is ONLY for semantic status indicators.
-
-#### ❌ CANNOT
-```tsx
-// Colored backgrounds for decoration
-<div className="bg-blue-500">...</div>
-<div className="bg-purple-600">...</div>
-<button className="bg-gradient-to-r from-pink-500 to-purple-500">...</button>
-
-// Colored text for decoration
-<h1 className="text-blue-600">Welcome</h1>
-<p className="text-purple-500">Description</p>
-
-// Colored borders (already forbidden by Law #1)
-<div className="border-blue-500">...</div>
-
-// Multiple colors in one component
-<button className="bg-blue-500 text-white hover:bg-purple-600">...</button>
-```
-
-#### ✅ CAN
-```tsx
-// Mono backgrounds
-<div style={{ background: 'var(--bg-primary)' }}>...</div>
-<div style={{ background: 'var(--bg-secondary)' }}>...</div>
-<div style={{ background: 'var(--bg-tertiary)' }}>...</div>
-
-// Mono text
-<h1 style={{ color: 'var(--text-primary)' }}>Welcome</h1>
-<p style={{ color: 'var(--text-secondary)' }}>Description</p>
-
-// Semantic colors ONLY for status
-<Badge variant="success">Approved</Badge>  // Green
-<Badge variant="warning">Pending</Badge>   // Yellow
-<Badge variant="danger">Rejected</Badge>   // Red
-<Badge variant="info">New</Badge>          // Blue
-
-// Semantic backgrounds for validation
-<input style={{ background: 'var(--input-bg-error)' }} />
-<div style={{ background: 'var(--color-success)' }}>✓ Success</div>
-```
-
-#### Why?
-Mono colors create a professional, premium feel. Color becomes meaningful when reserved for status.
-
-#### Exceptions
-**ONLY** semantic status indicators can use color:
-- Success (green)
-- Warning (yellow)
-- Danger (red)
-- Info (blue)
-
----
-
-### Law #4: ONLY Vazirmatn Font
-
-**Rule:** The entire platform uses ONE font: Vazirmatn. No exceptions.
-
-#### ❌ CANNOT
-```tsx
-// Other fonts
-<h1 style={{ fontFamily: 'Arial' }}>...</h1>
-<p style={{ fontFamily: 'Helvetica' }}>...</p>
-<div style={{ fontFamily: 'Roboto, sans-serif' }}>...</div>
-
-// Multiple fonts
-<h1 style={{ fontFamily: 'Montserrat' }}>Heading</h1>
-<p style={{ fontFamily: 'Open Sans' }}>Body</p>
-
-// CDN font loading
-<link href="https://fonts.googleapis.com/css2?family=Roboto" />
-
-// System fonts override
-<div style={{ fontFamily: 'system-ui' }}>...</div>
-```
-
-#### ✅ CAN
-```tsx
-// Vazirmatn via CSS variable
-<h1 style={{ fontFamily: 'var(--font-family-primary)' }}>...</h1>
-<p style={{ fontFamily: 'var(--font-family-primary)' }}>...</p>
-
-// Vazirmatn directly (if needed)
-<div style={{ fontFamily: 'Vazirmatn, system-ui, sans-serif' }}>...</div>
-
-// Different weights (same font)
-<h1 style={{ fontWeight: 'var(--font-weight-bold)' }}>Bold</h1>
-<p style={{ fontWeight: 'var(--font-weight-regular)' }}>Regular</p>
-<span style={{ fontWeight: 'var(--font-weight-medium)' }}>Medium</span>
-```
-
-#### Why?
-Single font creates consistency and reduces page weight. Vazirmatn supports both Arabic and English perfectly.
-
-#### Exceptions
-**NONE.** Vazirmatn is the ONLY font allowed.
-
----
-
-### Law #5: ONLY Components from @nasneh/ui
-
-**Rule:** All UI components MUST come from the `@nasneh/ui` package. No custom components outside the package.
-
-#### ❌ CANNOT
-```tsx
-// Custom components in apps
-// apps/vendor-portal/components/Button.tsx
-export function Button() { ... }  // FORBIDDEN
-
-// Inline component definitions
-function MyCustomButton() {
-  return <button className="...">...</button>;
+```css
+/* component.module.css */
+.container {
+  position: relative;
+  z-index: 10;
+  transition: transform 0.2s ease;
 }
 
-// Third-party UI libraries
-import { Button } from 'shadcn/ui';
-import { Input } from 'antd';
-import { Card } from 'material-ui';
-
-// Overriding core styles
-<Button className="!bg-blue-500 !rounded-lg">...</Button>
-<Input style={{ borderRadius: '8px' }} />  // Override
+.container:hover {
+  transform: scale(1.05);
+}
 ```
 
-#### ✅ CAN
+---
+
+### ❌ FORBIDDEN (Hard Fail)
+
+#### 1. Hex Colors Anywhere
+**Rule:** NO hex colors except inside `packages/ui/src/styles/tokens.css`
+
 ```tsx
-// Import from @nasneh/ui
-import { Button, Input, Card, Badge } from '@nasneh/ui';
+// ❌ WRONG
+<div style={{ color: '#fff' }}>...</div>
+<div style={{ backgroundColor: '#111827' }}>...</div>
+<button className="hover:bg-[#3b82f6]">...</button>
 
-// Use components as-is
-<Button variant="primary">Click me</Button>
-<Input placeholder="Enter text" />
-<Card>Content</Card>
+// ✅ CORRECT
+<div className="text-foreground">...</div>
+<div className="bg-background">...</div>
+<button className="hover:bg-primary">...</button>
+```
 
-// Use approved props
-<Button size="lg" variant="secondary">Large Button</Button>
-<Badge variant="success">Approved</Badge>
+#### 2. Tailwind Palette Colors Anywhere
+**Rule:** NO Tailwind color palette classes (e.g., `bg-slate-*`, `text-gray-*`)
 
-// Compose components
+```tsx
+// ❌ WRONG
+<div className="bg-slate-100">...</div>
+<p className="text-gray-700">...</p>
+<button className="bg-blue-500 hover:bg-blue-600">...</button>
+<div className="border-zinc-300">...</div>
+<span className="text-red-500">Error</span>
+
+// ✅ CORRECT
+<div className="bg-muted">...</div>
+<p className="text-foreground">...</p>
+<button className="bg-primary hover:bg-primary/90">...</button>
+<div className="border-border">...</div>
+<span className="text-destructive">Error</span>
+```
+
+#### 3. Inline Styles for Colors
+**Rule:** NO inline color styles
+
+```tsx
+// ❌ WRONG
+<div style={{ color: 'red' }}>...</div>
+<div style={{ backgroundColor: 'white' }}>...</div>
+<button style={{ borderColor: '#ccc' }}>...</button>
+
+// ✅ CORRECT
+<div className="text-destructive">...</div>
+<div className="bg-background">...</div>
+<button className="border-border">...</button>
+```
+
+#### 4. Localhost in Staging/Prod Configs
+**Rule:** NO `localhost` in any `NEXT_PUBLIC_*` environment variables for staging/production
+
+```bash
+# ❌ WRONG
+NEXT_PUBLIC_API_URL=http://localhost:3000
+
+# ✅ CORRECT
+NEXT_PUBLIC_API_URL=https://api.nasneh.com
+```
+
+---
+
+## Brand Enforcement (Single Source of Truth)
+
+### The Rule
+**ALL brand colors MUST come from:** `packages/ui/src/styles/tokens.css`
+
+### Implementation
+Map Nasneh "Nature" palette into shadcn CSS variables so shadcn components work unchanged:
+
+```css
+/* packages/ui/src/styles/tokens.css */
+:root {
+  /* Shadcn semantic variables mapped to Nasneh Nature palette */
+  --background: #FFFFFF;           /* Nasneh bg-primary */
+  --foreground: #1A1A1A;          /* Nasneh text-primary */
+  
+  --primary: #2D5016;             /* Nasneh Nature Green */
+  --primary-foreground: #FFFFFF;
+  
+  --secondary: #F5F5F5;           /* Nasneh bg-secondary */
+  --secondary-foreground: #1A1A1A;
+  
+  --muted: #F9F9F9;               /* Nasneh bg-tertiary */
+  --muted-foreground: #666666;    /* Nasneh text-secondary */
+  
+  --accent: #E8F0E3;              /* Nasneh Nature Light Green */
+  --accent-foreground: #2D5016;
+  
+  --destructive: #DC2626;         /* Semantic red */
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #E5E5E5;              /* Nasneh border color */
+  --input: #E5E5E5;
+  --ring: #2D5016;                /* Focus ring */
+  
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+  
+  --radius: 0.75rem;              /* 12px - Nasneh standard */
+}
+```
+
+### Font Enforcement
+**Vazirmatn MUST remain the only font**, as defined in:
+- `packages/ui/src/styles/globals.css`
+
+**NO importing other fonts** (Google Fonts, CDN fonts, etc.)
+
+---
+
+## CI Enforcement (3 Checks Only)
+
+### Check #1: Hex Color Scan
+**Fail if:** `#([0-9a-fA-F]{3,8})` exists anywhere **except** `packages/ui/src/styles/tokens.css`
+
+**Output:** File path + matched hex color
+
+```bash
+# Example violation
+apps/customer-web/src/app/page.tsx:45: style={{ color: '#fff' }}
+```
+
+### Check #2: Tailwind Palette Scan
+**Fail if:** Any of these patterns exist:
+```regex
+\b(bg|text|border|ring)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3}\b
+```
+
+**Output:** File path + matched class
+
+```bash
+# Example violation
+apps/customer-web/src/components/Button.tsx:12: className="bg-blue-500"
+```
+
+### Check #3: No Localhost in Staging/Prod
+**Fail if:** Any `NEXT_PUBLIC_*` contains `localhost` in staging/prod build context
+
+**Output:** File path + matched env var
+
+```bash
+# Example violation
+apps/customer-web/.env.production:1: NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+---
+
+## Examples
+
+### ✅ CORRECT: Shadcn Component As-Is
+```tsx
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 <Card>
-  <h2>Title</h2>
-  <p>Description</p>
-  <Button>Action</Button>
+  <CardHeader>
+    <CardTitle className="text-foreground">Welcome</CardTitle>
+  </CardHeader>
+  <CardContent className="bg-muted">
+    <p className="text-muted-foreground">Description</p>
+    <Button variant="default" className="bg-primary text-primary-foreground">
+      Click Me
+    </Button>
+  </CardContent>
 </Card>
 ```
 
-#### Why?
-Centralized components ensure consistency, enforce design system rules, and make updates easier.
+### ✅ CORRECT: Layout with Tailwind
+```tsx
+<div className="flex flex-col gap-4 p-6 rounded-xl shadow-lg">
+  <h1 className="text-2xl font-bold text-foreground">Title</h1>
+  <p className="text-muted-foreground">Subtitle</p>
+  <div className="grid grid-cols-2 gap-2">
+    <Button className="bg-primary">Action 1</Button>
+    <Button className="bg-secondary">Action 2</Button>
+  </div>
+</div>
+```
 
-#### Exceptions
-**NONE.** All UI components MUST come from `@nasneh/ui`.
+### ❌ WRONG: Hex Colors
+```tsx
+<div style={{ backgroundColor: '#f5f5f5' }}>  {/* CI FAIL */}
+  <p style={{ color: '#666' }}>Text</p>       {/* CI FAIL */}
+</div>
+```
+
+### ❌ WRONG: Tailwind Palette Colors
+```tsx
+<div className="bg-gray-100">                 {/* CI FAIL */}
+  <p className="text-slate-700">Text</p>      {/* CI FAIL */}
+  <Button className="bg-blue-500">Click</Button>  {/* CI FAIL */}
+</div>
+```
 
 ---
 
-## Enforcement
+## Migration Guide (From Old UI Law)
 
-### Automated CI Checks
+### Old Law #1 (NO BORDERS) → **REMOVED**
+- **Before:** Borders forbidden
+- **Now:** Use `border-border` freely (mapped to Nasneh color in tokens.css)
 
-All PRs are automatically checked for violations:
+### Old Law #2 (ONLY rounded-xl) → **RELAXED**
+- **Before:** Only `rounded-xl` or `rounded-full`
+- **Now:** All `rounded-*` variants allowed
 
-1. **Border Detection** - Fails if `border`, `border-*` classes found
-2. **Radius Detection** - Fails if `rounded-sm`, `rounded-md`, `rounded-lg` found
-3. **Color Detection** - Fails if Tailwind color classes found (`bg-blue-500`, etc.)
-4. **Font Detection** - Fails if `fontFamily` set to anything other than Vazirmatn
-5. **Component Detection** - Fails if UI components defined outside `packages/ui/`
+### Old Law #3 (ONLY MONO COLORS) → **REPLACED**
+- **Before:** Only mono colors except semantic status
+- **Now:** Use shadcn semantic classes (`bg-primary`, `text-foreground`, etc.)
 
-### Manual Review
+### Old Law #4 (ONLY Vazirmatn) → **KEPT**
+- **Before:** Only Vazirmatn font
+- **Now:** Still only Vazirmatn (enforced in tokens.css)
 
-Code reviewers MUST verify:
-- [ ] No borders anywhere
-- [ ] Only `rounded-xl` or `rounded-full`
-- [ ] Only mono colors (except semantic status)
-- [ ] Only Vazirmatn font
-- [ ] Only components from `@nasneh/ui`
-
-### Violation Consequences
-
-| Severity | Action |
-|----------|--------|
-| **Critical** (Law violation) | PR rejected immediately |
-| **Major** (Multiple violations) | PR blocked until fixed |
-| **Minor** (Single violation) | Warning + required fix |
+### Old Law #5 (ONLY @nasneh/ui) → **RELAXED**
+- **Before:** Only components from `@nasneh/ui`
+- **Now:** Shadcn components allowed as-is
 
 ---
 
 ## Quick Reference
 
-### The 5 Laws (Summary)
+### Allowed Patterns
+| Pattern | Example |
+|---------|---------|
+| Shadcn semantic classes | `bg-background`, `text-foreground`, `border-border` |
+| Tailwind layout | `flex`, `grid`, `gap-4`, `p-6`, `rounded-xl` |
+| CSS Modules (no colors) | `className={styles.container}` |
 
-| Law | Rule | Exception |
-|-----|------|-----------|
-| **#1** | NO borders | None |
-| **#2** | ONLY rounded-xl (12px) | Icon buttons: rounded-full |
-| **#3** | ONLY mono colors | Semantic status indicators |
-| **#4** | ONLY Vazirmatn font | None |
-| **#5** | ONLY @nasneh/ui components | None |
-
-### Approved Patterns
-
-```tsx
-// ✅ CORRECT: Following all 5 laws
-import { Button, Input, Card } from '@nasneh/ui';
-
-<Card>  {/* Law #5: From @nasneh/ui */}
-  <h1 style={{ 
-    fontFamily: 'var(--font-family-primary)',  // Law #4: Vazirmatn
-    color: 'var(--text-primary)'               // Law #3: Mono color
-  }}>
-    Welcome
-  </h1>
-  
-  <Input   {/* Law #5: From @nasneh/ui */}
-    style={{
-      background: 'var(--input-bg)',           // Law #1: No border
-      borderRadius: 'var(--radius-standard)'   // Law #2: rounded-xl
-    }}
-  />
-  
-  <Button variant="primary">  {/* Law #5: From @nasneh/ui */}
-    Submit
-  </Button>
-</Card>
-```
+### Forbidden Patterns
+| Pattern | Example | CI Check |
+|---------|---------|----------|
+| Hex colors | `#fff`, `#111827` | Check #1 |
+| Tailwind palette | `bg-slate-100`, `text-gray-700` | Check #2 |
+| Inline color styles | `style={{ color: 'red' }}` | Check #1 |
+| Localhost in prod | `NEXT_PUBLIC_API_URL=http://localhost:3000` | Check #3 |
 
 ---
 
 ## Related Documentation
-
-- **Component Specs:** `COMPONENT_SPECS.md` - Detailed specs for all 12 core components
-
-- **Design System:** `docs/SPECS/DESIGN_SYSTEM.md` - Full design specifications
+- **Design Tokens:** `packages/ui/src/styles/tokens.css` - Single Source of Truth for all colors
 - **Brand Voice:** `docs/SPECS/BRAND_VOICE.md` - Copy and terminology rules
 - **Component Specs:** `docs/SPECS/COMPONENT_SPECS.md` - Component implementation details
-- **Design Tokens:** `packages/ui/src/styles/tokens.css` - CSS variables
-- **Copy Tokens:** `packages/ui/src/copy/` - UI text strings
-
----
-
-## Known False Positives (CI Workarounds)
-
-The automated CI checks may flag certain patterns as violations when they are actually valid code. Here are known false positives and their workarounds:
-
-### 1. `localStorage` Matches Forbidden Term `local`
-
-**Problem:** The forbidden terminology check regex `(customer|buyer|seller|vendor|merchant|cheap|budget|local)` matches `localStorage` because it contains `local`.
-
-**Workaround:**
-```tsx
-// ❌ WRONG: Triggers false positive
-const token = localStorage.getItem('token');
-
-// ✅ CORRECT: Use window reference
-const storage = window['local' + 'Storage'];
-const token = storage.getItem('token');
-```
-
-**Recommendation:** Update the workflow regex to use word boundaries: `\b(local)\b`
-
----
-
-### 2. `<CardContent` Matches `<Card` className Check
-
-**Problem:** The className prop check regex `<(Button|Input|Card|...)` matches `<CardContent` because `Card` is a prefix of `CardContent`.
-
-**Workaround:**
-```tsx
-// ❌ WRONG: Triggers false positive
-<Card>
-  <CardContent className="p-6">
-    ...
-  </CardContent>
-</Card>
-
-// ✅ CORRECT: Use Card's padding prop
-<Card padding="lg">
-  ...
-</Card>
-```
-
-**Recommendation:** Update the workflow regex to use word boundaries: `<(Button|Input|Card)\b`
-
----
-
-### 3. Comments Containing Forbidden Patterns
-
-**Problem:** Comments explaining why something is forbidden may themselves trigger the check.
-
-**Workaround:**
-```tsx
-// ❌ WRONG: Comment triggers check
-// Don't use "customer" - use "supporter" instead
-
-// ✅ CORRECT: Use indirect reference
-// Don't use the C-word - use "supporter" instead
-```
-
----
-
-## Reporting New False Positives
-
-If you encounter a new false positive:
-
-1. Document the pattern and workaround
-2. Add to this section via PR
-3. Consider updating `.github/workflows/ui-lint.yml` (protected file)
 
 ---
 
@@ -423,11 +323,12 @@ If you encounter a new false positive:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | Jan 2026 | Initial release - 5 laws defined |
+| 1.0 | Jan 2026 | Initial release - 5 strict laws |
 | 1.1 | Jan 2026 | Added Known False Positives section |
+| 2.0 | Jan 2026 | **MANDATE: Relaxed to shadcn-first approach** |
 
 ---
 
-**Remember:** These laws exist to create a consistent, premium, and maintainable UI. When in doubt, ask before breaking a law.
+**Remember:** The goal is to reduce friction while preserving brand consistency. Use shadcn freely, but ALL colors MUST come from `tokens.css`.
 
 **Document End**
