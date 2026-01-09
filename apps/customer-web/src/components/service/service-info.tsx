@@ -53,7 +53,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
         <div className="flex items-center gap-2">
           <div
             className={`h-2 w-2 rounded-full ${
-              isAvailable ? 'bg-green-500' : 'bg-red-500'
+              isAvailable ? 'bg-primary' : 'bg-destructive'
             }`}
           />
           <span className="text-sm text-mono-11">
