@@ -112,12 +112,11 @@ export function Header() {
           {/* Center: NavigationMenu (Desktop only) */}
           <NavigationMenu
             style={{
-              display: 'none',
               position: 'absolute',
               left: '50%',
               transform: 'translateX(-50%)',
             }}
-            className="md:block"
+            className="hidden md:block"
           >
             <NavigationMenuList>
               {tabs.map((tab) => {
