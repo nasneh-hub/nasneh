@@ -20,7 +20,6 @@ import {
   Globe,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-// Dialog import removed - no longer needed after removing Globe modal
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,91 +67,60 @@ export function Header() {
 
   return (
     <>
-      <header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 50,
-          background: 'var(--bg-primary)',
-          boxShadow: 'var(--shadow-sm)',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            height: '5rem',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 var(--spacing-xl)',
-            maxWidth: '1440px',
-            margin: '0 auto',
-          }}
-        >
+      <header className="sticky top-0 z-50 bg-[var(--bg-primary)] shadow-[var(--shadow-sm)]">
+        <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-[var(--spacing-xl)] relative">
           {/* Left: Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-lg)' }}>
+          <div className="flex items-center gap-[var(--spacing-lg)]">
             <button
               onClick={() => router.push('/')}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-                width: '40px',
-                height: '40px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              className="flex h-10 w-10 cursor-pointer items-center justify-center border-none bg-transparent p-0"
               aria-label="Home"
             >
               <Logo variant="auto" size={40} />
             </button>
           </div>
 
-          {/* Center: NavigationMenu (Desktop only) */}
-          <NavigationMenu
-            style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
-            className="hidden md:block"
-          >
-            <NavigationMenuList>
-              {tabs.map((tab) => {
-                const active = isActiveTab(tab.href);
-                const isHighlighted = tab.highlighted;
-                return (
-                  <NavigationMenuItem key={tab.name}>
-                    <NavigationMenuLink
-                      href={tab.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        router.push(tab.href);
-                      }}
-                      active={active}
-                      style={{
-                        background: isHighlighted && !active ? 'var(--bg-tertiary)' : undefined,
-                        fontWeight: isHighlighted ? 'var(--font-weight-semibold)' : undefined,
-                      }}
-                    >
-                      {tab.name}
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                );
-              })}
-            </NavigationMenuList>
-          </NavigationMenu>
+          {/* Center: NavigationMenu (Desktop only) - Using absolute positioning within relative container */}
+          <div className="absolute left-1/2 hidden -translate-x-1/2 md:block">
+            <NavigationMenu>
+              <NavigationMenuList>
+                {tabs.map((tab) => {
+                  const active = isActiveTab(tab.href);
+                  const isHighlighted = tab.highlighted;
+                  return (
+                    <NavigationMenuItem key={tab.name}>
+                      <NavigationMenuLink
+                        href={tab.href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          router.push(tab.href);
+                        }}
+                        active={active}
+                        className={
+                          isHighlighted && !active
+                            ? 'bg-[var(--bg-tertiary)] font-[var(--font-weight-semibold)]'
+                            : isHighlighted
+                            ? 'font-[var(--font-weight-semibold)]'
+                            : ''
+                        }
+                      >
+                        {tab.name}
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  );
+                })}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
 
           {/* Right: Utilities */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+          <div className="flex items-center gap-[var(--spacing-md)]">
             {/* Sell CTA (Desktop only) */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => router.push('/sell')}
-              style={{ display: 'none' }}
-              className="md:inline-flex"
+              className="hidden md:inline-flex"
             >
               Become a Seller
             </Button>
@@ -161,61 +129,51 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 'var(--spacing-sm)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'background 0.2s',
-                  }}
-                  className="rounded-xl hover:bg-[var(--bg-hover)]"
+                  className="flex cursor-pointer items-center justify-center rounded-xl border-none bg-transparent p-[var(--spacing-sm)] transition-colors duration-200 hover:bg-[var(--bg-hover)]"
                   aria-label="Settings"
                 >
-                  <Globe size={20} style={{ color: 'var(--text-primary)' }} />
+                  <Globe size={20} className="text-[var(--text-primary)]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" style={{ minWidth: '200px' }}>
+              <DropdownMenuContent align="end" className="min-w-[200px]">
                 {/* Language Section */}
-                <div style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }}>
-                  <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-tertiary)', margin: 0 }}>
+                <div className="px-[var(--spacing-sm)] py-[var(--spacing-xs)]">
+                  <p className="m-0 text-[length:var(--font-size-xs)] font-[var(--font-weight-semibold)] text-[var(--text-tertiary)]">
                     {en.settings.language}
                   </p>
                 </div>
                 <DropdownMenuItem>
-                  <span style={{ color: 'var(--text-primary)' }}>{en.settings.english}</span>
+                  <span className="text-[var(--text-primary)]">{en.settings.english}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled>
-                  <span style={{ color: 'var(--text-tertiary)' }}>{en.settings.arabic} ({en.settings.comingSoon})</span>
+                  <span className="text-[var(--text-tertiary)]">{en.settings.arabic} ({en.settings.comingSoon})</span>
                 </DropdownMenuItem>
                 
                 <DropdownMenuSeparator />
                 
                 {/* Currency Section */}
-                <div style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }}>
-                  <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-tertiary)', margin: 0 }}>
+                <div className="px-[var(--spacing-sm)] py-[var(--spacing-xs)]">
+                  <p className="m-0 text-[length:var(--font-size-xs)] font-[var(--font-weight-semibold)] text-[var(--text-tertiary)]">
                     {en.settings.currency}
                   </p>
                 </div>
                 <DropdownMenuItem>
-                  <span style={{ color: 'var(--text-primary)' }}>{en.settings.bahrainDinar}</span>
+                  <span className="text-[var(--text-primary)]">{en.settings.bahrainDinar}</span>
                 </DropdownMenuItem>
                 
                 <DropdownMenuSeparator />
                 
                 {/* Country Section */}
-                <div style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }}>
-                  <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-tertiary)', margin: 0 }}>
+                <div className="px-[var(--spacing-sm)] py-[var(--spacing-xs)]">
+                  <p className="m-0 text-[length:var(--font-size-xs)] font-[var(--font-weight-semibold)] text-[var(--text-tertiary)]">
                     {en.settings.country}
                   </p>
                 </div>
                 <DropdownMenuItem>
-                  <span style={{ color: 'var(--text-primary)' }}>{en.settings.bahrain}</span>
+                  <span className="text-[var(--text-primary)]">{en.settings.bahrain}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled>
-                  <span style={{ color: 'var(--text-tertiary)' }}>{en.settings.gcc} ({en.settings.comingSoon})</span>
+                  <span className="text-[var(--text-tertiary)]">{en.settings.gcc} ({en.settings.comingSoon})</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -224,23 +182,13 @@ export function Header() {
             {mounted && (
               <button
                 onClick={toggleTheme}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 'var(--spacing-sm)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background 0.2s',
-                }}
-                className="rounded-xl hover:bg-[var(--bg-hover)]"
+                className="flex cursor-pointer items-center justify-center rounded-xl border-none bg-transparent p-[var(--spacing-sm)] transition-colors duration-200 hover:bg-[var(--bg-hover)]"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (
-                  <Sun size={20} style={{ color: 'var(--text-primary)' }} />
+                  <Sun size={20} className="text-[var(--text-primary)]" />
                 ) : (
-                  <Moon size={20} style={{ color: 'var(--text-primary)' }} />
+                  <Moon size={20} className="text-[var(--text-primary)]" />
                 )}
               </button>
             )}
@@ -248,59 +196,21 @@ export function Header() {
             {/* Favorites (Desktop only) */}
             <button
               onClick={() => router.push('/favorites')}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 'var(--spacing-sm)',
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s',
-              }}
-              className="md:flex rounded-xl hover:bg-[var(--bg-hover)]"
+              className="hidden cursor-pointer items-center justify-center rounded-xl border-none bg-transparent p-[var(--spacing-sm)] transition-colors duration-200 hover:bg-[var(--bg-hover)] md:flex"
               aria-label="Favorites"
             >
-              <Heart size={20} style={{ color: 'var(--text-primary)' }} />
+              <Heart size={20} className="text-[var(--text-primary)]" />
             </button>
 
             {/* Cart (Desktop only) */}
             <button
               onClick={() => router.push('/cart')}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 'var(--spacing-sm)',
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                transition: 'background 0.2s',
-              }}
-              className="md:flex rounded-xl hover:bg-[var(--bg-hover)]"
+              className="relative hidden cursor-pointer items-center justify-center rounded-xl border-none bg-transparent p-[var(--spacing-sm)] transition-colors duration-200 hover:bg-[var(--bg-hover)] md:flex"
               aria-label="Cart"
             >
-              <ShoppingBag size={20} style={{ color: 'var(--text-primary)' }} />
+              <ShoppingBag size={20} className="text-[var(--text-primary)]" />
               {/* Badge placeholder */}
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '0',
-                  right: '0',
-                  background: 'var(--primary)',
-                  color: 'var(--text-on-primary)',
-                  fontSize: '0.625rem',
-                  fontWeight: 'var(--font-weight-bold)',
-                  padding: '0.125rem 0.375rem',
-                  minWidth: '1.25rem',
-                  height: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                className="rounded-full"
-              >
+              <span className="absolute right-0 top-0 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-[var(--primary)] px-1.5 py-0.5 text-[0.625rem] font-[var(--font-weight-bold)] text-[var(--text-on-primary)]">
                 0
               </span>
             </button>
@@ -310,65 +220,119 @@ export function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: 0,
-                    }}
-                    aria-label="Account menu"
+                    className="flex cursor-pointer items-center justify-center rounded-xl border-none bg-transparent p-0 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
+                    aria-label="User menu"
                   >
-                    <Avatar size="md" name={user?.name || user?.phone || '?'} />
+                    <Avatar name={getInitials()} size="md" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="min-w-[200px]">
+                  <div className="px-[var(--spacing-sm)] py-[var(--spacing-xs)]">
+                    <p className="m-0 text-[length:var(--font-size-sm)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
+                      {user?.phone || 'Guest'}
+                    </p>
+                  </div>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/profile')}>
-                    <User size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    My Profile
+                    <User size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.profile.myProfile}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/orders')}>
-                    <Package size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    My Orders
+                    <Package size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.orders.myOrders}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/bookings')}>
-                    <Calendar size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    My Bookings
+                    <Calendar size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.bookings.myBookings}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/reviews')}>
-                    <Star size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    My Reviews
+                    <Star size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.reviews.myReviews}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/profile/addresses')}>
-                    <MapPin size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    My Addresses
+                  <DropdownMenuItem onClick={() => router.push('/addresses')}>
+                    <MapPin size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.profile.myAddresses}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/wishlist')}>
-                    <Heart size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    Wishlist
+                  <DropdownMenuItem onClick={() => router.push('/favorites')}>
+                    <Heart size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.wishlist.myWishlist}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/support')}>
-                    <Headphones size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    Support
+                    <Headphones size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.support.support}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
-                    Logout
+                    <LogOut size={16} className="mr-[var(--spacing-sm)]" />
+                    {en.auth.logout}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button variant="default" size="sm" onClick={() => router.push('/login')}>
-                Login
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => router.push('/login')}
+              >
+                {en.auth.login}
               </Button>
             )}
-
-            {/* Mobile Menu Button removed - will be implemented in PR4 with proper Sheet component */}
           </div>
         </div>
       </header>
 
-      {/* Globe Modal removed - will be replaced with dropdowns in PR3 */}
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-primary)] shadow-[var(--shadow-md)] md:hidden">
+        <div className="flex h-16 items-center justify-around px-[var(--spacing-md)]">
+          <button
+            onClick={() => router.push('/')}
+            className="flex flex-col items-center justify-center gap-1 border-none bg-transparent p-[var(--spacing-xs)] text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)]"
+            aria-label="Home"
+          >
+            <Package size={20} />
+            <span className="text-[0.625rem]">{en.dashboard.home}</span>
+          </button>
+
+          <button
+            onClick={() => router.push('/categories')}
+            className="flex flex-col items-center justify-center gap-1 border-none bg-transparent p-[var(--spacing-xs)] text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)]"
+            aria-label="Categories"
+          >
+            <Globe size={20} />
+            <span className="text-[0.625rem]">{en.categories.allCategories.split(' ')[0]}</span>
+          </button>
+
+          <button
+            onClick={() => router.push('/favorites')}
+            className="flex flex-col items-center justify-center gap-1 border-none bg-transparent p-[var(--spacing-xs)] text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)]"
+            aria-label="Favorites"
+          >
+            <Heart size={20} />
+            <span className="text-[0.625rem]">{en.wishlist.wishlist}</span>
+          </button>
+
+          <button
+            onClick={() => router.push('/cart')}
+            className="relative flex flex-col items-center justify-center gap-1 border-none bg-transparent p-[var(--spacing-xs)] text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)]"
+            aria-label="Cart"
+          >
+            <ShoppingBag size={20} />
+            <span className="text-[0.625rem]">{en.orders.cart}</span>
+            <span className="absolute right-0 top-0 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-[var(--primary)] px-1 text-[0.5rem] font-[var(--font-weight-bold)] text-[var(--text-on-primary)]">
+              0
+            </span>
+          </button>
+
+          <button
+            onClick={() => router.push(isAuthenticated ? '/profile' : '/login')}
+            className="flex flex-col items-center justify-center gap-1 border-none bg-transparent p-[var(--spacing-xs)] text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--text-primary)]"
+            aria-label="Profile"
+          >
+            <User size={20} />
+            <span className="text-[0.625rem]">{en.dashboard.profile}</span>
+          </button>
+        </div>
+      </nav>
     </>
   );
 }
