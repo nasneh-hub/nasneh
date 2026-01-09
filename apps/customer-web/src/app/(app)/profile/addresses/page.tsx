@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Badge, Dialog } from '@nasneh/ui';
-import { ar } from '@nasneh/ui/copy';
+import { en } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
 
 interface Address {
@@ -73,7 +73,7 @@ export default function AddressesPage() {
         setAddresses(data.data);
       }
     } catch (err) {
-      setError(ar.errors.somethingWrong);
+      setError(en.errors.somethingWrong);
     } finally {
       setIsLoading(false);
     }
@@ -138,9 +138,9 @@ export default function AddressesPage() {
 
   const formatAddress = (addr: Address) => {
     const parts = [
-      addr.building && `${ar.profile.building} ${addr.building}`,
-      addr.road && `${ar.profile.road} ${addr.road}`,
-      addr.block && `${ar.profile.block} ${addr.block}`,
+      addr.building && `${en.profile.building} ${addr.building}`,
+      addr.road && `${en.profile.road} ${addr.road}`,
+      addr.block && `${en.profile.block} ${addr.block}`,
       addr.area,
     ].filter(Boolean);
     return parts.join(', ');
@@ -149,9 +149,9 @@ export default function AddressesPage() {
   const getLabelText = (label: string) => {
     switch (label.toLowerCase()) {
       case 'home':
-        return ar.profile.labelHome;
+        return en.profile.labelHome;
       case 'work':
-        return ar.profile.labelWork;
+        return en.profile.labelWork;
       default:
         return label;
     }
@@ -162,7 +162,7 @@ export default function AddressesPage() {
       <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)]">
         <div className="text-center">
           <div className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)] animate-pulse mx-auto mb-4" />
-          <p className="text-[var(--text-secondary)]">{ar.ui.loading}</p>
+          <p className="text-[var(--text-secondary)]">{en.ui.loading}</p>
         </div>
       </div>
     );
@@ -183,14 +183,14 @@ export default function AddressesPage() {
               </svg>
             </button>
             <h1 className="text-xl font-semibold text-[var(--text-primary)]">
-              {ar.profile.myAddresses}
+              {en.profile.myAddresses}
             </h1>
           </div>
           <Button
             size="sm"
             onClick={() => router.push('/profile/addresses/new')}
           >
-            {ar.profile.addAddress}
+            {en.profile.addAddress}
           </Button>
         </div>
       </header>
@@ -201,7 +201,7 @@ export default function AddressesPage() {
           <Card padding="lg">
             <div className="text-center">
               <p className="text-[var(--text-error)] mb-4">{error}</p>
-              <Button onClick={fetchAddresses}>{ar.ui.back}</Button>
+              <Button onClick={fetchAddresses}>{en.ui.back}</Button>
             </div>
           </Card>
         ) : addresses.length === 0 ? (
@@ -213,9 +213,9 @@ export default function AddressesPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <p className="text-[var(--text-secondary)] mb-4">{ar.profile.noAddresses}</p>
+              <p className="text-[var(--text-secondary)] mb-4">{en.profile.noAddresses}</p>
               <Button onClick={() => router.push('/profile/addresses/new')}>
-                {ar.profile.addFirstAddress}
+                {en.profile.addFirstAddress}
               </Button>
             </div>
           </Card>
@@ -232,7 +232,7 @@ export default function AddressesPage() {
                       </span>
                       {address.isDefault && (
                         <Badge variant="success" size="sm">
-                          {ar.profile.defaultAddress}
+                          {en.profile.defaultAddress}
                         </Badge>
                       )}
                     </div>
@@ -279,7 +279,7 @@ export default function AddressesPage() {
                       onClick={() => handleSetDefault(address.id)}
                       className="text-sm text-[var(--text-accent)] hover:underline"
                     >
-                      {ar.profile.setAsDefault}
+                      {en.profile.setAsDefault}
                     </button>
                   )}
                 </div>
@@ -293,11 +293,11 @@ export default function AddressesPage() {
       <Dialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title={ar.profile.deleteAddress}
+        title={en.profile.deleteAddress}
       >
         <div className="space-y-4">
           <p className="text-[var(--text-secondary)]">
-            {ar.profile.confirmDeleteAddress}
+            {en.profile.confirmDeleteAddress}
           </p>
           <div className="flex gap-3">
             <Button
@@ -306,7 +306,7 @@ export default function AddressesPage() {
               disabled={isDeleting}
               fullWidth
             >
-              {isDeleting ? ar.ui.loading : ar.ui.delete}
+              {isDeleting ? en.ui.loading : en.ui.delete}
             </Button>
             <Button
               variant="secondary"
@@ -314,7 +314,7 @@ export default function AddressesPage() {
               disabled={isDeleting}
               fullWidth
             >
-              {ar.ui.cancel}
+              {en.ui.cancel}
             </Button>
           </div>
         </div>
