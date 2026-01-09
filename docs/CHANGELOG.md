@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#216:** add ACM certificate and Route53 for api-staging.nasneh.com
 
 ### 📚 Documentation (docs)
+- **#240:** relax to shadcn-first approach (v2.0)
 - **#215:** add environment variables contract
 
 ---
@@ -45,6 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#207:** remove localStorage workaround
 
 ### 📚 Documentation (docs)
+- **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
 - **#201:** add modification rules to tokens.css
 
@@ -125,6 +127,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#187:** remove accidental bash command from ui-lint.yml
 
 ### 📚 Documentation (docs)
+- **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
@@ -194,6 +197,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
+- **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
@@ -224,6 +228,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.2.0] - 2026-01-03
 
 ### 📚 Documentation (docs)
+- **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned
@@ -393,6 +398,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
+- **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
 - **#198:** complete API inventory with all 78 endpoints tested
 - **#195:** document Sprint 3.9 infrastructure fixes and lessons learned

@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 08:40:36 | Documented (ui-law): relax to shadcn-first approach (v2.0) | PR #240 | @nasneh-hub |
 | 07:32:11 | Added (customer-web): add post-login app shell with navigation | PR #238 | @nasneh-hub |
 | 06:56:25 | Fixed (customer-web): map verify-otp API response to frontend format | PR #237 | @nasneh-hub |
 | 06:02:23 | Fixed (api): configure CORS for staging frontends | PR #235 | @nasneh-hub |
