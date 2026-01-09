@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button, Card, Input, Select } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
-import { useAuth, getAccessToken } from '../../../../context/auth-context';
+import { useAuth, getAccessToken } from '@/context/auth-context';
 
 interface AddressForm {
   label: string;

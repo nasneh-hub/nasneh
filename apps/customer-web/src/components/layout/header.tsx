@@ -16,7 +16,7 @@ import {
   Calendar,
   Star,
   MapPin,
-  Settings,
+  Headphones,
   LogOut,
   Menu,
 } from 'lucide-react';
@@ -276,7 +276,7 @@ export function Header() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => router.push('/profile')}>
                     <User size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    {ar.profile.myProfile}
+                    ملفي الشخصي
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/orders')}>
                     <Package size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
@@ -292,12 +292,16 @@ export function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/profile/addresses')}>
                     <MapPin size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    {ar.profile.myAddresses}
+                    عناويني
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/wishlist')}>
+                    <Heart size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
+                    المفضلة
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/settings')}>
-                    <Settings size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    الإعدادات
+                  <DropdownMenuItem onClick={() => router.push('/support')}>
+                    <Headphones size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
+                    الدعم
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
