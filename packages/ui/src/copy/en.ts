@@ -275,6 +275,9 @@ export const en = {
     trackOrder: 'Track Order',
     cancelOrder: 'Cancel Order',
     reorder: 'Reorder',
+    noOrders: 'No orders yet',
+    orderHistory: 'Your order history will appear here',
+    startShopping: 'Start Shopping',
     
     // Cart
     cart: 'Cart',
@@ -431,14 +434,97 @@ export const en = {
   },
 
   /**
+   * Bookings
+   */
+  bookings: {
+    myBookings: 'My Bookings',
+    bookingDetails: 'Booking Details',
+    bookingNumber: 'Booking Number',
+    bookingDate: 'Booking Date',
+    bookingStatus: 'Booking Status',
+    bookingTime: 'Booking Time',
+    cancelBooking: 'Cancel Booking',
+    reschedule: 'Reschedule',
+    noBookings: 'No bookings yet',
+    bookingHistory: 'Your service bookings will appear here',
+    bookService: 'Book Service',
+  },
+
+  /**
    * Reviews & Ratings
    */
   reviews: {
     reviews: 'Reviews',
+    myReviews: 'My Reviews',
     rating: 'Rating',
     writeReview: 'Write Review',
     noReviews: 'No reviews yet',
+    reviewHistory: 'Your reviews and ratings will appear here',
     stars: 'stars',
+  },
+
+  /**
+   * Wishlist
+   */
+  wishlist: {
+    wishlist: 'Wishlist',
+    myWishlist: 'My Wishlist',
+    addToWishlist: 'Add to Wishlist',
+    removeFromWishlist: 'Remove from Wishlist',
+    noItems: 'No items in your wishlist',
+    wishlistEmpty: 'Your favorite items will appear here',
+    comingSoon: 'Coming Soon',
+  },
+
+  /**
+   * Support
+   */
+  support: {
+    support: 'Support',
+    helpCenter: 'Help Center',
+    contactUs: 'Contact Us',
+    faq: 'FAQ',
+    supportDescription: 'Get help with your orders and account',
+    needHelp: 'Need Help?',
+    getInTouch: 'Get in Touch',
+  },
+
+  /**
+   * Footer
+   */
+  footer: {
+    // Section Titles
+    marketplace: 'Marketplace',
+    company: 'Company',
+    support: 'Support',
+    legal: 'Legal',
+    
+    // Marketplace Links
+    kitchens: 'Kitchens',
+    craft: 'Craft',
+    products: 'Products',
+    foodTrucks: 'Food Trucks',
+    services: 'Services',
+    
+    // Company Links
+    aboutUs: 'About Us',
+    howItWorks: 'How It Works',
+    careers: 'Careers',
+    press: 'Press',
+    
+    // Support Links
+    helpCenter: 'Help Center',
+    safety: 'Safety',
+    contactUs: 'Contact Us',
+    
+    // Legal Links
+    termsOfService: 'Terms of Service',
+    privacyPolicy: 'Privacy Policy',
+    cookiePolicy: 'Cookie Policy',
+    
+    // Copyright
+    madeIn: 'Made with care in',
+    bahrain: 'Bahrain',
   },
 
   /**
