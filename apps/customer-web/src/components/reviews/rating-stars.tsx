@@ -34,7 +34,7 @@ export function RatingStars({
             key={i}
             className={`${iconSize} ${
               isFilled
-                ? 'fill-yellow-500 text-yellow-500'
+                ? 'fill-primary text-primary'
                 : 'fill-transparent text-mono-6'
             }`}
           />
