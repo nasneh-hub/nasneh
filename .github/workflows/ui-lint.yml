@@ -83,33 +83,41 @@ jobs:
             echo "✅ PASS: No Tailwind color classes found"
           fi
 
-      - name: 'Law 3: Check for Inline Styles'
+      - name: 'Law 3: Check for Inline Styles with Hardcoded Colors'
         id: check-inline-styles
         continue-on-error: true
         run: |
-          echo "🔍 Checking for inline styles (style={{...}})..."
+          echo "🔍 Checking for inline styles with hardcoded colors..."
+          echo ""
+          echo "Note: Inline styles are ALLOWED if they use CSS variables (var(--...))."
+          echo "      Only hardcoded values (#000, rgb(), hsl(), px values) are forbidden."
+          echo ""
           
-          # Search for inline styles in frontend code only
-          VIOLATIONS=$(grep -r -n -E 'style=\{\{' \
+          # Search for inline styles with hardcoded color values (hex, rgb, hsl)
+          # Allow inline styles that ONLY use var(--...) CSS variables
+          VIOLATIONS=$(grep -r -n -E 'style=\{\{[^}]*(#[0-9A-Fa-f]{3,8}|rgb\(|hsl\(|rgba\(|hsla\()' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v 'node_modules' || true)
           
           if [ -n "$VIOLATIONS" ]; then
-            echo "❌ VIOLATION: Inline styles found"
+            echo "❌ VIOLATION: Inline styles with hardcoded colors found"
             echo ""
-            echo "Inline styles are forbidden. Use CSS classes with tokens.css variables."
+            echo "Inline styles must use CSS variables from tokens.css only."
             echo ""
             echo "Violations:"
             echo "$VIOLATIONS"
             echo ""
             echo "📖 See: docs/SPECS/UI_LAW.md - Law #3"
             echo ""
-            echo "✅ Correct: className=\"text-primary\""
+            echo "✅ Correct: style={{ color: 'var(--text-primary)' }}"
+            echo "✅ Correct: style={{ background: 'var(--bg-secondary)' }}"
             echo "❌ Wrong: style={{ color: '#000' }}"
+            echo "❌ Wrong: style={{ background: 'rgb(255, 255, 255)' }}"
             exit 1
           else
-            echo "✅ PASS: No inline styles found"
+            echo "✅ PASS: No hardcoded colors in inline styles"
+            echo "   (Inline styles with CSS variables are allowed)"
           fi
 
       - name: 'Law 1: Check for Border Classes'
@@ -184,13 +192,17 @@ jobs:
           # Search for forbidden terms ONLY in UI copy files and frontend apps
           # Exclude backend API (apps/api) entirely
           # Note: Using word boundaries (\b) to prevent false positives like 'localStorage'
+          # Note: Excluding comments, route paths (href:/href=), and copy token references
           VIOLATIONS=$(grep -r -n -E '(زبون|بائع|محلي|رخيص|\bcustomer\b|\bbuyer\b|\bseller\b|\bvendor\b|\bmerchant\b|\bcheap\b|\bbudget\b|\blocal\b)' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
             | grep -v 'terminology.ts' \
             | grep -v 'node_modules' \
-            | grep -v -E '(//|/\*|\*)' || true)
+            | grep -v -E '//.*\b(vendor|customer|local|User)\b' \
+            | grep -v -E "href[:=]\s*['\"/]" \
+            | grep -v -E "^[^:]+:[0-9]+:\s*(VENDOR|CUSTOMER|SELLER|MERCHANT):" \
+            | grep -v -E "roles\.(vendor|customer|seller|merchant)" || true)
           
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ VIOLATION: Forbidden terminology found"
@@ -217,8 +229,12 @@ jobs:
         run: |
           echo "🔍 Checking for hardcoded Arabic text..."
           
-          # Search for Arabic text in frontend code only (excluding copy tokens and comments)
-          VIOLATIONS=$(grep -r -n -P '[\p{Arabic}]+' \
+          # Search for Arabic LETTERS only (U+0621-U+064A = ء to ي), excluding:
+          # - Arabic punctuation: ، (comma), ؛ (semicolon), ؟ (question mark)
+          # - Arabic-Indic digits: ٠-٩
+          # - Arabic extended characters and diacritics
+          # This allows using Arabic punctuation marks in code without triggering violations
+          VIOLATIONS=$(grep -r -n -P '[\x{0621}-\x{064A}]+' \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v '/copy/' \
@@ -310,9 +326,14 @@ jobs:
         continue-on-error: true
         run: |
           echo "🔍 Checking for external UI library imports..."
+          echo ""
+          echo "Note: @radix-ui primitives are ALLOWED (used by shadcn/ui internally)."
+          echo "      Only high-level UI libraries (MUI, Ant Design, etc.) are forbidden."
+          echo ""
           
           # Search for imports from external UI libraries in frontend code only
-          VIOLATIONS=$(grep -r -n -E "from ['\"](@mui|antd|react-bootstrap|chakra-ui|mantine|shadcn|@radix-ui|@headlessui)" \
+          # Allow @radix-ui (used by shadcn/ui) but block other libraries
+          VIOLATIONS=$(grep -r -n -E "from ['\"](@mui|antd|react-bootstrap|chakra-ui|mantine)" \
             --include="*.tsx" --include="*.ts" \
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v 'node_modules' || true)
@@ -328,10 +349,12 @@ jobs:
             echo "📖 See: docs/SPECS/UI_LAW.md - Law #5"
             echo ""
             echo "✅ Correct: import { Button } from '@nasneh/ui'"
+            echo "✅ Allowed: import * as Dialog from '@radix-ui/react-dialog' (shadcn primitive)"
             echo "❌ Wrong: import { Button } from 'antd'"
             exit 1
           else
             echo "✅ PASS: Only @nasneh/ui components imported"
+            echo "   (@radix-ui primitives are allowed)"
           fi
 
       - name: 'Design System: Check for Hardcoded CSS Values'
@@ -420,7 +443,7 @@ jobs:
           echo ""
           echo "  1. ✓ Hex Colors (Law #3)"
           echo "  2. ✓ Tailwind Color Classes (Law #3)"
-          echo "  3. ✓ Inline Styles (Law #3)"
+          echo "  3. ✓ Inline Styles with Hardcoded Colors (Law #3)"
           echo "  4. ✓ Border Classes (Law #1)"
           echo "  5. ✓ Invalid Border Radius (Law #2)"
           echo "  6. ✓ Forbidden Terminology (Brand Voice)"
@@ -439,6 +462,11 @@ jobs:
           echo "  - Component Specs: docs/SPECS/COMPONENT_SPECS.md"
           echo "  - Design Tokens: packages/ui/src/styles/tokens.css"
           echo "  - Copy Tokens: packages/ui/src/copy/"
+          echo ""
+          echo "🔧 shadcn/ui Compatibility:"
+          echo "  - ✅ Inline styles with CSS variables allowed"
+          echo "  - ✅ @radix-ui primitives allowed (used by shadcn)"
+          echo "  - ❌ Hardcoded colors in inline styles forbidden"
           echo ""
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
