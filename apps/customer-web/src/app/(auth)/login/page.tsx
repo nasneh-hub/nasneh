@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Card, Logo } from '@nasneh/ui';
+import { Button, Input, Card, Logo, Select, type SelectOption } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { requestOtp } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
@@ -11,8 +11,23 @@ export default function LoginPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
   const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+973');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Country code options from copy tokens
+  const countryOptions: SelectOption[] = [
+    {
+      value: '+973',
+      label: `${en.auth.bahrain} (${en.auth.bahrainCode})`,
+      disabled: false,
+    },
+    {
+      value: 'gcc',
+      label: en.auth.gccSoon,
+      disabled: true,
+    },
+  ];
 
   // Redirect if already authenticated
   React.useEffect(() => {
@@ -31,7 +46,7 @@ export default function LoginPage() {
 
   const formatPhoneForApi = (value: string): string => {
     const digits = value.replace(/\D/g, '');
-    return `+973${digits}`;
+    return `${countryCode}${digits}`;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +56,12 @@ export default function LoginPage() {
     // Limit to 8 digits
     setPhone(digits.slice(0, 8));
     setError('');
+  };
+
+  const handleCountryCodeChange = (value: string | string[]) => {
+    if (typeof value === 'string' && value !== 'gcc') {
+      setCountryCode(value);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,14 +108,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[var(--bg-secondary)]" dir="ltr">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[var(--bg-secondary)]">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Logo variant="auto" size={40} />
         </div>
 
-        {/* Login Card */}
+        {/* Login Card - FROM @nasneh/ui (shadcn-based) */}
         <Card padding="lg">
           <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
             {en.auth.login}
@@ -113,11 +134,17 @@ export default function LoginPage() {
                 {en.auth.phoneNumber}
               </label>
               <div className="flex gap-2">
-                {/* Country Code */}
-                <div className="flex items-center justify-center px-4 h-12 bg-[var(--bg-tertiary)] rounded-xl text-[color:var(--text-secondary)] text-sm shrink-0">
-                  +973
+                {/* Country Code Select - FROM @nasneh/ui (shadcn-based) */}
+                <div className="w-48 shrink-0">
+                  <Select
+                    options={countryOptions}
+                    value={countryCode}
+                    onChange={handleCountryCodeChange}
+                    disabled={isSubmitting}
+                    size="lg"
+                  />
                 </div>
-                {/* Phone Input */}
+                {/* Phone Input - FROM @nasneh/ui (shadcn-based) */}
                 <Input
                   id="phone"
                   type="tel"
@@ -138,7 +165,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Submit Button - FROM @nasneh/ui (shadcn-based) */}
             <Button
               type="submit"
               variant="default"
