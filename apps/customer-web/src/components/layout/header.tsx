@@ -15,7 +15,10 @@ import {
   MapPin,
   Headphones,
   LogOut,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 // Dialog import removed - no longer needed after removing Globe modal
 import {
   DropdownMenu,
@@ -30,7 +33,13 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
-  // Removed: globeModalOpen, theme, language, currency state (dead UI)
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  // Avoid hydration mismatch by only rendering theme toggle after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -47,7 +56,9 @@ export function Header() {
 
   const isActiveTab = (href: string) => pathname.startsWith(href);
 
-  // Removed: toggleTheme function (dead UI)
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   const getInitials = () => {
     if (!user?.phone) return 'U';
@@ -157,6 +168,31 @@ export function Header() {
             >
               Become a Seller
             </Button>
+
+            {/* Theme Toggle */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 'var(--spacing-sm)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background 0.2s',
+                }}
+                className="rounded-xl hover:bg-[var(--bg-hover)]"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <Sun size={20} style={{ color: 'var(--text-primary)' }} />
+                ) : (
+                  <Moon size={20} style={{ color: 'var(--text-primary)' }} />
+                )}
+              </button>
+            )}
 
             {/* Favorites (Desktop only) */}
             <button
