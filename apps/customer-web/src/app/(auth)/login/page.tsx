@@ -185,6 +185,17 @@ export default function LoginPage() {
             </Button>
           </form>
 
+          {/* Go Back Button - FROM @nasneh/ui (shadcn-based) */}
+          <Button
+            type="button"
+            variant="ghost"
+            size="md"
+            onClick={() => router.push('/')}
+            className="w-full mt-3"
+          >
+            {en.auth.goBack}
+          </Button>
+
           {/* Terms */}
           <p className="mt-6 text-xs text-center text-[color:var(--text-tertiary)]">
             {en.auth.byLoggingIn}{' '}
