@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardHeader, CardTitle, CardContent, Input, Dialog, Avatar } from '@nasneh/ui';
-import { ar } from '@nasneh/ui/copy';
+import { en } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
-import { AppShell } from '@/components/layout/app-shell';
 import { MapPin, ChevronLeft } from 'lucide-react';
 
 interface UserProfile {
@@ -73,7 +72,7 @@ export default function ProfilePage() {
         setProfile(data.data);
       }
     } catch {
-      setError(ar.errors.somethingWrong);
+      setError(en.errors.somethingWrong);
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +121,7 @@ export default function ProfilePage() {
         setIsEditOpen(false);
       }
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : ar.errors.somethingWrong);
+      setSaveError(err instanceof Error ? err.message : en.errors.somethingWrong);
     } finally {
       setIsSaving(false);
     }
@@ -130,30 +129,25 @@ export default function ProfilePage() {
 
   if (authLoading || isLoading) {
     return (
-      <AppShell>
-        <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
-          <p style={{ color: 'var(--text-secondary)' }}>{ar.ui.loading}</p>
-        </div>
-      </AppShell>
+      <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>{en.ui.loading}</p>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <AppShell>
-        <Card>
-          <CardContent style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
-            <p style={{ color: 'var(--text-error)', marginBottom: 'var(--spacing-lg)' }}>{error}</p>
-            <Button onClick={fetchProfile}>{ar.ui.back}</Button>
-          </CardContent>
-        </Card>
-      </AppShell>
+      <Card>
+        <CardContent style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
+          <p style={{ color: 'var(--text-error)', marginBottom: 'var(--spacing-lg)' }}>{error}</p>
+          <Button onClick={fetchProfile}>{en.ui.back}</Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <AppShell>
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--spacing-xl)' }}>
         {/* Page Header */}
         <div style={{ marginBottom: 'var(--spacing-xl)' }}>
           <h1
@@ -163,7 +157,7 @@ export default function ProfilePage() {
               color: 'var(--text-primary)',
             }}
           >
-            {ar.profile.myProfile}
+            {en.profile.myProfile}
           </h1>
         </div>
 
@@ -191,7 +185,7 @@ export default function ProfilePage() {
                       marginBottom: 'var(--spacing-xs)',
                     }}
                   >
-                    {ar.profile.name}
+                    {en.profile.name}
                   </label>
                   <p
                     style={{
@@ -214,7 +208,7 @@ export default function ProfilePage() {
                       marginBottom: 'var(--spacing-xs)',
                     }}
                   >
-                    {ar.profile.phoneReadOnly}
+                    {en.profile.phoneReadOnly}
                   </label>
                   <p
                     style={{
@@ -238,7 +232,7 @@ export default function ProfilePage() {
                       marginBottom: 'var(--spacing-xs)',
                     }}
                   >
-                    {ar.profile.email}
+                    {en.profile.email}
                   </label>
                   <p
                     style={{
@@ -254,7 +248,7 @@ export default function ProfilePage() {
 
               {/* Edit Button */}
               <Button variant="default" size="md" onClick={handleEditOpen} style={{ width: '100%' }}>
-                {ar.profile.editProfile}
+                {en.profile.editProfile}
               </Button>
             </div>
           </CardContent>
@@ -270,7 +264,7 @@ export default function ProfilePage() {
               marginBottom: 'var(--spacing-md)',
             }}
           >
-            إعدادات الحساب
+            {en.profile.accountSettings || 'Account Settings'}
           </h2>
 
           <Card>
@@ -311,7 +305,7 @@ export default function ProfilePage() {
                       fontSize: 'var(--font-size-base)',
                     }}
                   >
-                    {ar.profile.myAddresses}
+                    {en.profile.myAddresses}
                   </span>
                 </div>
                 <ChevronLeft size={20} style={{ color: 'var(--text-secondary)' }} />
@@ -319,13 +313,11 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
         </div>
-      </div>
-
       {/* Edit Profile Dialog */}
       <Dialog
         open={isEditOpen}
         onClose={() => setIsEditOpen(false)}
-        title={ar.profile.editProfile}
+        title={en.profile.editProfile}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
           {saveError && (
@@ -352,12 +344,12 @@ export default function ProfilePage() {
                 marginBottom: 'var(--spacing-sm)',
               }}
             >
-              {ar.profile.fullName}
+              {en.profile.fullName}
             </label>
             <Input
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              placeholder={ar.profile.fullName}
+              placeholder={en.profile.fullName}
             />
           </div>
 
@@ -371,13 +363,13 @@ export default function ProfilePage() {
                 marginBottom: 'var(--spacing-sm)',
               }}
             >
-              {ar.profile.email}
+              {en.profile.email}
             </label>
             <Input
               type="email"
               value={editEmail}
               onChange={(e) => setEditEmail(e.target.value)}
-              placeholder={ar.profile.email}
+              placeholder={en.profile.email}
               dir="ltr"
             />
           </div>
@@ -390,7 +382,7 @@ export default function ProfilePage() {
               disabled={isSaving}
               style={{ flex: 1 }}
             >
-              {isSaving ? ar.ui.loading : ar.profile.saveChanges}
+              {isSaving ? en.ui.loading : en.profile.saveChanges}
             </Button>
             <Button
               variant="secondary"
@@ -399,11 +391,11 @@ export default function ProfilePage() {
               disabled={isSaving}
               style={{ flex: 1 }}
             >
-              {ar.ui.cancel}
+              {en.ui.cancel}
             </Button>
           </div>
         </div>
       </Dialog>
-    </AppShell>
+    </div>
   );
 }
