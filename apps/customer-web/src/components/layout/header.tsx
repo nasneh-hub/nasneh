@@ -6,9 +6,6 @@ import { Logo, Button } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { useAuth } from '@/context/auth-context';
 import {
-  Globe,
-  Sun,
-  Moon,
   Heart,
   ShoppingBag,
   User,
@@ -18,9 +15,8 @@ import {
   MapPin,
   Headphones,
   LogOut,
-  Menu,
 } from 'lucide-react';
-import { Dialog } from '@nasneh/ui';
+// Dialog import removed - no longer needed after removing Globe modal
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,10 +30,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
-  const [globeModalOpen, setGlobeModalOpen] = React.useState(false);
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light');
-  const [language, setLanguage] = React.useState<'ar' | 'en'>('ar');
-  const [currency, setCurrency] = React.useState<'SAR' | 'USD' | 'EUR'>('SAR');
+  // Removed: globeModalOpen, theme, language, currency state (dead UI)
 
   const handleLogout = () => {
     logout();
@@ -54,10 +47,7 @@ export function Header() {
 
   const isActiveTab = (href: string) => pathname.startsWith(href);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-    // TODO: Implement actual theme switching
-  };
+  // Removed: toggleTheme function (dead UI)
 
   const getInitials = () => {
     if (!user?.phone) return 'U';
@@ -167,48 +157,6 @@ export function Header() {
             >
               Become a Seller
             </Button>
-
-            {/* Globe (Language + Currency) */}
-            <button
-              onClick={() => setGlobeModalOpen(true)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 'var(--spacing-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s',
-              }}
-              className="rounded-xl hover:bg-[var(--bg-hover)]"
-              aria-label="Language and Currency"
-            >
-              <Globe size={20} style={{ color: 'var(--text-primary)' }} />
-            </button>
-
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 'var(--spacing-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s',
-              }}
-              className="rounded-xl hover:bg-[var(--bg-hover)]"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? (
-                <Sun size={20} style={{ color: 'var(--text-primary)' }} />
-              ) : (
-                <Moon size={20} style={{ color: 'var(--text-primary)' }} />
-              )}
-            </button>
 
             {/* Favorites (Desktop only) */}
             <button
@@ -328,116 +276,12 @@ export function Header() {
               </Button>
             )}
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => {
-                // TODO: Implement mobile menu
-              }}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 'var(--spacing-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s',
-              }}
-              className="md:hidden rounded-xl hover:bg-[var(--bg-hover)]"
-              aria-label="Menu"
-            >
-              <Menu size={24} style={{ color: 'var(--text-primary)' }} />
-            </button>
+            {/* Mobile Menu Button removed - will be implemented in PR4 with proper Sheet component */}
           </div>
         </div>
       </header>
 
-      {/* Globe Modal (Language + Currency) */}
-      <Dialog
-        open={globeModalOpen}
-        onClose={() => setGlobeModalOpen(false)}
-        title="اللغة والعملة"
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
-            {/* Language Section */}
-            <div>
-              <h3
-                style={{
-                  fontSize: 'var(--font-size-base)',
-                  fontWeight: 'var(--font-weight-semibold)',
-                  marginBottom: 'var(--spacing-md)',
-                }}
-              >
-                اللغة
-              </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-                {[
-                  { value: 'ar', label: 'العربية' },
-                  { value: 'en', label: 'English' },
-                ].map((lang) => (
-                  <button
-                    key={lang.value}
-                    onClick={() => setLanguage(lang.value as 'ar' | 'en')}
-                    style={{
-                      padding: 'var(--spacing-md)',
-                      background: language === lang.value ? 'var(--bg-tertiary)' : 'transparent',
-                      border: `1px solid ${language === lang.value ? 'var(--primary)' : 'var(--border-primary)'}`,
-                      cursor: 'pointer',
-                      textAlign: 'right',
-                      fontWeight: language === lang.value ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
-                      transition: 'all 0.2s',
-                    }}
-                    className="rounded-xl hover:bg-[var(--bg-hover)]"
-                  >
-                    {lang.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Currency Section */}
-            <div>
-              <h3
-                style={{
-                  fontSize: 'var(--font-size-base)',
-                  fontWeight: 'var(--font-weight-semibold)',
-                  marginBottom: 'var(--spacing-md)',
-                }}
-              >
-                العملة
-              </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-                {[
-                  { value: 'SAR', label: 'ريال سعودي (SAR)' },
-                  { value: 'USD', label: 'دولار أمريكي (USD)' },
-                  { value: 'EUR', label: 'يورو (EUR)' },
-                ].map((curr) => (
-                  <button
-                    key={curr.value}
-                    onClick={() => setCurrency(curr.value as 'SAR' | 'USD' | 'EUR')}
-                    style={{
-                      padding: 'var(--spacing-md)',
-                      background: currency === curr.value ? 'var(--bg-tertiary)' : 'transparent',
-                      border: `1px solid ${currency === curr.value ? 'var(--primary)' : 'var(--border-primary)'}`,
-                      cursor: 'pointer',
-                      textAlign: 'right',
-                      fontWeight: currency === curr.value ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
-                      transition: 'all 0.2s',
-                    }}
-                    className="rounded-xl hover:bg-[var(--bg-hover)]"
-                  >
-                    {curr.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-          {/* Save Button */}
-          <Button variant="default" size="md" onClick={() => setGlobeModalOpen(false)} style={{ width: '100%' }}>
-            حفظ
-          </Button>
-        </div>
-      </Dialog>
+      {/* Globe Modal removed - will be replaced with dropdowns in PR3 */}
     </>
   );
 }
