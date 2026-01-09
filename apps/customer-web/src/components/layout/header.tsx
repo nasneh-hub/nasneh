@@ -17,6 +17,7 @@ import {
   LogOut,
   Sun,
   Moon,
+  Globe,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 // Dialog import removed - no longer needed after removing Globe modal
@@ -168,6 +169,69 @@ export function Header() {
             >
               Become a Seller
             </Button>
+
+            {/* Settings Dropdown (Language/Currency/Country) */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 'var(--spacing-sm)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'background 0.2s',
+                  }}
+                  className="rounded-xl hover:bg-[var(--bg-hover)]"
+                  aria-label="Settings"
+                >
+                  <Globe size={20} style={{ color: 'var(--text-primary)' }} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" style={{ minWidth: '200px' }}>
+                {/* Language Section */}
+                <div style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }}>
+                  <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-tertiary)', margin: 0 }}>
+                    {en.settings.language}
+                  </p>
+                </div>
+                <DropdownMenuItem>
+                  <span style={{ color: 'var(--text-primary)' }}>{en.settings.english}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{en.settings.arabic} ({en.settings.comingSoon})</span>
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator />
+                
+                {/* Currency Section */}
+                <div style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }}>
+                  <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-tertiary)', margin: 0 }}>
+                    {en.settings.currency}
+                  </p>
+                </div>
+                <DropdownMenuItem>
+                  <span style={{ color: 'var(--text-primary)' }}>{en.settings.bahrainDinar}</span>
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator />
+                
+                {/* Country Section */}
+                <div style={{ padding: 'var(--spacing-xs) var(--spacing-sm)' }}>
+                  <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-tertiary)', margin: 0 }}>
+                    {en.settings.country}
+                  </p>
+                </div>
+                <DropdownMenuItem>
+                  <span style={{ color: 'var(--text-primary)' }}>{en.settings.bahrain}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{en.settings.gcc} ({en.settings.comingSoon})</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Theme Toggle */}
             {mounted && (
