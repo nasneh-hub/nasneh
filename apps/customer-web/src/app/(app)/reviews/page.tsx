@@ -75,7 +75,7 @@ export default function ReviewsPage() {
   // Render stars
   const renderStars = (rating: number) => {
     return (
-      <div style={{ display: 'flex', gap: 'var(--spacing-xs)' }}>
+      <div className="flex gap-[var(--spacing-xs)]">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
@@ -91,15 +91,8 @@ export default function ReviewsPage() {
   // Loading state
   if (authLoading || isLoading) {
     return (
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <p style={{ color: 'var(--text-secondary)' }}>{en.ui.loading}</p>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <p className="text-[var(--text-secondary)]">{en.ui.loading}</p>
       </div>
     );
   }
@@ -107,17 +100,8 @@ export default function ReviewsPage() {
   // Error state
   if (error) {
     return (
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
-        <p style={{ color: 'var(--text-error)' }}>{error}</p>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-[var(--spacing-lg)]">
+        <p className="text-[var(--text-error)]">{error}</p>
       </div>
     );
   }
@@ -135,72 +119,26 @@ export default function ReviewsPage() {
 
   // Reviews list
   return (
-    <div
-      style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: 'var(--spacing-xl)',
-      }}
-    >
+    <div className="mx-auto max-w-[1200px] p-[var(--spacing-xl)]">
       {/* Page Header */}
-      <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
-        <h1
-          style={{
-            fontSize: 'var(--font-size-h1)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            margin: 0,
-          }}
-        >
+      <div className="mb-[var(--spacing-2xl)]">
+        <h1 className="m-0 text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
           {en.reviews.myReviews}
         </h1>
       </div>
 
       {/* Reviews Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
+      <div className="grid gap-[var(--spacing-lg)]">
         {reviews.map((review) => (
           <Card key={review.id}>
-            <div
-              style={{
-                padding: 'var(--spacing-xl)',
-              }}
-            >
+            <div className="p-[var(--spacing-xl)]">
               {/* Review Header */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  marginBottom: 'var(--spacing-md)',
-                  flexWrap: 'wrap',
-                  gap: 'var(--spacing-md)',
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-large)',
-                      fontWeight: 'var(--font-weight-semibold)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
+              <div className="mb-[var(--spacing-md)] flex flex-wrap items-start justify-between gap-[var(--spacing-md)]">
+                <div className="flex-1">
+                  <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-large)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
                     {review.reviewableName}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      margin: 0,
-                      textTransform: 'capitalize',
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-small)] capitalize text-[var(--text-secondary)]">
                     {review.reviewableType}
                   </p>
                 </div>
@@ -211,38 +149,16 @@ export default function ReviewsPage() {
 
               {/* Review Comment */}
               {review.comment && (
-                <div
-                  style={{
-                    marginBottom: 'var(--spacing-md)',
-                  }}
-                >
-                  <p
-                    style={{
-                      color: 'var(--text-primary)',
-                      fontSize: 'var(--font-size-base)',
-                      lineHeight: '1.6',
-                      margin: 0,
-                    }}
-                  >
+                <div className="mb-[var(--spacing-md)]">
+                  <p className="m-0 text-[length:var(--font-size-base)] leading-[1.6] text-[var(--text-primary)]">
                     {review.comment}
                   </p>
                 </div>
               )}
 
               {/* Review Date */}
-              <div
-                style={{
-                  paddingTop: 'var(--spacing-md)',
-                  borderTop: '1px solid var(--border-primary)',
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: 'var(--font-size-small)',
-                    color: 'var(--text-tertiary)',
-                    margin: 0,
-                  }}
-                >
+              <div className="border-t border-[var(--border-primary)] pt-[var(--spacing-md)]">
+                <p className="m-0 text-[length:var(--font-size-small)] text-[var(--text-tertiary)]">
                   {new Date(review.createdAt).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',

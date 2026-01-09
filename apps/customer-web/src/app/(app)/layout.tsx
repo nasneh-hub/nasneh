@@ -16,7 +16,7 @@ export default function AppLayout({
   return (
     <>
       <Header />
-      <main style={{ paddingTop: 'var(--spacing-lg)' }}>
+      <main className="pt-[var(--spacing-lg)]">
         {children}
       </main>
       <Footer />

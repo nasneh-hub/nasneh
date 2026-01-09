@@ -80,15 +80,8 @@ export default function OrdersPage() {
   // Loading state
   if (authLoading || isLoading) {
     return (
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <p style={{ color: 'var(--text-secondary)' }}>{en.ui.loading}</p>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <p className="text-[var(--text-secondary)]">{en.ui.loading}</p>
       </div>
     );
   }
@@ -96,17 +89,8 @@ export default function OrdersPage() {
   // Error state
   if (error) {
     return (
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
-        <p style={{ color: 'var(--text-error)' }}>{error}</p>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-[var(--spacing-lg)]">
+        <p className="text-[var(--text-error)]">{error}</p>
         <Button onClick={fetchOrders}>{en.ui.tryAgain}</Button>
       </div>
     );
@@ -129,109 +113,45 @@ export default function OrdersPage() {
 
   // Orders list
   return (
-    <div
-      style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: 'var(--spacing-xl)',
-      }}
-    >
+    <div className="mx-auto max-w-[1200px] p-[var(--spacing-xl)]">
       {/* Page Header */}
-      <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
-        <h1
-          style={{
-            fontSize: 'var(--font-size-h1)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            margin: 0,
-          }}
-        >
+      <div className="mb-[var(--spacing-2xl)]">
+        <h1 className="m-0 text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
           {en.orders.myOrders}
         </h1>
       </div>
 
       {/* Orders Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
+      <div className="grid gap-[var(--spacing-lg)]">
         {orders.map((order) => (
           <Card key={order.id}>
-            <div
-              style={{
-                padding: 'var(--spacing-xl)',
-              }}
-            >
+            <div className="p-[var(--spacing-xl)]">
               {/* Order Header */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  marginBottom: 'var(--spacing-lg)',
-                  flexWrap: 'wrap',
-                  gap: 'var(--spacing-md)',
-                }}
-              >
+              <div className="mb-[var(--spacing-lg)] flex flex-wrap items-start justify-between gap-[var(--spacing-md)]">
                 <div>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      margin: 0,
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
+                  <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                     {en.orders.orderNumber}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-large)',
-                      fontWeight: 'var(--font-weight-semibold)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-large)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
                     #{order.orderNumber}
                   </p>
                 </div>
-                <div
-                  style={{
-                    padding: 'var(--spacing-sm) var(--spacing-md)',
-                    background: 'var(--bg-tertiary)',
-                    color: 'var(--text-secondary)',
-                    fontSize: 'var(--font-size-small)',
-                    fontWeight: 'var(--font-weight-medium)',
-                    textTransform: 'capitalize',
-                  }}
-                  className="rounded-xl"
-                >
+                <div className="rounded-xl bg-[var(--bg-tertiary)] px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[length:var(--font-size-small)] font-[var(--font-weight-medium)] capitalize text-[var(--text-secondary)]">
                   {order.status}
                 </div>
               </div>
 
               {/* Order Items */}
-              <div
-                style={{
-                  marginBottom: 'var(--spacing-lg)',
-                }}
-              >
+              <div className="mb-[var(--spacing-lg)]">
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      padding: 'var(--spacing-sm) 0',
-                      borderBottom: '1px solid var(--border-primary)',
-                    }}
+                    className="flex justify-between border-b border-[var(--border-primary)] py-[var(--spacing-sm)]"
                   >
-                    <span style={{ color: 'var(--text-primary)' }}>
+                    <span className="text-[var(--text-primary)]">
                       {item.quantity}x {item.productName}
                     </span>
-                    <span style={{ color: 'var(--text-secondary)' }}>
+                    <span className="text-[var(--text-secondary)]">
                       {item.price.toFixed(3)} {en.currency.bhd}
                     </span>
                   </div>
@@ -239,37 +159,16 @@ export default function OrdersPage() {
               </div>
 
               {/* Order Footer */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingTop: 'var(--spacing-md)',
-                }}
-              >
+              <div className="flex items-center justify-between pt-[var(--spacing-md)]">
                 <div>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                     {new Date(order.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',
                     })}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-large)',
-                      fontWeight: 'var(--font-weight-bold)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                      marginTop: 'var(--spacing-xs)',
-                    }}
-                  >
+                  <p className="m-0 mt-[var(--spacing-xs)] text-[length:var(--font-size-large)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
                     {order.total.toFixed(3)} {en.currency.bhd}
                   </p>
                 </div>
