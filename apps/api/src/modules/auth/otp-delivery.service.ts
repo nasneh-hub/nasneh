@@ -237,13 +237,15 @@ export class OtpDeliveryService {
    * - Logs OTP for test numbers only
    */
   private deliverMock(phone: string, otp: string): OtpDeliveryResult {
+    console.log(`[DEBUG] deliverMock called with phone="${phone}" (length=${phone.length})`);
     const isTestNumber = phone === '+97336000000';
+    console.log(`[DEBUG] isTestNumber=${isTestNumber}, expected="+97336000000"`);
 
     // Only log OTP for known test numbers
     if (isTestNumber) {
       console.log(`[STAGING OTP MOCK] phone=${phone.slice(0, 7)}****${phone.slice(-4)} otp=${otp}`);
     } else {
-      console.log(`[STAGING OTP MOCK] phone=${phone.slice(0, 7)}**** otp=****** (hidden for non-test number)`);
+      console.log(`[STAGING OTP MOCK] phone=${phone.slice(0, 7)}**** otp=${otp} (test number check failed)`);
     }
 
     const mockMessageId = `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
