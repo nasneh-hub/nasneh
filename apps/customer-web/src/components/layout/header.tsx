@@ -45,9 +45,11 @@ export function Header() {
   };
 
   const tabs = [
-    { name: 'التصنيفات', href: '/categories' },
-    { name: 'المميزة', href: '/featured' },
-    { name: 'العروض', href: '/deals' },
+    { name: 'Kitchens', href: '/kitchens' },
+    { name: 'Craft', href: '/craft' },
+    { name: 'Products', href: '/products' },
+    { name: 'Food Trucks', href: '/food-trucks' },
+    { name: 'Services', href: '/services', highlighted: true },
   ];
 
   const isActiveTab = (href: string) => pathname.startsWith(href);
@@ -93,10 +95,15 @@ export function Header() {
                 border: 'none',
                 cursor: 'pointer',
                 padding: 0,
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
               aria-label="Home"
             >
-              <Logo variant="auto" size="md" />
+              <Logo variant="auto" size={40} />
             </button>
           </div>
 
@@ -110,29 +117,35 @@ export function Header() {
           >
             {tabs.map((tab) => {
               const active = isActiveTab(tab.href);
+              const isHighlighted = tab.highlighted;
               return (
                 <button
                   key={tab.name}
                   onClick={() => router.push(tab.href)}
                   style={{
-                    background: 'transparent',
+                    background: isHighlighted && !active ? 'var(--bg-tertiary)' : 'transparent',
                     border: 'none',
                     cursor: 'pointer',
                     padding: 'var(--spacing-sm) var(--spacing-md)',
                     fontSize: 'var(--font-size-base)',
-                    fontWeight: active ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
+                    fontWeight: active || isHighlighted ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
                     color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
                     borderBottom: active ? '2px solid var(--primary)' : '2px solid transparent',
                     transition: 'all 0.2s',
                   }}
+                  className="rounded-xl"
                   onMouseEnter={(e) => {
                     if (!active) {
                       e.currentTarget.style.color = 'var(--text-primary)';
+                      if (!isHighlighted) {
+                        e.currentTarget.style.background = 'var(--bg-hover)';
+                      }
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!active) {
                       e.currentTarget.style.color = 'var(--text-secondary)';
+                      e.currentTarget.style.background = isHighlighted ? 'var(--bg-tertiary)' : 'transparent';
                     }
                   }}
                 >
@@ -152,7 +165,7 @@ export function Header() {
               style={{ display: 'none' }}
               className="md:inline-flex"
             >
-              ابدأ البيع
+              Become a Seller
             </Button>
 
             {/* Globe (Language + Currency) */}
@@ -275,43 +288,43 @@ export function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => router.push('/profile')}>
-                    <User size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    ملفي الشخصي
+                    <User size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    My Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/orders')}>
-                    <Package size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    طلباتي
+                    <Package size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    My Orders
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/bookings')}>
-                    <Calendar size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    حجوزاتي
+                    <Calendar size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    My Bookings
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/reviews')}>
-                    <Star size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    تقييماتي
+                    <Star size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    My Reviews
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/profile/addresses')}>
-                    <MapPin size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    عناويني
+                    <MapPin size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    My Addresses
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/wishlist')}>
-                    <Heart size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    المفضلة
+                    <Heart size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    Wishlist
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/support')}>
-                    <Headphones size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    الدعم
+                    <Headphones size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    Support
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut size={16} style={{ marginLeft: 'var(--spacing-sm)' }} />
-                    {ar.auth.logout}
+                    <LogOut size={16} style={{ marginRight: 'var(--spacing-sm)' }} />
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Button variant="default" size="sm" onClick={() => router.push('/login')}>
-                {ar.auth.login}
+                Login
               </Button>
             )}
 

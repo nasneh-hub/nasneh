@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button } from '@nasneh/ui';
-import { ar } from '@nasneh/ui/copy';
+import { Card, CardContent, Button } from '@nasneh/ui';
 import { useAuth } from '@/context/auth-context';
 import { AppShell } from '@/components/layout/app-shell';
 import { Salad, Cookie, Palette, Truck, Sparkles, Grid3x3 } from 'lucide-react';
@@ -22,7 +21,7 @@ export default function CategoriesPage() {
     return (
       <AppShell>
         <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
-          <p style={{ color: 'var(--text-secondary)' }}>{ar.ui.loading}</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
         </div>
       </AppShell>
     );
@@ -34,40 +33,46 @@ export default function CategoriesPage() {
 
   const categories = [
     {
-      name: ar.categories.freshFood,
+      name: 'Kitchens',
       icon: <Salad size={48} style={{ color: 'var(--primary)' }} />,
-      description: 'منتجات طازجة يومياً',
+      description: 'Fresh homemade meals daily',
       count: 0,
+      href: '/kitchens',
     },
     {
-      name: ar.categories.foodProducts,
+      name: 'Food Products',
       icon: <Cookie size={48} style={{ color: 'var(--primary)' }} />,
-      description: 'منتجات غذائية محلية',
+      description: 'Local food products and treats',
       count: 0,
+      href: '/products',
     },
     {
-      name: ar.categories.crafts,
+      name: 'Craft',
       icon: <Palette size={48} style={{ color: 'var(--primary)' }} />,
-      description: 'حرف ومنتجات يدوية',
+      description: 'Handcrafted items and art',
       count: 0,
+      href: '/craft',
     },
     {
-      name: ar.categories.foodTrucks,
+      name: 'Food Trucks',
       icon: <Truck size={48} style={{ color: 'var(--primary)' }} />,
-      description: 'عربات الطعام المتنقلة',
+      description: 'Mobile food vendors',
       count: 0,
+      href: '/food-trucks',
     },
     {
-      name: ar.categories.services,
+      name: 'Services',
       icon: <Sparkles size={48} style={{ color: 'var(--primary)' }} />,
-      description: 'خدمات وإبداع محلي',
+      description: 'Local services and bookings',
       count: 0,
+      href: '/services',
     },
     {
-      name: 'أخرى',
+      name: 'Other',
       icon: <Grid3x3 size={48} style={{ color: 'var(--primary)' }} />,
-      description: 'تصنيفات إضافية',
+      description: 'Additional categories',
       count: 0,
+      href: '/other',
     },
   ];
 
@@ -83,10 +88,10 @@ export default function CategoriesPage() {
             marginBottom: 'var(--spacing-sm)',
           }}
         >
-          التصنيفات
+          Categories
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-large)' }}>
-          اكتشف منتجات وخدمات ناسنتنا حسب التصنيف
+          Discover products and services by category
         </p>
       </div>
 
@@ -101,10 +106,7 @@ export default function CategoriesPage() {
                 transition: 'all 0.2s',
               }}
               className="hover:bg-[var(--bg-hover)]"
-              onClick={() => {
-                // TODO: Navigate to category page
-                console.log('Navigate to:', category.name);
-              }}
+              onClick={() => router.push(category.href)}
             >
               <div
                 style={{
@@ -149,7 +151,7 @@ export default function CategoriesPage() {
                   }}
                   className="rounded-full"
                 >
-                  {category.count} منتج
+                  {category.count} items
                 </div>
               </div>
             </CardContent>
@@ -170,7 +172,7 @@ export default function CategoriesPage() {
                 marginBottom: 'var(--spacing-sm)',
               }}
             >
-              قريباً
+              Coming Soon
             </h3>
             <p
               style={{
@@ -179,10 +181,10 @@ export default function CategoriesPage() {
                 marginBottom: 'var(--spacing-lg)',
               }}
             >
-              المزيد من المنتجات والخدمات في كل تصنيف
+              More products and services in each category
             </p>
             <Button variant="default" size="md" onClick={() => router.push('/')}>
-              العودة للرئيسية
+              Back to Home
             </Button>
           </CardContent>
         </Card>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
 
 /**
  * App Layout
@@ -18,7 +19,7 @@ export default function AppLayout({
       <main style={{ paddingTop: 'var(--spacing-lg)' }}>
         {children}
       </main>
-      {/* Footer will be added here later */}
+      <Footer />
     </>
   );
 }
