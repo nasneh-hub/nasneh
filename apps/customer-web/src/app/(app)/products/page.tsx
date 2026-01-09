@@ -1,31 +1,141 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Skeleton } from '@nasneh/ui';
+import { en } from '@nasneh/ui/copy';
+import { ProductCard } from '@/components/listing/product-card';
+import { SortSelect } from '@/components/listing/sort-select';
+import { Pagination } from '@/components/listing/pagination';
+import { ListingEmptyState } from '@/components/listing/listing-empty-state';
+
+interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  image?: string;
+  vendorName?: string;
+  categorySlug?: string;
+}
+
+interface PaginationData {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [pagination, setPagination] = useState<PaginationData>({
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+  });
+  const [sortValue, setSortValue] = useState('createdAt:desc');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [sortValue, pagination.page]);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const [sort, order] = sortValue.split(':');
+      const params = new URLSearchParams({
+        sort,
+        order,
+        page: pagination.page.toString(),
+        limit: pagination.limit.toString(),
+      });
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/products?${params}`
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        setProducts(data.data || []);
+        if (data.pagination) {
+          setPagination(data.pagination);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortValue(value);
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const handlePageChange = (page: number) => {
+    setPagination((prev) => ({ ...prev, page }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="mx-auto max-w-[1440px] p-[var(--spacing-2xl)]">
-      <div className="py-[var(--spacing-4xl)] text-center">
+    <div className="container mx-auto px-[var(--spacing-lg)] py-[var(--spacing-2xl)]">
+      <div className="mb-[var(--spacing-2xl)]">
         <h1 className="mb-[var(--spacing-md)] text-[length:var(--font-size-3xl)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
-          Products
+          {en.listing.allProducts}
         </h1>
-        <p className="mb-[var(--spacing-2xl)] text-[length:var(--font-size-lg)] text-[var(--text-secondary)]">
-          Shop unique products from local makers
-        </p>
-        <div className="inline-block rounded-[var(--radius-xl)] bg-[var(--bg-secondary)] px-[var(--spacing-xl)] py-[var(--spacing-md)]">
-          <p className="m-0 text-[length:var(--font-size-base)] text-[var(--text-tertiary)]">
-            Coming soon
+        
+        <div className="flex items-center justify-between">
+          <p className="text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
+            {pagination.total > 0 && (
+              <>
+                {en.listing.showing} {products.length} {en.listing.of} {pagination.total} {en.listing.results}
+              </>
+            )}
           </p>
+          
+          {!loading && products.length > 0 && (
+            <SortSelect
+              type="products"
+              value={sortValue}
+              onChange={handleSortChange}
+            />
+          )}
         </div>
       </div>
 
-      {/* Skeleton placeholders */}
-      <div className="mt-[var(--spacing-2xl)] grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[var(--spacing-lg)]">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <Skeleton key={i} className="h-[300px] rounded-[var(--radius-xl)]" />
-        ))}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-1 gap-[var(--spacing-lg)] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-[350px] rounded-[var(--radius-xl)]" />
+          ))}
+        </div>
+      ) : products.length === 0 ? (
+        <ListingEmptyState type="products" />
+      ) : (
+        <>
+          <div className="mb-[var(--spacing-2xl)] grid grid-cols-1 gap-[var(--spacing-lg)] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {pagination.totalPages > 1 && (
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              hasNext={pagination.hasNext}
+              hasPrev={pagination.hasPrev}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }
