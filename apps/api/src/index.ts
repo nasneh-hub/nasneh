@@ -35,10 +35,24 @@ const app: express.Application = express();
 // ===========================================
 
 // CORS
+console.log('[CORS DEBUG] Allowed origins:', {
+  frontend: config.urls.frontend,
+  dashboard: config.urls.dashboard,
+});
+
 app.use(cors({
   origin: [config.urls.frontend, config.urls.dashboard],
   credentials: true,
 }));
+
+app.use((req, res, next) => {
+  console.log('[CORS DEBUG] Request:', {
+    method: req.method,
+    origin: req.headers.origin,
+    path: req.path,
+  });
+  next();
+});
 
 // Body parsing
 app.use(express.json());
