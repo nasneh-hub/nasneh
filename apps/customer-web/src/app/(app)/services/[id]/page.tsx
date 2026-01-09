@@ -8,6 +8,8 @@ import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { ImageGallery } from '@/components/product/image-gallery';
 import { ServiceInfo } from '@/components/service/service-info';
 import { RelatedServices } from '@/components/service/related-services';
+import { ReviewsSummary } from '@/components/reviews/reviews-summary';
+import { ReviewList } from '@/components/reviews/review-list';
 
 interface Service {
   id: string;
@@ -38,6 +40,10 @@ export default function ServiceDetailPage() {
   const [relatedServices, setRelatedServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [reviewsData, setReviewsData] = useState<{
+    averageRating: number;
+    totalReviews: number;
+  }>({ averageRating: 0, totalReviews: 0 });
 
   useEffect(() => {
     async function fetchService() {
@@ -70,6 +76,20 @@ export default function ServiceDetailPage() {
                 );
                 setRelatedServices(filtered.slice(0, 6));
               }
+            }
+          }
+          
+          // Fetch reviews summary
+          const reviewsResponse = await fetch(
+            `${apiUrl}/api/v1/reviews?itemType=service&itemId=${serviceId}&limit=1`
+          );
+          if (reviewsResponse.ok) {
+            const reviewsData = await reviewsResponse.json();
+            if (reviewsData.total) {
+              setReviewsData({
+                averageRating: reviewsData.averageRating || 0,
+                totalReviews: reviewsData.total || 0,
+              });
             }
           }
         } else {
@@ -173,9 +193,27 @@ export default function ServiceDetailPage() {
         </div>
       </div>
 
+      {/* Reviews Section */}
+      <div className="mt-12">
+        <h2 className="mb-6 text-2xl font-bold text-mono-12">
+          {en.reviews.title}
+        </h2>
+        
+        <div className="space-y-6">
+          <ReviewsSummary
+            averageRating={reviewsData.averageRating}
+            totalReviews={reviewsData.totalReviews}
+          />
+          
+          <ReviewList itemType="service" itemId={serviceId} />
+        </div>
+      </div>
+
       {/* Related Services */}
       {relatedServices.length > 0 && (
-        <RelatedServices services={relatedServices} />
+        <div className="mt-12">
+          <RelatedServices services={relatedServices} />
+        </div>
       )}
     </div>
   );

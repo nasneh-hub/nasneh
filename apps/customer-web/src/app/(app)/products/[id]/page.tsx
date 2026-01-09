@@ -8,6 +8,8 @@ import { Breadcrumb } from '@/components/shared/breadcrumb';
 import { ImageGallery } from '@/components/product/image-gallery';
 import { ProductInfo } from '@/components/product/product-info';
 import { RelatedProducts } from '@/components/product/related-products';
+import { ReviewsSummary } from '@/components/reviews/reviews-summary';
+import { ReviewList } from '@/components/reviews/review-list';
 
 interface Product {
   id: string;
@@ -39,6 +41,10 @@ export default function ProductDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [reviewsData, setReviewsData] = useState<{
+    averageRating: number;
+    totalReviews: number;
+  }>({ averageRating: 0, totalReviews: 0 });
   
   useEffect(() => {
     async function fetchProduct() {
@@ -67,6 +73,9 @@ export default function ProductDetailPage() {
           if (data.data.category?.slug) {
             fetchRelatedProducts(data.data.category.slug, productId);
           }
+          
+          // Fetch reviews summary
+          fetchReviewsSummary(productId);
         } else {
           setNotFound(true);
         }
@@ -80,6 +89,27 @@ export default function ProductDetailPage() {
     
     fetchProduct();
   }, [productId]);
+  
+  async function fetchReviewsSummary(itemId: string) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/reviews?itemType=product&itemId=${itemId}&limit=1`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.total) {
+          // Calculate average from all reviews (simplified - in production would come from API)
+          setReviewsData({
+            averageRating: data.averageRating || 0,
+            totalReviews: data.total || 0,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching reviews summary:', error);
+    }
+  }
   
   async function fetchRelatedProducts(categorySlug: string, excludeId: string) {
     try {
@@ -215,6 +245,22 @@ export default function ProductDetailPage() {
           onAddToCart={handleAddToCart}
           isAddingToCart={isAddingToCart}
         />
+      </div>
+      
+      {/* Reviews Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-mono-12 mb-6">
+          {en.reviews.title}
+        </h2>
+        
+        <div className="space-y-6">
+          <ReviewsSummary
+            averageRating={reviewsData.averageRating}
+            totalReviews={reviewsData.totalReviews}
+          />
+          
+          <ReviewList itemType="product" itemId={productId} />
+        </div>
       </div>
       
       {/* Related Products */}
