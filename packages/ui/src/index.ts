@@ -101,6 +101,13 @@ export type { SelectProps, SelectOption } from './components/select';
 export { Table } from './components/table';
 export type { TableProps, TableColumn } from './components/table';
 
+// RadioGroup - Radio button selection
+export { RadioGroup, RadioGroupItem } from './components/radio-group';
+
+// Textarea - Multi-line text input
+export { Textarea } from './components/textarea';
+export type { TextareaProps } from './components/textarea';
+
 // =============================================================================
 // Logo Component (Pre-existing)
 // =============================================================================
