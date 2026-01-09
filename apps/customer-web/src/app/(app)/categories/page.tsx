@@ -20,8 +20,8 @@ export default function CategoriesPage() {
   if (isLoading) {
     return (
       <AppShell>
-        <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
-          <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
+        <div className="p-[var(--spacing-2xl)] text-center">
+          <p className="text-[var(--text-secondary)]">Loading...</p>
         </div>
       </AppShell>
     );
@@ -34,42 +34,42 @@ export default function CategoriesPage() {
   const categories = [
     {
       name: 'Kitchens',
-      icon: <Salad size={48} style={{ color: 'var(--primary)' }} />,
+      icon: <Salad size={48} className="text-[var(--primary)]" />,
       description: 'Fresh homemade meals daily',
       count: 0,
       href: '/kitchens',
     },
     {
       name: 'Food Products',
-      icon: <Cookie size={48} style={{ color: 'var(--primary)' }} />,
+      icon: <Cookie size={48} className="text-[var(--primary)]" />,
       description: 'Local food products and treats',
       count: 0,
       href: '/products',
     },
     {
       name: 'Craft',
-      icon: <Palette size={48} style={{ color: 'var(--primary)' }} />,
+      icon: <Palette size={48} className="text-[var(--primary)]" />,
       description: 'Handcrafted items and art',
       count: 0,
       href: '/craft',
     },
     {
       name: 'Food Trucks',
-      icon: <Truck size={48} style={{ color: 'var(--primary)' }} />,
+      icon: <Truck size={48} className="text-[var(--primary)]" />,
       description: 'Mobile food vendors',
       count: 0,
       href: '/food-trucks',
     },
     {
       name: 'Services',
-      icon: <Sparkles size={48} style={{ color: 'var(--primary)' }} />,
+      icon: <Sparkles size={48} className="text-[var(--primary)]" />,
       description: 'Local services and bookings',
       count: 0,
       href: '/services',
     },
     {
       name: 'Other',
-      icon: <Grid3x3 size={48} style={{ color: 'var(--primary)' }} />,
+      icon: <Grid3x3 size={48} className="text-[var(--primary)]" />,
       description: 'Additional categories',
       count: 0,
       href: '/other',
@@ -79,78 +79,39 @@ export default function CategoriesPage() {
   return (
     <AppShell>
       {/* Page Header */}
-      <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
-        <h1
-          style={{
-            fontSize: 'var(--font-size-h1)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--spacing-sm)',
-          }}
-        >
+      <div className="mb-[var(--spacing-2xl)]">
+        <h1 className="mb-[var(--spacing-sm)] text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
           Categories
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-large)' }}>
+        <p className="text-[length:var(--font-size-large)] text-[var(--text-secondary)]">
           Discover products and services by category
         </p>
       </div>
 
       {/* Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
           <Card key={category.name}>
             <CardContent
-              style={{
-                padding: 'var(--spacing-xl)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              className="hover:bg-[var(--bg-hover)]"
+              className="cursor-pointer p-[var(--spacing-xl)] transition-all duration-200 hover:bg-[var(--bg-hover)]"
               onClick={() => router.push(category.href)}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 'var(--spacing-md)',
-                  textAlign: 'center',
-                }}
-              >
+              <div className="flex flex-col items-center gap-[var(--spacing-md)] text-center">
                 {/* Icon */}
-                <div style={{ marginBottom: 'var(--spacing-sm)' }}>{category.icon}</div>
+                <div className="mb-[var(--spacing-sm)]">{category.icon}</div>
 
                 {/* Title */}
-                <h3
-                  style={{
-                    fontSize: 'var(--font-size-h3)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    color: 'var(--text-primary)',
-                  }}
-                >
+                <h3 className="text-[length:var(--font-size-h3)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
                   {category.name}
                 </h3>
 
                 {/* Description */}
-                <p
-                  style={{
-                    color: 'var(--text-secondary)',
-                    fontSize: 'var(--font-size-base)',
-                  }}
-                >
+                <p className="text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
                   {category.description}
                 </p>
 
                 {/* Count Badge */}
-                <div
-                  style={{
-                    padding: 'var(--spacing-xs) var(--spacing-md)',
-                    background: 'var(--bg-tertiary)',
-                    fontSize: 'var(--font-size-small)',
-                    color: 'var(--text-secondary)',
-                  }}
-                  className="rounded-full"
-                >
+                <div className="rounded-full bg-[var(--bg-tertiary)] px-[var(--spacing-md)] py-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                   {category.count} items
                 </div>
               </div>
@@ -160,27 +121,14 @@ export default function CategoriesPage() {
       </div>
 
       {/* Empty State */}
-      <div style={{ marginTop: 'var(--spacing-2xl)', textAlign: 'center' }}>
+      <div className="mt-[var(--spacing-2xl)] text-center">
         <Card>
-          <CardContent style={{ padding: 'var(--spacing-2xl)' }}>
-            <Grid3x3 size={48} style={{ color: 'var(--text-tertiary)', margin: '0 auto var(--spacing-lg)' }} />
-            <h3
-              style={{
-                fontSize: 'var(--font-size-h3)',
-                fontWeight: 'var(--font-weight-semibold)',
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--spacing-sm)',
-              }}
-            >
+          <CardContent className="p-[var(--spacing-2xl)]">
+            <Grid3x3 size={48} className="mx-auto mb-[var(--spacing-lg)] text-[var(--text-tertiary)]" />
+            <h3 className="mb-[var(--spacing-sm)] text-[length:var(--font-size-h3)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
               Coming Soon
             </h3>
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                fontSize: 'var(--font-size-base)',
-                marginBottom: 'var(--spacing-lg)',
-              }}
-            >
+            <p className="mb-[var(--spacing-lg)] text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
               More products and services in each category
             </p>
             <Button variant="default" size="md" onClick={() => router.push('/')}>

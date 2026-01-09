@@ -78,15 +78,8 @@ export default function BookingsPage() {
   // Loading state
   if (authLoading || isLoading) {
     return (
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <p style={{ color: 'var(--text-secondary)' }}>{en.ui.loading}</p>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <p className="text-[var(--text-secondary)]">{en.ui.loading}</p>
       </div>
     );
   }
@@ -94,17 +87,8 @@ export default function BookingsPage() {
   // Error state
   if (error) {
     return (
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
-        <p style={{ color: 'var(--text-error)' }}>{error}</p>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-[var(--spacing-lg)]">
+        <p className="text-[var(--text-error)]">{error}</p>
         <Button onClick={fetchBookings}>{en.ui.tryAgain}</Button>
       </div>
     );
@@ -127,172 +111,63 @@ export default function BookingsPage() {
 
   // Bookings list
   return (
-    <div
-      style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: 'var(--spacing-xl)',
-      }}
-    >
+    <div className="mx-auto max-w-[1200px] p-[var(--spacing-xl)]">
       {/* Page Header */}
-      <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
-        <h1
-          style={{
-            fontSize: 'var(--font-size-h1)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            margin: 0,
-          }}
-        >
+      <div className="mb-[var(--spacing-2xl)]">
+        <h1 className="m-0 text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
           {en.bookings.myBookings}
         </h1>
       </div>
 
       {/* Bookings Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gap: 'var(--spacing-lg)',
-        }}
-      >
+      <div className="grid gap-[var(--spacing-lg)]">
         {bookings.map((booking) => (
           <Card key={booking.id}>
-            <div
-              style={{
-                padding: 'var(--spacing-xl)',
-              }}
-            >
+            <div className="p-[var(--spacing-xl)]">
               {/* Booking Header */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  marginBottom: 'var(--spacing-lg)',
-                  flexWrap: 'wrap',
-                  gap: 'var(--spacing-md)',
-                }}
-              >
+              <div className="mb-[var(--spacing-lg)] flex flex-wrap items-start justify-between gap-[var(--spacing-md)]">
                 <div>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      margin: 0,
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
+                  <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                     {en.bookings.bookingNumber}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-large)',
-                      fontWeight: 'var(--font-weight-semibold)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-large)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
                     #{booking.bookingNumber}
                   </p>
                 </div>
-                <div
-                  style={{
-                    padding: 'var(--spacing-sm) var(--spacing-md)',
-                    background: 'var(--bg-tertiary)',
-                    color: 'var(--text-secondary)',
-                    fontSize: 'var(--font-size-small)',
-                    fontWeight: 'var(--font-weight-medium)',
-                    textTransform: 'capitalize',
-                  }}
-                  className="rounded-xl"
-                >
+                <div className="rounded-xl bg-[var(--bg-tertiary)] px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[length:var(--font-size-small)] font-[var(--font-weight-medium)] capitalize text-[var(--text-secondary)]">
                   {booking.status}
                 </div>
               </div>
 
               {/* Booking Details */}
-              <div
-                style={{
-                  display: 'grid',
-                  gap: 'var(--spacing-md)',
-                  marginBottom: 'var(--spacing-lg)',
-                }}
-              >
+              <div className="mb-[var(--spacing-lg)] grid gap-[var(--spacing-md)]">
                 {/* Service Name */}
                 <div>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      margin: 0,
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
+                  <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                     {en.products.service}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-base)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
                     {booking.serviceName}
                   </p>
                 </div>
 
                 {/* Provider Name */}
                 <div>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      margin: 0,
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
+                  <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                     {en.ui.provider}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-base)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
                     {booking.providerName}
                   </p>
                 </div>
 
                 {/* Date & Time */}
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: 'var(--spacing-md)',
-                  }}
-                >
+                <div className="grid grid-cols-2 gap-[var(--spacing-md)]">
                   <div>
-                    <p
-                      style={{
-                        fontSize: 'var(--font-size-small)',
-                        color: 'var(--text-secondary)',
-                        margin: 0,
-                        marginBottom: 'var(--spacing-xs)',
-                      }}
-                    >
+                    <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                       {en.bookings.bookingDate}
                     </p>
-                    <p
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--text-primary)',
-                        margin: 0,
-                      }}
-                    >
+                    <p className="m-0 text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
                       {new Date(booking.bookingDate).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -301,24 +176,10 @@ export default function BookingsPage() {
                     </p>
                   </div>
                   <div>
-                    <p
-                      style={{
-                        fontSize: 'var(--font-size-small)',
-                        color: 'var(--text-secondary)',
-                        margin: 0,
-                        marginBottom: 'var(--spacing-xs)',
-                      }}
-                    >
+                    <p className="m-0 mb-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
                       {en.bookings.bookingTime}
                     </p>
-                    <p
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        fontWeight: 'var(--font-weight-medium)',
-                        color: 'var(--text-primary)',
-                        margin: 0,
-                      }}
-                    >
+                    <p className="m-0 text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
                       {booking.bookingTime}
                     </p>
                   </div>
@@ -326,24 +187,9 @@ export default function BookingsPage() {
               </div>
 
               {/* Booking Footer */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingTop: 'var(--spacing-md)',
-                  borderTop: '1px solid var(--border-primary)',
-                }}
-              >
+              <div className="flex items-center justify-between border-t border-[var(--border-primary)] pt-[var(--spacing-md)]">
                 <div>
-                  <p
-                    style={{
-                      fontSize: 'var(--font-size-large)',
-                      fontWeight: 'var(--font-weight-bold)',
-                      color: 'var(--text-primary)',
-                      margin: 0,
-                    }}
-                  >
+                  <p className="m-0 text-[length:var(--font-size-large)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
                     {booking.total.toFixed(3)} {en.currency.bhd}
                   </p>
                 </div>

@@ -129,8 +129,8 @@ export default function ProfilePage() {
 
   if (authLoading || isLoading) {
     return (
-      <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>{en.ui.loading}</p>
+      <div className="p-[var(--spacing-2xl)] text-center">
+        <p className="text-[var(--text-secondary)]">{en.ui.loading}</p>
       </div>
     );
   }
@@ -138,8 +138,8 @@ export default function ProfilePage() {
   if (error) {
     return (
       <Card>
-        <CardContent style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
-          <p style={{ color: 'var(--text-error)', marginBottom: 'var(--spacing-lg)' }}>{error}</p>
+        <CardContent className="p-[var(--spacing-2xl)] text-center">
+          <p className="mb-[var(--spacing-lg)] text-[var(--text-error)]">{error}</p>
           <Button onClick={fetchProfile}>{en.ui.back}</Button>
         </CardContent>
       </Card>
@@ -147,203 +147,108 @@ export default function ProfilePage() {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--spacing-xl)' }}>
-        {/* Page Header */}
-        <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-          <h1
-            style={{
-              fontSize: 'var(--font-size-h1)',
-              fontWeight: 'var(--font-weight-bold)',
-              color: 'var(--text-primary)',
-            }}
-          >
-            {en.profile.myProfile}
-          </h1>
-        </div>
+    <div className="mx-auto max-w-[800px] p-[var(--spacing-xl)]">
+      {/* Page Header */}
+      <div className="mb-[var(--spacing-xl)]">
+        <h1 className="text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
+          {en.profile.myProfile}
+        </h1>
+      </div>
 
-        {/* Profile Card */}
-        <Card>
-          <CardContent style={{ padding: 'var(--spacing-xl)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
-              {/* Avatar */}
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Avatar
-                  name={profile?.name || profile?.phone || '?'}
-                  size="xl"
-                />
-              </div>
-
-              {/* Profile Info */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
-                {/* Name */}
-                <div>
-                  <label
-                    style={{
-                      display: 'block',
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
-                    {en.profile.name}
-                  </label>
-                  <p
-                    style={{
-                      color: 'var(--text-primary)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      fontSize: 'var(--font-size-base)',
-                    }}
-                  >
-                    {profile?.name || '-'}
-                  </p>
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label
-                    style={{
-                      display: 'block',
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
-                    {en.profile.phoneReadOnly}
-                  </label>
-                  <p
-                    style={{
-                      color: 'var(--text-primary)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      fontSize: 'var(--font-size-base)',
-                    }}
-                    dir="ltr"
-                  >
-                    +973 {profile?.phone}
-                  </p>
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label
-                    style={{
-                      display: 'block',
-                      fontSize: 'var(--font-size-small)',
-                      color: 'var(--text-secondary)',
-                      marginBottom: 'var(--spacing-xs)',
-                    }}
-                  >
-                    {en.profile.email}
-                  </label>
-                  <p
-                    style={{
-                      color: 'var(--text-primary)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      fontSize: 'var(--font-size-base)',
-                    }}
-                  >
-                    {profile?.email || '-'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Edit Button */}
-              <Button variant="default" size="md" onClick={handleEditOpen} style={{ width: '100%' }}>
-                {en.profile.editProfile}
-              </Button>
+      {/* Profile Card */}
+      <Card>
+        <CardContent className="p-[var(--spacing-xl)]">
+          <div className="flex flex-col gap-[var(--spacing-xl)]">
+            {/* Avatar */}
+            <div className="flex justify-center">
+              <Avatar
+                name={profile?.name || profile?.phone || '?'}
+                size="xl"
+              />
             </div>
+
+            {/* Profile Info */}
+            <div className="flex flex-col gap-[var(--spacing-lg)]">
+              {/* Name */}
+              <div>
+                <label className="mb-[var(--spacing-xs)] block text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
+                  {en.profile.name}
+                </label>
+                <p className="text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
+                  {profile?.name || '-'}
+                </p>
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="mb-[var(--spacing-xs)] block text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
+                  {en.profile.phoneReadOnly}
+                </label>
+                <p className="text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]" dir="ltr">
+                  +973 {profile?.phone}
+                </p>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="mb-[var(--spacing-xs)] block text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
+                  {en.profile.email}
+                </label>
+                <p className="text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
+                  {profile?.email || '-'}
+                </p>
+              </div>
+            </div>
+
+            {/* Edit Button */}
+            <Button variant="default" size="md" onClick={handleEditOpen} className="w-full">
+              {en.profile.editProfile}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Quick Links */}
+      <div className="mt-[var(--spacing-xl)]">
+        <h2 className="mb-[var(--spacing-md)] text-[length:var(--font-size-h3)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
+          {en.profile.accountSettings || 'Account Settings'}
+        </h2>
+
+        <Card>
+          <CardContent className="p-0">
+            <button
+              onClick={() => router.push('/profile/addresses')}
+              className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent p-[var(--spacing-lg)] transition-[background] duration-200 hover:bg-[var(--bg-hover)]"
+            >
+              <div className="flex items-center gap-[var(--spacing-md)]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-tertiary)]">
+                  <MapPin size={20} className="text-[var(--text-secondary)]" />
+                </div>
+                <span className="text-[length:var(--font-size-base)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
+                  {en.profile.myAddresses}
+                </span>
+              </div>
+              <ChevronLeft size={20} className="text-[var(--text-secondary)]" />
+            </button>
           </CardContent>
         </Card>
+      </div>
 
-        {/* Quick Links */}
-        <div style={{ marginTop: 'var(--spacing-xl)' }}>
-          <h2
-            style={{
-              fontSize: 'var(--font-size-h3)',
-              fontWeight: 'var(--font-weight-semibold)',
-              color: 'var(--text-primary)',
-              marginBottom: 'var(--spacing-md)',
-            }}
-          >
-            {en.profile.accountSettings || 'Account Settings'}
-          </h2>
-
-          <Card>
-            <CardContent style={{ padding: 0 }}>
-              <button
-                onClick={() => router.push('/profile/addresses')}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: 'var(--spacing-lg)',
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'background 0.2s',
-                }}
-                className="hover:bg-[var(--bg-hover)]"
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: 'var(--bg-tertiary)',
-                    }}
-                    className="rounded-xl"
-                  >
-                    <MapPin size={20} style={{ color: 'var(--text-secondary)' }} />
-                  </div>
-                  <span
-                    style={{
-                      color: 'var(--text-primary)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      fontSize: 'var(--font-size-base)',
-                    }}
-                  >
-                    {en.profile.myAddresses}
-                  </span>
-                </div>
-                <ChevronLeft size={20} style={{ color: 'var(--text-secondary)' }} />
-              </button>
-            </CardContent>
-          </Card>
-        </div>
       {/* Edit Profile Dialog */}
       <Dialog
         open={isEditOpen}
         onClose={() => setIsEditOpen(false)}
         title={en.profile.editProfile}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+        <div className="flex flex-col gap-[var(--spacing-lg)]">
           {saveError && (
-            <div
-              style={{
-                padding: 'var(--spacing-md)',
-                background: 'var(--bg-error)',
-                color: 'var(--text-error)',
-                fontSize: 'var(--font-size-small)',
-              }}
-              className="rounded-xl"
-            >
+            <div className="rounded-xl bg-[var(--bg-error)] p-[var(--spacing-md)] text-[length:var(--font-size-small)] text-[var(--text-error)]">
               {saveError}
             </div>
           )}
 
           <div>
-            <label
-              style={{
-                display: 'block',
-                fontSize: 'var(--font-size-small)',
-                fontWeight: 'var(--font-weight-medium)',
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--spacing-sm)',
-              }}
-            >
+            <label className="mb-[var(--spacing-sm)] block text-[length:var(--font-size-small)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
               {en.profile.fullName}
             </label>
             <Input
@@ -354,15 +259,7 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label
-              style={{
-                display: 'block',
-                fontSize: 'var(--font-size-small)',
-                fontWeight: 'var(--font-weight-medium)',
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--spacing-sm)',
-              }}
-            >
+            <label className="mb-[var(--spacing-sm)] block text-[length:var(--font-size-small)] font-[var(--font-weight-medium)] text-[var(--text-primary)]">
               {en.profile.email}
             </label>
             <Input
@@ -374,13 +271,13 @@ export default function ProfilePage() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: 'var(--spacing-md)', paddingTop: 'var(--spacing-sm)' }}>
+          <div className="flex gap-[var(--spacing-md)] pt-[var(--spacing-sm)]">
             <Button
               variant="default"
               size="md"
               onClick={handleSaveProfile}
               disabled={isSaving}
-              style={{ flex: 1 }}
+              className="flex-1"
             >
               {isSaving ? en.ui.loading : en.profile.saveChanges}
             </Button>
@@ -389,7 +286,7 @@ export default function ProfilePage() {
               size="md"
               onClick={() => setIsEditOpen(false)}
               disabled={isSaving}
-              style={{ flex: 1 }}
+              className="flex-1"
             >
               {en.ui.cancel}
             </Button>

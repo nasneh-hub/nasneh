@@ -12,88 +12,26 @@ export default function HomePage() {
   return (
     <AppShell>
       {/* Hero Section */}
-      <section
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--spacing-2xl)',
-          background: 'var(--bg-secondary)',
-          padding: 'var(--spacing-3xl) var(--spacing-lg)',
-          textAlign: 'center',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '800px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--spacing-xl)',
-          }}
-        >
-          <h1
-            style={{
-              fontSize: 'var(--font-size-4xl)',
-              fontWeight: 'var(--font-weight-bold)',
-              color: 'var(--text-primary)',
-              margin: 0,
-              lineHeight: 1.2,
-            }}
-          >
+      <section className="flex min-h-[60vh] flex-col items-center justify-center gap-[var(--spacing-2xl)] bg-[var(--bg-secondary)] px-[var(--spacing-lg)] py-[var(--spacing-3xl)] text-center">
+        <div className="flex max-w-[800px] flex-col gap-[var(--spacing-xl)]">
+          <h1 className="m-0 text-[length:var(--font-size-4xl)] font-[var(--font-weight-bold)] leading-[1.2] text-[var(--text-primary)]">
             Discover Local Kitchens, Craft & Services
           </h1>
-          <p
-            style={{
-              fontSize: 'var(--font-size-lg)',
-              color: 'var(--text-secondary)',
-              margin: 0,
-              lineHeight: 1.6,
-            }}
-          >
+          <p className="m-0 text-[length:var(--font-size-lg)] leading-[1.6] text-[var(--text-secondary)]">
             From us, for us — Your marketplace for authentic homemade food, handcrafted products, and trusted local services.
           </p>
 
           {/* Search Bar */}
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--spacing-md)',
-              maxWidth: '600px',
-              width: '100%',
-              margin: '0 auto',
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                position: 'relative',
-              }}
-            >
+          <div className="mx-auto flex w-full max-w-[600px] gap-[var(--spacing-md)]">
+            <div className="relative flex-1">
               <Search
                 size={20}
-                style={{
-                  position: 'absolute',
-                  left: 'var(--spacing-md)',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-tertiary)',
-                }}
+                className="absolute left-[var(--spacing-md)] top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
               />
               <input
                 type="text"
                 placeholder="Search for kitchens, products, or services..."
-                style={{
-                  width: '100%',
-                  padding: 'var(--spacing-md) var(--spacing-md) var(--spacing-md) var(--spacing-3xl)',
-                  borderRadius: 'var(--radius-standard)',
-                  border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-primary)',
-                  color: 'var(--text-primary)',
-                  fontSize: 'var(--font-size-base)',
-                  outline: 'none',
-                }}
+                className="w-full rounded-[var(--radius-standard)] border border-[var(--border-primary)] bg-[var(--bg-primary)] py-[var(--spacing-md)] pl-[var(--spacing-3xl)] pr-[var(--spacing-md)] text-[length:var(--font-size-base)] text-[var(--text-primary)] outline-none"
               />
             </div>
           </div>
@@ -111,32 +49,13 @@ export default function HomePage() {
       </section>
 
       {/* Featured Categories */}
-      <section
-        style={{
-          padding: 'var(--spacing-3xl) var(--spacing-lg)',
-          background: 'var(--bg-primary)',
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h2
-            style={{
-              fontSize: 'var(--font-size-2xl)',
-              fontWeight: 'var(--font-weight-semibold)',
-              color: 'var(--text-primary)',
-              marginBottom: 'var(--spacing-2xl)',
-              textAlign: 'center',
-            }}
-          >
+      <section className="bg-[var(--bg-primary)] px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+        <div className="mx-auto max-w-[1200px]">
+          <h2 className="mb-[var(--spacing-2xl)] text-center text-[length:var(--font-size-2xl)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
             Featured Categories
           </h2>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: 'var(--spacing-xl)',
-            }}
-          >
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-[var(--spacing-xl)]">
             {[
               { name: 'Kitchens', description: 'Homemade meals & catering' },
               { name: 'Craft', description: 'Handmade products & art' },
@@ -147,37 +66,12 @@ export default function HomePage() {
               <div
                 key={category.name}
                 onClick={() => router.push('/categories')}
-                style={{
-                  padding: 'var(--spacing-xl)',
-                  background: 'var(--bg-secondary)',
-                  borderRadius: 'var(--radius-standard)',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                className="cursor-pointer rounded-[var(--radius-standard)] bg-[var(--bg-secondary)] p-[var(--spacing-xl)] transition-transform duration-200 hover:-translate-y-1"
               >
-                <h3
-                  style={{
-                    fontSize: 'var(--font-size-lg)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    color: 'var(--text-primary)',
-                    marginBottom: 'var(--spacing-sm)',
-                  }}
-                >
+                <h3 className="mb-[var(--spacing-sm)] text-[length:var(--font-size-lg)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
                   {category.name}
                 </h3>
-                <p
-                  style={{
-                    fontSize: 'var(--font-size-sm)',
-                    color: 'var(--text-secondary)',
-                    margin: 0,
-                  }}
-                >
+                <p className="m-0 text-[length:var(--font-size-sm)] text-[var(--text-secondary)]">
                   {category.description}
                 </p>
               </div>

@@ -4,7 +4,7 @@
  * Reusable empty state component for consistent UI across all pages.
  * Used when lists/collections are empty (orders, bookings, reviews, etc.)
  * 
- * Single Source: All styling uses tokens.css variables
+ * Single Source: All styling uses tokens.css variables via Tailwind classes
  */
 
 import React from 'react';
@@ -35,65 +35,25 @@ export function EmptyState({
   comingSoon,
 }: EmptyStateProps) {
   return (
-    <div
-      style={{
-        minHeight: '60vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: 'var(--spacing-2xl)',
-      }}
-    >
+    <div className="flex min-h-[60vh] flex-col items-center justify-center p-[var(--spacing-2xl)] text-center">
       {/* Icon */}
-      <div
-        style={{
-          marginBottom: 'var(--spacing-lg)',
-          color: 'var(--text-tertiary)',
-        }}
-      >
+      <div className="mb-[var(--spacing-lg)] text-[var(--text-tertiary)]">
         <Icon size={64} />
       </div>
 
       {/* Title */}
-      <h1
-        style={{
-          fontSize: 'var(--font-size-h1)',
-          fontWeight: 'var(--font-weight-bold)',
-          color: 'var(--text-primary)',
-          marginBottom: 'var(--spacing-md)',
-          margin: 0,
-        }}
-      >
+      <h1 className="m-0 mb-[var(--spacing-md)] text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
         {title}
       </h1>
 
       {/* Description */}
-      <p
-        style={{
-          color: 'var(--text-secondary)',
-          fontSize: 'var(--font-size-large)',
-          marginBottom: comingSoon || action ? 'var(--spacing-xl)' : 0,
-          maxWidth: '500px',
-        }}
-      >
+      <p className={`max-w-[500px] text-[length:var(--font-size-large)] text-[var(--text-secondary)] ${comingSoon || action ? 'mb-[var(--spacing-xl)]' : 'mb-0'}`}>
         {description}
       </p>
 
       {/* Coming Soon Badge */}
       {comingSoon && (
-        <div
-          style={{
-            display: 'inline-block',
-            padding: 'var(--spacing-sm) var(--spacing-lg)',
-            background: 'var(--bg-tertiary)',
-            color: 'var(--text-secondary)',
-            fontSize: 'var(--font-size-small)',
-            fontWeight: 'var(--font-weight-medium)',
-          }}
-          className="rounded-xl"
-        >
+        <div className="inline-block rounded-xl bg-[var(--bg-tertiary)] px-[var(--spacing-lg)] py-[var(--spacing-sm)] text-[length:var(--font-size-small)] font-[var(--font-weight-medium)] text-[var(--text-secondary)]">
           Coming Soon
         </div>
       )}

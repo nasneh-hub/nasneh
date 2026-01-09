@@ -31,106 +31,37 @@ export default function SupportPage() {
   ];
 
   return (
-    <div
-      style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: 'var(--spacing-xl)',
-      }}
-    >
+    <div className="mx-auto max-w-[1200px] p-[var(--spacing-xl)]">
       {/* Page Header */}
-      <div
-        style={{
-          textAlign: 'center',
-          marginBottom: 'var(--spacing-3xl)',
-        }}
-      >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: 'var(--spacing-lg)',
-          }}
-        >
-          <Headphones size={64} style={{ color: 'var(--text-tertiary)' }} />
+      <div className="mb-[var(--spacing-3xl)] text-center">
+        <div className="mb-[var(--spacing-lg)] inline-flex items-center justify-center">
+          <Headphones size={64} className="text-[var(--text-tertiary)]" />
         </div>
-        <h1
-          style={{
-            fontSize: 'var(--font-size-h1)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--spacing-md)',
-            margin: 0,
-          }}
-        >
+        <h1 className="m-0 mb-[var(--spacing-md)] text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
           {en.support.support}
         </h1>
-        <p
-          style={{
-            color: 'var(--text-secondary)',
-            fontSize: 'var(--font-size-large)',
-            maxWidth: '600px',
-            margin: '0 auto',
-          }}
-        >
+        <p className="mx-auto max-w-[600px] text-[length:var(--font-size-large)] text-[var(--text-secondary)]">
           {en.support.supportDescription}
         </p>
       </div>
 
       {/* Support Options Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: 'var(--spacing-xl)',
-        }}
-      >
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[var(--spacing-xl)]">
         {supportOptions.map((option, index) => (
           <Card key={index}>
-            <div
-              style={{
-                padding: 'var(--spacing-xl)',
-                textAlign: 'center',
-              }}
-            >
+            <div className="p-[var(--spacing-xl)] text-center">
               {/* Icon */}
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '64px',
-                  height: '64px',
-                  background: 'var(--bg-tertiary)',
-                  marginBottom: 'var(--spacing-lg)',
-                }}
-                className="rounded-xl"
-              >
-                <option.icon size={32} style={{ color: 'var(--text-secondary)' }} />
+              <div className="mb-[var(--spacing-lg)] inline-flex h-16 w-16 items-center justify-center rounded-xl bg-[var(--bg-tertiary)]">
+                <option.icon size={32} className="text-[var(--text-secondary)]" />
               </div>
 
               {/* Title */}
-              <h3
-                style={{
-                  fontSize: 'var(--font-size-h3)',
-                  fontWeight: 'var(--font-weight-semibold)',
-                  color: 'var(--text-primary)',
-                  marginBottom: 'var(--spacing-sm)',
-                  margin: 0,
-                }}
-              >
+              <h3 className="m-0 mb-[var(--spacing-sm)] text-[length:var(--font-size-h3)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
                 {option.title}
               </h3>
 
               {/* Description */}
-              <p
-                style={{
-                  color: 'var(--text-secondary)',
-                  fontSize: 'var(--font-size-base)',
-                  marginBottom: 'var(--spacing-lg)',
-                }}
-              >
+              <p className="mb-[var(--spacing-lg)] text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
                 {option.description}
               </p>
 
@@ -139,7 +70,7 @@ export default function SupportPage() {
                 variant="secondary"
                 size="md"
                 onClick={option.action}
-                style={{ width: '100%' }}
+                className="w-full"
               >
                 {en.support.getInTouch}
               </Button>
@@ -149,33 +80,11 @@ export default function SupportPage() {
       </div>
 
       {/* Additional Help Section */}
-      <div
-        style={{
-          marginTop: 'var(--spacing-3xl)',
-          padding: 'var(--spacing-2xl)',
-          background: 'var(--bg-secondary)',
-          textAlign: 'center',
-        }}
-        className="rounded-xl"
-      >
-        <h2
-          style={{
-            fontSize: 'var(--font-size-h2)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--spacing-md)',
-            margin: 0,
-          }}
-        >
+      <div className="mt-[var(--spacing-3xl)] rounded-xl bg-[var(--bg-secondary)] p-[var(--spacing-2xl)] text-center">
+        <h2 className="m-0 mb-[var(--spacing-md)] text-[length:var(--font-size-h2)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
           {en.support.needHelp}
         </h2>
-        <p
-          style={{
-            color: 'var(--text-secondary)',
-            fontSize: 'var(--font-size-base)',
-            marginBottom: 'var(--spacing-xl)',
-          }}
-        >
+        <p className="mb-[var(--spacing-xl)] text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
           Our support team is here to help you with any questions or issues
         </p>
         <Button
