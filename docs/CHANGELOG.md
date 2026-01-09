@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#228:** add logging to diagnose OTP test number issue
 
 ### 🐛 Bug Fixes (fix)
+- **#239:** use ar.profile.myProfile instead of non-existent ar.profile.title
 - **#237:** map verify-otp API response to frontend format
 - **#235:** configure CORS for staging frontends
 - **#234:** add build args for NEXT_PUBLIC environment variables
@@ -66,6 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#199:** add 6 core components (Button, Input, Card, Badge, Skeleton, Dialog)
 
 ### 🐛 Bug Fixes (fix)
+- **#239:** use ar.profile.myProfile instead of non-existent ar.profile.title
 - **#237:** map verify-otp API response to frontend format
 - **#235:** configure CORS for staging frontends
 - **#234:** add build args for NEXT_PUBLIC environment variables
@@ -105,6 +107,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#190:** add OTP mock mode for staging
 
 ### 🐛 Bug Fixes (fix)
+- **#239:** use ar.profile.myProfile instead of non-existent ar.profile.title
 - **#237:** map verify-otp API response to frontend format
 - **#235:** configure CORS for staging frontends
 - **#234:** add build args for NEXT_PUBLIC environment variables
@@ -176,6 +179,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#167:** implement categories API
 
 ### 🐛 Bug Fixes (fix)
+- **#239:** use ar.profile.myProfile instead of non-existent ar.profile.title
 - **#237:** map verify-otp API response to frontend format
 - **#235:** configure CORS for staging frontends
 - **#234:** add build args for NEXT_PUBLIC environment variables
@@ -254,6 +258,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#127:** Comprehensive CD stabilization and database migration documentation
 
 ### 🐛 Bug Fixes (fix)
+- **#239:** use ar.profile.myProfile instead of non-existent ar.profile.title
 - **#237:** map verify-otp API response to frontend format
 - **#235:** configure CORS for staging frontends
 - **#234:** add build args for NEXT_PUBLIC environment variables
@@ -378,6 +383,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#22:** Implement SMS fallback via AWS SNS
 
 ### 🐛 Bug Fixes (fix)
+- **#239:** use ar.profile.myProfile instead of non-existent ar.profile.title
 - **#237:** map verify-otp API response to frontend format
 - **#235:** configure CORS for staging frontends
 - **#234:** add build args for NEXT_PUBLIC environment variables
