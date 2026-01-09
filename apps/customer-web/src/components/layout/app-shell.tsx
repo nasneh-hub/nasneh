@@ -61,7 +61,6 @@ export function AppShell({ children }: AppShellProps) {
               padding: 'var(--spacing-sm)',
               borderRadius: 'var(--radius-standard)',
               background: 'transparent',
-              border: 'none',
               cursor: 'pointer',
               transition: 'background 0.2s',
             }}
