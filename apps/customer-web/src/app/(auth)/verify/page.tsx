@@ -240,7 +240,7 @@ export default function VerifyPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Logo variant="auto" size="lg" />
+          <Logo variant="auto" size={40} />
         </div>
 
         {/* Verify Card */}
