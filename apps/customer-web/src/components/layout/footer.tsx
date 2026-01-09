@@ -250,15 +250,7 @@ export function Footer() {
                 margin: 0,
               }}
             >
-            <p
-              style={{
-                color: 'var(--text-tertiary)',
-                fontSize: 'var(--font-size-small)',
-                margin: 0,
-              }}
-            >
               {en.footer.madeIn} {en.footer.bahrain}
-            </p>
             </p>
           </div>
         </div>
