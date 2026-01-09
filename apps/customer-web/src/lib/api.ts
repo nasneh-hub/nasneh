@@ -63,8 +63,24 @@ export async function verifyOtp(phone: string, otp: string): Promise<ApiResponse
       body: JSON.stringify({ phone, otp }),
     });
 
-    const data = await response.json();
-    return data;
+    const apiResponse = await response.json();
+    
+    // API returns { success, user, tokens } but frontend expects { success, data: { accessToken, refreshToken, user } }
+    if (apiResponse.success && apiResponse.tokens) {
+      return {
+        success: true,
+        data: {
+          accessToken: apiResponse.tokens.accessToken,
+          refreshToken: apiResponse.tokens.refreshToken,
+          user: apiResponse.user,
+        },
+      };
+    }
+    
+    return {
+      success: false,
+      error: apiResponse.message || 'Verification failed',
+    };
   } catch (error) {
     return {
       success: false,
