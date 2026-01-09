@@ -770,16 +770,24 @@ export const en = {
     selectAddress: 'Select delivery address',
     addNewAddress: 'Add New Address',
     useThisAddress: 'Use This Address',
+    noAddresses: 'No saved addresses',
+    noAddressesDescription: 'Add a delivery address to continue with your order',
+    defaultAddress: 'Default',
     
     // Order details
     orderSummary: 'Order Summary',
     orderItems: 'Order Items',
+    items: 'Items',
     orderNotes: 'Order Notes',
     orderNotesPlaceholder: 'Add any special instructions for your order',
+    orderNotesHint: 'e.g., delivery time preference, special instructions',
+    optional: 'Optional',
+    charactersRemaining: 'characters remaining',
     
     // Actions
     placeOrder: 'Place Order',
     backToCart: 'Back to Cart',
+    continue: 'Continue',
     
     // Validation
     selectAddressFirst: 'Please select a delivery address',
