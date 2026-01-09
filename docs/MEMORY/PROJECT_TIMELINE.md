@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 19:49:44 | Added (checkout): add checkout components for S5-02 PR3 | PR #265 | @nasneh-hub |
 | 19:36:05 | Added (cart): add cart page with API integration for S5-02 PR2 | PR #264 | @nasneh-hub |
 | 19:25:10 | Added (cart): add cart components for S5-02 PR1 | PR #263 | @nasneh-hub |
 | 19:15:34 | Added (copy): add cart/checkout/order copy tokens for S5-02 | PR #262 | @nasneh-hub |
