@@ -59,6 +59,20 @@ export type {
   DropdownMenuSeparatorProps,
 } from './components/dropdown-menu';
 
+// NavigationMenu - Main navigation menu
+export {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from './components/navigation-menu';
+export type {
+  NavigationMenuProps,
+  NavigationMenuListProps,
+  NavigationMenuItemProps,
+  NavigationMenuLinkProps,
+} from './components/navigation-menu';
+
 // =============================================================================
 // Additional Components (S4-01b)
 // =============================================================================
