@@ -108,7 +108,7 @@ export function ReviewList({ itemType, itemId }: ReviewListProps) {
             disabled={!hasPrev}
           >
             <ChevronLeft className="h-4 w-4" />
-            {en.listing.previous}
+            {en.ui.previous}
           </Button>
 
           <div className="flex items-center gap-1">
@@ -133,7 +133,7 @@ export function ReviewList({ itemType, itemId }: ReviewListProps) {
             onClick={() => setPage((p) => p + 1)}
             disabled={!hasNext}
           >
-            {en.listing.next}
+            {en.ui.next}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

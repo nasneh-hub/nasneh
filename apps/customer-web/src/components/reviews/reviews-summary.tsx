@@ -37,9 +37,7 @@ export function ReviewsSummary({
             {totalReviews}
           </div>
           <div className="text-sm text-mono-11">
-            {totalReviews === 1
-              ? en.reviews.reviewCount.replace('{count}', '1')
-              : en.reviews.reviewCount.replace('{count}', totalReviews.toString())}
+            {en.reviews.basedOn.replace('{count}', totalReviews.toString())}
           </div>
         </div>
       </div>
