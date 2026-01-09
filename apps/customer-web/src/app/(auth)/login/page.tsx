@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Card, Logo } from '@nasneh/ui';
-import { ar } from '@nasneh/ui/copy';
+import { en } from '@nasneh/ui/copy';
 import { requestOtp } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
 
@@ -48,12 +48,12 @@ export default function LoginPage() {
     setError('');
 
     if (!phone) {
-      setError(ar.errors.requiredField);
+      setError(en.errors.requiredField);
       return;
     }
 
     if (!validatePhone(phone)) {
-      setError(ar.errors.invalidPhone);
+      setError(en.errors.invalidPhone);
       return;
     }
 
@@ -69,10 +69,10 @@ export default function LoginPage() {
         sessionStorage.setItem('otp_expires_in', String(response.data?.expiresIn || 300));
         router.push('/verify');
       } else {
-        setError(response.error || ar.errors.somethingWrong);
+        setError(response.error || en.errors.somethingWrong);
       }
     } catch {
-      setError(ar.errors.networkError);
+      setError(en.errors.networkError);
     } finally {
       setIsSubmitting(false);
     }
@@ -81,13 +81,13 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--bg-secondary)]">
-        <div className="text-[color:var(--text-secondary)]">{ar.ui.loading}</div>
+        <div className="text-[color:var(--text-secondary)]">{en.ui.loading}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[var(--bg-secondary)]">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[var(--bg-secondary)]" dir="ltr">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -96,71 +96,71 @@ export default function LoginPage() {
 
         {/* Login Card */}
         <Card padding="lg">
-            <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
-              {ar.auth.login}
-            </h1>
-            <p className="text-sm text-center mb-6 text-[color:var(--text-secondary)]">
-              {ar.auth.welcome}
-            </p>
+          <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
+            {en.auth.login}
+          </h1>
+          <p className="text-sm text-center mb-6 text-[color:var(--text-secondary)]">
+            {en.auth.welcome}
+          </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Phone Input */}
-              <div>
-                <label 
-                  htmlFor="phone" 
-                  className="block text-sm font-medium mb-2 text-[color:var(--text-primary)]"
-                >
-                  {ar.auth.phoneNumber}
-                </label>
-                <div className="flex gap-2">
-                  {/* Country Code */}
-                  <div className="flex items-center justify-center px-4 h-12 bg-[var(--bg-tertiary)] rounded-xl text-[color:var(--text-secondary)] text-sm shrink-0">
-                    +973
-                  </div>
-                  {/* Phone Input */}
-                  <Input
-                    id="phone"
-                    type="tel"
-                    inputMode="numeric"
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    placeholder={ar.auth.phonePlaceholder}
-                    error={error || undefined}
-                    disabled={isSubmitting}
-                    autoComplete="tel"
-                    className="flex-1"
-                  />
-                </div>
-                {error && (
-                  <p className="mt-2 text-sm text-[color:var(--color-danger)]">
-                    {error}
-                  </p>
-                )}
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                variant="default"
-                size="lg"
-                disabled={isSubmitting || !phone}
-                className="w-full"
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Phone Input */}
+            <div>
+              <label 
+                htmlFor="phone" 
+                className="block text-sm font-medium mb-2 text-[color:var(--text-primary)]"
               >
-                {isSubmitting ? ar.ui.loading : ar.auth.sendOtp}
-              </Button>
-            </form>
+                {en.auth.phoneNumber}
+              </label>
+              <div className="flex gap-2">
+                {/* Country Code */}
+                <div className="flex items-center justify-center px-4 h-12 bg-[var(--bg-tertiary)] rounded-xl text-[color:var(--text-secondary)] text-sm shrink-0">
+                  +973
+                </div>
+                {/* Phone Input */}
+                <Input
+                  id="phone"
+                  type="tel"
+                  inputMode="numeric"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  placeholder={en.auth.phonePlaceholder}
+                  error={error || undefined}
+                  disabled={isSubmitting}
+                  autoComplete="tel"
+                  className="flex-1"
+                />
+              </div>
+              {error && (
+                <p className="mt-2 text-sm text-[color:var(--color-danger)]">
+                  {error}
+                </p>
+              )}
+            </div>
 
-            {/* Terms */}
-            <p className="mt-6 text-xs text-center text-[color:var(--text-tertiary)]">
-              {ar.auth.byLoggingIn}{' '}
-              <a href="/terms" className="underline hover:text-[color:var(--text-secondary)]">
-                {ar.auth.termsOfService}
-              </a>{' '}
-              {ar.auth.and}{' '}
-              <a href="/privacy" className="underline hover:text-[color:var(--text-secondary)]">
-                {ar.auth.privacyPolicy}
-              </a>
-            </p>
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="default"
+              size="lg"
+              disabled={isSubmitting || !phone}
+              className="w-full"
+            >
+              {isSubmitting ? en.ui.loading : en.auth.sendOtp}
+            </Button>
+          </form>
+
+          {/* Terms */}
+          <p className="mt-6 text-xs text-center text-[color:var(--text-tertiary)]">
+            {en.auth.byLoggingIn}{' '}
+            <a href="/terms" className="underline hover:text-[color:var(--text-secondary)]">
+              {en.auth.termsOfService}
+            </a>{' '}
+            {en.auth.and}{' '}
+            <a href="/privacy" className="underline hover:text-[color:var(--text-secondary)]">
+              {en.auth.privacyPolicy}
+            </a>
+          </p>
         </Card>
       </div>
     </div>
