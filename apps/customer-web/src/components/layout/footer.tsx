@@ -257,7 +257,7 @@ export function Footer() {
                 margin: 0,
               }}
             >
-              Made with care in Saudi Arabia
+              Made with care in Bahrain
             </p>
           </div>
         </div>
