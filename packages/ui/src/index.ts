@@ -43,6 +43,22 @@ export type { SkeletonProps } from './components/skeleton';
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 
+// DropdownMenu - Dropdown menu for actions
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from './components/dropdown-menu';
+export type {
+  DropdownMenuProps,
+  DropdownMenuTriggerProps,
+  DropdownMenuContentProps,
+  DropdownMenuItemProps,
+  DropdownMenuSeparatorProps,
+} from './components/dropdown-menu';
+
 // =============================================================================
 // Additional Components (S4-01b)
 // =============================================================================
