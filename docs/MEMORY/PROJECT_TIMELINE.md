@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 05:05:22 | Fixed (customer-web): add build args for NEXT_PUBLIC environment variables | PR #234 | @nasneh-hub |
 | 04:39:24 | Fixed (infra): correct API URL for ECS customer-web to include /api/v1 | PR #232 | @nasneh-hub |
 | 04:34:22 | Fixed (customer-web): correct API URL in staging to include /api/v1 path | PR #231 | @nasneh-hub |
 | 03:48:14 | Changed: use config.environment instead of config.env | PR #230 | @nasneh-hub |
