@@ -35,24 +35,28 @@ const app: express.Application = express();
 // ===========================================
 
 // CORS
-console.log('[CORS DEBUG] Allowed origins:', {
-  frontend: config.urls.frontend,
-  dashboard: config.urls.dashboard,
-});
+const allowedOrigins = [config.urls.frontend, config.urls.dashboard];
+
+console.log('[CORS] Allowed origins:', allowedOrigins);
 
 app.use(cors({
-  origin: [config.urls.frontend, config.urls.dashboard],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., curl, Postman)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Check if origin is in allowlist
+    if (allowedOrigins.includes(origin)) {
+      console.log('[CORS] ✓ Allowed origin:', origin);
+      return callback(null, true);
+    }
+    
+    console.log('[CORS] ✗ Blocked origin:', origin, 'Allowed:', allowedOrigins);
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
-
-app.use((req, res, next) => {
-  console.log('[CORS DEBUG] Request:', {
-    method: req.method,
-    origin: req.headers.origin,
-    path: req.path,
-  });
-  next();
-});
 
 // Body parsing
 app.use(express.json());
