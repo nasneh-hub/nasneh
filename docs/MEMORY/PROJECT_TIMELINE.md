@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 11:46:07 | Added (customer-web): UI corrections - English LTR, country switcher, Go Back button | PR #246 | @nasneh-hub |
 | 10:38:51 | Added (customer-web): UI corrections + standardization | PR #245 | @nasneh-hub |
 | 10:15:09 | Fixed (ui): implement route groups and fix avatar dropdown menu | PR #244 | @nasneh-hub |
 | 10:00:39 | Added (ui): implement unified UI Philosophy with Airbnb-style header | PR #243 | @nasneh-hub |
