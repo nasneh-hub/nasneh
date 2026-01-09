@@ -1,17 +1,22 @@
 /**
- * Nasneh Design Tokens
+ * Nasneh Design Tokens (Shadcn-First)
  * 
  * THE SINGLE SOURCE OF TRUTH for all design values.
  * 
  * Source: docs/SPECS/DESIGN_SYSTEM.md
- * Version: 3.0
+ * Version: 4.0 (Shadcn-First)
  * Last Updated: January 2026
  * 
  * CRITICAL RULES:
  * - ALL color values MUST come from this file
  * - NO hex colors allowed anywhere else in the codebase
- * - NO Tailwind color classes (bg-white, text-black, etc.)
- * - Use CSS variables: var(--bg-primary), var(--text-primary), etc.
+ * - NO Tailwind color classes (bg-slate-*, text-gray-*, etc.)
+ * - Use shadcn semantic variables: var(--background), var(--foreground), etc.
+ * 
+ * SHADCN-FIRST POLICY:
+ * - Shadcn/UI components work as-is without modification
+ * - All shadcn semantic variables mapped to Nasneh Nature palette
+ * - Brand consistency enforced through this file only
  * 
  * MODIFICATION RULES:
  * - Adding new tokens REQUIRES owner approval
@@ -22,12 +27,62 @@
 
 :root {
   /* ============================================
-   * TYPOGRAPHY
-   * Source: DESIGN_SYSTEM.md Section 4.1
+   * SHADCN SEMANTIC VARIABLES (Mapped to Nasneh Nature Palette)
+   * These variables make shadcn/ui components work as-is
+   * Source: Nasneh "Nature" Palette + DESIGN_SYSTEM.md
    * ============================================ */
+  
+  /* Base Colors */
+  --background: #FFFFFF;           /* Page background (Nasneh bg-primary) */
+  --foreground: #1A1A1A;          /* Main text (Nasneh text-primary) */
+  
+  /* Primary - Nasneh Nature Green */
+  --primary: #2D5016;             /* Nature Green - brand color */
+  --primary-foreground: #FFFFFF;  /* Text on primary */
+  
+  /* Secondary - Subtle backgrounds */
+  --secondary: #F5F5F5;           /* Nasneh bg-tertiary */
+  --secondary-foreground: #1A1A1A;/* Text on secondary */
+  
+  /* Muted - Less prominent elements */
+  --muted: #F9F9F9;               /* Nasneh bg-secondary (lighter) */
+  --muted-foreground: #6B7280;    /* Nasneh text-secondary */
+  
+  /* Accent - Highlights and hover states */
+  --accent: #E8F0E3;              /* Nature Light Green */
+  --accent-foreground: #2D5016;   /* Dark green text on light green */
+  
+  /* Destructive - Error states */
+  --destructive: #DC2626;         /* Semantic red */
+  --destructive-foreground: #FFFFFF;
+  
+  /* Border - Subtle separators */
+  --border: #E5E5E5;              /* Light gray border */
+  --input: #E5E5E5;               /* Input border */
+  
+  /* Ring - Focus indicator */
+  --ring: #2D5016;                /* Nature Green focus ring */
+  
+  /* Card - Elevated surfaces */
+  --card: #FFFFFF;                /* Card background */
+  --card-foreground: #1A1A1A;     /* Text on card */
+  
+  /* Popover - Floating elements */
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  
+  /* Radius - Border radius */
+  --radius: 0.75rem;              /* 12px - Nasneh standard */
+  
+  /* ============================================
+   * LEGACY NASNEH VARIABLES (Backward Compatibility)
+   * Keep for existing code that uses old variable names
+   * ============================================ */
+  
+  /* Typography */
   --font-family-primary: 'Vazirmatn', system-ui, -apple-system, sans-serif;
   
-  /* Font Sizes - Section 4.2 */
+  /* Font Sizes */
   --font-size-h1: 2rem;        /* 32px */
   --font-size-h2: 1.5rem;      /* 24px */
   --font-size-h3: 1.25rem;     /* 20px */
@@ -42,11 +97,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   
-  /* ============================================
-   * SPACING
-   * Source: DESIGN_SYSTEM.md Section 5
-   * Base Unit: 4px
-   * ============================================ */
+  /* Spacing */
   --spacing-xs: 0.25rem;   /* 4px */
   --spacing-sm: 0.5rem;    /* 8px */
   --spacing-md: 0.75rem;   /* 12px */
@@ -56,72 +107,48 @@
   --spacing-3xl: 3rem;     /* 48px */
   --spacing-4xl: 4rem;     /* 64px */
   
-  /* ============================================
-   * BORDER RADIUS
-   * Source: DESIGN_SYSTEM.md Section 6
-   * Standard: 12px for EVERYTHING
-   * Exception: rounded-full for icon buttons
-   * ============================================ */
+  /* Border Radius (Legacy) */
   --radius-standard: 0.75rem;  /* 12px - USE FOR EVERYTHING */
   --radius-full: 9999px;       /* rounded-full - ONLY for icon buttons */
   
-  /* ============================================
-   * COMPONENT HEIGHTS
-   * Source: DESIGN_SYSTEM.md Section 8
-   * ============================================ */
+  /* Component Heights */
   --height-xs: 2rem;      /* 32px - Compact buttons */
   --height-sm: 2.5rem;    /* 40px - Small inputs */
   --height-md: 3rem;      /* 48px - Default (buttons, inputs) */
   --height-lg: 3.5rem;    /* 56px - Large buttons */
   
-  /* ============================================
-   * COLORS - LIGHT MODE
-   * Source: DESIGN_SYSTEM.md Section 3
-   * Mono Palette (Primary) - Section 3.1
-   * ============================================ */
+  /* Background Colors (Legacy) */
+  --bg-primary: var(--background);      /* Page background */
+  --bg-secondary: var(--muted);         /* Section background */
+  --bg-tertiary: var(--secondary);      /* Card background */
+  --bg-hover: #F3F4F6;                  /* Hover states */
   
-  /* Background Colors */
-  --bg-primary: #FFFFFF;      /* Page background */
-  --bg-secondary: #FAFAFA;    /* Section background */
-  --bg-tertiary: #F5F5F5;     /* Card background */
-  --bg-hover: #F3F4F6;        /* Hover states */
+  /* Input Backgrounds (Legacy) */
+  --input-bg: var(--secondary);         /* Default input background */
+  --input-bg-error: #FEE2E2;           /* Error state */
+  --input-bg-success: #D1FAE5;         /* Success state */
   
-  /* Input Backgrounds */
-  --input-bg: #F5F5F5;        /* Default input background */
-  --input-bg-error: #FEE2E2;  /* Error state */
-  --input-bg-success: #D1FAE5;/* Success state */
+  /* Text Colors (Legacy) */
+  --text-primary: var(--foreground);    /* Main text */
+  --text-secondary: var(--muted-foreground); /* Secondary text */
+  --text-tertiary: #9CA3AF;            /* Placeholder text */
+  --color-text-inverse: #FFFFFF;       /* Text on colored backgrounds */
   
-  /* Text Colors */
-  --text-primary: #000000;    /* Main text */
-  --text-secondary: #6B7280;  /* Secondary text */
-  --text-tertiary: #9CA3AF;   /* Placeholder text */
-  --color-text-inverse: #FFFFFF; /* Text on colored backgrounds */
-  
-  /* ============================================
-   * SEMANTIC COLORS (Status Only)
-   * Source: DESIGN_SYSTEM.md Section 3.2
-   * Use ONLY for status indicators, badges, alerts
-   * ============================================ */
+  /* Semantic Colors (Legacy) */
   --color-success: #10B981;   /* Completed, approved */
   --color-warning: #F59E0B;   /* Pending, attention */
-  --color-danger: #EF4444;    /* Error, cancelled */
+  --color-danger: var(--destructive);    /* Error, cancelled */
   --color-info: #3B82F6;      /* Information */
   
-  /* ============================================
-   * SHADOWS
-   * Subtle shadows for depth (no borders)
-   * ============================================ */
+  /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   
-  /* ============================================
-   * FOCUS RING
-   * Use ring instead of border for focus states
-   * ============================================ */
+  /* Focus Ring (Legacy) */
   --ring-width: 2px;
   --ring-offset: 2px;
-  --ring-color: #000000;      /* Black ring for focus */
+  --ring-color: var(--ring);      /* Focus ring color */
 }
 
 /* ============================================
@@ -129,31 +156,57 @@
  * Source: DESIGN_SYSTEM.md Section 11
  * ============================================ */
 .dark {
-  /* Background Colors */
-  --bg-primary: #0A0A0A;      /* Page background */
-  --bg-secondary: #111111;    /* Section background */
-  --bg-tertiary: #1A1A1A;     /* Card background */
-  --bg-hover: #1F1F1F;        /* Hover states */
+  /* Shadcn Semantic Variables (Dark Mode) */
+  --background: #0A0A0A;           /* Page background */
+  --foreground: #FFFFFF;          /* Main text */
   
-  /* Input Backgrounds */
-  --input-bg: #262626;        /* Default input background */
-  --input-bg-error: #450A0A;  /* Error state */
-  --input-bg-success: #052E16;/* Success state */
+  --primary: #3A6B1F;             /* Lighter Nature Green for dark bg */
+  --primary-foreground: #FFFFFF;
   
-  /* Text Colors */
-  --text-primary: #FFFFFF;    /* Main text */
-  --text-secondary: #9CA3AF;  /* Secondary text */
-  --text-tertiary: #6B7280;   /* Placeholder text */
-  --color-text-inverse: #000000; /* Text on colored backgrounds (dark mode) */
+  --secondary: #1A1A1A;           /* Darker secondary */
+  --secondary-foreground: #FFFFFF;
   
-  /* Semantic Colors (adjusted for dark mode) */
-  --color-success: #34D399;   /* Brighter green for dark bg */
-  --color-warning: #FCD34D;   /* Brighter yellow for dark bg */
-  --color-danger: #F87171;    /* Brighter red for dark bg */
-  --color-info: #60A5FA;      /* Brighter blue for dark bg */
+  --muted: #111111;               /* Darker muted */
+  --muted-foreground: #9CA3AF;
   
-  /* Focus Ring */
-  --ring-color: #FFFFFF;      /* White ring for dark mode */
+  --accent: #1F3A10;              /* Dark green accent */
+  --accent-foreground: #E8F0E3;
+  
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #262626;              /* Darker border */
+  --input: #262626;
+  
+  --ring: #3A6B1F;                /* Lighter green ring for dark mode */
+  
+  --card: #111111;
+  --card-foreground: #FFFFFF;
+  
+  --popover: #0A0A0A;
+  --popover-foreground: #FFFFFF;
+  
+  /* Legacy Variables (Dark Mode) */
+  --bg-primary: var(--background);
+  --bg-secondary: var(--muted);
+  --bg-tertiary: var(--secondary);
+  --bg-hover: #1F1F1F;
+  
+  --input-bg: #262626;
+  --input-bg-error: #450A0A;
+  --input-bg-success: #052E16;
+  
+  --text-primary: var(--foreground);
+  --text-secondary: var(--muted-foreground);
+  --text-tertiary: #6B7280;
+  --color-text-inverse: #000000;
+  
+  --color-success: #34D399;
+  --color-warning: #FCD34D;
+  --color-danger: var(--destructive);
+  --color-info: #60A5FA;
+  
+  --ring-color: var(--ring);
 }
 
 /* ============================================
@@ -170,50 +223,70 @@
 */
 
 /* ============================================
- * USAGE EXAMPLES
+ * USAGE EXAMPLES (Shadcn-First)
  * ============================================ */
 /*
-  Button:
-  .button {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    border-radius: var(--radius-standard);
-    height: var(--height-md);
+  Shadcn Button (works as-is):
+  <Button className="bg-primary text-primary-foreground">
+    Click Me
+  </Button>
+  
+  Shadcn Card (works as-is):
+  <Card className="bg-card text-card-foreground">
+    <CardContent>Content</CardContent>
+  </Card>
+  
+  Custom Component (use shadcn variables):
+  .custom-button {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius);
     padding: 0 var(--spacing-lg);
   }
   
-  Input:
-  .input {
-    background: var(--input-bg);
-    border-radius: var(--radius-standard);
-    height: var(--height-md);
-  }
-  
-  Card:
-  .card {
-    background: var(--bg-tertiary);
-    border-radius: var(--radius-standard);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-sm);
-  }
+  Layout with Tailwind (allowed):
+  <div className="flex flex-col gap-4 p-6 rounded-xl">
+    <h1 className="text-foreground">Title</h1>
+    <p className="text-muted-foreground">Subtitle</p>
+  </div>
 */
 
 /* ============================================
- * FORBIDDEN PATTERNS
+ * FORBIDDEN PATTERNS (UI Law v2.0)
  * ============================================ */
 /*
   ❌ NEVER use:
-  - Hex colors directly (#FFFFFF, #000000)
-  - Tailwind color classes (bg-white, text-black)
-  - border-* classes
-  - rounded-sm, rounded-md, rounded-lg
-  - Multiple fonts
-  - Gradients
-  - Decorative colors
+  - Hex colors directly (#FFFFFF, #000000) - except in this file
+  - Tailwind palette colors (bg-slate-*, text-gray-*, bg-blue-500)
+  - Inline color styles (style={{ color: '#fff' }})
+  - Localhost in NEXT_PUBLIC_* env vars (staging/prod)
   
   ✅ ALWAYS use:
-  - CSS variables from this file
-  - var(--bg-primary), var(--text-primary), etc.
-  - var(--radius-standard) for all components
-  - var(--radius-full) ONLY for icon buttons
+  - Shadcn semantic classes (bg-background, text-foreground, border-border)
+  - CSS variables from this file (var(--primary), var(--foreground))
+  - Tailwind for layout only (flex, grid, gap-*, p-*, rounded-*)
+  - Vazirmatn font (enforced via --font-family-primary)
+*/
+
+/* ============================================
+ * NASNEH NATURE PALETTE REFERENCE
+ * ============================================ */
+/*
+  Primary Brand Color:
+  - Nature Green: #2D5016 (--primary)
+  - Light Green: #E8F0E3 (--accent)
+  
+  Mono Palette:
+  - White: #FFFFFF (--background)
+  - Black: #1A1A1A (--foreground)
+  - Gray-50: #F9F9F9 (--muted)
+  - Gray-100: #F5F5F5 (--secondary)
+  - Gray-200: #E5E5E5 (--border)
+  - Gray-500: #6B7280 (--muted-foreground)
+  
+  Semantic Colors:
+  - Success: #10B981
+  - Warning: #F59E0B
+  - Danger: #DC2626 (--destructive)
+  - Info: #3B82F6
 */
