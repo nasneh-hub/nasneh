@@ -390,6 +390,28 @@ export const en = {
   },
 
   /**
+   * Settings Dropdown (Language/Currency/Country)
+   */
+  settings: {
+    // Language
+    language: 'Language',
+    english: 'English',
+    arabic: 'Arabic',
+    
+    // Currency
+    currency: 'Currency',
+    bahrainDinar: 'Bahraini Dinar (BHD)',
+    
+    // Country
+    country: 'Country',
+    bahrain: 'Bahrain',
+    gcc: 'GCC',
+    
+    // Status
+    comingSoon: 'Coming soon',
+  },
+
+  /**
    * Profile
    */
   profile: {
