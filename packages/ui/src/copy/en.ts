@@ -167,6 +167,9 @@ export const en = {
     logoutSuccess: 'Logged out successfully',
     passwordResetSent: 'Password reset link sent',
     
+    // Navigation
+    goBack: 'Go Back',
+    
     // Country Codes
     countryCode: 'Country Code',
     bahrain: 'Bahrain',
