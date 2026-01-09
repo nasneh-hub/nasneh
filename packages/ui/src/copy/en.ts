@@ -167,6 +167,12 @@ export const en = {
     logoutSuccess: 'Logged out successfully',
     passwordResetSent: 'Password reset link sent',
     
+    // Country Codes
+    countryCode: 'Country Code',
+    bahrain: 'Bahrain',
+    bahrainCode: '+973',
+    gccSoon: 'GCC (Soon)',
+    
     // Terms
     termsAndPrivacy: 'Terms & Privacy',
     byLoggingIn: 'By logging in, you agree to our',
