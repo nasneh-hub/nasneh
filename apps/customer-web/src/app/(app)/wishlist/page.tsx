@@ -1,37 +1,17 @@
 'use client';
 
 import React from 'react';
-import { AppShell } from '@/components/layout/app-shell';
 import { Heart } from 'lucide-react';
+import { en } from '@nasneh/ui/copy';
+import { EmptyState } from '@/components/shared/empty-state';
 
 export default function WishlistPage() {
   return (
-    <AppShell>
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-        }}
-      >
-        <Heart size={64} style={{ color: 'var(--text-tertiary)', marginBottom: 'var(--spacing-lg)' }} />
-        <h1
-          style={{
-            fontSize: 'var(--font-size-h1)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--spacing-md)',
-          }}
-        >
-          Wishlist
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-large)' }}>
-          Your favorite items will appear here
-        </p>
-      </div>
-    </AppShell>
+    <EmptyState
+      icon={Heart}
+      title={en.wishlist.myWishlist}
+      description={en.wishlist.wishlistEmpty}
+      comingSoon={true}
+    />
   );
 }
