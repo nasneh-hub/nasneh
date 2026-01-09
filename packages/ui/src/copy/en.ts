@@ -561,6 +561,40 @@ export const en = {
   },
 
   /**
+   * Listing Pages
+   */
+  listing: {
+    // Page Headings
+    products: 'Products',
+    services: 'Services',
+    allProducts: 'All Products',
+    allServices: 'All Services',
+    
+    // Sort Options
+    sortBy: 'Sort by',
+    newest: 'Newest',
+    oldest: 'Oldest',
+    priceLowToHigh: 'Price: Low to High',
+    priceHighToLow: 'Price: High to Low',
+    nameAtoZ: 'Name: A to Z',
+    nameZtoA: 'Name: Z to A',
+    
+    // Pagination
+    page: 'Page',
+    of: 'of',
+    showing: 'Showing',
+    results: 'results',
+    
+    // Empty States
+    noResults: 'No results found',
+    noProducts: 'No products available yet',
+    noServices: 'No services available yet',
+    emptyDescription: 'Check back soon for new items from our Nasneh',
+    browseCategories: 'Browse Categories',
+    backToHome: 'Back to Home',
+  },
+
+  /**
    * Common UI Elements
    */
   common: {
