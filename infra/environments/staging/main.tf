@@ -466,7 +466,7 @@ module "amplify" {
   environment = var.environment
 
   # API URL for frontend apps
-  api_url = "https://api-staging.nasneh.com"
+  api_url = "https://api-staging.nasneh.com/api/v1"
 
   # Custom domains (disabled initially - enable after verifying Amplify works)
   enable_custom_domains = false

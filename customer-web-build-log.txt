@@ -1,0 +1,389 @@
+Build and Deploy Customer Web	Set up job	﻿2026-01-08T18:50:34.2088138Z Current runner version: '2.330.0'
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2114856Z ##[group]Runner Image Provisioner
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2115871Z Hosted Compute Agent
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2116446Z Version: 20251211.462
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2117018Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2117815Z Build Date: 2025-12-11T16:28:49Z
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2118490Z Worker ID: {9ef95e66-bde2-4c8d-9083-6d9ae5580922}
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2119152Z ##[endgroup]
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2119752Z ##[group]Operating System
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2120320Z Ubuntu
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2120833Z 24.04.3
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2121283Z LTS
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2121782Z ##[endgroup]
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2122479Z ##[group]Runner Image
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2123037Z Image: ubuntu-24.04
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2123557Z Version: 20260105.202.1
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2124601Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260105.202/images/ubuntu/Ubuntu2404-Readme.md
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2125936Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260105.202
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2127234Z ##[endgroup]
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2128348Z ##[group]GITHUB_TOKEN Permissions
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2130383Z Contents: read
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2130972Z Metadata: read
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2131520Z Packages: read
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2132079Z ##[endgroup]
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2134807Z Secret source: Actions
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2135540Z Prepare workflow directory
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2557579Z Prepare all required actions
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.2596662Z Getting action download info
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.8177260Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:34.9203830Z Download action repository 'aws-actions/configure-aws-credentials@v4' (SHA:7474bc4690e29a8392af63c5b98e7449536d5c3a)
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:35.4918679Z Download action repository 'aws-actions/amazon-ecr-login@v2' (SHA:062b18b96a7aff071d4dc91bc00c4c1a7945b076)
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:36.0318492Z Download action repository 'aws-actions/amazon-ecs-render-task-definition@v1' (SHA:06472d439cb66af6210a6709bfc842c26b053706)
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:36.6390129Z Download action repository 'aws-actions/amazon-ecs-deploy-task-definition@v2' (SHA:c6e19c08506099e50400581201a3a767fd8e3ff4)
+Build and Deploy Customer Web	Set up job	2026-01-08T18:50:37.7993329Z Complete job name: Build and Deploy Customer Web
+Build and Deploy Customer Web	Checkout code	﻿2026-01-08T18:50:37.8671944Z ##[group]Run actions/checkout@v4
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8672965Z with:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8673209Z   repository: nasneh-hub/nasneh
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8673657Z   token: ***
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8673854Z   ssh-strict: true
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8674050Z   ssh-user: git
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8674245Z   persist-credentials: true
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8674478Z   clean: true
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8674681Z   sparse-checkout-cone-mode: true
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8674946Z   fetch-depth: 1
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8675139Z   fetch-tags: false
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8675355Z   show-progress: true
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8675550Z   lfs: false
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8675734Z   submodules: false
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8675957Z   set-safe-directory: true
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8676474Z env:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8676663Z   AWS_REGION: me-south-1
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8676931Z   ECR_REPOSITORY: nasneh-staging-customer-web
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8677243Z   ECS_CLUSTER: nasneh-staging-cluster
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8677528Z   ECS_SERVICE: nasneh-staging-customer-web
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8677851Z   CONTAINER_NAME: customer-web
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.8678073Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9771523Z Syncing repository: nasneh-hub/nasneh
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9773306Z ##[group]Getting Git version info
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9773731Z Working directory is '/home/runner/work/nasneh/nasneh'
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9774290Z [command]/usr/bin/git version
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9869343Z git version 2.52.0
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9898124Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9915968Z Temporarily overriding HOME='/home/runner/work/_temp/569e4eed-cdbb-46c4-bf0e-66962036ab5a' before making global git config changes
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9917215Z Adding repository directory to the temporary git global config as a safe directory
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9935570Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nasneh/nasneh
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9982860Z Deleting the contents of '/home/runner/work/nasneh/nasneh'
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9987123Z ##[group]Initializing the repository
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:37.9991863Z [command]/usr/bin/git init /home/runner/work/nasneh/nasneh
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0120248Z hint: Using 'master' as the name for the initial branch. This default branch name
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0121272Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0122418Z hint: to use in all of your new repositories, which will suppress this warning,
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0123139Z hint: call:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0123442Z hint:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0123868Z hint: 	git config --global init.defaultBranch <name>
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0124391Z hint:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0124867Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0125718Z hint: 'development'. The just-created branch can be renamed via this command:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0126345Z hint:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0126652Z hint: 	git branch -m <name>
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0127009Z hint:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0127506Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0128422Z Initialized empty Git repository in /home/runner/work/nasneh/nasneh/.git/
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0138433Z [command]/usr/bin/git remote add origin https://github.com/nasneh-hub/nasneh
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0177489Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0177971Z ##[group]Disabling automatic garbage collection
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0182044Z [command]/usr/bin/git config --local gc.auto 0
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0212949Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0213469Z ##[group]Setting up auth
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0220501Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0251833Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0636771Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0668308Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0895915Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.0928650Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.1179307Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.1217321Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.1217904Z ##[group]Fetching the repository
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.1226529Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +89b2730762ae0f1dd63863871db81d6fa38e8d12:refs/remotes/origin/main
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.8920651Z From https://github.com/nasneh-hub/nasneh
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.8921744Z  * [new ref]         89b2730762ae0f1dd63863871db81d6fa38e8d12 -> origin/main
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.8958692Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.8959336Z ##[group]Determining the checkout info
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.8961323Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.8966914Z [command]/usr/bin/git sparse-checkout disable
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9012004Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9039440Z ##[group]Checking out the ref
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9043939Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9331368Z Switched to a new branch 'main'
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9332866Z branch 'main' set up to track 'origin/main'.
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9341893Z ##[endgroup]
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9383048Z [command]/usr/bin/git log -1 --format=%H
+Build and Deploy Customer Web	Checkout code	2026-01-08T18:50:38.9407950Z 89b2730762ae0f1dd63863871db81d6fa38e8d12
+Build and Deploy Customer Web	Configure AWS credentials	﻿2026-01-08T18:50:38.9719198Z ##[group]Run aws-actions/configure-aws-credentials@v4
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9719580Z with:
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9719897Z   aws-access-key-id: ***
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9720228Z   aws-secret-access-key: ***
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9720467Z   aws-region: me-south-1
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9720695Z   audience: sts.amazonaws.com
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9720945Z   output-env-credentials: true
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9721169Z env:
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9721339Z   AWS_REGION: me-south-1
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9721591Z   ECR_REPOSITORY: nasneh-staging-customer-web
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9721887Z   ECS_CLUSTER: nasneh-staging-cluster
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9722156Z   ECS_SERVICE: nasneh-staging-customer-web
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9722730Z   CONTAINER_NAME: customer-web
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:38.9722953Z ##[endgroup]
+Build and Deploy Customer Web	Configure AWS credentials	2026-01-08T18:50:40.1312136Z Proceeding with IAM user credentials
+Build and Deploy Customer Web	Login to Amazon ECR	﻿2026-01-08T18:50:40.1417985Z ##[group]Run aws-actions/amazon-ecr-login@v2
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1418307Z with:
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1418496Z   mask-password: true
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1418719Z   registry-type: private
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1418938Z   skip-logout: false
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1419133Z env:
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1419309Z   AWS_REGION: me-south-1
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1419559Z   ECR_REPOSITORY: nasneh-staging-customer-web
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1419853Z   ECS_CLUSTER: nasneh-staging-cluster
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1420126Z   ECS_SERVICE: nasneh-staging-customer-web
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1420388Z   CONTAINER_NAME: customer-web
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1420625Z   AWS_DEFAULT_REGION: me-south-1
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1420981Z   AWS_ACCESS_KEY_ID: ***
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1421294Z   AWS_SECRET_ACCESS_KEY: ***
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:40.1421554Z ##[endgroup]
+Build and Deploy Customer Web	Login to Amazon ECR	2026-01-08T18:50:41.3104062Z Logging into registry 277225104996.dkr.ecr.me-south-1.amazonaws.com
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	﻿2026-01-08T18:50:43.3595546Z ##[group]Run docker build \
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3595901Z [36;1mdocker build \[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3596190Z [36;1m  -f apps/customer-web/Dockerfile \[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3596546Z [36;1m  -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3596929Z [36;1m  -t $ECR_REGISTRY/$ECR_REPOSITORY:staging-latest \[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3597328Z [36;1m  -t $ECR_REGISTRY/$ECR_REPOSITORY:$(date +%Y%m%d-%H%M%S) \[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3597669Z [36;1m  .[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3597937Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3598399Z [36;1mecho "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT[0m
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3633944Z shell: /usr/bin/bash -e {0}
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3634235Z env:
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3634420Z   AWS_REGION: me-south-1
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3634702Z   ECR_REPOSITORY: nasneh-staging-customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3635055Z   ECS_CLUSTER: nasneh-staging-cluster
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3635342Z   ECS_SERVICE: nasneh-staging-customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3635678Z   CONTAINER_NAME: customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3635914Z   AWS_DEFAULT_REGION: me-south-1
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3636291Z   AWS_ACCESS_KEY_ID: ***
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3636601Z   AWS_SECRET_ACCESS_KEY: ***
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3636894Z   ECR_REGISTRY: 277225104996.dkr.ecr.me-south-1.amazonaws.com
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3637259Z   IMAGE_TAG: 89b2730762ae0f1dd63863871db81d6fa38e8d12
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.3637533Z ##[endgroup]
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8782594Z #0 building with "default" instance using docker driver
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8783220Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8783462Z #1 [internal] load build definition from Dockerfile
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8784045Z #1 transferring dockerfile: 2.07kB done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8784551Z #1 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8784786Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:43.8785046Z #2 [internal] load metadata for docker.io/library/node:20-alpine
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.1029387Z #2 ...
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.1031039Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.1031368Z #3 [auth] library/node:pull token for registry-1.docker.io
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.1032541Z #3 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.2492925Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.2493600Z #2 [internal] load metadata for docker.io/library/node:20-alpine
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.7177310Z #2 DONE 1.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8468435Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8468935Z #4 [internal] load .dockerignore
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8469455Z #4 transferring context: 2B done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8469891Z #4 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8470090Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8470253Z #5 [internal] load build context
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8470651Z #5 transferring context: 701.34kB 0.0s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8470999Z #5 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8471127Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8471632Z #6 [deps  1/12] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8472887Z #6 resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448 done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8473771Z #6 sha256:1074353eec0db2c1d81d5af2671e56e00cf5738486f5762609ea33d606f88612 0B / 3.86MB 0.1s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8474553Z #6 sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 0B / 42.78MB 0.1s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8475225Z #6 sha256:cb3325e64457574e24f92246e3da3376946e473d636209e1390eac47b50b26a3 0B / 1.26MB 0.1s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8475829Z #6 sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448 7.67kB / 7.67kB done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8476442Z #6 sha256:fcbb8f7d018707c656a4da2eea8a15f2893d2258093fea9ff2ea5ea1cba82112 1.72kB / 1.72kB done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.8477043Z #6 sha256:e80b0510ba947015cacddea3d23dcdc761e399971c074a1bf32eea7e44510524 6.52kB / 6.52kB done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.9879462Z #6 sha256:1074353eec0db2c1d81d5af2671e56e00cf5738486f5762609ea33d606f88612 3.86MB / 3.86MB 0.1s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.9880853Z #6 extracting sha256:1074353eec0db2c1d81d5af2671e56e00cf5738486f5762609ea33d606f88612 0.1s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:44.9881850Z #6 sha256:fd1849a5c548bc65ee47a64498951bda5d40e87d08efe9dca69b5c8cdedc7a52 0B / 443B 0.2s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:45.1465579Z #6 sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 27.26MB / 42.78MB 0.4s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:45.1466334Z #6 sha256:cb3325e64457574e24f92246e3da3376946e473d636209e1390eac47b50b26a3 1.26MB / 1.26MB 0.3s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:45.1466991Z #6 sha256:fd1849a5c548bc65ee47a64498951bda5d40e87d08efe9dca69b5c8cdedc7a52 443B / 443B 0.3s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:45.2625871Z #6 sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 42.78MB / 42.78MB 0.5s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:45.2627402Z #6 extracting sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:45.3646950Z #6 sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 42.78MB / 42.78MB 0.5s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:46.4626769Z #6 extracting sha256:8d06ba6946d1f299d8f962e37906c77006df33d47050430a57f7893ec35af697 1.0s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.1125454Z #6 extracting sha256:cb3325e64457574e24f92246e3da3376946e473d636209e1390eac47b50b26a3
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3428061Z #6 extracting sha256:cb3325e64457574e24f92246e3da3376946e473d636209e1390eac47b50b26a3 0.0s done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3429054Z #6 extracting sha256:fd1849a5c548bc65ee47a64498951bda5d40e87d08efe9dca69b5c8cdedc7a52 done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3429601Z #6 DONE 2.4s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3429722Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3429807Z #7 [builder  2/11] WORKDIR /app
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3430089Z #7 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3430243Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.3430465Z #8 [builder  3/11] RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.4237487Z #8 ...
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.4238285Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.4238966Z #9 [runner 3/9] RUN addgroup --system --gid 1001 nodejs
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.4247489Z #9 DONE 0.2s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.5749698Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.5765027Z #10 [runner 4/9] RUN adduser --system --uid 1001 nextjs
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.6028165Z #10 DONE 0.2s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.6029169Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.6030617Z #11 [deps  2/12] RUN apk add --no-cache libc6-compat
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:47.8823950Z #11 0.701 (1/3) Installing musl-obstack (1.2.3-r2)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1292056Z #11 0.706 (2/3) Installing libucontext (1.3.3-r0)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1297861Z #11 0.708 (3/3) Installing gcompat (1.1.0-r4)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1300340Z #11 0.717 OK: 11.0 MiB in 21 packages
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1300832Z #11 DONE 0.8s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1301036Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1301176Z #12 [deps  3/12] WORKDIR /app
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1304460Z #12 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1304657Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.1305012Z #13 [deps  4/12] RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.3323795Z #13 0.354 Preparing pnpm@8.15.0 for immediate activation...
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.6698591Z #13 ...
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.6698893Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.6699307Z #8 [builder  3/11] RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.6700095Z #8 0.492 Preparing pnpm@8.15.0 for immediate activation...
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.6700642Z #8 DONE 1.5s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.8201649Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:48.8202835Z #13 [deps  4/12] RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.1615118Z #13 DONE 1.2s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4086978Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4089010Z #14 [deps  5/12] COPY pnpm-workspace.yaml ./
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4089559Z #14 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4089762Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4090007Z #15 [deps  6/12] COPY package.json pnpm-lock.yaml ./
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4090525Z #15 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4090727Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4091062Z #16 [deps  7/12] COPY apps/customer-web/package.json ./apps/customer-web/
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4091687Z #16 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4091869Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4092123Z #17 [deps  8/12] COPY packages/ui/package.json ./packages/ui/
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4093108Z #17 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4093328Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4093626Z #18 [deps  9/12] COPY packages/config/package.json ./packages/config/
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4094213Z #18 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4094956Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4095242Z #19 [deps 10/12] COPY packages/types/package.json ./packages/types/
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4095809Z #19 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4096005Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4096285Z #20 [deps 11/12] COPY packages/utils/package.json ./packages/utils/
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4096867Z #20 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4097049Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.4097268Z #21 [deps 12/12] RUN pnpm install --frozen-lockfile
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:49.9215098Z #21 0.663 Scope: all 6 workspace projects
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:50.0623632Z #21 0.804 Lockfile is up to date, resolution step is skipped
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:50.2910751Z #21 0.897 Progress: resolved 1, reused 0, downloaded 0, added 0
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:50.2911484Z #21 1.032 Packages: +375
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:50.2912131Z #21 1.032 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.1784775Z #21 1.919 Progress: resolved 375, reused 0, downloaded 22, added 12
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3732337Z #21 1.964 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3735104Z #21 1.964    ╭───────────────────────────────────────────────────────────────────╮
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3735927Z #21 1.964    │                                                                   │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3736676Z #21 1.964    │                Update available! 8.15.0 → 10.27.0.                │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3737556Z #21 1.964    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v10.27.0   │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3738478Z #21 1.964    │     Run "corepack prepare pnpm@10.27.0 --activate" to update.     │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3739253Z #21 1.964    │                                                                   │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3740046Z #21 1.964    │      Follow @pnpmjs for updates: https://twitter.com/pnpmjs       │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3740827Z #21 1.964    │                                                                   │
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3741593Z #21 1.964    ╰───────────────────────────────────────────────────────────────────╯
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:51.3742109Z #21 1.964 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:52.1801164Z #21 2.921 Progress: resolved 375, reused 0, downloaded 38, added 28
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:53.1814344Z #21 3.923 Progress: resolved 375, reused 0, downloaded 190, added 176
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:53.8783653Z #21 4.620 Progress: resolved 375, reused 0, downloaded 375, added 375, done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.0912873Z #21 4.833 .../node_modules/unrs-resolver postinstall$ napi-postinstall unrs-resolver 1.11.1 check
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2529341Z #21 4.899 .../node_modules/unrs-resolver postinstall: Done
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2529782Z #21 4.994 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2529979Z #21 4.994 devDependencies:
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2530219Z #21 4.994 + prettier 3.7.4
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2530418Z #21 4.994 + turbo 2.7.2
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2530627Z #21 4.994 + typescript 5.9.3
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.2530834Z #21 4.994 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:54.4311796Z #21 5.022 Done in 4.8s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:55.5464760Z #21 DONE 6.3s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:57.2787554Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:50:57.2788166Z #22 [builder  4/11] COPY --from=deps /app/node_modules ./node_modules
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.0323747Z #22 DONE 3.8s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2632970Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2633687Z #23 [builder  5/11] COPY --from=deps /app/package.json ./package.json
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2634253Z #23 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2634385Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2634623Z #24 [builder  6/11] COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2635057Z #24 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2635185Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2635436Z #25 [builder  7/11] COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2635911Z #25 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2636042Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2636222Z #26 [builder  8/11] COPY apps/customer-web ./apps/customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2636594Z #26 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2636713Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2636839Z #27 [builder  9/11] COPY packages ./packages
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2637145Z #27 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2637267Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2637371Z #28 [builder 10/11] COPY turbo.json ./
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2638179Z #28 DONE 0.0s
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2638294Z 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.2638509Z #29 [builder 11/11] RUN pnpm turbo run build --filter=@nasneh/customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7885273Z #29 0.676 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7885680Z #29 0.676 Attention:
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7886280Z #29 0.676 Turborepo now collects completely anonymous telemetry regarding usage.
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7887049Z #29 0.676 This information is used to shape the Turborepo roadmap and prioritize features.
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7888114Z #29 0.676 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7888946Z #29 0.676 https://turborepo.com/docs/telemetry
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.7889243Z #29 0.676 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.9868392Z #29 0.676 • turbo 2.7.2
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.9868947Z #29 0.709 • Packages in scope: @nasneh/customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.9869387Z #29 0.709 • Running build in 1 packages
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.9869742Z #29 0.709 • Remote caching disabled
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:01.9870205Z #29 0.724 @nasneh/customer-web:build: cache miss, executing 02837e59042b64c4
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.3739233Z #29 1.261 @nasneh/customer-web:build: 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.3740211Z #29 1.261 @nasneh/customer-web:build: > @nasneh/customer-web@0.0.1 build /app/apps/customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.3741110Z #29 1.261 @nasneh/customer-web:build: > next build
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.3741660Z #29 1.261 @nasneh/customer-web:build: 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5495640Z #29 1.265 @nasneh/customer-web:build: sh: next: not found
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5497001Z #29 1.267 @nasneh/customer-web:build:  ELIFECYCLE  Command failed.
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5497915Z #29 1.268 @nasneh/customer-web:build:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5499016Z #29 1.283 @nasneh/customer-web:build: ERROR: command finished with error: command (/app/apps/customer-web) /usr/local/bin/pnpm run build exited (1)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5500068Z #29 1.283 @nasneh/customer-web#build: command (/app/apps/customer-web) /usr/local/bin/pnpm run build exited (1)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5501163Z #29 1.284 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5501393Z #29 1.284  Tasks:    0 successful, 1 total
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5501714Z #29 1.284 Cached:    0 cached, 1 total
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5502010Z #29 1.284   Time:    603ms 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5502579Z #29 1.284 Failed:    @nasneh/customer-web#build
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5502893Z #29 1.284 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.5503132Z #29 1.286  ERROR  run failed: command  exited (1)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.6533689Z #29 ERROR: process "/bin/sh -c pnpm turbo run build --filter=@nasneh/customer-web" did not complete successfully: exit code: 1
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7314867Z ------
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7315729Z  > [builder 11/11] RUN pnpm turbo run build --filter=@nasneh/customer-web:
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7317507Z 1.268 @nasneh/customer-web:build:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7319447Z 1.283 @nasneh/customer-web:build: ERROR: command finished with error: command (/app/apps/customer-web) /usr/local/bin/pnpm run build exited (1)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7321114Z 1.283 @nasneh/customer-web#build: command (/app/apps/customer-web) /usr/local/bin/pnpm run build exited (1)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7322042Z 1.284 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7322609Z 1.284  Tasks:    0 successful, 1 total
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7323120Z 1.284 Cached:    0 cached, 1 total
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7323595Z 1.284   Time:    603ms 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7323987Z 1.284 Failed:    @nasneh/customer-web#build
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7324421Z 1.284 
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7324760Z 1.286  ERROR  run failed: command  exited (1)
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7325212Z ------
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7325935Z Dockerfile:42
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7326307Z --------------------
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7326641Z   40 |     
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7326981Z   41 |     # Build the application
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7327448Z   42 | >>> RUN pnpm turbo run build --filter=@nasneh/customer-web
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7327863Z   43 |     
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7328471Z   44 |     # Stage 3: Runner
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7328728Z --------------------
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7329434Z ERROR: failed to build: failed to solve: process "/bin/sh -c pnpm turbo run build --filter=@nasneh/customer-web" did not complete successfully: exit code: 1
+Build and Deploy Customer Web	Build, tag, and push image to Amazon ECR	2026-01-08T18:51:02.7383603Z ##[error]Process completed with exit code 1.
+Build and Deploy Customer Web	Post Login to Amazon ECR	﻿2026-01-08T18:51:02.7458875Z Post job cleanup.
+Build and Deploy Customer Web	Post Login to Amazon ECR	2026-01-08T18:51:02.7815246Z Logging out of registry 277225104996.dkr.ecr.me-south-1.amazonaws.com
+Build and Deploy Customer Web	Post Configure AWS credentials	﻿2026-01-08T18:51:02.8123721Z Post job cleanup.
+Build and Deploy Customer Web	Post Checkout code	﻿2026-01-08T18:51:02.9444805Z Post job cleanup.
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0487605Z [command]/usr/bin/git version
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0530588Z git version 2.52.0
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0577038Z Temporarily overriding HOME='/home/runner/work/_temp/ce9a1df2-4daa-4936-a75b-247b40373897' before making global git config changes
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0577964Z Adding repository directory to the temporary git global config as a safe directory
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0583047Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nasneh/nasneh
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0621341Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0655072Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0894504Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0917573Z http.https://github.com/.extraheader
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0930517Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.0965149Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.1199765Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build and Deploy Customer Web	Post Checkout code	2026-01-08T18:51:03.1232792Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build and Deploy Customer Web	Complete job	﻿2026-01-08T18:51:03.1574374Z Cleaning up orphan processes
