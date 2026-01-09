@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Card, Input, Dialog } from '@nasneh/ui';
+import { Button, Card, CardHeader, CardTitle, CardContent, Input, Dialog, Avatar } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '../../context/auth-context';
+import { AppShell } from '@/components/layout/app-shell';
+import { MapPin, ChevronLeft } from 'lucide-react';
 
 interface UserProfile {
   id: string;
@@ -128,124 +130,196 @@ export default function ProfilePage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)]">
-        <div className="text-center">
-          <div className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)] animate-pulse mx-auto mb-4" />
-          <p className="text-[var(--text-secondary)]">{ar.ui.loading}</p>
+      <AppShell>
+        <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
+          <p style={{ color: 'var(--text-secondary)' }}>{ar.ui.loading}</p>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)] p-4">
-        <Card padding="lg">
-          <div className="text-center">
-            <p className="text-[var(--text-error)] mb-4">{error}</p>
+      <AppShell>
+        <Card>
+          <CardContent style={{ textAlign: 'center', padding: 'var(--spacing-2xl)' }}>
+            <p style={{ color: 'var(--text-error)', marginBottom: 'var(--spacing-lg)' }}>{error}</p>
             <Button onClick={fetchProfile}>{ar.ui.back}</Button>
-          </div>
+          </CardContent>
         </Card>
-      </div>
+      </AppShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]" dir="rtl">
-      {/* Header */}
-      <header className="bg-[var(--bg-secondary)] shadow-sm">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
-          <button
-            onClick={() => router.back()}
-            className="p-2 rounded-xl hover:bg-[var(--bg-tertiary)] transition-colors"
+    <AppShell>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        {/* Page Header */}
+        <div style={{ marginBottom: 'var(--spacing-xl)' }}>
+          <h1
+            style={{
+              fontSize: 'var(--font-size-h1)',
+              fontWeight: 'var(--font-weight-bold)',
+              color: 'var(--text-primary)',
+            }}
           >
-            <svg className="w-6 h-6 text-[var(--text-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)]">
             {ar.profile.myProfile}
           </h1>
         </div>
-      </header>
 
-      {/* Content */}
-      <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Profile Card */}
-        <Card padding="lg">
-          <div className="space-y-6">
-            {/* Avatar */}
-            <div className="flex justify-center">
-              <div className="w-24 h-24 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center">
-                <span className="text-3xl font-bold text-[var(--text-secondary)]">
-                  {profile?.name?.charAt(0) || profile?.phone?.charAt(0) || '?'}
-                </span>
+        <Card>
+          <CardContent style={{ padding: 'var(--spacing-xl)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
+              {/* Avatar */}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Avatar
+                  name={profile?.name || profile?.phone || '?'}
+                  size="xl"
+                />
               </div>
+
+              {/* Profile Info */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+                {/* Name */}
+                <div>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: 'var(--font-size-small)',
+                      color: 'var(--text-secondary)',
+                      marginBottom: 'var(--spacing-xs)',
+                    }}
+                  >
+                    {ar.profile.name}
+                  </label>
+                  <p
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontWeight: 'var(--font-weight-medium)',
+                      fontSize: 'var(--font-size-base)',
+                    }}
+                  >
+                    {profile?.name || '-'}
+                  </p>
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: 'var(--font-size-small)',
+                      color: 'var(--text-secondary)',
+                      marginBottom: 'var(--spacing-xs)',
+                    }}
+                  >
+                    {ar.profile.phoneReadOnly}
+                  </label>
+                  <p
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontWeight: 'var(--font-weight-medium)',
+                      fontSize: 'var(--font-size-base)',
+                    }}
+                    dir="ltr"
+                  >
+                    +973 {profile?.phone}
+                  </p>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: 'var(--font-size-small)',
+                      color: 'var(--text-secondary)',
+                      marginBottom: 'var(--spacing-xs)',
+                    }}
+                  >
+                    {ar.profile.email}
+                  </label>
+                  <p
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontWeight: 'var(--font-weight-medium)',
+                      fontSize: 'var(--font-size-base)',
+                    }}
+                  >
+                    {profile?.email || '-'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Edit Button */}
+              <Button variant="default" size="md" onClick={handleEditOpen} style={{ width: '100%' }}>
+                {ar.profile.editProfile}
+              </Button>
             </div>
-
-            {/* Profile Info */}
-            <div className="space-y-4">
-              {/* Name */}
-              <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">
-                  {ar.profile.name}
-                </label>
-                <p className="text-[var(--text-primary)] font-medium">
-                  {profile?.name || '-'}
-                </p>
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">
-                  {ar.profile.phoneReadOnly}
-                </label>
-                <p className="text-[var(--text-primary)] font-medium" dir="ltr">
-                  +973 {profile?.phone}
-                </p>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-sm text-[var(--text-secondary)] mb-1">
-                  {ar.profile.email}
-                </label>
-                <p className="text-[var(--text-primary)] font-medium">
-                  {profile?.email || '-'}
-                </p>
-              </div>
-            </div>
-
-            {/* Edit Button */}
-            <Button onClick={handleEditOpen} fullWidth>
-              {ar.profile.editProfile}
-            </Button>
-          </div>
+          </CardContent>
         </Card>
 
-        {/* Addresses Link */}
-        <Card padding="lg">
-          <button
-            onClick={() => router.push('/profile/addresses')}
-            className="w-full flex items-center justify-between"
+        {/* Quick Links */}
+        <div style={{ marginTop: 'var(--spacing-xl)' }}>
+          <h2
+            style={{
+              fontSize: 'var(--font-size-h3)',
+              fontWeight: 'var(--font-weight-semibold)',
+              color: 'var(--text-primary)',
+              marginBottom: 'var(--spacing-md)',
+            }}
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[var(--bg-tertiary)] flex items-center justify-center">
-                <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <span className="text-[var(--text-primary)] font-medium">
-                {ar.profile.myAddresses}
-              </span>
-            </div>
-            <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-        </Card>
-      </main>
+            إعدادات الحساب
+          </h2>
+
+          <Card>
+            <CardContent style={{ padding: 0 }}>
+              <button
+                onClick={() => router.push('/profile/addresses')}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: 'var(--spacing-lg)',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s',
+                }}
+                className="hover:bg-[var(--bg-hover)]"
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'var(--bg-tertiary)',
+                    }}
+                    className="rounded-xl"
+                  >
+                    <MapPin size={20} style={{ color: 'var(--text-secondary)' }} />
+                  </div>
+                  <span
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontWeight: 'var(--font-weight-medium)',
+                      fontSize: 'var(--font-size-base)',
+                    }}
+                  >
+                    {ar.profile.myAddresses}
+                  </span>
+                </div>
+                <ChevronLeft size={20} style={{ color: 'var(--text-secondary)' }} />
+              </button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {/* Edit Profile Dialog */}
       <Dialog
@@ -253,15 +327,31 @@ export default function ProfilePage() {
         onClose={() => setIsEditOpen(false)}
         title={ar.profile.editProfile}
       >
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
           {saveError && (
-            <div className="p-3 rounded-xl bg-[var(--bg-error)] text-[var(--text-error)] text-sm">
+            <div
+              style={{
+                padding: 'var(--spacing-md)',
+                background: 'var(--bg-error)',
+                color: 'var(--text-error)',
+                fontSize: 'var(--font-size-small)',
+              }}
+              className="rounded-xl"
+            >
               {saveError}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label
+              style={{
+                display: 'block',
+                fontSize: 'var(--font-size-small)',
+                fontWeight: 'var(--font-weight-medium)',
+                color: 'var(--text-primary)',
+                marginBottom: 'var(--spacing-sm)',
+              }}
+            >
               {ar.profile.fullName}
             </label>
             <Input
@@ -272,7 +362,15 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+            <label
+              style={{
+                display: 'block',
+                fontSize: 'var(--font-size-small)',
+                fontWeight: 'var(--font-weight-medium)',
+                color: 'var(--text-primary)',
+                marginBottom: 'var(--spacing-sm)',
+              }}
+            >
               {ar.profile.email}
             </label>
             <Input
@@ -284,25 +382,28 @@ export default function ProfilePage() {
             />
           </div>
 
-          <div className="flex gap-3 pt-2">
+          <div style={{ display: 'flex', gap: 'var(--spacing-md)', paddingTop: 'var(--spacing-sm)' }}>
             <Button
+              variant="default"
+              size="md"
               onClick={handleSaveProfile}
               disabled={isSaving}
-              fullWidth
+              style={{ flex: 1 }}
             >
               {isSaving ? ar.ui.loading : ar.profile.saveChanges}
             </Button>
             <Button
               variant="secondary"
+              size="md"
               onClick={() => setIsEditOpen(false)}
               disabled={isSaving}
-              fullWidth
+              style={{ flex: 1 }}
             >
               {ar.ui.cancel}
             </Button>
           </div>
         </div>
       </Dialog>
-    </div>
+    </AppShell>
   );
 }
