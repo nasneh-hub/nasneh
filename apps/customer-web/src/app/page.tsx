@@ -70,7 +70,7 @@ export default function HomePage() {
                   marginBottom: 'var(--spacing-sm)',
                 }}
               >
-                {ar.profile.title}
+                {ar.profile.myProfile}
               </h2>
               <div
                 style={{
@@ -111,7 +111,7 @@ export default function HomePage() {
                   {ar.cta.browseNasneh}
                 </Button>
                 <Button variant="secondary" size="md" onClick={() => router.push('/profile')}>
-                  {ar.profile.title}
+                  {ar.profile.myProfile}
                 </Button>
               </div>
             </div>
