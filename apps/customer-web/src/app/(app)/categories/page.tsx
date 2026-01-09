@@ -1,142 +1,93 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, Button } from '@nasneh/ui';
-import { useAuth } from '@/context/auth-context';
-import { AppShell } from '@/components/layout/app-shell';
-import { Salad, Cookie, Palette, Truck, Sparkles, Grid3x3 } from 'lucide-react';
+import { Card, Skeleton } from '@nasneh/ui';
+import { en } from '@nasneh/ui/copy';
+
+interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  slug: string;
+}
 
 export default function CategoriesPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/login');
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/categories`
+      );
+      const data = await response.json();
+      if (data.success) {
+        setCategories(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [isLoading, isAuthenticated, router]);
-
-  if (isLoading) {
-    return (
-      <AppShell>
-        <div className="p-[var(--spacing-2xl)] text-center">
-          <p className="text-[var(--text-secondary)]">Loading...</p>
-        </div>
-      </AppShell>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  const categories = [
-    {
-      name: 'Kitchens',
-      icon: <Salad size={48} className="text-[var(--primary)]" />,
-      description: 'Fresh homemade meals daily',
-      count: 0,
-      href: '/kitchens',
-    },
-    {
-      name: 'Food Products',
-      icon: <Cookie size={48} className="text-[var(--primary)]" />,
-      description: 'Local food products and treats',
-      count: 0,
-      href: '/products',
-    },
-    {
-      name: 'Craft',
-      icon: <Palette size={48} className="text-[var(--primary)]" />,
-      description: 'Handcrafted items and art',
-      count: 0,
-      href: '/craft',
-    },
-    {
-      name: 'Food Trucks',
-      icon: <Truck size={48} className="text-[var(--primary)]" />,
-      description: 'Mobile food vendors',
-      count: 0,
-      href: '/food-trucks',
-    },
-    {
-      name: 'Services',
-      icon: <Sparkles size={48} className="text-[var(--primary)]" />,
-      description: 'Local services and bookings',
-      count: 0,
-      href: '/services',
-    },
-    {
-      name: 'Other',
-      icon: <Grid3x3 size={48} className="text-[var(--primary)]" />,
-      description: 'Additional categories',
-      count: 0,
-      href: '/other',
-    },
-  ];
+  };
 
   return (
-    <AppShell>
+    <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* Page Header */}
-      <div className="mb-[var(--spacing-2xl)]">
-        <h1 className="mb-[var(--spacing-sm)] text-[length:var(--font-size-h1)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
-          Categories
-        </h1>
-        <p className="text-[length:var(--font-size-large)] text-[var(--text-secondary)]">
-          Discover products and services by category
-        </p>
-      </div>
+      <section className="bg-[var(--bg-secondary)] px-[var(--spacing-lg)] py-[var(--spacing-2xl)]">
+        <div className="mx-auto max-w-[1200px]">
+          <h1 className="mb-[var(--spacing-md)] text-[length:var(--font-size-3xl)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
+            {en.categories.allCategories}
+          </h1>
+        </div>
+      </section>
 
       {/* Categories Grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {categories.map((category) => (
-          <Card key={category.name}>
-            <CardContent
-              className="cursor-pointer p-[var(--spacing-xl)] transition-all duration-200 hover:bg-[var(--bg-hover)]"
-              onClick={() => router.push(category.href)}
-            >
-              <div className="flex flex-col items-center gap-[var(--spacing-md)] text-center">
-                {/* Icon */}
-                <div className="mb-[var(--spacing-sm)]">{category.icon}</div>
-
-                {/* Title */}
-                <h3 className="text-[length:var(--font-size-h3)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
-                  {category.name}
-                </h3>
-
-                {/* Description */}
-                <p className="text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
-                  {category.description}
-                </p>
-
-                {/* Count Badge */}
-                <div className="rounded-full bg-[var(--bg-tertiary)] px-[var(--spacing-md)] py-[var(--spacing-xs)] text-[length:var(--font-size-small)] text-[var(--text-secondary)]">
-                  {category.count} items
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Empty State */}
-      <div className="mt-[var(--spacing-2xl)] text-center">
-        <Card>
-          <CardContent className="p-[var(--spacing-2xl)]">
-            <Grid3x3 size={48} className="mx-auto mb-[var(--spacing-lg)] text-[var(--text-tertiary)]" />
-            <h3 className="mb-[var(--spacing-sm)] text-[length:var(--font-size-h3)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
-              Coming Soon
-            </h3>
-            <p className="mb-[var(--spacing-lg)] text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
-              More products and services in each category
-            </p>
-            <Button variant="default" size="md" onClick={() => router.push('/')}>
-              Back to Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </AppShell>
+      <section className="px-[var(--spacing-lg)] py-[var(--spacing-2xl)]">
+        <div className="mx-auto max-w-[1200px]">
+          {loading ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[var(--spacing-xl)]">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="p-[var(--spacing-xl)]">
+                  <Skeleton className="mb-[var(--spacing-sm)] h-[24px] w-[120px]" />
+                  <Skeleton className="h-[16px] w-full" />
+                </Card>
+              ))}
+            </div>
+          ) : categories.length > 0 ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[var(--spacing-xl)]">
+              {categories.map((category) => (
+                <Card
+                  key={category.id}
+                  onClick={() => router.push(`/category/${category.slug}`)}
+                  className="cursor-pointer p-[var(--spacing-xl)] transition-transform duration-200 hover:-translate-y-1"
+                >
+                  <h3 className="mb-[var(--spacing-sm)] text-[length:var(--font-size-lg)] font-[var(--font-weight-semibold)] text-[var(--text-primary)]">
+                    {category.name}
+                  </h3>
+                  {category.description && (
+                    <p className="m-0 text-[length:var(--font-size-sm)] text-[var(--text-secondary)]">
+                      {category.description}
+                    </p>
+                  )}
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-[var(--spacing-md)] py-[var(--spacing-3xl)] text-center">
+              <p className="text-[length:var(--font-size-base)] text-[var(--text-secondary)]">
+                {en.settings.comingSoon}
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
