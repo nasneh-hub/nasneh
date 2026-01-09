@@ -78,6 +78,8 @@ export const en = {
     success: 'Success',
     warning: 'Warning',
     info: 'Info',
+    tryAgain: 'Try Again',
+    provider: 'Provider',
   },
 
   /**
@@ -380,12 +382,21 @@ export const en = {
   },
 
   /**
-   * Profile & Addresses
+   * Currency
+   */
+  currency: {
+    bhd: 'BHD',
+    bd: 'BD',
+  },
+
+  /**
+   * Profile
    */
   profile: {
     // Profile
     myProfile: 'My Profile',
     editProfile: 'Edit Profile',
+    accountSettings: 'Account Settings',
     name: 'Name',
     fullName: 'Full Name',
     email: 'Email',
