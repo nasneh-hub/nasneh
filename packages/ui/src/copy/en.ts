@@ -710,6 +710,159 @@ export const en = {
   },
   
   /**
+   * Cart Section
+   * Shopping cart page and components
+   */
+  cart: {
+    // Page title
+    title: 'Shopping Cart',
+    myCart: 'My Cart',
+    
+    // Empty state
+    emptyCart: 'Your cart is empty',
+    emptyCartDescription: 'Add products to get started',
+    continueShopping: 'Continue Shopping',
+    
+    // Actions
+    addToCart: 'Add to Cart',
+    removeFromCart: 'Remove from Cart',
+    updateCart: 'Update Cart',
+    clearCart: 'Clear Cart',
+    proceedToCheckout: 'Proceed to Checkout',
+    
+    // Item details
+    quantity: 'Quantity',
+    price: 'Price',
+    subtotal: 'Subtotal',
+    total: 'Total',
+    
+    // Fees
+    deliveryFee: 'Delivery Fee',
+    freeDelivery: 'Free',
+    
+    // Vendor
+    vendor: 'Vendor',
+    vendorInfo: 'Items from {vendorName}',
+    singleVendorWarning: 'Cart can only contain items from one vendor',
+    switchVendorWarning: 'Adding this item will clear your current cart',
+    
+    // Messages
+    itemAdded: 'Item added to cart',
+    itemRemoved: 'Item removed from cart',
+    cartUpdated: 'Cart updated',
+    cartCleared: 'Cart cleared',
+  },
+
+  /**
+   * Checkout Section
+   * Checkout flow and order placement
+   */
+  checkout: {
+    // Page title
+    title: 'Checkout',
+    
+    // Steps
+    deliveryAddress: 'Delivery Address',
+    orderReview: 'Review Your Order',
+    payment: 'Payment',
+    
+    // Address selection
+    selectAddress: 'Select delivery address',
+    addNewAddress: 'Add New Address',
+    useThisAddress: 'Use This Address',
+    
+    // Order details
+    orderSummary: 'Order Summary',
+    orderItems: 'Order Items',
+    orderNotes: 'Order Notes',
+    orderNotesPlaceholder: 'Add any special instructions for your order',
+    
+    // Actions
+    placeOrder: 'Place Order',
+    backToCart: 'Back to Cart',
+    
+    // Validation
+    selectAddressFirst: 'Please select a delivery address',
+    addressRequired: 'Delivery address is required',
+  },
+
+  /**
+   * Payment Section
+   * Payment processing and methods
+   */
+  payment: {
+    // Page title
+    title: 'Payment',
+    
+    // Mock mode
+    mockMode: 'Mock Payment Mode',
+    mockModeDescription: 'This is a test payment. No real charges will be made.',
+    
+    // Payment method
+    paymentMethod: 'Payment Method',
+    selectPaymentMethod: 'Select payment method',
+    
+    // Card details
+    cardNumber: 'Card Number',
+    cardNumberPlaceholder: '1234 5678 9012 3456',
+    expiryDate: 'Expiry Date',
+    expiryDatePlaceholder: 'MM/YY',
+    cvv: 'CVV',
+    cvvPlaceholder: '123',
+    
+    // Actions
+    payNow: 'Pay Now',
+    processing: 'Processing payment...',
+    
+    // Status
+    paymentSuccess: 'Payment successful',
+    paymentFailed: 'Payment failed',
+    paymentPending: 'Payment pending',
+    
+    // Errors
+    invalidCard: 'Invalid card number',
+    invalidExpiry: 'Invalid expiry date',
+    invalidCVV: 'Invalid CVV',
+    paymentError: 'Payment processing error. Please try again.',
+  },
+
+  /**
+   * Order Section
+   * Order confirmation and details
+   */
+  order: {
+    // Confirmation
+    title: 'Order Confirmed',
+    thankYou: 'Thank you for your order!',
+    orderPlaced: 'Your order has been placed successfully',
+    orderNumber: 'Order Number',
+    orderDetails: 'Order Details',
+    
+    // Delivery
+    estimatedDelivery: 'Estimated Delivery',
+    deliveryAddress: 'Delivery Address',
+    
+    // Actions
+    trackOrder: 'Track Order',
+    viewOrder: 'View Order',
+    continueShopping: 'Continue Shopping',
+    backToOrders: 'Back to Orders',
+    
+    // Status
+    orderStatus: 'Order Status',
+    pending: 'Pending',
+    confirmed: 'Confirmed',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled',
+    
+    // Not found
+    notFound: 'Order not found',
+    notFoundDescription: 'This order may not exist or you don\'t have access to it',
+  },
+
+  /**
    * Navigation Labels
    * For breadcrumbs and navigation
    */
