@@ -325,10 +325,17 @@ jobs:
           echo "Updating image to: $NEW_IMAGE"
           
           # Update ONLY the API container image by NAME, preserve all other containers
+          # Also add/update CORS environment variables for staging
           jq --arg IMAGE "$NEW_IMAGE" --arg CONTAINER_NAME "${{ env.CONTAINER_NAME }}" '
             .containerDefinitions |= map(
               if .name == $CONTAINER_NAME then 
-                .image = $IMAGE 
+                .image = $IMAGE |
+                .environment += [
+                  {"name": "FRONTEND_URL", "value": "https://staging.nasneh.com"},
+                  {"name": "DASHBOARD_URL", "value": "https://staging-dashboard.nasneh.com"}
+                ] |
+                # Remove duplicates (keep last occurrence )
+                .environment |= (group_by(.name) | map(last))
               else 
                 . 
               end
@@ -340,6 +347,7 @@ jobs:
           cat task-definition-updated.json | jq --arg CONTAINER_NAME "${{ env.CONTAINER_NAME }}" '.containerDefinitions[] | select(.name == $CONTAINER_NAME) | .image'
           echo "All container images:"
           cat task-definition-updated.json | jq '.containerDefinitions[] | {name: .name, image: .image}'
+
           
           # Safety gate: Verify Redis container image is correct
           REDIS_IMAGE=$(cat task-definition-updated.json | jq -r '.containerDefinitions[] | select(.name == "redis") | .image')
