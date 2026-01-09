@@ -90,6 +90,9 @@ importers:
       '@nasneh/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      country-flag-icons:
+        specifier: ^1.6.4
+        version: 1.6.4
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@18.3.1)
@@ -3257,6 +3260,10 @@ packages:
     dependencies:
       object-assign: 4.1.1
       vary: 1.1.2
+    dev: false
+
+  /country-flag-icons@1.6.4:
+    resolution: {integrity: sha512-Z3Zi419FI889tlElMsVhCIS5eRkiLDWixr576J5DPiTe5RGxpbRi+enMpHdYVp5iK5WFjr8P/RgyIFAGhFsiFg==}
     dev: false
 
   /cross-spawn@7.0.6:

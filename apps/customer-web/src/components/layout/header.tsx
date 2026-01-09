@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Logo, Button } from '@nasneh/ui';
-import { ar } from '@nasneh/ui/copy';
+import { en } from '@nasneh/ui/copy';
 import { useAuth } from '@/context/auth-context';
 import {
   Globe,

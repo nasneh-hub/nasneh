@@ -6,6 +6,7 @@ import { Button, Input, Card, Logo, Select, type SelectOption } from '@nasneh/ui
 import { en } from '@nasneh/ui/copy';
 import { requestOtp } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
+import BH from 'country-flag-icons/react/3x2/BH';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,11 +16,11 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Country code options from copy tokens
+  // Country code options with flag icons
   const countryOptions: SelectOption[] = [
     {
       value: '+973',
-      label: `${en.auth.bahrain} (${en.auth.bahrainCode})`,
+      label: '+973', // Just the code, flag will be shown separately
       disabled: false,
     },
     {
@@ -134,16 +135,23 @@ export default function LoginPage() {
                 {en.auth.phoneNumber}
               </label>
               <div className="flex gap-2">
-                {/* Country Code Select - FROM @nasneh/ui (shadcn-based) */}
-                <div className="w-48 shrink-0">
-                  <Select
-                    options={countryOptions}
-                    value={countryCode}
-                    onChange={handleCountryCodeChange}
-                    disabled={isSubmitting}
-                    size="lg"
+                {/* Country Code with Flag - Compact Design */}
+                <div className="flex items-center gap-2 px-3 h-12 bg-[var(--bg-tertiary)] rounded-xl shrink-0">
+                  {/* Bahrain Flag Icon */}
+                  <BH 
+                    title="Bahrain"
+                    style={{ 
+                      width: '24px', 
+                      height: '16px',
+                      borderRadius: '2px',
+                    }} 
                   />
+                  {/* Country Code */}
+                  <span className="text-sm font-medium text-[color:var(--text-primary)]">
+                    {countryCode}
+                  </span>
                 </div>
+                
                 {/* Phone Input - FROM @nasneh/ui (shadcn-based) */}
                 <Input
                   id="phone"
