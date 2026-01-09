@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Vazirmatn } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/auth-context';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const vazirmatn = Vazirmatn({
   subsets: ['arabic', 'latin'],
@@ -24,9 +25,16 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className={vazirmatn.variable}>
       <body className="min-h-screen bg-[var(--bg-primary)] text-[color:var(--text-primary)]">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
