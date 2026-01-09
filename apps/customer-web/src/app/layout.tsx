@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" className={vazirmatn.variable}>
+    <html lang="en" dir="ltr" className={vazirmatn.variable}>
       <body className="min-h-screen bg-[var(--bg-primary)] text-[color:var(--text-primary)]">
         <AuthProvider>
           {children}
