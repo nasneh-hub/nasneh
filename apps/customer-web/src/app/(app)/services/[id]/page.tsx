@@ -138,7 +138,7 @@ export default function ServiceDetailPage() {
               {en.service.backToServices}
             </Button>
             <Button onClick={() => router.push('/categories')}>
-              {en.categories.browseCategories}
+              {en.ui.browse} {en.navigation.categories}
             </Button>
           </div>
         </div>
