@@ -484,19 +484,6 @@ export const en = {
   },
 
   /**
-   * Reviews & Ratings
-   */
-  reviews: {
-    reviews: 'Reviews',
-    myReviews: 'My Reviews',
-    rating: 'Rating',
-    writeReview: 'Write Review',
-    noReviews: 'No reviews yet',
-    reviewHistory: 'Your reviews and ratings will appear here',
-    stars: 'stars',
-  },
-
-  /**
    * Wishlist
    */
   wishlist: {
@@ -595,6 +582,100 @@ export const en = {
   },
 
   /**
+   * Product Detail Page
+   * Product-specific content
+   */
+  product: {
+    // Page sections
+    details: 'Product Details',
+    description: 'Description',
+    specifications: 'Specifications',
+    
+    // Vendor
+    vendor: 'Vendor',
+    soldBy: 'Sold by',
+    
+    // Actions
+    addToCart: 'Add to Cart',
+    addedToCart: 'Added to Cart',
+    outOfStock: 'Out of Stock',
+    
+    // Related
+    relatedProducts: 'Related Products',
+    similarProducts: 'Similar Products',
+    
+    // Not found
+    notFound: 'Product not found',
+    notFoundDescription: 'This product may have been removed or is no longer available',
+    backToProducts: 'Back to Products',
+    
+    // Stock
+    inStock: 'In Stock',
+    limitedStock: 'Limited Stock',
+    stockAvailable: '{count} available',
+  },
+
+  /**
+   * Service Detail Page
+   * Service-specific content
+   */
+  service: {
+    // Page sections
+    details: 'Service Details',
+    description: 'Description',
+    whatIncluded: 'What\'s Included',
+    
+    // Provider
+    provider: 'Provider',
+    providedBy: 'Provided by',
+    
+    // Actions
+    bookNow: 'Book Now',
+    bookingConfirmed: 'Booking Confirmed',
+    unavailable: 'Unavailable',
+    
+    // Related
+    relatedServices: 'Related Services',
+    similarServices: 'Similar Services',
+    
+    // Not found
+    notFound: 'Service not found',
+    notFoundDescription: 'This service may have been removed or is no longer available',
+    backToServices: 'Back to Services',
+    
+    // Availability
+    available: 'Available',
+    limitedAvailability: 'Limited Availability',
+  },
+
+  /**
+   * Reviews Section
+   * Reviews and ratings
+   */
+  reviews: {
+    // Titles
+    title: 'Reviews',
+    customerReviews: 'Customer Reviews',
+    myReviews: 'My Reviews',
+    reviewHistory: 'Review History',
+    
+    // Ratings
+    rating: 'Rating',
+    averageRating: 'Average Rating',
+    basedOn: 'Based on {count} reviews',
+    stars: '{count} stars',
+    
+    // Empty state
+    noReviews: 'No reviews yet',
+    noReviewsDescription: 'Be the first to review this item',
+    
+    // Actions
+    writeReview: 'Write a Review',
+    readMore: 'Read More',
+    showLess: 'Show Less',
+  },
+
+  /**
    * Common UI Elements
    */
   common: {
@@ -621,6 +702,25 @@ export const en = {
     optional: 'Optional',
     invalid: 'Invalid',
     valid: 'Valid',
+    
+    // Loading states
+    loading: 'Loading...',
+    saving: 'Saving...',
+    processing: 'Processing...',
+  },
+  
+  /**
+   * Navigation Labels
+   * For breadcrumbs and navigation
+   */
+  navigation: {
+    home: 'Home',
+    products: 'Products',
+    services: 'Services',
+    categories: 'Categories',
+    cart: 'Cart',
+    orders: 'Orders',
+    profile: 'Profile',
   },
 } as const;
 
