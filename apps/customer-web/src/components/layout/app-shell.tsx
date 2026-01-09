@@ -59,7 +59,6 @@ export function AppShell({ children }: AppShellProps) {
             style={{
               display: 'block',
               padding: 'var(--spacing-sm)',
-              borderRadius: 'var(--radius-standard)',
               background: 'transparent',
               cursor: 'pointer',
               transition: 'background 0.2s',
@@ -71,7 +70,7 @@ export function AppShell({ children }: AppShellProps) {
               e.currentTarget.style.background = 'transparent';
             }}
             aria-label="Toggle menu"
-            className="lg:hidden"
+            className="lg:hidden rounded-xl"
           >
             <svg
               style={{ width: '1.5rem', height: '1.5rem', color: 'var(--text-primary)' }}
@@ -141,12 +140,12 @@ export function AppShell({ children }: AppShellProps) {
                 <a
                   key={item.name}
                   href={item.href}
+                  className="rounded-xl"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 'var(--spacing-md)',
                     padding: 'var(--spacing-md) var(--spacing-lg)',
-                    borderRadius: 'var(--radius-standard)',
                     color: 'var(--text-primary)',
                     textDecoration: 'none',
                     background: active ? 'var(--bg-tertiary)' : 'transparent',
