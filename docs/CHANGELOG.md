@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#221:** preserve workspace structure in builder stage
 
 ### ✨ Features (feat)
+- **#264:** add cart page with API integration for S5-02 PR2
 - **#263:** add cart components for S5-02 PR1
 - **#262:** add cart/checkout/order copy tokens for S5-02
 - **#261:** add RadioGroup and Textarea components
@@ -77,6 +78,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#264:** add cart page with API integration for S5-02 PR2
 - **#263:** add cart components for S5-02 PR1
 - **#262:** add cart/checkout/order copy tokens for S5-02
 - **#261:** add RadioGroup and Textarea components
@@ -136,6 +138,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#264:** add cart page with API integration for S5-02 PR2
 - **#263:** add cart components for S5-02 PR1
 - **#262:** add cart/checkout/order copy tokens for S5-02
 - **#261:** add RadioGroup and Textarea components
@@ -219,6 +222,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#264:** add cart page with API integration for S5-02 PR2
 - **#263:** add cart components for S5-02 PR1
 - **#262:** add cart/checkout/order copy tokens for S5-02
 - **#261:** add RadioGroup and Textarea components
@@ -393,6 +397,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#264:** add cart page with API integration for S5-02 PR2
 - **#263:** add cart components for S5-02 PR1
 - **#262:** add cart/checkout/order copy tokens for S5-02
 - **#261:** add RadioGroup and Textarea components
@@ -436,6 +441,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#264:** add cart page with API integration for S5-02 PR2
 - **#263:** add cart components for S5-02 PR1
 - **#262:** add cart/checkout/order copy tokens for S5-02
 - **#261:** add RadioGroup and Textarea components
