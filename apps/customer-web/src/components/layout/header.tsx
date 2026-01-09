@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Logo, Button } from '@nasneh/ui';
+import { Logo, Button, NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { useAuth } from '@/context/auth-context';
 import {
@@ -109,53 +109,41 @@ export function Header() {
             </button>
           </div>
 
-          {/* Center: Tabs (Desktop only) */}
-          <nav
+          {/* Center: NavigationMenu (Desktop only) */}
+          <NavigationMenu
             style={{
               display: 'none',
-              gap: 'var(--spacing-lg)',
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
             }}
-            className="md:flex"
+            className="md:block"
           >
-            {tabs.map((tab) => {
-              const active = isActiveTab(tab.href);
-              const isHighlighted = tab.highlighted;
-              return (
-                <button
-                  key={tab.name}
-                  onClick={() => router.push(tab.href)}
-                  style={{
-                    background: isHighlighted && !active ? 'var(--bg-tertiary)' : 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 'var(--spacing-sm) var(--spacing-md)',
-                    fontSize: 'var(--font-size-base)',
-                    fontWeight: active || isHighlighted ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
-                    color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
-                    borderBottom: active ? '2px solid var(--primary)' : '2px solid transparent',
-                    transition: 'all 0.2s',
-                  }}
-                  className="rounded-xl"
-                  onMouseEnter={(e) => {
-                    if (!active) {
-                      e.currentTarget.style.color = 'var(--text-primary)';
-                      if (!isHighlighted) {
-                        e.currentTarget.style.background = 'var(--bg-hover)';
-                      }
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) {
-                      e.currentTarget.style.color = 'var(--text-secondary)';
-                      e.currentTarget.style.background = isHighlighted ? 'var(--bg-tertiary)' : 'transparent';
-                    }
-                  }}
-                >
-                  {tab.name}
-                </button>
-              );
-            })}
-          </nav>
+            <NavigationMenuList>
+              {tabs.map((tab) => {
+                const active = isActiveTab(tab.href);
+                const isHighlighted = tab.highlighted;
+                return (
+                  <NavigationMenuItem key={tab.name}>
+                    <NavigationMenuLink
+                      href={tab.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push(tab.href);
+                      }}
+                      active={active}
+                      style={{
+                        background: isHighlighted && !active ? 'var(--bg-tertiary)' : undefined,
+                        fontWeight: isHighlighted ? 'var(--font-weight-semibold)' : undefined,
+                      }}
+                    >
+                      {tab.name}
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                );
+              })}
+            </NavigationMenuList>
+          </NavigationMenu>
 
           {/* Right: Utilities */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
