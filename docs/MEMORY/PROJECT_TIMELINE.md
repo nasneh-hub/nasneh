@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 07:32:11 | Added (customer-web): add post-login app shell with navigation | PR #238 | @nasneh-hub |
 | 06:56:25 | Fixed (customer-web): map verify-otp API response to frontend format | PR #237 | @nasneh-hub |
 | 06:02:23 | Fixed (api): configure CORS for staging frontends | PR #235 | @nasneh-hub |
 | 05:05:22 | Fixed (customer-web): add build args for NEXT_PUBLIC environment variables | PR #234 | @nasneh-hub |
