@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### 📝 Other
+- **#228:** add logging to diagnose OTP test number issue
+
 ### 🐛 Bug Fixes (fix)
 - **#227:** update staging test phone number to valid Bahrain mobile
 - **#225:** add public directories for Docker build
