@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:38:51 | Added (customer-web): UI corrections + standardization | PR #245 | @nasneh-hub |
 | 10:15:09 | Fixed (ui): implement route groups and fix avatar dropdown menu | PR #244 | @nasneh-hub |
 | 10:00:39 | Added (ui): implement unified UI Philosophy with Airbnb-style header | PR #243 | @nasneh-hub |
 | 09:13:13 | Fixed (customer-web): use ar.profile.myProfile instead of non-existent ar.profile.title | PR #239 | @nasneh-hub |
