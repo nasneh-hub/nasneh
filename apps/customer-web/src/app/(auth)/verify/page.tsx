@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Logo } from '@nasneh/ui';
-import { ar } from '@nasneh/ui/copy';
+import { en } from '@nasneh/ui/copy';
 import { verifyOtp, requestOtp } from '@/lib/api';
 import { useAuth } from '@/context/auth-context';
 
@@ -155,12 +155,12 @@ export default function VerifyPage() {
     const otpToSubmit = otpValue || otp.join('');
     
     if (otpToSubmit.length !== OTP_LENGTH) {
-      setError(ar.auth.otpRequired);
+      setError(en.auth.otpRequired);
       return;
     }
 
     if (expiresIn <= 0) {
-      setError(ar.auth.expiredOtp);
+      setError(en.auth.expiredOtp);
       return;
     }
 
@@ -185,13 +185,13 @@ export default function VerifyPage() {
         // Redirect to home
         router.replace('/');
       } else {
-        setError(response.error || ar.auth.invalidOtp);
+        setError(response.error || en.auth.invalidOtp);
         // Clear OTP on error
         setOtp(Array(OTP_LENGTH).fill(''));
         inputRefs.current[0]?.focus();
       }
     } catch {
-      setError(ar.errors.networkError);
+      setError(en.errors.networkError);
     } finally {
       setIsSubmitting(false);
     }
@@ -212,10 +212,10 @@ export default function VerifyPage() {
         setOtp(Array(OTP_LENGTH).fill(''));
         inputRefs.current[0]?.focus();
       } else {
-        setError(response.error || ar.errors.somethingWrong);
+        setError(response.error || en.errors.somethingWrong);
       }
     } catch {
-      setError(ar.errors.networkError);
+      setError(en.errors.networkError);
     } finally {
       setIsResending(false);
     }
@@ -230,13 +230,13 @@ export default function VerifyPage() {
   if (authLoading || !phone) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--bg-secondary)]">
-        <div className="text-[color:var(--text-secondary)]">{ar.ui.loading}</div>
+        <div className="text-[color:var(--text-secondary)]">{en.ui.loading}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[var(--bg-secondary)]">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[var(--bg-secondary)]" dir="ltr">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -245,102 +245,102 @@ export default function VerifyPage() {
 
         {/* Verify Card */}
         <Card padding="lg">
-            <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
-              {ar.auth.verifyOtp}
-            </h1>
-            <p className="text-sm text-center mb-2 text-[color:var(--text-secondary)]">
-              {ar.auth.otpSentTo}
-            </p>
-            <p className="text-sm text-center mb-6 font-medium text-[color:var(--text-primary)]" dir="ltr">
-              {formatPhoneDisplay(phone)}
-            </p>
+          <h1 className="text-xl font-semibold text-center mb-2 text-[color:var(--text-primary)]">
+            {en.auth.verifyOtp}
+          </h1>
+          <p className="text-sm text-center mb-2 text-[color:var(--text-secondary)]">
+            {en.auth.otpSentTo}
+          </p>
+          <p className="text-sm text-center mb-6 font-medium text-[color:var(--text-primary)]" dir="ltr">
+            {formatPhoneDisplay(phone)}
+          </p>
 
-            {/* OTP Input */}
-            <div className="flex justify-center gap-2 mb-4" dir="ltr">
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  ref={el => { inputRefs.current[index] = el; }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChange={e => handleOtpChange(index, e.target.value)}
-                  onKeyDown={e => handleKeyDown(index, e)}
-                  onPaste={handlePaste}
-                  disabled={isSubmitting}
-                  className={`
-                    w-12 h-14
-                    text-center text-xl font-semibold
-                    bg-[var(--bg-tertiary)]
-                    rounded-xl
-                    text-[color:var(--text-primary)]
-                    focus:outline-none focus:ring-2 focus:ring-[var(--ring-color)]
-                    disabled:opacity-50
-                    transition-all
-                    ${error ? 'ring-2 ring-[var(--color-danger)]' : ''}
-                  `}
-                />
-              ))}
-            </div>
+          {/* OTP Input */}
+          <div className="flex justify-center gap-2 mb-4" dir="ltr">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                ref={el => { inputRefs.current[index] = el; }}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                value={digit}
+                onChange={e => handleOtpChange(index, e.target.value)}
+                onKeyDown={e => handleKeyDown(index, e)}
+                onPaste={handlePaste}
+                disabled={isSubmitting}
+                className={`
+                  w-12 h-14
+                  text-center text-xl font-semibold
+                  bg-[var(--bg-tertiary)]
+                  rounded-xl
+                  text-[color:var(--text-primary)]
+                  focus:outline-none focus:ring-2 focus:ring-[var(--ring-color)]
+                  disabled:opacity-50
+                  transition-all
+                  ${error ? 'ring-2 ring-[var(--color-danger)]' : ''}
+                `}
+              />
+            ))}
+          </div>
 
-            {/* Error Message */}
-            {error && (
-              <p className="text-sm text-center mb-4 text-[color:var(--color-danger)]">
-                {error}
+          {/* Error Message */}
+          {error && (
+            <p className="text-sm text-center mb-4 text-[color:var(--color-danger)]">
+              {error}
+            </p>
+          )}
+
+          {/* Expiry Timer */}
+          <div className="text-center mb-4">
+            {expiresIn > 0 ? (
+              <p className="text-sm text-[color:var(--text-secondary)]">
+                {en.auth.otpExpiry}: <span className="font-medium">{formatTime(expiresIn)}</span>
+              </p>
+            ) : (
+              <p className="text-sm text-[color:var(--color-danger)]">
+                {en.auth.expiredOtp}
               </p>
             )}
+          </div>
 
-            {/* Expiry Timer */}
-            <div className="text-center mb-4">
-              {expiresIn > 0 ? (
-                <p className="text-sm text-[color:var(--text-secondary)]">
-                  {ar.auth.otpExpiry}: <span className="font-medium">{formatTime(expiresIn)}</span>
-                </p>
-              ) : (
-                <p className="text-sm text-[color:var(--color-danger)]">
-                  {ar.auth.expiredOtp}
-                </p>
-              )}
-            </div>
+          {/* Submit Button */}
+          <Button
+            type="button"
+            variant="default"
+            size="lg"
+            disabled={isSubmitting || otp.join('').length !== OTP_LENGTH}
+            onClick={() => handleSubmit()}
+            className="w-full mb-4"
+          >
+            {isSubmitting ? en.ui.loading : en.auth.verifyOtp}
+          </Button>
 
-            {/* Submit Button */}
-            <Button
+          {/* Resend & Change Phone */}
+          <div className="flex justify-between items-center text-sm">
+            <button
               type="button"
-              variant="default"
-              size="lg"
-              disabled={isSubmitting || otp.join('').length !== OTP_LENGTH}
-              onClick={() => handleSubmit()}
-              className="w-full mb-4"
+              onClick={handleResend}
+              disabled={resendCooldown > 0 || isResending}
+              className={`
+                text-[color:var(--text-secondary)]
+                ${resendCooldown > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:text-[color:var(--text-primary)]'}
+              `}
             >
-              {isSubmitting ? ar.ui.loading : ar.auth.verifyOtp}
-            </Button>
-
-            {/* Resend & Change Phone */}
-            <div className="flex justify-between items-center text-sm">
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={resendCooldown > 0 || isResending}
-                className={`
-                  text-[color:var(--text-secondary)]
-                  ${resendCooldown > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:text-[color:var(--text-primary)]'}
-                `}
-              >
-                {resendCooldown > 0 
-                  ? `${ar.auth.resendIn} ${resendCooldown}${ar.auth.seconds}`
-                  : ar.auth.resendOtp
-                }
-              </button>
-              
-              <button
-                type="button"
-                onClick={handleChangePhone}
-                className="text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]"
-              >
-                {ar.auth.changePhone}
-              </button>
-            </div>
+              {resendCooldown > 0 
+                ? `${en.auth.resendIn} ${resendCooldown}${en.auth.seconds}`
+                : en.auth.resendOtp
+              }
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleChangePhone}
+              className="text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]"
+            >
+              {en.auth.changePhone}
+            </button>
+          </div>
         </Card>
       </div>
     </div>
