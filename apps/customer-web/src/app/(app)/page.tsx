@@ -3,40 +3,11 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@nasneh/ui';
-import { useAuth } from '@/context/auth-context';
 import { AppShell } from '@/components/layout/app-shell';
 import { Search } from 'lucide-react';
 
 export default function HomePage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading } = useAuth();
-
-  // Redirect to login if not authenticated
-  React.useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isLoading, isAuthenticated, router]);
-
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--bg-secondary)',
-        }}
-      >
-        <div style={{ color: 'var(--text-secondary)' }}>Loading...</div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null; // Will redirect
-  }
 
   return (
     <AppShell>
@@ -48,121 +19,170 @@ export default function HomePage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: 'var(--spacing-2xl)',
+          background: 'var(--bg-secondary)',
+          padding: 'var(--spacing-3xl) var(--spacing-lg)',
           textAlign: 'center',
-          padding: 'var(--spacing-2xl) 0',
         }}
       >
-        <h1
-          style={{
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-            fontWeight: 'var(--font-weight-bold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--spacing-lg)',
-            maxWidth: '800px',
-          }}
-        >
-          Discover Local Kitchens, Craft & Services
-        </h1>
-        <p
-          style={{
-            color: 'var(--text-secondary)',
-            fontSize: 'var(--font-size-large)',
-            marginBottom: 'var(--spacing-2xl)',
-            maxWidth: '600px',
-          }}
-        >
-          From us, for us — Your marketplace for homemade food, handcrafted products, and trusted services
-        </p>
-
-        {/* Search Bar */}
         <div
           style={{
-            maxWidth: '600px',
-            width: '100%',
-            position: 'relative',
-            marginBottom: 'var(--spacing-xl)',
+            maxWidth: '800px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--spacing-xl)',
           }}
         >
-          <input
-            type="text"
-            placeholder="Search for products and services..."
+          <h1
             style={{
-              width: '100%',
-              padding: 'var(--spacing-md) var(--spacing-lg)',
-              paddingLeft: 'calc(var(--spacing-lg) + 24px + var(--spacing-md))',
-              fontSize: 'var(--font-size-base)',
-              background: 'var(--bg-primary)',
+              fontSize: 'var(--font-size-4xl)',
+              fontWeight: 'var(--font-weight-bold)',
               color: 'var(--text-primary)',
-              border: `1px solid var(--border-primary)`,
-              outline: 'none',
-              transition: 'all 0.2s',
+              margin: 0,
+              lineHeight: 1.2,
             }}
-            className="rounded-xl focus:ring-[length:var(--ring-width)] focus:ring-[color:var(--ring-color)]"
-          />
-          <Search
-            size={20}
+          >
+            Discover Local Kitchens, Craft & Services
+          </h1>
+          <p
             style={{
-              position: 'absolute',
-              left: 'var(--spacing-lg)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--text-tertiary)',
-              pointerEvents: 'none',
+              fontSize: 'var(--font-size-lg)',
+              color: 'var(--text-secondary)',
+              margin: 0,
+              lineHeight: 1.6,
             }}
-          />
-        </div>
+          >
+            From us, for us — Your marketplace for authentic homemade food, handcrafted products, and trusted local services.
+          </p>
 
-        {/* CTA Button */}
-        <Button
-          variant="default"
-          size="lg"
-          onClick={() => router.push('/categories')}
-        >
-          Browse Categories
-        </Button>
+          {/* Search Bar */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--spacing-md)',
+              maxWidth: '600px',
+              width: '100%',
+              margin: '0 auto',
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                position: 'relative',
+              }}
+            >
+              <Search
+                size={20}
+                style={{
+                  position: 'absolute',
+                  left: 'var(--spacing-md)',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-tertiary)',
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Search for kitchens, products, or services..."
+                style={{
+                  width: '100%',
+                  padding: 'var(--spacing-md) var(--spacing-md) var(--spacing-md) var(--spacing-3xl)',
+                  borderRadius: 'var(--radius-standard)',
+                  border: '1px solid var(--border-primary)',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--font-size-base)',
+                  outline: 'none',
+                }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => router.push('/categories')}
+            >
+              Browse Categories
+            </Button>
+          </div>
+        </div>
       </section>
 
-      {/* Featured Categories Section */}
-      <section style={{ padding: 'var(--spacing-2xl) 0' }}>
-        <h2
-          style={{
-            fontSize: 'var(--font-size-h2)',
-            fontWeight: 'var(--font-weight-semibold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--spacing-xl)',
-            textAlign: 'center',
-          }}
-        >
-          Explore Categories
-        </h2>
+      {/* Featured Categories */}
+      <section
+        style={{
+          padding: 'var(--spacing-3xl) var(--spacing-lg)',
+          background: 'var(--bg-primary)',
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h2
+            style={{
+              fontSize: 'var(--font-size-2xl)',
+              fontWeight: 'var(--font-weight-semibold)',
+              color: 'var(--text-primary)',
+              marginBottom: 'var(--spacing-2xl)',
+              textAlign: 'center',
+            }}
+          >
+            Featured Categories
+          </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {[
-            { name: 'Kitchens', href: '/kitchens' },
-            { name: 'Craft', href: '/craft' },
-            { name: 'Products', href: '/products' },
-            { name: 'Food Trucks', href: '/food-trucks' },
-            { name: 'Services', href: '/services' },
-          ].map((category) => (
-            <button
-              key={category.name}
-              onClick={() => router.push(category.href)}
-              style={{
-                padding: 'var(--spacing-xl)',
-                background: 'var(--bg-primary)',
-                border: `1px solid var(--border-primary)`,
-                cursor: 'pointer',
-                fontSize: 'var(--font-size-base)',
-                fontWeight: 'var(--font-weight-medium)',
-                color: 'var(--text-primary)',
-                transition: 'all 0.2s',
-                textAlign: 'center',
-              }}
-              className="rounded-xl hover:bg-[var(--bg-hover)]"
-            >
-              {category.name}
-            </button>
-          ))}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: 'var(--spacing-xl)',
+            }}
+          >
+            {[
+              { name: 'Kitchens', description: 'Homemade meals & catering' },
+              { name: 'Craft', description: 'Handmade products & art' },
+              { name: 'Products', description: 'Local goods & essentials' },
+              { name: 'Food Trucks', description: 'Street food & mobile kitchens' },
+              { name: 'Services', description: 'Bookable local services' },
+            ].map((category) => (
+              <div
+                key={category.name}
+                onClick={() => router.push('/categories')}
+                style={{
+                  padding: 'var(--spacing-xl)',
+                  background: 'var(--bg-secondary)',
+                  borderRadius: 'var(--radius-standard)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: 'var(--font-size-lg)',
+                    fontWeight: 'var(--font-weight-semibold)',
+                    color: 'var(--text-primary)',
+                    marginBottom: 'var(--spacing-sm)',
+                  }}
+                >
+                  {category.name}
+                </h3>
+                <p
+                  style={{
+                    fontSize: 'var(--font-size-sm)',
+                    color: 'var(--text-secondary)',
+                    margin: 0,
+                  }}
+                >
+                  {category.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </AppShell>
