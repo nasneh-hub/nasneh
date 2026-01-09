@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### ♻️ Refactors (refactor)
+- **#255:** remove all remaining inline styles from customer-web
 - **#254:** remove all inline styles from header, footer, and placeholder pages
 
 ### 📝 Other
@@ -59,6 +60,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.4.0] - 2026-01-08
 
 ### ♻️ Refactors (refactor)
+- **#255:** remove all remaining inline styles from customer-web
 - **#207:** remove localStorage workaround
 
 ### 📚 Documentation (docs)
