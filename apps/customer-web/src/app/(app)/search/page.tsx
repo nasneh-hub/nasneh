@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button, Card, Badge, Skeleton } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
@@ -24,7 +24,7 @@ interface Service {
   serviceType?: string;
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q') || '';
@@ -201,5 +201,28 @@ export default function SearchPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[var(--bg-primary)] p-[var(--spacing-2xl)]">
+        <div className="mx-auto max-w-[1200px]">
+          <Skeleton className="mb-[var(--spacing-lg)] h-[40px] w-[200px]" />
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[var(--spacing-xl)]">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="p-[var(--spacing-lg)]">
+                <Skeleton className="mb-[var(--spacing-md)] h-[200px] w-full" />
+                <Skeleton className="mb-[var(--spacing-sm)] h-[20px] w-full" />
+                <Skeleton className="h-[16px] w-[80px]" />
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }
