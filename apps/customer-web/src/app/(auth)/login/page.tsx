@@ -16,16 +16,16 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Country code options with flag icons
+  // Country code options - FROM COPY TOKENS (single source)
   const countryOptions: SelectOption[] = [
     {
       value: '+973',
-      label: '+973', // Just the code, flag will be shown separately
+      label: `🇧🇭 ${en.auth.bahrainCode}`, // Flag emoji + code from copy tokens
       disabled: false,
     },
     {
       value: 'gcc',
-      label: en.auth.gccSoon,
+      label: en.auth.gccSoon, // "GCC (Soon)" from copy tokens
       disabled: true,
     },
   ];
@@ -135,21 +135,15 @@ export default function LoginPage() {
                 {en.auth.phoneNumber}
               </label>
               <div className="flex gap-2">
-                {/* Country Code with Flag - Compact Design */}
-                <div className="flex items-center gap-2 px-3 h-12 bg-[var(--bg-tertiary)] rounded-xl shrink-0">
-                  {/* Bahrain Flag Icon */}
-                  <BH 
-                    title="Bahrain"
-                    style={{ 
-                      width: '24px', 
-                      height: '16px',
-                      borderRadius: '2px',
-                    }} 
+                {/* Country Code Switcher - FROM @nasneh/ui (shadcn-based) */}
+                <div className="w-32 shrink-0">
+                  <Select
+                    options={countryOptions}
+                    value={countryCode}
+                    onChange={handleCountryCodeChange}
+                    disabled={isSubmitting}
+                    size="lg"
                   />
-                  {/* Country Code */}
-                  <span className="text-sm font-medium text-[color:var(--text-primary)]">
-                    {countryCode}
-                  </span>
                 </div>
                 
                 {/* Phone Input - FROM @nasneh/ui (shadcn-based) */}
