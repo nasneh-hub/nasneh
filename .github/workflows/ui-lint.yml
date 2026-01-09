@@ -133,6 +133,7 @@ jobs:
             packages/ui/src apps/customer-web apps/dashboard 2>/dev/null \
             | grep -v 'border-box' \
             | grep -v 'border-radius' \
+            | grep -v 'borderRadius' \
             | grep -v 'node_modules' \
             | grep -v -E '(//|/\*|\*)' || true)
           
