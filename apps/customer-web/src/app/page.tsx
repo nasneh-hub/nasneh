@@ -73,9 +73,9 @@ export default function HomePage() {
                 {ar.profile.myProfile}
               </h2>
               <div
+                className="rounded-xl"
                 style={{
                   background: 'var(--bg-tertiary)',
-                  borderRadius: 'var(--radius-standard)',
                   padding: 'var(--spacing-lg)',
                   display: 'inline-block',
                 }}
