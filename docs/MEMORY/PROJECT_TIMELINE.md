@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 19:15:34 | Added (copy): add cart/checkout/order copy tokens for S5-02 | PR #262 | @nasneh-hub |
 | 19:07:20 | Added (ui): add RadioGroup and Textarea components | PR #261 | @nasneh-hub |
 | 18:41:24 | Added (s5-01): Add reviews section to product and service detail pages (PR3-C) | PR #260 | @nasneh-hub |
 | 18:13:43 | Added (customer-web): implement service detail page | PR #259 | @nasneh-hub |
