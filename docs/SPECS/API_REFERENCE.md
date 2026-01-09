@@ -54,7 +54,7 @@ Request an OTP code for phone number authentication.
 
 **Staging Mock Mode:**
 - When `OTP_MOCK_ENABLED=true` and `ENVIRONMENT=staging`:
-  - Test number `+97317000000` receives fixed OTP `123456`
+  - Test number `+97336000000` receives fixed OTP `123456`
   - Other numbers receive random OTP (logged in CloudWatch but hidden for security)
   - Response includes `"channel": "mock"` indicator
 - Rate limiting: 5 requests per 45 minutes per phone number
@@ -65,7 +65,7 @@ POST /api/v1/auth/request-otp
 Content-Type: application/json
 
 {
-  "phone": "+97317000000"
+  "phone": "+97336000000"
 }
 ```
 
@@ -97,7 +97,7 @@ Content-Type: application/json
 Verify an OTP code and receive authentication tokens.
 
 **Staging Mock Mode:**
-- Test number `+97317000000` must use OTP `123456`
+- Test number `+97336000000` must use OTP `123456`
 - Other numbers use the OTP from CloudWatch logs: `/ecs/nasneh-staging/api`
 - Maximum 5 attempts per OTP request
 
@@ -107,7 +107,7 @@ POST /api/v1/auth/verify-otp
 Content-Type: application/json
 
 {
-  "phone": "+97317000000",
+  "phone": "+97336000000",
   "otp": "123456"
 }
 ```
@@ -122,7 +122,7 @@ Content-Type: application/json
     "expiresIn": 900,
     "user": {
       "id": "usr_...",
-      "phone": "+97317000000",
+      "phone": "+97336000000",
       "role": "customer"
     }
   }
@@ -277,7 +277,7 @@ Authorization: Bearer <token>
 ```json
 {
   "id": "uuid",
-  "phone": "+97317000000",
+  "phone": "+97336000000",
   "email": "user@example.com",
   "name": "Ahmed Ali",
   "role": "CUSTOMER",

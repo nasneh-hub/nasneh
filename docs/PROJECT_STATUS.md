@@ -143,11 +143,11 @@ import crypto from 'crypto';
 **Testing Results:**
 ```bash
 # Correct OTP
-curl -X POST .../auth/verify-otp -d '{"phone": "+97317000000", "otp": "123456"}'
+curl -X POST .../auth/verify-otp -d '{"phone": "+97336000000", "otp": "123456"}'
 # Response: {"success":true,"data":{"accessToken":"eyJ...","refreshToken":"a1b..."}}
 
 # Wrong OTP
-curl -X POST .../auth/verify-otp -d '{"phone": "+97317000000", "otp": "999999"}'
+curl -X POST .../auth/verify-otp -d '{"phone": "+97336000000", "otp": "999999"}'
 # Response: {"success":false,"error":"Invalid OTP. 4 attempt(s) remaining.","attemptsRemaining":4}
 ```
 
@@ -185,11 +185,11 @@ fi
 **Configuration:**
 - `OTP_MOCK_ENABLED=true` (staging only)
 - `ENVIRONMENT=staging` (safety check)
-- Test number: `+97317000000`
+- Test number: `+97336000000`
 - Fixed OTP: `123456`
 
 **Behavior:**
-- Test number `+97317000000` receives fixed OTP `123456` ✅
+- Test number `+97336000000` receives fixed OTP `123456` ✅
 - Non-test numbers receive random OTP (hidden in logs for security) ✅
 - Mock mode only enabled when both env vars are set ✅
 - Rate limiting working (5 requests per 45 min per phone) ✅

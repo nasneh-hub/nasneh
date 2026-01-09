@@ -50,7 +50,7 @@ export class OtpDeliveryService {
    * MOCK MODE (Staging Only):
    * - When OTP_MOCK_ENABLED=true, skips actual delivery
    * - Logs OTP to CloudWatch for testing
-   * - Only works for test numbers (+97317000000)
+   * - Only works for test numbers (+97336000000)
    * - BLOCKED in production (hard fail)
    */
   async deliver(phone: string, otp: string): Promise<OtpDeliveryResult> {
@@ -237,7 +237,7 @@ export class OtpDeliveryService {
    * - Logs OTP for test numbers only
    */
   private deliverMock(phone: string, otp: string): OtpDeliveryResult {
-    const isTestNumber = phone === '+97317000000';
+    const isTestNumber = phone === '+97336000000';
 
     // Only log OTP for known test numbers
     if (isTestNumber) {
