@@ -58,16 +58,21 @@ export default function BookingConfirmationPage() {
     const fetchBooking = async () => {
       try {
         setIsLoading(true);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com';
+        
+        // TODO: Add auth token when auth is implemented
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/bookings/${bookingId}`,
+          `${apiUrl}/api/v1/bookings/${bookingId}`,
           {
             credentials: 'include',
+            // TODO: Add auth header when auth is implemented
+            // headers: { 'Authorization': `Bearer ${token}` }
           }
         );
 
         if (!response.ok) {
           if (response.status === 401) {
-            router.push('/login');
+            setError('Authentication required to view booking details');
             return;
           } else if (response.status === 404) {
             setError('Booking not found');
@@ -88,7 +93,7 @@ export default function BookingConfirmationPage() {
     };
 
     fetchBooking();
-  }, [bookingId, router]);
+  }, [bookingId]);
 
   // Format date
   const formatDate = (dateStr: string) => {
@@ -131,10 +136,10 @@ export default function BookingConfirmationPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-mono-50 p-4">
+      <div className="min-h-screen bg-[var(--background)] p-4">
         <div className="max-w-2xl mx-auto space-y-6">
-          <div className="h-8 bg-mono-200 rounded-xl animate-pulse w-64" />
-          <div className="h-96 bg-mono-200 rounded-xl animate-pulse" />
+          <div className="h-8 bg-[var(--muted)] rounded-xl animate-pulse w-64" />
+          <div className="h-96 bg-[var(--muted)] rounded-xl animate-pulse" />
         </div>
       </div>
     );
@@ -143,16 +148,16 @@ export default function BookingConfirmationPage() {
   // Error state
   if (error || !booking) {
     return (
-      <div className="min-h-screen bg-mono-50 p-4">
+      <div className="min-h-screen bg-[var(--background)] p-4">
         <div className="max-w-2xl mx-auto">
           <Card className="p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-              <X className="w-8 h-8 text-destructive" />
+            <div className="w-16 h-16 rounded-full bg-[var(--destructive)]/10 flex items-center justify-center mx-auto mb-4">
+              <X className="w-8 h-8 text-[var(--destructive)]" />
             </div>
-            <h2 className="text-xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2 text-[var(--foreground)]">
               {error || en.ui.error}
             </h2>
-            <p className="text-mono-600 mb-6">
+            <p className="text-[var(--muted-foreground)] mb-6">
               The booking you&apos;re looking for doesn&apos;t exist or has been removed.
             </p>
             <div className="flex gap-4 justify-center">
@@ -167,20 +172,20 @@ export default function BookingConfirmationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mono-50 p-4">
+    <div className="min-h-screen bg-[var(--background)] p-4">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Success Header */}
         <Card className="p-8 text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <Check className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-full bg-[var(--primary)]/10 flex items-center justify-center mx-auto mb-4">
+            <Check className="w-8 h-8 text-[var(--primary)]" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">
+          <h1 className="text-2xl font-bold mb-2 text-[var(--foreground)]">
             {en.booking.confirmationTitle}
           </h1>
-          <p className="text-mono-600 mb-4">
+          <p className="text-[var(--muted-foreground)] mb-4">
             {en.booking.bookingConfirmed}
           </p>
-          <div className="inline-flex items-center gap-2 text-sm text-mono-600">
+          <div className="inline-flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
             <span>{en.booking.bookingReference}:</span>
             <span className="font-mono font-semibold">{booking.id}</span>
           </div>
@@ -189,7 +194,7 @@ export default function BookingConfirmationPage() {
         {/* Booking Details */}
         <Card className="p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{en.booking.bookingSummary}</h2>
+            <h2 className="text-lg font-semibold text-[var(--foreground)]">{en.booking.bookingSummary}</h2>
             <Badge variant={getStatusVariant(booking.status)}>
               {en.booking[booking.status.toLowerCase() as keyof typeof en.booking]}
             </Badge>
@@ -198,18 +203,18 @@ export default function BookingConfirmationPage() {
           <div className="space-y-4">
             {/* Service */}
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-mono-100 flex items-center justify-center flex-shrink-0">
-                <FileText className="w-5 h-5 text-mono-600" />
+              <div className="w-10 h-10 rounded-full bg-[var(--secondary)] flex items-center justify-center flex-shrink-0">
+                <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
               </div>
               <div className="flex-1">
-                <p className="text-sm text-mono-600">{en.booking.service}</p>
-                <p className="font-semibold text-mono-900">{booking.service.name}</p>
-                <p className="text-sm text-mono-600">
+                <p className="text-sm text-[var(--muted-foreground)]">{en.booking.service}</p>
+                <p className="font-semibold text-[var(--foreground)]">{booking.service.name}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">
                   {booking.provider.name} • {booking.service.duration} {en.booking.minutes}
                 </p>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-mono-900">
+                <p className="font-semibold text-[var(--foreground)]">
                   {formatCurrency(booking.service.price)}
                 </p>
               </div>
@@ -217,15 +222,15 @@ export default function BookingConfirmationPage() {
 
             {/* Date & Time */}
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-mono-100 flex items-center justify-center flex-shrink-0">
-                <Calendar className="w-5 h-5 text-mono-600" />
+              <div className="w-10 h-10 rounded-full bg-[var(--secondary)] flex items-center justify-center flex-shrink-0">
+                <Calendar className="w-5 h-5 text-[var(--muted-foreground)]" />
               </div>
               <div className="flex-1">
-                <p className="text-sm text-mono-600">{en.booking.dateTime}</p>
-                <p className="font-semibold text-mono-900">
+                <p className="text-sm text-[var(--muted-foreground)]">{en.booking.dateTime}</p>
+                <p className="font-semibold text-[var(--foreground)]">
                   {formatDate(booking.date)}
                 </p>
-                <p className="text-sm text-mono-600 flex items-center gap-1">
+                <p className="text-sm text-[var(--muted-foreground)] flex items-center gap-1">
                   <Clock className="w-4 h-4" />
                   {formatTime(booking.time)}
                 </p>
@@ -234,28 +239,28 @@ export default function BookingConfirmationPage() {
 
             {/* Location */}
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-mono-100 flex items-center justify-center flex-shrink-0">
-                <MapPin className="w-5 h-5 text-mono-600" />
+              <div className="w-10 h-10 rounded-full bg-[var(--secondary)] flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-5 h-5 text-[var(--muted-foreground)]" />
               </div>
               <div className="flex-1">
-                <p className="text-sm text-mono-600">{en.booking.location}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">{en.booking.location}</p>
                 {booking.service.type === 'HOME' && booking.address ? (
                   <>
-                    <p className="font-semibold text-mono-900">
+                    <p className="font-semibold text-[var(--foreground)]">
                       {booking.address.label}
                     </p>
-                    <p className="text-sm text-mono-600">
+                    <p className="text-sm text-[var(--muted-foreground)]">
                       {booking.address.street}, {booking.address.city},{' '}
                       {booking.address.country}
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="font-semibold text-mono-900">
+                    <p className="font-semibold text-[var(--foreground)]">
                       {booking.provider.name}
                     </p>
                     {booking.provider.location && (
-                      <p className="text-sm text-mono-600">
+                      <p className="text-sm text-[var(--muted-foreground)]">
                         {booking.provider.location}
                       </p>
                     )}
@@ -266,9 +271,9 @@ export default function BookingConfirmationPage() {
 
             {/* Notes */}
             {booking.notes && (
-              <div className="pt-4 border-t border-mono-200">
-                <p className="text-sm text-mono-600 mb-2">{en.booking.notes}</p>
-                <p className="text-mono-900">{booking.notes}</p>
+              <div className="pt-4 border-t border-[var(--border)]">
+                <p className="text-sm text-[var(--muted-foreground)] mb-2">{en.booking.notes}</p>
+                <p className="text-[var(--foreground)]">{booking.notes}</p>
               </div>
             )}
           </div>

@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { en } from '@nasneh/ui/copy';
-import { Button, Card } from '@nasneh/ui';
-import { MapPin } from 'lucide-react';
+import { Button, Card, Textarea } from '@nasneh/ui';
+import { MapPin, Calendar, Clock, FileText } from 'lucide-react';
 import { DateCalendar } from '../booking/date-calendar';
 import { TimeSlotSelector } from '../booking/time-slot-selector';
 import { AddressSelector } from '../checkout/address-selector';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface Service {
   id: string;
@@ -63,15 +64,17 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
   const router = useRouter();
   
   // State
-  const [currentStep, setCurrentStep] = useState<1 | 2>(1);
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [selectedDate, setSelectedDate] = useState<string | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
   const [selectedAddressId, setSelectedAddressId] = useState<string | undefined>();
+  const [notes, setNotes] = useState('');
   const [slotsData, setSlotsData] = useState<DateSlots[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Mock addresses (TODO: fetch from API in PR3)
+  // Mock addresses (TODO: fetch from API when auth is implemented)
   const [addresses] = useState<Address[]>([
     {
       id: '1',
@@ -149,6 +152,9 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
     available: slot.available,
   }));
 
+  // Get selected address
+  const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
+
   // Handle date selection
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
@@ -170,19 +176,24 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
     setCurrentStep(1);
   };
 
+  // Handle back from Step 3 to Step 2
+  const handleBackToStep2 = () => {
+    setCurrentStep(2);
+  };
+
   // Handle address selection
   const handleSelectAddress = (addressId: string) => {
     setSelectedAddressId(addressId);
   };
 
-  // Handle add new address (TODO: implement in PR3)
+  // Handle add new address (TODO: implement when auth is ready)
   const handleAddNewAddress = () => {
     console.log('Add new address - to be implemented');
   };
 
-  // Handle continue to Step 3 (TODO: implement in PR3)
+  // Handle continue to Step 3
   const handleContinueToStep3 = () => {
-    console.log('Continue to Step 3 - to be implemented in PR3');
+    setCurrentStep(3);
   };
 
   // Check if Step 2 can proceed
@@ -191,6 +202,90 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
       return true; // No address needed for in-store
     }
     return !!selectedAddressId; // Address required for HOME and DELIVERY
+  };
+
+  // Handle booking submission
+  const handleConfirmBooking = async () => {
+    if (!selectedDate || !selectedTime) return;
+
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com';
+      
+      // Prepare booking data
+      const bookingData: any = {
+        serviceId: service.id,
+        date: selectedDate,
+        startTime: selectedTime,
+      };
+
+      // Add address for HOME/DELIVERY
+      if (service.type !== 'IN_STORE' && selectedAddressId) {
+        bookingData.addressId = selectedAddressId;
+      }
+
+      // Add notes if provided
+      if (notes.trim()) {
+        bookingData.notes = notes.trim();
+      }
+
+      // TODO: Add auth token when auth is implemented
+      const response = await fetch(`${apiUrl}/api/v1/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: Add auth header when auth is implemented
+          // 'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (response.status === 401) {
+        // Auth required - expected for now
+        setError('Authentication required. Please log in to complete your booking.');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to create booking');
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.data.id) {
+        // Navigate to confirmation page
+        router.push(`/bookings/${result.data.id}/confirmation`);
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err) {
+      console.error('Error creating booking:', err);
+      setError(en.errors.somethingWrong);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Format date for display
+  const formatDate = (dateStr: string) => {
+    const dateObj = new Date(dateStr + 'T00:00:00');
+    return dateObj.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  // Format time for display
+  const formatTime = (timeStr: string) => {
+    const [hours, minutes] = timeStr.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour}:${minutes} ${ampm}`;
   };
 
   return (
@@ -346,6 +441,150 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
                 disabled={!canProceedFromStep2()}
               >
                 {en.checkout.continue}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Review & Confirm */}
+        {!error && currentStep === 3 && selectedDate && selectedTime && (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-[var(--foreground)]">
+                {en.booking.step3Title}
+              </h2>
+
+              {/* Booking Summary */}
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)]">
+                  {en.booking.bookingSummary}
+                </h3>
+                
+                <div className="space-y-4">
+                  {/* Service */}
+                  <div>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-1">
+                      {en.booking.service}
+                    </p>
+                    <p className="font-medium text-[var(--foreground)]">
+                      {service.name}
+                    </p>
+                    <p className="text-sm text-[var(--muted-foreground)]">
+                      {service.duration} {en.booking.minutes}
+                    </p>
+                  </div>
+
+                  {/* Provider */}
+                  <div>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-1">
+                      {en.booking.provider}
+                    </p>
+                    <p className="font-medium text-[var(--foreground)]">
+                      {service.provider.name}
+                    </p>
+                  </div>
+
+                  {/* Date & Time */}
+                  <div>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-1">
+                      {en.booking.dateTime}
+                    </p>
+                    <div className="flex items-center gap-2 text-[var(--foreground)]">
+                      <Calendar className="w-4 h-4" />
+                      <span className="font-medium">{formatDate(selectedDate)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[var(--foreground)] mt-1">
+                      <Clock className="w-4 h-4" />
+                      <span className="font-medium">{formatTime(selectedTime)}</span>
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-1">
+                      {en.booking.location}
+                    </p>
+                    {service.type === 'IN_STORE' ? (
+                      <div>
+                        <p className="font-medium text-[var(--foreground)]">
+                          {service.provider.name}
+                        </p>
+                        {service.provider.location && (
+                          <p className="text-sm text-[var(--muted-foreground)]">
+                            {service.provider.location}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      selectedAddress && (
+                        <div>
+                          <p className="font-medium text-[var(--foreground)]">
+                            {selectedAddress.label}
+                          </p>
+                          <p className="text-sm text-[var(--muted-foreground)]">
+                            {selectedAddress.street}
+                          </p>
+                          <p className="text-sm text-[var(--muted-foreground)]">
+                            {selectedAddress.city}, {selectedAddress.country}
+                          </p>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  {/* Price */}
+                  <div className="pt-4 border-t border-[var(--border)]">
+                    <div className="flex items-center justify-between">
+                      <p className="text-lg font-semibold text-[var(--foreground)]">
+                        {en.booking.total}
+                      </p>
+                      <p className="text-lg font-semibold text-[var(--foreground)]">
+                        {formatCurrency(service.price)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Booking Notes */}
+              <div className="mt-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
+                  <h3 className="text-lg font-semibold text-[var(--foreground)]">
+                    {en.booking.notes}
+                  </h3>
+                  <span className="text-sm text-[var(--muted-foreground)]">
+                    ({en.checkout.optional})
+                  </span>
+                </div>
+                <Textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder={en.booking.notesPlaceholder}
+                  maxLength={500}
+                  rows={4}
+                  className="w-full"
+                />
+                <p className="text-sm text-[var(--muted-foreground)] mt-2">
+                  {500 - notes.length} {en.checkout.charactersRemaining}
+                </p>
+              </div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="flex items-center justify-between">
+              <Button
+                variant="secondary"
+                onClick={handleBackToStep2}
+              >
+                {en.ui.back}
+              </Button>
+              <Button
+                onClick={handleConfirmBooking}
+                size="lg"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Creating...' : en.booking.confirmBooking}
               </Button>
             </div>
           </div>
