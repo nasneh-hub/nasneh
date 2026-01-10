@@ -2,7 +2,56 @@
  * API Client for Nasneh Backend
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+
+/**
+ * Get the API base URL from environment variables
+ * @returns API base URL with /api/v1 suffix
+ */
+export function getApiBaseUrl(): string {
+  return API_BASE_URL;
+}
+
+/**
+ * Build a full API URL from a relative path
+ * 
+ * @param path - Relative API path (e.g., '/services', '/users/me')
+ * @returns Full API URL
+ * 
+ * @example
+ * ```ts
+ * apiUrl('/services') // → 'https://api-staging.nasneh.com/api/v1/services'
+ * apiUrl('/users/me') // → 'https://api-staging.nasneh.com/api/v1/users/me'
+ * ```
+ */
+export function apiUrl(path: string): string {
+  const baseUrl = getApiBaseUrl();
+  
+  // Remove leading slash if present to avoid double slashes
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  
+  return `${baseUrl}/${cleanPath}`;
+}
+
+/**
+ * Fetch wrapper with automatic API URL building
+ * 
+ * @param path - Relative API path
+ * @param options - Fetch options
+ * @returns Fetch response
+ * 
+ * @example
+ * ```ts
+ * const response = await apiFetch('/services');
+ * const data = await response.json();
+ * ```
+ */
+export async function apiFetch(
+  path: string,
+  options?: RequestInit
+): Promise<Response> {
+  return fetch(apiUrl(path), options);
+}
 
 interface ApiResponse<T> {
   success: boolean;
@@ -32,7 +81,7 @@ interface VerifyOtpResponse {
  */
 export async function requestOtp(phone: string): Promise<ApiResponse<RequestOtpResponse>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/request-otp`, {
+    const response = await fetch(`${API_BASE_URL}/auth/request-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +104,7 @@ export async function requestOtp(phone: string): Promise<ApiResponse<RequestOtpR
  */
 export async function verifyOtp(phone: string, otp: string): Promise<ApiResponse<VerifyOtpResponse>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-otp`, {
+    const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,7 +143,7 @@ export async function verifyOtp(phone: string, otp: string): Promise<ApiResponse
  */
 export async function refreshToken(refreshToken: string): Promise<ApiResponse<{ accessToken: string; refreshToken?: string }>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +166,7 @@ export async function refreshToken(refreshToken: string): Promise<ApiResponse<{ 
  */
 export async function logout(accessToken: string): Promise<ApiResponse<void>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
