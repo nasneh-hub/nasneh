@@ -967,6 +967,15 @@ export const en = {
       crNumber: 'Commercial Registration Number',
       crNumberPlaceholder: 'Enter your CR number',
       
+      // Document Upload
+      documentLabel: {
+        default: 'Supporting Document',
+        sijili: 'Upload Sijili Document',
+        khotwa: 'Upload Khotwa Document',
+        cr: 'Upload CR Document',
+      },
+      documentComingSoon: '⚠️ Document upload feature coming soon. You can proceed without uploading for now.',
+      
       // Categories
       categories: {
         homeKitchen: 'Home Kitchen',
@@ -993,7 +1002,8 @@ export const en = {
         businessNameRequired: 'Business name is required (minimum 2 characters)',
         categoryRequired: 'Please select a business category',
         eligibilityRequired: 'Please select your legal eligibility',
-        crNumberRequired: 'CR number is required when using Commercial Registration',
+        crNumberRequired: 'CR number is required',
+        documentRequired: 'Supporting document is required',
         submitFailed: 'Failed to submit application. Please try again.',
       },
       
