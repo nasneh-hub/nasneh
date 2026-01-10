@@ -22,6 +22,45 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Staging-only guard
+function ensureStagingEnvironment() {
+  const dbUrl = process.env.DATABASE_URL || '';
+  const nodeEnv = process.env.NODE_ENV || '';
+  
+  // Check for staging indicators
+  const isStaging = dbUrl.includes('staging') || 
+                    dbUrl.includes('nasneh-staging') ||
+                    nodeEnv === 'staging';
+  
+  // Refuse to run on production
+  const isProduction = dbUrl.includes('production') || 
+                       dbUrl.includes('nasneh-prod') ||
+                       nodeEnv === 'production';
+  
+  if (isProduction) {
+    console.error('❌ ERROR: This script cannot run on PRODUCTION!');
+    console.error('   DATABASE_URL contains production indicators.');
+    process.exit(1);
+  }
+  
+  if (!isStaging) {
+    console.warn('⚠️  WARNING: Could not confirm staging environment.');
+    console.warn('   DATABASE_URL:', dbUrl.substring(0, 30) + '...');
+    console.warn('   NODE_ENV:', nodeEnv || '(not set)');
+    console.warn('');
+    console.warn('   This script should only run on staging.');
+    console.warn('   Press Ctrl+C to cancel, or wait 5 seconds to continue...');
+    console.warn('');
+    
+    // Give user 5 seconds to cancel
+    return new Promise(resolve => setTimeout(resolve, 5000));
+  }
+  
+  console.log('✅ Environment check passed: STAGING');
+  console.log('');
+  return Promise.resolve();
+}
+
 // Test data constants
 const E2E_PHONE = '+97333000001';
 const E2E_USER_NAME = '__E2E__ Test Provider';
@@ -81,6 +120,9 @@ const SERVICES = [
 ];
 
 async function main() {
+  // Ensure we're running on staging
+  await ensureStagingEnvironment();
+  
   console.log('🌱 Starting staging E2E data seeding...\n');
 
   let createdCount = 0;

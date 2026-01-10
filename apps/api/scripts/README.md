@@ -146,16 +146,51 @@ aws ecs describe-services \
   --query 'services[0].networkConfiguration'
 ```
 
+### Get Current Service Configuration
+
+**IMPORTANT:** Use the exact task definition and network configuration from the running service.
+
+```bash
+# Get current task definition and network config
+aws ecs describe-services \
+  --region me-south-1 \
+  --cluster nasneh-staging-cluster \
+  --services nasneh-staging-api-service \
+  --query 'services[0].{taskDefinition:taskDefinition,networkConfiguration:networkConfiguration}'
+```
+
+**Example output:**
+```json
+{
+  "taskDefinition": "arn:aws:ecs:me-south-1:xxx:task-definition/nasneh-staging-api:5",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": ["subnet-abc123", "subnet-def456"],
+      "securityGroups": ["sg-xyz789"],
+      "assignPublicIp": "ENABLED"
+    }
+  }
+}
+```
+
 ### Run Seed Task
+
+**Use the values from above:**
 
 ```bash
 aws ecs run-task \
+  --region me-south-1 \
   --cluster nasneh-staging-cluster \
-  --task-definition nasneh-staging-api:latest \
+  --task-definition "arn:aws:ecs:me-south-1:xxx:task-definition/nasneh-staging-api:5" \
   --launch-type FARGATE \
-  --network-configuration "awsvpcConfiguration={subnets=[subnet-xxx,subnet-yyy],securityGroups=[sg-xxx],assignPublicIp=ENABLED}" \
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-abc123,subnet-def456],securityGroups=[sg-xyz789],assignPublicIp=ENABLED}" \
   --overrides '{"containerOverrides":[{"name":"api","command":["pnpm","seed:staging"]}]}'
 ```
+
+**Replace:**
+- Task definition ARN with actual value from describe-services
+- Subnets with actual subnet IDs
+- Security groups with actual SG IDs
 
 ### View Logs
 
