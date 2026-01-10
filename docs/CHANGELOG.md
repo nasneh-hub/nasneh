@@ -41,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#221:** preserve workspace structure in builder stage
 
 ### ✨ Features (feat)
+- **#287:** onboarding selection page (PR1)
 - **#285:** implement booking step 3 (review/confirm + POST booking + confirmation)
 - **#284:** implement booking step 2 (location selection)
 - **#283:** implement booking step 1 (date/time selection)
@@ -104,6 +105,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#287:** onboarding selection page (PR1)
 - **#285:** implement booking step 3 (review/confirm + POST booking + confirmation)
 - **#284:** implement booking step 2 (location selection)
 - **#283:** implement booking step 1 (date/time selection)
@@ -182,6 +184,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#287:** onboarding selection page (PR1)
 - **#285:** implement booking step 3 (review/confirm + POST booking + confirmation)
 - **#284:** implement booking step 2 (location selection)
 - **#283:** implement booking step 1 (date/time selection)
@@ -288,6 +291,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#287:** onboarding selection page (PR1)
 - **#285:** implement booking step 3 (review/confirm + POST booking + confirmation)
 - **#284:** implement booking step 2 (location selection)
 - **#283:** implement booking step 1 (date/time selection)
@@ -496,6 +500,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#287:** onboarding selection page (PR1)
 - **#285:** implement booking step 3 (review/confirm + POST booking + confirmation)
 - **#284:** implement booking step 2 (location selection)
 - **#283:** implement booking step 1 (date/time selection)
@@ -551,6 +556,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#287:** onboarding selection page (PR1)
 - **#285:** implement booking step 3 (review/confirm + POST booking + confirmation)
 - **#284:** implement booking step 2 (location selection)
 - **#283:** implement booking step 1 (date/time selection)

@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 16:40:51 | Added (s5-04): onboarding selection page (PR1) | PR #287 | @nasneh-hub |
 | 15:10:39 | Fixed (api): prevent double /api/v1 in URL paths | PR #286 | @nasneh-hub |
 | 14:37:37 | Added (customer-web): implement booking step 3 (review/confirm + POST booking + confirmation) | PR #285 | @nasneh-hub |
 | 14:21:53 | Added (customer-web): implement booking step 2 (location selection) | PR #284 | @nasneh-hub |
