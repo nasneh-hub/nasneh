@@ -1015,6 +1015,59 @@ export const en = {
       },
     },
     
+    // Provider Application
+    provider: {
+      step1Title: 'Business & Qualifications',
+      step1Description: 'Tell us about your services and professional background',
+      step2Title: 'Review & Submit',
+      step2Description: 'Review your information before submitting',
+      
+      // Fields
+      businessName: 'Business Name',
+      businessNamePlaceholder: 'Enter your business name',
+      category: 'Service Category',
+      categoryPlaceholder: 'Select a category',
+      crNumber: 'Commercial Registration Number',
+      crNumberPlaceholder: 'Enter your CR number',
+      qualifications: 'Professional Qualifications (Optional)',
+      qualificationsPlaceholder: 'List your certifications, licenses, or relevant experience...',
+      description: 'Service Description (Optional)',
+      descriptionPlaceholder: 'Tell us about your services...',
+      
+      // Document Upload
+      documentLabel: 'Upload Supporting Document (License/Certificate)',
+      documentComingSoon: '⚠️ Document upload feature coming soon. You can proceed without uploading for now.',
+      
+      // Categories
+      categories: {
+        home: 'Home Services (cleaning, repairs, maintenance)',
+        personal: 'Personal Services (beauty, fitness, wellness)',
+        professional: 'Professional Services (consulting, training)',
+      },
+      
+      // Actions
+      next: 'Next',
+      back: 'Back',
+      submit: 'Submit Application',
+      submitting: 'Submitting...',
+      
+      // Errors
+      errors: {
+        businessNameRequired: 'Business name is required (minimum 2 characters)',
+        categoryRequired: 'Please select a service category',
+        crNumberRequired: 'CR number is required',
+        documentRequired: 'Supporting document is required',
+        submitFailed: 'Failed to submit application. Please try again.',
+      },
+      
+      // Success
+      success: {
+        title: 'Application Submitted!',
+        message: 'Your application has been submitted successfully',
+        redirecting: 'Redirecting to status page...',
+      },
+    },
+    
     // Status Page
     status: {
       title: 'Application Status',
