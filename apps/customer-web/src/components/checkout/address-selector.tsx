@@ -28,14 +28,14 @@ export function AddressSelector({
 }: AddressSelectorProps) {
   if (addresses.length === 0) {
     return (
-      <div className="p-6 rounded-xl bg-mono-2 text-center">
-        <div className="w-16 h-16 rounded-full bg-mono-3 flex items-center justify-center mx-auto mb-4">
-          <MapPin className="w-8 h-8 text-mono-9" />
+      <div className="p-6 rounded-xl bg-[var(--muted)] text-center">
+        <div className="w-16 h-16 rounded-full bg-[var(--secondary)] flex items-center justify-center mx-auto mb-4">
+          <MapPin className="w-8 h-8 text-[var(--muted-foreground)]" />
         </div>
-        <h3 className="text-lg font-semibold text-mono-12 mb-2">
+        <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">
           {en.checkout.noAddresses}
         </h3>
-        <p className="text-mono-10 mb-6">
+        <p className="text-[var(--muted-foreground)] mb-6">
           {en.checkout.noAddressesDescription}
         </p>
         <Button onClick={onAddNewAddress}>
@@ -49,12 +49,12 @@ export function AddressSelector({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-mono-12">
+        <h3 className="text-lg font-semibold text-[var(--foreground)]">
           {en.checkout.deliveryAddress}
         </h3>
         <button
           onClick={onAddNewAddress}
-          className="text-sm text-primary hover:underline flex items-center gap-1"
+          className="text-sm text-[var(--primary)] hover:underline flex items-center gap-1"
         >
           <Plus className="w-4 h-4" />
           {en.checkout.addNewAddress}
@@ -69,7 +69,7 @@ export function AddressSelector({
           {addresses.map((address) => (
             <label
               key={address.id}
-              className="flex items-start gap-3 p-4 rounded-xl bg-mono-2 hover:bg-mono-3 cursor-pointer transition-colors"
+              className="flex items-start gap-3 p-4 rounded-xl bg-[var(--muted)] hover:bg-[var(--accent)] cursor-pointer transition-colors"
             >
               <RadioGroupItem
                 value={address.id}
@@ -77,16 +77,16 @@ export function AddressSelector({
               />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-mono-12">
+                  <span className="font-medium text-[var(--foreground)]">
                     {address.label}
                   </span>
                   {address.isDefault && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-mono-4 text-mono-11">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--secondary)] text-[var(--muted-foreground)]">
                       {en.checkout.defaultAddress}
                     </span>
                   )}
                 </div>
-                <div className="text-sm text-mono-10">
+                <div className="text-sm text-[var(--muted-foreground)]">
                   <div>{address.street}</div>
                   <div>{address.city}, {address.country}</div>
                 </div>
