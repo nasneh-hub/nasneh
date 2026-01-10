@@ -55,7 +55,7 @@ jobs:
         run: |
           docker build \
             -f apps/customer-web/Dockerfile \
-            --build-arg NEXT_PUBLIC_API_URL=https://api-staging.nasneh.com \
+            --build-arg NEXT_PUBLIC_API_URL=https://api-staging.nasneh.com/api/v1 \
             --build-arg NEXT_PUBLIC_APP_ENV=staging \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:staging-latest \
