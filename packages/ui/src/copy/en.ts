@@ -948,6 +948,62 @@ export const en = {
     checkingStatus: 'Checking application status...',
     loadingError: 'Failed to load application status',
     tryAgain: 'Try Again',
+    
+    // Vendor Application
+    vendor: {
+      step1Title: 'Business & Eligibility',
+      step1Description: 'Tell us about your business and legal eligibility',
+      step2Title: 'Review & Submit',
+      step2Description: 'Review your information before submitting',
+      
+      // Fields
+      businessName: 'Business Name',
+      businessNamePlaceholder: 'Enter your business name',
+      category: 'Business Category',
+      categoryPlaceholder: 'Select a category',
+      eligibilityType: 'Legal Eligibility',
+      description: 'Business Description (Optional)',
+      descriptionPlaceholder: 'Tell us about your business...',
+      crNumber: 'Commercial Registration Number',
+      crNumberPlaceholder: 'Enter your CR number',
+      
+      // Categories
+      categories: {
+        homeKitchen: 'Home Kitchen',
+        crafts: 'Crafts & Handmade',
+        market: 'Market Goods',
+        foodTruck: 'Food Truck',
+      },
+      
+      // Eligibility
+      eligibility: {
+        sijili: 'Sijili (MOIC — Bahrain Home Business License)',
+        khotwa: 'Khotwa Program Beneficiary',
+        cr: 'Commercial Registration (CR)',
+      },
+      
+      // Actions
+      next: 'Next',
+      back: 'Back',
+      submit: 'Submit Application',
+      submitting: 'Submitting...',
+      
+      // Errors
+      errors: {
+        businessNameRequired: 'Business name is required (minimum 2 characters)',
+        categoryRequired: 'Please select a business category',
+        eligibilityRequired: 'Please select your legal eligibility',
+        crNumberRequired: 'CR number is required when using Commercial Registration',
+        submitFailed: 'Failed to submit application. Please try again.',
+      },
+      
+      // Success
+      success: {
+        title: 'Application Submitted!',
+        message: 'Your application has been submitted successfully',
+        redirecting: 'Redirecting to status page...',
+      },
+    },
   },
   /**
    * Navigation Labels
