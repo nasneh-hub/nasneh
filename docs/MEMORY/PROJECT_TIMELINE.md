@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 18:54:00 | Added (onboarding): provider application form (2-step MVP) | PR #291 | @nasneh-hub |
 | 18:44:35 | Fixed (onboarding): make CR number and document upload mandatory for all eligibility types | PR #290 | @nasneh-hub |
 | 18:32:47 | Added (onboarding): vendor application form (2-step MVP) | PR #289 | @nasneh-hub |
 | 18:04:57 | Fixed (ui): remove mono classes from RadioGroup and Textarea | PR #288 | @nasneh-hub |
