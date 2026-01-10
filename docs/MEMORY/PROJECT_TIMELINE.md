@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:34:34 | Fixed (api): prioritize APP_ENVIRONMENT over NODE_ENV in seed guard | PR #275 | @nasneh-hub |
 | 09:48:31 | Added (api): add staging E2E test data seed and cleanup scripts | PR #274 | @nasneh-hub |
 | 09:18:02 | Documented (s5-03): add E2E smoke test report and evidence | PR #273 | @nasneh-hub |
 | 08:59:59 | Added (booking): wire book now button to booking flow with auth handling | PR #272 | @nasneh-hub |
