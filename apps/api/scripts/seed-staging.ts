@@ -24,39 +24,33 @@ const prisma = new PrismaClient();
 
 // Staging-only guard
 function ensureStagingEnvironment() {
-  const dbUrl = process.env.DATABASE_URL || '';
+  const appEnv = process.env.APP_ENVIRONMENT || '';
   const nodeEnv = process.env.NODE_ENV || '';
+  const dbUrl = process.env.DATABASE_URL || '';
   
-  // Check for staging indicators
-  const isStaging = dbUrl.includes('staging') || 
-                    dbUrl.includes('nasneh-staging') ||
-                    nodeEnv === 'staging';
-  
-  // Refuse to run on production
-  const isProduction = dbUrl.includes('production') || 
-                       dbUrl.includes('nasneh-prod') ||
-                       nodeEnv === 'production';
-  
-  if (isProduction) {
-    console.error('❌ ERROR: This script cannot run on PRODUCTION!');
-    console.error('   DATABASE_URL contains production indicators.');
+  // Primary check: APP_ENVIRONMENT must be 'staging'
+  if (appEnv !== 'staging') {
+    console.error('❌ ERROR: This script requires APP_ENVIRONMENT=staging');
+    console.error('   Current APP_ENVIRONMENT:', appEnv || '(not set)');
+    console.error('');
+    console.error('   This script can only run on staging environment.');
+    console.error('   Set APP_ENVIRONMENT=staging to proceed.');
     process.exit(1);
   }
   
-  if (!isStaging) {
-    console.warn('⚠️  WARNING: Could not confirm staging environment.');
-    console.warn('   DATABASE_URL:', dbUrl.substring(0, 30) + '...');
-    console.warn('   NODE_ENV:', nodeEnv || '(not set)');
-    console.warn('');
-    console.warn('   This script should only run on staging.');
-    console.warn('   Press Ctrl+C to cancel, or wait 5 seconds to continue...');
-    console.warn('');
-    
-    // Give user 5 seconds to cancel
-    return new Promise(resolve => setTimeout(resolve, 5000));
+  // Secondary check: Refuse to run on production
+  const isProduction = dbUrl.includes('production') || 
+                       dbUrl.includes('nasneh-prod') ||
+                       nodeEnv === 'production' ||
+                       appEnv === 'production';
+  
+  if (isProduction) {
+    console.error('❌ ERROR: This script cannot run on PRODUCTION!');
+    console.error('   Production indicators detected.');
+    process.exit(1);
   }
   
-  console.log('✅ Environment check passed: STAGING');
+  console.log('✅ Environment check passed: APP_ENVIRONMENT=staging');
   console.log('');
   return Promise.resolve();
 }
