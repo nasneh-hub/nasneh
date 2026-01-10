@@ -433,6 +433,26 @@ export const ar = {
   },
 
   /**
+   * Onboarding Section
+   * For vendor/provider application flow
+   */
+  onboarding: {
+    // Selection Page
+    selectionTitle: 'اختر مسارك',
+    selectionSubtitle: 'اختر كيف تريد الانضمام إلى ناسنه',
+    becomeVendor: 'كن بائع',
+    becomeVendorDesc: 'بيع المنتجات على ناسنه',
+    becomeProvider: 'كن مقدم خدمة',
+    becomeProviderDesc: 'قدم خدمات للعملاء',
+    startApplication: 'ابدأ التقديم',
+    viewStatus: 'عرض حالة الطلب',
+    
+    // Status Messages
+    checkingStatus: 'جاري التحقق من حالة الطلب...',
+    loadingError: 'فشل تحميل حالة الطلب',
+    tryAgain: 'حاول مرة أخرى',
+  },
+  /**
    * Common UI Elements
    */
   common: {

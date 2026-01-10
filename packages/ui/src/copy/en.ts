@@ -930,6 +930,26 @@ export const en = {
   },
 
   /**
+   * Onboarding Section
+   * For vendor/provider application flow
+   */
+  onboarding: {
+    // Selection Page
+    selectionTitle: 'Choose Your Path',
+    selectionSubtitle: 'Select how you\'d like to join Nasneh',
+    becomeVendor: 'Become a Vendor',
+    becomeVendorDesc: 'Sell products on Nasneh',
+    becomeProvider: 'Become a Service Provider',
+    becomeProviderDesc: 'Offer services to customers',
+    startApplication: 'Start Application',
+    viewStatus: 'View Application Status',
+    
+    // Status Messages
+    checkingStatus: 'Checking application status...',
+    loadingError: 'Failed to load application status',
+    tryAgain: 'Try Again',
+  },
+  /**
    * Navigation Labels
    * For breadcrumbs and navigation
    */
