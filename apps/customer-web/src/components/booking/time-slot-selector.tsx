@@ -58,7 +58,7 @@ export function TimeSlotSelector({
           {Array.from({ length: 9 }).map((_, i) => (
             <div
               key={i}
-              className="h-12 bg-mono-200 rounded-xl animate-pulse"
+              className="h-12 bg-[var(--muted)] rounded-xl animate-pulse"
             />
           ))}
         </div>
@@ -69,7 +69,7 @@ export function TimeSlotSelector({
   if (slots.length === 0) {
     return (
       <Card className="p-6">
-        <p className="text-center text-mono-600">
+        <p className="text-center text-[var(--muted-foreground)]">
           {en.booking.noSlotsAvailable}
         </p>
       </Card>
@@ -78,7 +78,7 @@ export function TimeSlotSelector({
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">
+      <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)]">
         {en.booking.selectTime}
       </h3>
       <div className="grid grid-cols-3 gap-3">
@@ -98,10 +98,10 @@ export function TimeSlotSelector({
                 font-medium
                 transition-colors
                 ${isSelected
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                   : isClickable
-                  ? 'bg-mono-100 hover:bg-mono-200 text-mono-900'
-                  : 'bg-mono-50 text-mono-400 cursor-not-allowed'
+                  ? 'bg-[var(--secondary)] hover:bg-[var(--accent)] text-[var(--foreground)]'
+                  : 'bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50'
                 }
               `}
             >

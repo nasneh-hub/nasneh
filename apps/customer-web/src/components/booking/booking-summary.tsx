@@ -80,53 +80,53 @@ export function BookingSummary({
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">
+      <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)]">
         {en.booking.bookingSummary}
       </h3>
       
       <div className="space-y-4">
         {/* Service */}
         <div>
-          <p className="text-sm text-mono-600 mb-1">
+          <p className="text-sm text-[var(--muted-foreground)] mb-1">
             {en.booking.service}
           </p>
-          <p className="font-medium text-mono-900">
+          <p className="font-medium text-[var(--foreground)]">
             {service.name}
           </p>
-          <p className="text-sm text-mono-600">
+          <p className="text-sm text-[var(--muted-foreground)]">
             {service.duration} {en.booking.minutes}
           </p>
         </div>
 
         {/* Provider */}
         <div>
-          <p className="text-sm text-mono-600 mb-1">
+          <p className="text-sm text-[var(--muted-foreground)] mb-1">
             {en.booking.provider}
           </p>
-          <p className="font-medium text-mono-900">
+          <p className="font-medium text-[var(--foreground)]">
             {provider.name}
           </p>
         </div>
 
         {/* Date & Time */}
         <div>
-          <p className="text-sm text-mono-600 mb-1">
+          <p className="text-sm text-[var(--muted-foreground)] mb-1">
             {en.booking.dateTime}
           </p>
-          <p className="font-medium text-mono-900">
+          <p className="font-medium text-[var(--foreground)]">
             {formatDate(date)}
           </p>
-          <p className="font-medium text-mono-900">
+          <p className="font-medium text-[var(--foreground)]">
             {formatTime(time)}
           </p>
         </div>
 
         {/* Location */}
         <div>
-          <p className="text-sm text-mono-600 mb-1">
+          <p className="text-sm text-[var(--muted-foreground)] mb-1">
             {en.booking.location}
           </p>
-          <p className="font-medium text-mono-900">
+          <p className="font-medium text-[var(--foreground)]">
             {location}
           </p>
         </div>
@@ -134,30 +134,30 @@ export function BookingSummary({
         {/* Notes (if provided) */}
         {notes && (
           <div>
-            <p className="text-sm text-mono-600 mb-1">
+            <p className="text-sm text-[var(--muted-foreground)] mb-1">
               {en.booking.notes}
             </p>
-            <p className="text-mono-900">
+            <p className="text-[var(--foreground)]">
               {notes}
             </p>
           </div>
         )}
 
         {/* Price Breakdown */}
-        <div className="pt-4 border-t border-mono-200">
+        <div className="pt-4 border-t border-[var(--border)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-mono-600">
+            <p className="text-[var(--muted-foreground)]">
               {en.booking.servicePrice}
             </p>
-            <p className="font-medium text-mono-900">
+            <p className="font-medium text-[var(--foreground)]">
               {formatPrice(service.price)}
             </p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-lg font-semibold text-mono-900">
+            <p className="text-lg font-semibold text-[var(--foreground)]">
               {en.booking.total}
             </p>
-            <p className="text-lg font-semibold text-mono-900">
+            <p className="text-lg font-semibold text-[var(--foreground)]">
               {formatPrice(service.price)}
             </p>
           </div>
