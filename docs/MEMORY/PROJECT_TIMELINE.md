@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 13:09:08 | Fixed (customer-web): convert service pages to server components with client sub-components | PR #282 | @nasneh-hub |
 | 12:48:21 | Fixed (customer-web): enable dynamic params for service detail and booking pages | PR #281 | @nasneh-hub |
 | 12:27:51 | Fixed (customer-web): replace all price .toFixed() with formatCurrency helper | PR #280 | @nasneh-hub |
 | 12:07:02 | Fixed (customer-web): remove duplicate /api/v1 from service detail page | PR #279 | @nasneh-hub |
