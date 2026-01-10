@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 08:48:27 | Added (booking): add step 3 review & confirm + booking confirmation page | PR #271 | @nasneh-hub |
 | 08:28:11 | Added (s5-03): add booking page steps 1-2 with slots API integration | PR #270 | @nasneh-hub |
 | 08:17:10 | Added (s5-03): add booking components and copy tokens | PR #269 | @nasneh-hub |
 | 07:35:59 | Documented: add S5-02 E2E smoke test audit for PR6 | PR #268 | @nasneh-hub |
