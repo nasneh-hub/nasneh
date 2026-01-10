@@ -2,6 +2,7 @@
 
 import { Button, Badge, Avatar } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
+import { formatCurrency } from '@/lib/utils/currency';
 import Link from 'next/link';
 
 interface ProductInfoProps {
@@ -39,7 +40,7 @@ export function ProductInfo({ product, onAddToCart, isAddingToCart }: ProductInf
           {product.name}
         </h1>
         <div className="text-2xl font-semibold text-mono-12">
-          {product.price.toFixed(2)} {en.currency.bhd}
+          {formatCurrency(product.price)}
         </div>
       </div>
       
