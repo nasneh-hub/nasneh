@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 14:21:53 | Added (customer-web): implement booking step 2 (location selection) | PR #284 | @nasneh-hub |
 | 14:05:12 | Added (customer-web): implement booking step 1 (date/time selection) | PR #283 | @nasneh-hub |
 | 13:09:08 | Fixed (customer-web): convert service pages to server components with client sub-components | PR #282 | @nasneh-hub |
 | 12:48:21 | Fixed (customer-web): enable dynamic params for service detail and booking pages | PR #281 | @nasneh-hub |
