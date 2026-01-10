@@ -2,6 +2,7 @@
 
 import { en } from '@nasneh/ui/copy';
 import { Card } from '@nasneh/ui';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface BookingSummaryProps {
   /**
@@ -74,7 +75,7 @@ export function BookingSummary({
   };
 
   const formatPrice = (price: number) => {
-    return `${en.currency.bd} ${price.toFixed(2)}`;
+    return formatCurrency(price);
   };
 
   return (
