@@ -16,11 +16,11 @@ export function OrderNotes({ value, onChange, maxLength = 500 }: OrderNotesProps
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <FileText className="w-5 h-5 text-mono-10" />
-        <h3 className="text-lg font-semibold text-mono-12">
+        <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
+        <h3 className="text-lg font-semibold text-[var(--foreground)]">
           {en.checkout.orderNotes}
         </h3>
-        <span className="text-sm text-mono-9">
+        <span className="text-sm text-[var(--muted-foreground)]">
           ({en.checkout.optional})
         </span>
       </div>
@@ -35,10 +35,10 @@ export function OrderNotes({ value, onChange, maxLength = 500 }: OrderNotesProps
           className="w-full"
         />
         <div className="flex items-center justify-between text-sm">
-          <span className="text-mono-10">
+          <span className="text-[var(--muted-foreground)]">
             {en.checkout.orderNotesHint}
           </span>
-          <span className={`${remainingChars < 50 ? 'text-mono-11' : 'text-mono-9'}`}>
+          <span className={`${remainingChars < 50 ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>
             {remainingChars} {en.checkout.charactersRemaining}
           </span>
         </div>
