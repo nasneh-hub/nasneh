@@ -14,6 +14,7 @@ interface FormData {
   category: VendorCategory | '';
   eligibilityType: EligibilityType | '';
   crNumber: string;
+  document: File | null;
   description: string;
 }
 
@@ -28,6 +29,7 @@ export function VendorApplicationForm() {
     category: '',
     eligibilityType: '',
     crNumber: '',
+    document: null,
     description: '',
   });
 
@@ -48,8 +50,14 @@ export function VendorApplicationForm() {
       newErrors.eligibilityType = en.onboarding.vendor.errors.eligibilityRequired;
     }
 
-    if (formData.eligibilityType === 'CR' && !formData.crNumber) {
+    // CR number is now required for ALL eligibility types
+    if (!formData.crNumber) {
       newErrors.crNumber = en.onboarding.vendor.errors.crNumberRequired;
+    }
+
+    // Document is required for all eligibility types
+    if (!formData.document) {
+      newErrors.document = en.onboarding.vendor.errors.documentRequired;
     }
 
     setErrors(newErrors);
@@ -229,28 +237,60 @@ export function VendorApplicationForm() {
               )}
             </div>
 
-            {/* CR Number (conditional) */}
-            {formData.eligibilityType === 'CR' && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  {en.onboarding.vendor.crNumber}
-                  <span className="text-[var(--destructive)]"> *</span>
-                </label>
-                <Input
-                  value={formData.crNumber}
+            {/* CR Number (always required) */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">
+                {en.onboarding.vendor.crNumber}
+                <span className="text-[var(--destructive)]"> *</span>
+              </label>
+              <Input
+                value={formData.crNumber}
+                onChange={(e) => {
+                  setFormData({ ...formData, crNumber: e.target.value });
+                  if (errors.crNumber) {
+                    setErrors({ ...errors, crNumber: undefined });
+                  }
+                }}
+                placeholder={en.onboarding.vendor.crNumberPlaceholder}
+              />
+              {errors.crNumber && (
+                <p className="text-sm text-[var(--destructive)]">{errors.crNumber}</p>
+              )}
+            </div>
+
+            {/* Document Upload (required, dynamic label) */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">
+                {formData.eligibilityType === 'SIJILI' && en.onboarding.vendor.documentLabel.sijili}
+                {formData.eligibilityType === 'KHOTWA' && en.onboarding.vendor.documentLabel.khotwa}
+                {formData.eligibilityType === 'CR' && en.onboarding.vendor.documentLabel.cr}
+                {!formData.eligibilityType && en.onboarding.vendor.documentLabel.default}
+                <span className="text-[var(--destructive)]"> *</span>
+              </label>
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
                   onChange={(e) => {
-                    setFormData({ ...formData, crNumber: e.target.value });
-                    if (errors.crNumber) {
-                      setErrors({ ...errors, crNumber: undefined });
+                    const file = e.target.files?.[0] || null;
+                    setFormData({ ...formData, document: file });
+                    if (errors.document) {
+                      setErrors({ ...errors, document: undefined });
                     }
                   }}
-                  placeholder={en.onboarding.vendor.crNumberPlaceholder}
+                  disabled
+                  className="w-full rounded-xl bg-[var(--input-bg)] px-4 py-2 text-sm text-[var(--foreground)] file:mr-4 file:rounded-xl file:border-0 file:bg-[var(--muted)] file:px-4 file:py-2 file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50"
                 />
-                {errors.crNumber && (
-                  <p className="text-sm text-[var(--destructive)]">{errors.crNumber}</p>
-                )}
+                <div className="rounded-xl bg-[var(--warning)] bg-opacity-10 p-3">
+                  <p className="text-sm text-[var(--warning)]">
+                    {en.onboarding.vendor.documentComingSoon}
+                  </p>
+                </div>
               </div>
-            )}
+              {errors.document && (
+                <p className="text-sm text-[var(--destructive)]">{errors.document}</p>
+              )}
+            </div>
 
             {/* Description */}
             <div className="space-y-2">
