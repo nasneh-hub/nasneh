@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 09:18:02 | Documented (s5-03): add E2E smoke test report and evidence | PR #273 | @nasneh-hub |
 | 08:59:59 | Added (booking): wire book now button to booking flow with auth handling | PR #272 | @nasneh-hub |
 | 08:48:27 | Added (booking): add step 3 review & confirm + booking confirmation page | PR #271 | @nasneh-hub |
 | 08:28:11 | Added (s5-03): add booking page steps 1-2 with slots API integration | PR #270 | @nasneh-hub |

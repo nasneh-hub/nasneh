@@ -68,6 +68,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#216:** add ACM certificate and Route53 for api-staging.nasneh.com
 
 ### 📚 Documentation (docs)
+- **#273:** add E2E smoke test report and evidence
 - **#268:** add S5-02 E2E smoke test audit for PR6
 - **#240:** relax to shadcn-first approach (v2.0)
 - **#215:** add environment variables contract
@@ -81,6 +82,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#207:** remove localStorage workaround
 
 ### 📚 Documentation (docs)
+- **#273:** add E2E smoke test report and evidence
 - **#268:** add S5-02 E2E smoke test audit for PR6
 - **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
@@ -221,6 +223,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#187:** remove accidental bash command from ui-lint.yml
 
 ### 📚 Documentation (docs)
+- **#273:** add E2E smoke test report and evidence
 - **#268:** add S5-02 E2E smoke test audit for PR6
 - **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
@@ -321,6 +324,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
+- **#273:** add E2E smoke test report and evidence
 - **#268:** add S5-02 E2E smoke test audit for PR6
 - **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
@@ -353,6 +357,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.2.0] - 2026-01-03
 
 ### 📚 Documentation (docs)
+- **#273:** add E2E smoke test report and evidence
 - **#268:** add S5-02 E2E smoke test audit for PR6
 - **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
@@ -582,6 +587,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
+- **#273:** add E2E smoke test report and evidence
 - **#268:** add S5-02 E2E smoke test audit for PR6
 - **#240:** relax to shadcn-first approach (v2.0)
 - **#214:** update documentation for Sprint 4 completion
