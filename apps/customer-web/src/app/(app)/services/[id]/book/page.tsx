@@ -8,6 +8,7 @@ import {
   DateCalendar,
   TimeSlotSelector,
   BookingActions,
+  BookingSummary,
 } from '@/components/booking';
 import { AddressSelector } from '@/components/checkout';
 
@@ -41,14 +42,15 @@ interface BookingAddress {
   isDefault?: boolean;
 }
 
-type Step = 1 | 2;
+type Step = 1 | 2 | 3;
 
 /**
  * Service Booking Page
  * 
- * 2-step booking flow:
+ * 3-step booking flow:
  * Step 1: Select Date & Time
  * Step 2: Service Location (address or provider location)
+ * Step 3: Review & Confirm
  * 
  * Route: /services/[id]/book
  */
@@ -73,6 +75,10 @@ export default function ServiceBookingPage() {
   // Step 2 state
   const [addresses, setAddresses] = useState<BookingAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>();
+
+  // Step 3 state
+  const [bookingNotes, setBookingNotes] = useState<string>('');
+  const [isCreatingBooking, setIsCreatingBooking] = useState(false);
 
   // Fetch service details
   useEffect(() => {
@@ -202,14 +208,70 @@ export default function ServiceBookingPage() {
   const handleNext = () => {
     if (step === 1) {
       setStep(2);
+    } else if (step === 2) {
+      setStep(3);
     }
   };
 
   const handleBack = () => {
-    if (step === 2) {
+    if (step === 3) {
+      setStep(2);
+    } else if (step === 2) {
       setStep(1);
     } else {
       router.push(`/services/${serviceId}`);
+    }
+  };
+
+  // Handle booking creation
+  const handleConfirmBooking = async () => {
+    if (!selectedDate || !selectedTime) return;
+
+    try {
+      setIsCreatingBooking(true);
+      const requestBody: any = {
+        serviceId,
+        date: selectedDate,
+        time: selectedTime,
+        notes: bookingNotes || undefined,
+      };
+
+      // Add addressId only for HOME services
+      if (service?.type === 'HOME' && selectedAddressId) {
+        requestBody.addressId = selectedAddressId;
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/bookings`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          router.push('/login');
+          return;
+        } else {
+          setError(en.ui.error);
+          return;
+        }
+      }
+
+      const data = await response.json();
+      const bookingId = data.data.id;
+
+      // Navigate to confirmation page
+      router.push(`/bookings/${bookingId}/confirmation`);
+    } catch (err) {
+      setError(en.ui.error);
+    } finally {
+      setIsCreatingBooking(false);
     }
   };
 
@@ -302,6 +364,23 @@ export default function ServiceBookingPage() {
             </div>
             <span className="font-medium">{en.booking.step2Title}</span>
           </div>
+          <div className="flex-1 h-px bg-mono-300" />
+          <div
+            className={`flex items-center gap-2 ${
+              step === 3 ? 'text-primary' : 'text-mono-600'
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
+                step === 3
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-mono-200 text-mono-600'
+              }`}
+            >
+              3
+            </div>
+            <span className="font-medium">{en.booking.step3Title}</span>
+          </div>
         </div>
 
         {/* Step 1: Select Date & Time */}
@@ -372,12 +451,58 @@ export default function ServiceBookingPage() {
 
             <BookingActions
               onBack={handleBack}
-              onConfirm={() => {
-                // TODO: Navigate to step 3 (Review & Confirm) in PR3
-                alert('Step 3 (Review & Confirm) will be implemented in PR3');
-              }}
+              onConfirm={handleNext}
               confirmDisabled={!canProceedStep2}
               confirmLabel={en.ui.next}
+            />
+          </div>
+        )}
+
+        {/* Step 3: Review & Confirm */}
+        {step === 3 && (
+          <div className="space-y-6">
+            <BookingSummary
+              service={{
+                name: service.name,
+                duration: service.duration,
+                price: service.price,
+              }}
+              provider={{
+                name: service.provider.name,
+              }}
+              date={selectedDate!}
+              time={selectedTime!}
+              location={
+                service.type === 'HOME'
+                  ? addresses.find((a) => a.id === selectedAddressId)?.label ||
+                    ''
+                  : service.provider.location || ''
+              }
+              notes={bookingNotes}
+            />
+
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">
+                {en.booking.notes}
+              </h3>
+              <textarea
+                value={bookingNotes}
+                onChange={(e) => setBookingNotes(e.target.value)}
+                placeholder={en.booking.notesPlaceholder}
+                className="w-full min-h-32 p-3 rounded-xl border border-mono-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                maxLength={500}
+              />
+              <p className="text-sm text-mono-600 mt-2">
+                {bookingNotes.length}/500 characters
+              </p>
+            </Card>
+
+            <BookingActions
+              onBack={handleBack}
+              onConfirm={handleConfirmBooking}
+              confirmDisabled={isCreatingBooking}
+              confirmLabel={en.booking.confirmBooking}
+              isConfirming={isCreatingBooking}
             />
           </div>
         )}
