@@ -1,6 +1,7 @@
 'use client';
 
 import { en } from '@nasneh/ui/copy';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface CartSummaryProps {
   subtotal: number;
@@ -21,7 +22,7 @@ export function CartSummary({ subtotal, deliveryFee, total }: CartSummaryProps) 
         {/* Subtotal */}
         <div className="flex items-center justify-between text-mono-11">
           <span>{en.cart.subtotal}</span>
-          <span>{subtotal.toFixed(2)} {en.currency.bhd}</span>
+          <span>{formatCurrency(subtotal)}</span>
         </div>
 
         {/* Delivery Fee */}
@@ -31,7 +32,7 @@ export function CartSummary({ subtotal, deliveryFee, total }: CartSummaryProps) 
             {isFreeDelivery ? (
               <span className="text-primary font-medium">{en.cart.freeDelivery}</span>
             ) : (
-              `${deliveryFee.toFixed(2)} ${en.currency.bhd}`
+              formatCurrency(deliveryFee)
             )}
           </span>
         </div>
@@ -42,7 +43,7 @@ export function CartSummary({ subtotal, deliveryFee, total }: CartSummaryProps) 
         {/* Total */}
         <div className="flex items-center justify-between text-lg font-semibold text-mono-12">
           <span>{en.cart.total}</span>
-          <span>{total.toFixed(2)} {en.currency.bhd}</span>
+          <span>{formatCurrency(total)}</span>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { Package } from 'lucide-react';
 import { Card, Button } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
+import { formatCurrency } from '@/lib/utils/currency';
 import { EmptyState } from '@/components/shared/empty-state';
 
 interface Order {
@@ -152,7 +153,7 @@ export default function OrdersPage() {
                       {item.quantity}x {item.productName}
                     </span>
                     <span className="text-[var(--text-secondary)]">
-                      {item.price.toFixed(3)} {en.currency.bhd}
+                      {formatCurrency(item.price)}
                     </span>
                   </div>
                 ))}
@@ -169,7 +170,7 @@ export default function OrdersPage() {
                     })}
                   </p>
                   <p className="m-0 mt-[var(--spacing-xs)] text-[length:var(--font-size-large)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
-                    {order.total.toFixed(3)} {en.currency.bhd}
+                    {formatCurrency(order.total)}
                   </p>
                 </div>
                 <Button

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { en } from '@nasneh/ui/copy';
 import { Button, Skeleton } from '@nasneh/ui';
+import { formatCurrency } from '@/lib/utils/currency';
 import { CheckCircle, XCircle, Package, MapPin, FileText } from 'lucide-react';
 import { getPaymentProvider } from '@/lib/payment';
 
@@ -278,7 +279,7 @@ export default function OrderConfirmationPage() {
                       </p>
                     </div>
                     <p className="font-medium text-mono-12">
-                      {item.price.toFixed(3)} {en.currency.bhd}
+                      {formatCurrency(item.price)}
                     </p>
                   </div>
                 ))}
@@ -288,7 +289,7 @@ export default function OrderConfirmationPage() {
               <div className="mt-6 pt-6 border-t border-mono-4 space-y-2">
                 <div className="flex justify-between text-mono-11">
                   <span>{en.cart.subtotal}</span>
-                  <span>{order.subtotal.toFixed(3)} {en.currency.bhd}</span>
+                  <span>{formatCurrency(order.subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-mono-11">
                   <span>{en.cart.deliveryFee}</span>
@@ -296,13 +297,13 @@ export default function OrderConfirmationPage() {
                     {order.deliveryFee === 0 ? (
                       <span className="text-primary">{en.cart.freeDelivery}</span>
                     ) : (
-                      `${order.deliveryFee.toFixed(3)} ${en.currency.bhd}`
+                      formatCurrency(order.deliveryFee)
                     )}
                   </span>
                 </div>
                 <div className="flex justify-between text-lg font-bold text-mono-12 pt-2">
                   <span>{en.cart.total}</span>
-                  <span>{order.total.toFixed(3)} {en.currency.bhd}</span>
+                  <span>{formatCurrency(order.total)}</span>
                 </div>
               </div>
             </div>

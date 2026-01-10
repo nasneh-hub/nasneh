@@ -2,6 +2,7 @@
 
 import { Button } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
+import { formatCurrency } from '@/lib/utils/currency';
 import { Minus, Plus, X } from 'lucide-react';
 import Image from 'next/image';
 
@@ -104,7 +105,7 @@ export function CartItem({ item, onQuantityChange, onRemove, isUpdating }: CartI
           <div className="text-right">
             <div className="text-sm text-mono-10">{en.cart.price}</div>
             <div className="font-semibold text-mono-12">
-              {itemTotal.toFixed(2)} {en.currency.bhd}
+              {formatCurrency(itemTotal)}
             </div>
           </div>
         </div>

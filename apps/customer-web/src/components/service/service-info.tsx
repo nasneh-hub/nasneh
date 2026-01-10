@@ -3,6 +3,7 @@
 import { Button, Badge, Avatar } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import Link from 'next/link';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface ServiceInfoProps {
   service: {
@@ -44,7 +45,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
       {/* Price */}
       <div>
         <div className="text-3xl font-bold text-mono-12">
-          {service.price.toFixed(3)} {en.currency.bd}
+          {formatCurrency(service.price)}
         </div>
       </div>
 

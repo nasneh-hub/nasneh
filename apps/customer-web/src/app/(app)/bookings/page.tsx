@@ -6,6 +6,7 @@ import { Calendar } from 'lucide-react';
 import { Card, Button } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
+import { formatCurrency } from '@/lib/utils/currency';
 import { EmptyState } from '@/components/shared/empty-state';
 
 interface Booking {
@@ -190,7 +191,7 @@ export default function BookingsPage() {
               <div className="flex items-center justify-between border-t border-[var(--border-primary)] pt-[var(--spacing-md)]">
                 <div>
                   <p className="m-0 text-[length:var(--font-size-large)] font-[var(--font-weight-bold)] text-[var(--text-primary)]">
-                    {booking.total.toFixed(3)} {en.currency.bhd}
+                    {formatCurrency(booking.total)}
                   </p>
                 </div>
                 <Button
