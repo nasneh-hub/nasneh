@@ -54,7 +54,7 @@ export default function AddressesPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me/addresses`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -85,7 +85,7 @@ export default function AddressesPage() {
       if (!token) return;
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me/addresses/${addressId}/default`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${addressId}/default`,
         {
           method: 'POST',
           headers: {
@@ -116,7 +116,7 @@ export default function AddressesPage() {
       if (!token) return;
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me/addresses/${deleteId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${deleteId}`,
         {
           method: 'DELETE',
           headers: {

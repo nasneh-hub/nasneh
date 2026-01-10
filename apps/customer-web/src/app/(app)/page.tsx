@@ -26,7 +26,7 @@ export default function HomePage() {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/categories`
+        `${process.env.NEXT_PUBLIC_API_URL}/categories`
       );
       const data = await response.json();
       if (data.success) {

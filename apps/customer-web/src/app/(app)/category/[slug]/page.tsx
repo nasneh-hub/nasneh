@@ -54,7 +54,7 @@ export default function CategoryPage() {
       
       // Fetch category info
       const categoriesResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/categories`
+        `${process.env.NEXT_PUBLIC_API_URL}/categories`
       );
       const categoriesData = await categoriesResponse.json();
       
@@ -67,7 +67,7 @@ export default function CategoryPage() {
 
       // Fetch products
       const productsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products?category=${slug}&sort=${sortBy}`
+        `${process.env.NEXT_PUBLIC_API_URL}/products?category=${slug}&sort=${sortBy}`
       );
       const productsData = await productsResponse.json();
       
@@ -77,7 +77,7 @@ export default function CategoryPage() {
 
       // Fetch services
       const servicesResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/services?category=${slug}&sort=${sortBy}`
+        `${process.env.NEXT_PUBLIC_API_URL}/services?category=${slug}&sort=${sortBy}`
       );
       const servicesData = await servicesResponse.json();
       
