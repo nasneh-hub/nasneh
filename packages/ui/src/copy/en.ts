@@ -871,6 +871,65 @@ export const en = {
   },
 
   /**
+   * Booking Section
+   * Service booking flow
+   */
+  booking: {
+    // Page titles
+    pageTitle: 'Book Service',
+    confirmationTitle: 'Booking Confirmed',
+    
+    // Step labels
+    step1Title: 'Select Date & Time',
+    step2Title: 'Service Location',
+    step3Title: 'Review & Confirm',
+    
+    // Date & Time
+    selectDate: 'Select Date',
+    selectTime: 'Select Time',
+    noAvailability: 'No availability in the next 30 days',
+    noSlotsAvailable: 'No slots available on this date',
+    duration: 'Duration',
+    minutes: 'minutes',
+    
+    // Location
+    selectAddress: 'Select Address',
+    providerLocation: 'Provider Location',
+    serviceAt: 'Service at',
+    
+    // Review
+    bookingSummary: 'Booking Summary',
+    service: 'Service',
+    provider: 'Provider',
+    dateTime: 'Date & Time',
+    location: 'Location',
+    notes: 'Booking Notes',
+    notesPlaceholder: 'Add any special requests or instructions...',
+    priceBreakdown: 'Price Breakdown',
+    servicePrice: 'Service Price',
+    total: 'Total',
+    
+    // Actions
+    confirmBooking: 'Confirm Booking',
+    backToService: 'Back to Service',
+    viewBookings: 'View My Bookings',
+    continueBrowsing: 'Continue Browsing',
+    
+    // Confirmation
+    bookingConfirmed: 'Your booking has been confirmed!',
+    bookingReference: 'Booking Reference',
+    providerContact: 'Provider Contact',
+    
+    // Status
+    pending: 'Pending',
+    confirmed: 'Confirmed',
+    inProgress: 'In Progress',
+    completed: 'Completed',
+    cancelled: 'Cancelled',
+    noShow: 'No Show',
+  },
+
+  /**
    * Navigation Labels
    * For breadcrumbs and navigation
    */
