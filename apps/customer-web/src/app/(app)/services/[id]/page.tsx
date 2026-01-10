@@ -50,8 +50,8 @@ export default function ServiceDetailPage() {
   useEffect(() => {
     async function fetchService() {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com';
-        const response = await fetch(`${apiUrl}/api/v1/services/${serviceId}`);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
+        const response = await fetch(`${apiUrl}/services/${serviceId}`);
 
         if (!response.ok) {
           if (response.status === 404) {
@@ -67,7 +67,7 @@ export default function ServiceDetailPage() {
           // Fetch related services
           if (data.data.category?.slug) {
             const relatedResponse = await fetch(
-              `${apiUrl}/api/v1/services?category=${data.data.category.slug}&limit=6`
+              `${apiUrl}/services?category=${data.data.category.slug}&limit=6`
             );
             if (relatedResponse.ok) {
               const relatedData = await relatedResponse.json();
@@ -83,7 +83,7 @@ export default function ServiceDetailPage() {
           
           // Fetch reviews summary
           const reviewsResponse = await fetch(
-            `${apiUrl}/api/v1/reviews?itemType=service&itemId=${serviceId}&limit=1`
+            `${apiUrl}/reviews?itemType=service&itemId=${serviceId}&limit=1`
           );
           if (reviewsResponse.ok) {
             const reviewsData = await reviewsResponse.json();
