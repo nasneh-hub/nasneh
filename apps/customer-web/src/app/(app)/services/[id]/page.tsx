@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
 import { en } from '@nasneh/ui/copy';
 import { Button, Skeleton } from '@nasneh/ui';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
@@ -34,6 +35,7 @@ interface Service {
 export default function ServiceDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const serviceId = params.id as string;
 
   const [service, setService] = useState<Service | null>(null);
@@ -107,8 +109,16 @@ export default function ServiceDetailPage() {
   }, [serviceId]);
 
   const handleBookNow = () => {
-    // TODO: Implement booking flow (S5-03)
-    router.push('/login');
+    if (!isAuthenticated) {
+      // Store return URL for redirect after login
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('booking_return_url', `/services/${serviceId}/book`);
+      }
+      router.push('/login');
+    } else {
+      // Navigate to booking flow
+      router.push(`/services/${serviceId}/book`);
+    }
   };
 
   // Loading State
