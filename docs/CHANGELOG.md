@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#221:** preserve workspace structure in builder stage
 
 ### ✨ Features (feat)
+- **#283:** implement booking step 1 (date/time selection)
 - **#274:** add staging E2E test data seed and cleanup scripts
 - **#272:** wire book now button to booking flow with auth handling
 - **#271:** add step 3 review & confirm + booking confirmation page
@@ -100,6 +101,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#201:** add modification rules to tokens.css
 
 ### ✨ Features (feat)
+- **#283:** implement booking step 1 (date/time selection)
 - **#274:** add staging E2E test data seed and cleanup scripts
 - **#272:** wire book now button to booking flow with auth handling
 - **#271:** add step 3 review & confirm + booking confirmation page
@@ -174,6 +176,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.3.5] - 2026-01-07
 
 ### ✨ Features (feat)
+- **#283:** implement booking step 1 (date/time selection)
 - **#274:** add staging E2E test data seed and cleanup scripts
 - **#272:** wire book now button to booking flow with auth handling
 - **#271:** add step 3 review & confirm + booking confirmation page
@@ -276,6 +279,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#142:** switch to unified auto-docs workflow
 
 ### ✨ Features (feat)
+- **#283:** implement booking step 1 (date/time selection)
 - **#274:** add staging E2E test data seed and cleanup scripts
 - **#272:** wire book now button to booking flow with auth handling
 - **#271:** add step 3 review & confirm + booking confirmation page
@@ -479,6 +483,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#102:** Dereference pnpm symlinks using tar for self-contained image
 
 ### ✨ Features (feat)
+- **#283:** implement booking step 1 (date/time selection)
 - **#274:** add staging E2E test data seed and cleanup scripts
 - **#272:** wire book now button to booking flow with auth handling
 - **#271:** add step 3 review & confirm + booking confirmation page
@@ -531,6 +536,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.1.0] - 2026-01-02
 
 ### ✨ Features (feat)
+- **#283:** implement booking step 1 (date/time selection)
 - **#274:** add staging E2E test data seed and cleanup scripts
 - **#272:** wire book now button to booking flow with auth handling
 - **#271:** add step 3 review & confirm + booking confirmation page
