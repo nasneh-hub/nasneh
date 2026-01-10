@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+// Enable dynamic params for booking pages
+export const dynamicParams = true;
 import { useParams, useRouter } from 'next/navigation';
 import { en } from '@nasneh/ui/copy';
 import { Button, Card } from '@nasneh/ui';

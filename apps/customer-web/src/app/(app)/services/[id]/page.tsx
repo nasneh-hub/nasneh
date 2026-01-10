@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
+// Enable dynamic params for service detail pages
+export const dynamicParams = true;
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { en } from '@nasneh/ui/copy';
