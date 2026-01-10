@@ -13,7 +13,7 @@ export default function OnboardingStatusPage() {
         </p>
       </div>
 
-      <Card className="p-6">
+      <Card padding="lg">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>

@@ -139,7 +139,7 @@ export function VendorApplicationForm() {
           </p>
         </div>
 
-        <Card className="p-6">
+        <Card padding="lg">
           <div className="space-y-6">
             {/* Business Name */}
             <div className="space-y-2">
@@ -289,7 +289,7 @@ export function VendorApplicationForm() {
         </p>
       </div>
 
-      <Card className="p-6">
+      <Card padding="lg">
         <div className="space-y-4">
           <div>
             <p className="text-sm text-[var(--muted-foreground)]">
