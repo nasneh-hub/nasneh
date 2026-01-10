@@ -47,7 +47,7 @@ function SearchContent() {
 
       // Search products
       const productsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products?search=${encodeURIComponent(query)}`
+        `${process.env.NEXT_PUBLIC_API_URL}/products?search=${encodeURIComponent(query)}`
       );
       const productsData = await productsResponse.json();
       
@@ -57,7 +57,7 @@ function SearchContent() {
 
       // Search services
       const servicesResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/services?search=${encodeURIComponent(query)}`
+        `${process.env.NEXT_PUBLIC_API_URL}/services?search=${encodeURIComponent(query)}`
       );
       const servicesData = await servicesResponse.json();
       

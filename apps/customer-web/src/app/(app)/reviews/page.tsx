@@ -47,7 +47,7 @@ export default function ReviewsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/reviews`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

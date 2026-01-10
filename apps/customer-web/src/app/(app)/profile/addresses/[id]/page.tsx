@@ -83,7 +83,7 @@ export default function AddressFormPage() {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me/addresses/${addressId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${addressId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -160,8 +160,8 @@ export default function AddressFormPage() {
       }
 
       const url = isNew
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me/addresses`
-        : `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me/addresses/${addressId}`;
+        ? `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses`
+        : `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${addressId}`;
 
       const response = await fetch(url, {
         method: isNew ? 'POST' : 'PATCH',
