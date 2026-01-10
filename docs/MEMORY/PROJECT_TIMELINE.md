@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 08:17:10 | Added (s5-03): add booking components and copy tokens | PR #269 | @nasneh-hub |
 | 07:35:59 | Documented: add S5-02 E2E smoke test audit for PR6 | PR #268 | @nasneh-hub |
 
 ---
