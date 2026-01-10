@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 18:32:47 | Added (onboarding): vendor application form (2-step MVP) | PR #289 | @nasneh-hub |
 | 18:04:57 | Fixed (ui): remove mono classes from RadioGroup and Textarea | PR #288 | @nasneh-hub |
 | 16:40:51 | Added (s5-04): onboarding selection page (PR1) | PR #287 | @nasneh-hub |
 | 15:10:39 | Fixed (api): prevent double /api/v1 in URL paths | PR #286 | @nasneh-hub |
