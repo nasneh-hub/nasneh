@@ -77,12 +77,12 @@ export function DateCalendar({
     return (
       <Card className="p-6">
         <div className="space-y-4">
-          <div className="h-6 w-32 bg-mono-200 rounded-xl animate-pulse" />
+          <div className="h-6 w-32 bg-[var(--muted)] rounded-xl animate-pulse" />
           <div className="grid grid-cols-7 gap-2">
             {Array.from({ length: 28 }).map((_, i) => (
               <div
                 key={i}
-                className="h-16 bg-mono-200 rounded-xl animate-pulse"
+                className="h-16 bg-[var(--muted)] rounded-xl animate-pulse"
               />
             ))}
           </div>
@@ -94,7 +94,7 @@ export function DateCalendar({
   if (dates.length === 0) {
     return (
       <Card className="p-6">
-        <p className="text-center text-mono-600">
+        <p className="text-center text-[var(--muted-foreground)]">
           {en.booking.noAvailability}
         </p>
       </Card>
@@ -105,7 +105,7 @@ export function DateCalendar({
     <div className="space-y-6">
       {Object.entries(datesByMonth).map(([monthKey, monthDates]) => (
         <Card key={monthKey} className="p-6">
-          <h3 className="text-lg font-semibold mb-4">
+          <h3 className="text-lg font-semibold mb-4 text-[var(--foreground)]">
             {formatMonthYear(monthKey)}
           </h3>
           <div className="grid grid-cols-7 gap-2">
@@ -124,10 +124,10 @@ export function DateCalendar({
                     h-16 rounded-xl
                     transition-colors
                     ${isSelected
-                      ? 'bg-primary text-primary-foreground'
+                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                       : isClickable
-                      ? 'bg-mono-100 hover:bg-mono-200 text-mono-900'
-                      : 'bg-mono-50 text-mono-400 cursor-not-allowed'
+                      ? 'bg-[var(--secondary)] hover:bg-[var(--accent)] text-[var(--foreground)]'
+                      : 'bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50'
                     }
                   `}
                 >
