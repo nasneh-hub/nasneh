@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 11:43:51 | Fixed (customer-web): remove duplicate /api/v1 from API endpoint paths | PR #278 | @nasneh-hub |
 | 11:07:04 | Documented: add staging frontend fix documentation (services not rendering) | PR #277 | @nasneh-hub |
 | 10:38:59 | Documented (s5-03): add E2E live verification report with staging seed evidence | PR #276 | @nasneh-hub |
 | 10:34:34 | Fixed (api): prioritize APP_ENVIRONMENT over NODE_ENV in seed guard | PR #275 | @nasneh-hub |
