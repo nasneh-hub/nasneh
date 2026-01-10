@@ -24,7 +24,6 @@ const prisma = new PrismaClient();
 // Staging-only guard
 function ensureStagingEnvironment() {
   const appEnv = process.env.APP_ENVIRONMENT || '';
-  const nodeEnv = process.env.NODE_ENV || '';
   const dbUrl = process.env.DATABASE_URL || '';
   
   // Primary check: APP_ENVIRONMENT must be 'staging'
@@ -37,19 +36,31 @@ function ensureStagingEnvironment() {
     process.exit(1);
   }
   
-  // Secondary check: Refuse to run on production
-  const isProduction = dbUrl.includes('production') || 
-                       dbUrl.includes('nasneh-prod') ||
-                       nodeEnv === 'production' ||
-                       appEnv === 'production';
+  // Secondary safety check: Even if APP_ENVIRONMENT=staging, block if DATABASE_URL looks like production
+  const dbUrlLower = dbUrl.toLowerCase();
+  const productionIndicators = [
+    'prod',
+    'production',
+    'nasneh-prod',
+    'nasneh-production'
+  ];
   
-  if (isProduction) {
-    console.error('❌ ERROR: This script cannot run on PRODUCTION!');
-    console.error('   Production indicators detected.');
+  const hasProductionIndicator = productionIndicators.some(indicator => 
+    dbUrlLower.includes(indicator)
+  );
+  
+  if (hasProductionIndicator) {
+    console.error('❌ ERROR: DATABASE_URL contains production indicators!');
+    console.error('   APP_ENVIRONMENT is staging, but DATABASE_URL looks like production.');
+    console.error('   Database host:', dbUrl.split('@')[1]?.split('/')[0] || '(hidden)');
+    console.error('');
+    console.error('   This is a safety check to prevent accidental production data modification.');
+    console.error('   If this is truly staging, update the DATABASE_URL to not contain production keywords.');
     process.exit(1);
   }
   
   console.log('✅ Environment check passed: APP_ENVIRONMENT=staging');
+  console.log('✅ Database check passed: No production indicators in DATABASE_URL');
   console.log('');
   return Promise.resolve();
 }
