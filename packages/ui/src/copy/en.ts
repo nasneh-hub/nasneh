@@ -1004,6 +1004,15 @@ export const en = {
         redirecting: 'Redirecting to status page...',
       },
     },
+    
+    // Status Page
+    status: {
+      title: 'Application Status',
+      description: 'Track your application progress',
+      statusLabel: 'Current Status',
+      pending: 'Pending Review',
+      reviewMessage: 'Your application is under review. We will notify you once it has been processed.',
+    },
   },
   /**
    * Navigation Labels
