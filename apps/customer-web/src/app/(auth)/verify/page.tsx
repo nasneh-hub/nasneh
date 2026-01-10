@@ -182,8 +182,15 @@ export default function VerifyPage() {
           response.data.user
         );
         
-        // Redirect to home
-        router.replace('/');
+        // Check for return URL (e.g., from booking flow)
+        const returnUrl = sessionStorage.getItem('booking_return_url');
+        if (returnUrl) {
+          sessionStorage.removeItem('booking_return_url');
+          router.replace(returnUrl);
+        } else {
+          // Redirect to home
+          router.replace('/');
+        }
       } else {
         setError(response.error || en.auth.invalidOtp);
         // Clear OTP on error
