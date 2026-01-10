@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 12:27:51 | Fixed (customer-web): replace all price .toFixed() with formatCurrency helper | PR #280 | @nasneh-hub |
 | 12:07:02 | Fixed (customer-web): remove duplicate /api/v1 from service detail page | PR #279 | @nasneh-hub |
 | 11:43:51 | Fixed (customer-web): remove duplicate /api/v1 from API endpoint paths | PR #278 | @nasneh-hub |
 | 11:07:04 | Documented: add staging frontend fix documentation (services not rendering) | PR #277 | @nasneh-hub |
