@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { ServiceBookingClient } from '@/components/service/service-booking-client';
+import { getApiUrl } from '@/lib/api';
 
 // Enable dynamic params and force dynamic rendering
 export const dynamicParams = true;
@@ -20,8 +21,7 @@ interface Service {
 
 async function fetchService(serviceId: string): Promise<Service | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
-    const response = await fetch(`${apiUrl}/services/${serviceId}`, {
+    const response = await fetch(getApiUrl(`/services/${serviceId}`), {
       cache: 'no-store', // Ensure fresh data
     });
 

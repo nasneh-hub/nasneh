@@ -10,9 +10,7 @@ import {
   CheckoutSummary,
   CheckoutActions,
 } from '@/components/checkout';
-
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
+import { getApiUrl } from '@/lib/api';
 
 // Types
 interface Address {
@@ -57,7 +55,7 @@ export default function CheckoutPage() {
       setError(null);
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/users/me/addresses`, {
+      const response = await fetch(getApiUrl('/users/me/addresses'), {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -98,7 +96,7 @@ export default function CheckoutPage() {
       setIsLoadingCart(true);
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/cart`, {
+      const response = await fetch(getApiUrl('/cart'), {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -147,7 +145,7 @@ export default function CheckoutPage() {
       setError(null);
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/orders`, {
+      const response = await fetch(getApiUrl('/orders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

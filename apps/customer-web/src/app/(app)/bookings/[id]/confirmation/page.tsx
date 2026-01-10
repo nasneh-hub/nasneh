@@ -6,6 +6,7 @@ import { en } from '@nasneh/ui/copy';
 import { Button, Card, Badge } from '@nasneh/ui';
 import { Check, X, Calendar, Clock, MapPin, FileText } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/currency';
+import { getApiUrl } from '@/lib/api';
 
 interface BookingData {
   id: string;
@@ -58,11 +59,10 @@ export default function BookingConfirmationPage() {
     const fetchBooking = async () => {
       try {
         setIsLoading(true);
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com';
         
         // TODO: Add auth token when auth is implemented
         const response = await fetch(
-          `${apiUrl}/api/v1/bookings/${bookingId}`,
+          getApiUrl(`/bookings/${bookingId}`),
           {
             credentials: 'include',
             // TODO: Add auth header when auth is implemented

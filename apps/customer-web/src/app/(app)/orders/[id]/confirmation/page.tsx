@@ -7,9 +7,7 @@ import { Button, Skeleton } from '@nasneh/ui';
 import { formatCurrency } from '@/lib/utils/currency';
 import { CheckCircle, XCircle, Package, MapPin, FileText } from 'lucide-react';
 import { getPaymentProvider } from '@/lib/payment';
-
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
+import { getApiUrl } from '@/lib/api';
 
 // Types
 interface OrderItem {
@@ -60,7 +58,7 @@ export default function OrderConfirmationPage() {
       setNotFound(false);
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+      const response = await fetch(getApiUrl(`/orders/${orderId}`), {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
