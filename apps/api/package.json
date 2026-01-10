@@ -15,7 +15,9 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev"
+    "db:migrate:dev": "prisma migrate dev",
+    "seed:staging": "tsx scripts/seed-staging.ts",
+    "cleanup:staging": "tsx scripts/cleanup-staging.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.958.0",
