@@ -4,6 +4,30 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
+/**
+ * Get normalized API URL
+ * 
+ * Handles cases where NEXT_PUBLIC_API_URL may or may not include /api/v1
+ * Prevents double /api/v1 in URLs
+ * 
+ * @param path - API path without /api/v1 prefix (e.g., '/services/123')
+ * @returns Full API URL
+ */
+export function getApiUrl(path: string): string {
+  let baseUrl = API_BASE_URL;
+  
+  // Remove trailing slash from base URL
+  baseUrl = baseUrl.replace(/\/$/, '');
+  
+  // If base URL already ends with /api/v1, don't append it again
+  if (baseUrl.endsWith('/api/v1')) {
+    return `${baseUrl}${path}`;
+  }
+  
+  // Otherwise, append /api/v1
+  return `${baseUrl}/api/v1${path}`;
+}
+
 interface ApiResponse<T> {
   success: boolean;
   data?: T;

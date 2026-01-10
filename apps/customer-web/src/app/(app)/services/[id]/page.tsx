@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { ServiceDetailClient } from '@/components/service/service-detail-client';
+import { getApiUrl } from '@/lib/api';
 
 // Enable dynamic params and force dynamic rendering
 export const dynamicParams = true;
@@ -27,8 +28,7 @@ interface Service {
 
 async function fetchService(serviceId: string): Promise<Service | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
-    const response = await fetch(`${apiUrl}/services/${serviceId}`, {
+    const response = await fetch(getApiUrl(`/services/${serviceId}`), {
       cache: 'no-store', // Ensure fresh data
     });
 
@@ -50,9 +50,8 @@ async function fetchService(serviceId: string): Promise<Service | null> {
 
 async function fetchRelatedServices(categorySlug: string, currentServiceId: string): Promise<Service[]> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
     const response = await fetch(
-      `${apiUrl}/services?category=${categorySlug}&limit=6`,
+      getApiUrl(`/services?category=${categorySlug}&limit=6`),
       { cache: 'no-store' }
     );
 
@@ -75,9 +74,8 @@ async function fetchRelatedServices(categorySlug: string, currentServiceId: stri
 
 async function fetchReviewsData(serviceId: string): Promise<{ averageRating: number; totalReviews: number }> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
     const response = await fetch(
-      `${apiUrl}/reviews?itemType=service&itemId=${serviceId}&limit=1`,
+      getApiUrl(`/reviews?itemType=service&itemId=${serviceId}&limit=1`),
       { cache: 'no-store' }
     );
 

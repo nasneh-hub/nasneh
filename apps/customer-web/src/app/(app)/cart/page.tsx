@@ -11,6 +11,7 @@ import {
   VendorBanner,
   CartActions,
 } from '@/components/cart';
+import { getApiUrl } from '@/lib/api';
 
 interface CartItemData {
   id: string;
@@ -47,15 +48,13 @@ export default function CartPage() {
   const [isClearing, setIsClearing] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com/api/v1';
-
   // Fetch cart data
   const fetchCart = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(`${API_BASE_URL}/cart`, {
+      const response = await fetch(getApiUrl('/cart'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
         },
@@ -90,7 +89,7 @@ export default function CartPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [API_BASE_URL]);
+  }, []);
 
   // Update item quantity
   const handleQuantityChange = useCallback(async (itemId: string, quantity: number) => {
@@ -99,7 +98,7 @@ export default function CartPage() {
     setUpdatingItemId(itemId);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/cart/items/${itemId}`, {
+      const response = await fetch(getApiUrl(`/cart/items/${itemId}`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +119,7 @@ export default function CartPage() {
     } finally {
       setUpdatingItemId(null);
     }
-  }, [cart, API_BASE_URL, fetchCart]);
+  }, [cart, fetchCart]);
 
   // Remove item
   const handleRemoveItem = useCallback(async (itemId: string) => {
@@ -129,7 +128,7 @@ export default function CartPage() {
     setUpdatingItemId(itemId);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/cart/items/${itemId}`, {
+      const response = await fetch(getApiUrl(`/cart/items/${itemId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
@@ -148,14 +147,14 @@ export default function CartPage() {
     } finally {
       setUpdatingItemId(null);
     }
-  }, [cart, API_BASE_URL, fetchCart]);
+  }, [cart, fetchCart]);
 
   // Clear cart
   const handleClearCart = useCallback(async () => {
     setIsClearing(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/cart`, {
+      const response = await fetch(getApiUrl('/cart'), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
@@ -174,7 +173,7 @@ export default function CartPage() {
     } finally {
       setIsClearing(false);
     }
-  }, [API_BASE_URL, fetchCart]);
+  }, [fetchCart]);
 
   // Proceed to checkout
   const handleCheckout = useCallback(() => {

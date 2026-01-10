@@ -9,6 +9,7 @@ import { DateCalendar } from '../booking/date-calendar';
 import { TimeSlotSelector } from '../booking/time-slot-selector';
 import { AddressSelector } from '../checkout/address-selector';
 import { formatCurrency } from '@/lib/utils/currency';
+import { getApiUrl } from '@/lib/api';
 
 interface Service {
   id: string;
@@ -109,9 +110,8 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
         const endDate = endDateObj.toISOString().split('T')[0];
 
         // Fetch slots from API
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com';
         const response = await fetch(
-          `${apiUrl}/api/v1/services/${service.id}/slots?startDate=${startDate}&endDate=${endDate}`
+          getApiUrl(`/services/${service.id}/slots?startDate=${startDate}&endDate=${endDate}`)
         );
 
         if (!response.ok) {
@@ -212,8 +212,6 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
       setIsSubmitting(true);
       setError(null);
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-staging.nasneh.com';
-      
       // Prepare booking data
       const bookingData: any = {
         serviceId: service.id,
@@ -232,7 +230,7 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
       }
 
       // TODO: Add auth token when auth is implemented
-      const response = await fetch(`${apiUrl}/api/v1/bookings`, {
+      const response = await fetch(getApiUrl('/bookings'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
