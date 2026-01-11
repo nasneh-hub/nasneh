@@ -57,7 +57,9 @@ export async function requestOtp(
     }
 
     const { phone } = validation.data;
+    console.log('[AUTH DEBUG] requestOtp - Incoming phone:', phone);
     const result = await authService.requestOtp(phone);
+    console.log('[AUTH DEBUG] requestOtp - Result:', result.success ? 'SUCCESS' : 'FAILED', result);
 
     if (req.setCooldown) {
       await req.setCooldown();

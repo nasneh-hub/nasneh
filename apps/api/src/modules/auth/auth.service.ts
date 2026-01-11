@@ -96,6 +96,7 @@ export class AuthService {
    * 3. If not delivered/failed, fallback to SMS
    */
   async requestOtp(phone: string): Promise<OtpRequestResponse> {
+    console.log('[AUTH DEBUG] requestOtp service - Phone received:', phone);
     const otp = this.generateOtp(phone);
     const expiresAt = Date.now() + config.otp.expiryMinutes * 60 * 1000;
 
@@ -307,10 +308,12 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getOrCreateUser(phone: string): Promise<AuthUser> {
+    console.log('[AUTH DEBUG] getOrCreateUser - Looking up phone:', phone);
     // Try to find existing user
     let user = await prisma.user.findUnique({
       where: { phone },
     });
+    console.log('[AUTH DEBUG] getOrCreateUser - User found:', user ? `YES (ID: ${user.id}, Role: ${user.role})` : 'NO - will create new');
 
     // If user doesn't exist, create new customer
     if (!user) {
