@@ -11,6 +11,7 @@ import {
   toggleServiceAvailability,
   getPublicServices,
   getPublicServiceById,
+  getPublicServiceBySlug,
   getServicesByCategory,
   getServicesByProvider,
   searchServices,
@@ -69,6 +70,9 @@ publicServicesRouter.get('/category/:categoryId', getServicesByCategory);
 
 // GET /services/provider/:providerId - Get services by provider (public view)
 publicServicesRouter.get('/provider/:providerId', getServicesByProvider);
+
+// GET /services/slug/:slug - Get service by slug
+publicServicesRouter.get('/slug/:slug', getPublicServiceBySlug);
 
 // GET /services/:id/slots - Get available slots for a service
 publicServicesRouter.get('/:id/slots', getServiceSlots);

@@ -243,6 +243,33 @@ export async function getProductById(
 }
 
 /**
+ * Get Product By Slug
+ * GET /products/slug/:slug
+ */
+export async function getProductBySlug(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { slug } = req.params;
+
+    const result = await productsService.getProductBySlug(slug);
+
+    res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof ProductNotFoundError) {
+      res.status(404).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+    next(error);
+  }
+}
+
+/**
  * Get Featured Products
  * GET /products/featured
  */

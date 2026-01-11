@@ -48,6 +48,26 @@ export class ProductsService {
   }
 
   /**
+   * Get product by slug (public)
+   */
+  async getProductBySlug(slug: string) {
+    const product = await productsRepository.findBySlug(slug);
+
+    if (!product) {
+      throw new ProductNotFoundError(`Product with slug "${slug}" not found`);
+    }
+
+    if (product.status === ProductStatus.DELETED) {
+      throw new ProductNotFoundError(`Product with slug "${slug}" not found`);
+    }
+
+    return {
+      success: true,
+      product,
+    };
+  }
+
+  /**
    * Get vendor's products (for vendor dashboard)
    * Includes all statuses except DELETED
    */
