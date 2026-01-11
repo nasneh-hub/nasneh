@@ -115,6 +115,12 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
         );
 
         if (!response.ok) {
+          // If slots endpoint not implemented, show graceful message
+          if (response.status === 404 || response.status === 501) {
+            setError('Booking availability is not yet available for this service. Please check back later or contact the provider directly.');
+            setIsLoading(false);
+            return;
+          }
           throw new Error('Failed to fetch availability');
         }
 
@@ -122,6 +128,10 @@ export function ServiceBookingClient({ service }: ServiceBookingClientProps) {
         
         if (data.success && data.data.dates) {
           setSlotsData(data.data.dates);
+          // If no dates available, show message
+          if (data.data.dates.length === 0) {
+            setError('No availability found for the next 30 days. Please check back later or contact the provider.');
+          }
         } else {
           throw new Error('Invalid response format');
         }
