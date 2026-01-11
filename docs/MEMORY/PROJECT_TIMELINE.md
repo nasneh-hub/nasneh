@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:48:52 | Fixed (ui): remove inline style violations from dropdown and navigation menus | PR #300 | @nasneh-hub |
 | 10:32:27 | Fixed (customer-web): remove mono classes from demo pages [S6-01 PR5 FINAL] | PR #299 | @nasneh-hub |
 | 10:28:39 | Fixed (customer-web): remove mono classes from components [S6-01 PR4] | PR #298 | @nasneh-hub |
 | 10:24:51 | Fixed (customer-web): remove mono classes from products components [S6-01 PR3] | PR #297 | @nasneh-hub |
