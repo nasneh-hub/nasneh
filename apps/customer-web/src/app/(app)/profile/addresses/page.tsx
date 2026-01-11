@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, Badge, Dialog } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
+import { authenticatedFetch, getApiUrl } from '@/lib/api';
 
 interface Address {
   id: string;
@@ -54,11 +55,7 @@ export default function AddressesPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await authenticatedFetch(getApiUrl('/users/me/addresses'));
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -84,13 +81,10 @@ export default function AddressesPage() {
       const token = getAccessToken();
       if (!token) return;
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${addressId}/default`,
+      const response = await authenticatedFetch(
+        getApiUrl(`/users/me/addresses/${addressId}/default`),
         {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
         }
       );
 
@@ -115,13 +109,10 @@ export default function AddressesPage() {
       const token = getAccessToken();
       if (!token) return;
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${deleteId}`,
+      const response = await authenticatedFetch(
+        getApiUrl(`/users/me/addresses/${deleteId}`),
         {
           method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
         }
       );
 

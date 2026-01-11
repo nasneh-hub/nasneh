@@ -10,7 +10,7 @@ import {
   CheckoutSummary,
   CheckoutActions,
 } from '@/components/checkout';
-import { getApiUrl } from '@/lib/api';
+import { getApiUrl, authenticatedFetch } from '@/lib/api';
 
 // Types
 interface Address {
@@ -54,12 +54,7 @@ export default function CheckoutPage() {
       setIsLoadingAddresses(true);
       setError(null);
 
-      const token = localStorage.getItem('token');
-      const response = await fetch(getApiUrl('/users/me/addresses'), {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await authenticatedFetch(getApiUrl('/users/me/addresses'));
 
       if (response.status === 401) {
         // Unauthorized - redirect to login
@@ -95,12 +90,7 @@ export default function CheckoutPage() {
     try {
       setIsLoadingCart(true);
 
-      const token = localStorage.getItem('token');
-      const response = await fetch(getApiUrl('/cart'), {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await authenticatedFetch(getApiUrl('/cart'));
 
       if (response.status === 401) {
         // Unauthorized - treat as empty cart, redirect to login
@@ -144,12 +134,10 @@ export default function CheckoutPage() {
       setIsPlacingOrder(true);
       setError(null);
 
-      const token = localStorage.getItem('token');
-      const response = await fetch(getApiUrl('/orders'), {
+      const response = await authenticatedFetch(getApiUrl('/orders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           addressId: selectedAddressId,

@@ -28,6 +28,14 @@ export function getApiUrl(path: string): string {
   return `${baseUrl}/api/v1${path}`;
 }
 
+/**
+ * Get full API URL with /api/v1 prefix
+ * Alias for getApiUrl for clarity
+ */
+export function getFullApiUrl(path: string): string {
+  return getApiUrl(path);
+}
+
 interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -157,4 +165,78 @@ export async function logout(accessToken: string): Promise<ApiResponse<void>> {
       error: 'Network error. Please check your connection.',
     };
   }
+}
+
+/**
+ * Get access token from localStorage
+ */
+function getAccessToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('nasneh_access_token');
+}
+
+/**
+ * Get refresh token from localStorage
+ */
+function getRefreshToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('nasneh_refresh_token');
+}
+
+/**
+ * Update access token in localStorage
+ */
+function setAccessToken(token: string): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('nasneh_access_token', token);
+}
+
+/**
+ * Authenticated fetch with auto-refresh
+ * 
+ * Automatically adds Authorization header and handles token refresh on 401
+ */
+export async function authenticatedFetch(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const accessToken = getAccessToken();
+  
+  // First attempt with current token
+  const headers = {
+    ...options.headers,
+    'Authorization': accessToken ? `Bearer ${accessToken}` : '',
+  };
+  
+  let response = await fetch(url, {
+    ...options,
+    headers,
+  });
+  
+  // If 401, try to refresh token and retry
+  if (response.status === 401) {
+    const refreshTokenValue = getRefreshToken();
+    
+    if (refreshTokenValue) {
+      const refreshResponse = await refreshToken(refreshTokenValue);
+      
+      if (refreshResponse.success && refreshResponse.data?.accessToken) {
+        // Update token in localStorage
+        setAccessToken(refreshResponse.data.accessToken);
+        
+        // Retry original request with new token
+        const newHeaders = {
+          ...options.headers,
+          'Authorization': `Bearer ${refreshResponse.data.accessToken}`,
+        };
+        
+        response = await fetch(url, {
+          ...options,
+          headers: newHeaders,
+        });
+      }
+    }
+  }
+  
+  return response;
 }

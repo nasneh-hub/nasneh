@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button, Card, Input, Select } from '@nasneh/ui';
 import { ar } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
+import { authenticatedFetch, getApiUrl } from '@/lib/api';
 
 interface AddressForm {
   label: string;
@@ -82,13 +83,8 @@ export default function AddressFormPage() {
         return;
       }
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${addressId}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        }
+      const response = await authenticatedFetch(
+        getApiUrl(`/users/me/addresses/${addressId}`)
       );
 
       if (!response.ok) {
@@ -160,13 +156,12 @@ export default function AddressFormPage() {
       }
 
       const url = isNew
-        ? `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses`
-        : `${process.env.NEXT_PUBLIC_API_URL}/users/me/addresses/${addressId}`;
+        ? getApiUrl('/users/me/addresses')
+        : getApiUrl(`/users/me/addresses/${addressId}`);
 
-      const response = await fetch(url, {
+      const response = await authenticatedFetch(url, {
         method: isNew ? 'POST' : 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

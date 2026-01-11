@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, CardHeader, CardTitle, CardContent, Input, Dialog, Avatar } from '@nasneh/ui';
 import { en } from '@nasneh/ui/copy';
 import { useAuth, getAccessToken } from '@/context/auth-context';
+import { authenticatedFetch, getApiUrl } from '@/lib/api';
 import { MapPin, ChevronLeft } from 'lucide-react';
 
 interface UserProfile {
@@ -53,11 +54,7 @@ export default function ProfilePage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const response = await authenticatedFetch(getApiUrl('/users/me'));
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -98,10 +95,9 @@ export default function ProfilePage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+      const response = await authenticatedFetch(getApiUrl('/users/me'), {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
