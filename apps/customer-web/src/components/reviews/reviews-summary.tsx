@@ -22,21 +22,21 @@ export function ReviewsSummary({
       <div className="flex items-center gap-6">
         {/* Average Rating */}
         <div className="text-center">
-          <div className="mb-2 text-4xl font-bold text-mono-12">
+          <div className="mb-2 text-4xl font-bold text-[var(--foreground)]">
             {averageRating.toFixed(1)}
           </div>
           <RatingStars rating={averageRating} size="md" />
         </div>
 
         {/* Divider */}
-        <div className="h-16 w-px bg-mono-6" />
+        <div className="h-16 w-px bg-[var(--secondary)]" />
 
         {/* Total Reviews */}
         <div>
-          <div className="text-2xl font-semibold text-mono-12">
+          <div className="text-2xl font-semibold text-[var(--foreground)]">
             {totalReviews}
           </div>
-          <div className="text-sm text-mono-11">
+          <div className="text-sm text-[var(--foreground)]">
             {en.reviews.basedOn.replace('{count}', totalReviews.toString())}
           </div>
         </div>

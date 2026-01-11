@@ -35,13 +35,13 @@ export function RatingStars({
             className={`${iconSize} ${
               isFilled
                 ? 'fill-primary text-primary'
-                : 'fill-transparent text-mono-6'
+                : 'fill-transparent text-[var(--muted-foreground)]'
             }`}
           />
         );
       })}
       {showValue && (
-        <span className="ml-1 text-sm text-mono-11">
+        <span className="ml-1 text-sm text-[var(--foreground)]">
           {rating.toFixed(1)}
         </span>
       )}

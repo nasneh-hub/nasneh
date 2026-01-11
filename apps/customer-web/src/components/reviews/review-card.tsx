@@ -41,10 +41,10 @@ export function ReviewCard({ review }: ReviewCardProps) {
           {/* Author Name & Date */}
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <div className="font-medium text-mono-12">
+              <div className="font-medium text-[var(--foreground)]">
                 {review.author.name}
               </div>
-              <div className="text-sm text-mono-11">
+              <div className="text-sm text-[var(--foreground)]">
                 {formatDate(review.createdAt)}
               </div>
             </div>
@@ -56,7 +56,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
           </div>
 
           {/* Comment */}
-          <p className="text-mono-11">{review.comment}</p>
+          <p className="text-[var(--foreground)]">{review.comment}</p>
         </div>
       </div>
     </Card>

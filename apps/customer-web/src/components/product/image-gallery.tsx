@@ -13,8 +13,8 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
   
   if (images.length === 0) {
     return (
-      <div className="w-full aspect-square rounded-xl bg-mono-3 flex items-center justify-center">
-        <span className="text-mono-9">No image available</span>
+      <div className="w-full aspect-square rounded-xl bg-[var(--secondary)] flex items-center justify-center">
+        <span className="text-[var(--muted-foreground)]">No image available</span>
       </div>
     );
   }
@@ -22,7 +22,7 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Main Image */}
-      <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-mono-2">
+      <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[var(--muted)]">
         <Image
           src={images[selectedIndex]}
           alt={alt}

@@ -60,7 +60,7 @@ export function ReviewList({ itemType, itemId }: ReviewListProps) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-xl bg-mono-3 p-6">
+          <div key={i} className="rounded-xl bg-[var(--secondary)] p-6">
             <div className="flex gap-4">
               <Skeleton className="h-12 w-12 rounded-full" />
               <div className="flex-1 space-y-2">
@@ -77,13 +77,13 @@ export function ReviewList({ itemType, itemId }: ReviewListProps) {
 
   if (reviews.length === 0) {
     return (
-      <div className="rounded-xl bg-mono-2 p-12 text-center">
+      <div className="rounded-xl bg-[var(--muted)] p-12 text-center">
         <div className="mx-auto max-w-md">
           <div className="mb-4 text-4xl">📝</div>
-          <h3 className="mb-2 text-lg font-medium text-mono-12">
+          <h3 className="mb-2 text-lg font-medium text-[var(--foreground)]">
             {en.reviews.noReviews}
           </h3>
-          <p className="text-mono-11">{en.reviews.noReviewsDescription}</p>
+          <p className="text-[var(--foreground)]">{en.reviews.noReviewsDescription}</p>
         </div>
       </div>
     );
