@@ -63,7 +63,7 @@ export class ProductsService {
 
     return {
       success: true,
-      product,
+      data: product,
     };
   }
 
