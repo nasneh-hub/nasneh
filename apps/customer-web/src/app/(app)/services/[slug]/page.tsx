@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 interface Service {
   id: string;
   name: string;
+  slug: string;
   description: string;
   price: number;
   images?: string[];
@@ -26,9 +27,9 @@ interface Service {
   };
 }
 
-async function fetchService(serviceId: string): Promise<Service | null> {
+async function fetchService(serviceSlug: string): Promise<Service | null> {
   try {
-    const response = await fetch(getApiUrl(`/services/${serviceId}`), {
+    const response = await fetch(getApiUrl(`/services/slug/${serviceSlug}`), {
       cache: 'no-store', // Ensure fresh data
     });
 
@@ -72,10 +73,10 @@ async function fetchRelatedServices(categorySlug: string, currentServiceId: stri
   }
 }
 
-async function fetchReviewsData(serviceId: string): Promise<{ averageRating: number; totalReviews: number }> {
+async function fetchReviewsData(serviceSlug: string): Promise<{ averageRating: number; totalReviews: number }> {
   try {
     const response = await fetch(
-      getApiUrl(`/reviews?itemType=service&itemId=${serviceId}&limit=1`),
+      getApiUrl(`/reviews?itemType=service&itemId=${serviceSlug}&limit=1`),
       { cache: 'no-store' }
     );
 
@@ -101,12 +102,12 @@ async function fetchReviewsData(serviceId: string): Promise<{ averageRating: num
 export default async function ServiceDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
-  const serviceId = params.id;
+  const serviceSlug = params.slug;
 
   // Fetch service data server-side
-  const service = await fetchService(serviceId);
+  const service = await fetchService(serviceSlug);
 
   // If service not found, trigger Next.js 404
   if (!service) {
@@ -116,9 +117,9 @@ export default async function ServiceDetailPage({
   // Fetch related data in parallel
   const [relatedServices, reviewsData] = await Promise.all([
     service.category?.slug
-      ? fetchRelatedServices(service.category.slug, serviceId)
+      ? fetchRelatedServices(service.category.slug, serviceSlug)
       : Promise.resolve([]),
-    fetchReviewsData(serviceId),
+    fetchReviewsData(serviceSlug),
   ]);
 
   return (

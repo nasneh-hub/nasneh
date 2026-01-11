@@ -14,6 +14,7 @@ import { ReviewList } from '@/components/reviews/review-list';
 interface Product {
   id: string;
   name: string;
+  slug: string;
   description: string;
   price: number;
   images: string[];
@@ -34,7 +35,7 @@ interface Product {
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const productId = params.id as string;
+  const productSlug = params.slug as string;
   
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -53,7 +54,7 @@ export default function ProductDetailPage() {
         setNotFound(false);
         
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/products/slug/${productSlug}`
         );
         
         if (!response.ok) {
@@ -71,11 +72,11 @@ export default function ProductDetailPage() {
           
           // Fetch related products if category exists
           if (data.data.category?.slug) {
-            fetchRelatedProducts(data.data.category.slug, productId);
+            fetchRelatedProducts(data.data.category.slug, data.data.id);
           }
           
           // Fetch reviews summary
-          fetchReviewsSummary(productId);
+          fetchReviewsSummary(data.data.id);
         } else {
           setNotFound(true);
         }
@@ -88,7 +89,7 @@ export default function ProductDetailPage() {
     }
     
     fetchProduct();
-  }, [productId]);
+  }, [productSlug]);
   
   async function fetchReviewsSummary(itemId: string) {
     try {
@@ -259,7 +260,7 @@ export default function ProductDetailPage() {
             totalReviews={reviewsData.totalReviews}
           />
           
-          <ReviewList itemType="product" itemId={productId} />
+          <ReviewList itemType="product" itemId={product.id} />
         </div>
       </div>
       

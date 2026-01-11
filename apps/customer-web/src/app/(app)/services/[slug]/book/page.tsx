@@ -54,12 +54,12 @@ async function fetchService(serviceId: string): Promise<Service | null> {
 export default async function ServiceBookingPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
-  const serviceId = params.id;
+  const serviceSlug = params.slug;
 
   // Fetch service data server-side
-  const service = await fetchService(serviceId);
+  const service = await fetchService(serviceSlug);
 
   // If service not found, trigger Next.js 404
   if (!service) {
