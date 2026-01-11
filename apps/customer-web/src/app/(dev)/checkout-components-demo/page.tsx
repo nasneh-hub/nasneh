@@ -59,7 +59,7 @@ export default function CheckoutComponentsDemo() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-mono-12 mb-8">
+        <h1 className="text-3xl font-bold text-[var(--foreground)] mb-8">
           Checkout Components Demo
         </h1>
 
@@ -67,9 +67,9 @@ export default function CheckoutComponentsDemo() {
           {/* Left Column: Checkout Form */}
           <div className="lg:col-span-2 space-y-8">
             {/* Address Selector */}
-            <div className="p-6 rounded-xl bg-mono-2">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-mono-12">
+                <h2 className="text-xl font-semibold text-[var(--foreground)]">
                   Address Selector
                 </h2>
                 <button
@@ -88,8 +88,8 @@ export default function CheckoutComponentsDemo() {
             </div>
 
             {/* Order Notes */}
-            <div className="p-6 rounded-xl bg-mono-2">
-              <h2 className="text-xl font-semibold text-mono-12 mb-4">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
+              <h2 className="text-xl font-semibold text-[var(--foreground)] mb-4">
                 Order Notes
               </h2>
               <OrderNotes
@@ -121,11 +121,11 @@ export default function CheckoutComponentsDemo() {
         </div>
 
         {/* Component Info */}
-        <div className="mt-12 p-6 rounded-xl bg-mono-2">
-          <h2 className="text-xl font-semibold text-mono-12 mb-4">
+        <div className="mt-12 p-6 rounded-xl bg-[var(--muted)]">
+          <h2 className="text-xl font-semibold text-[var(--foreground)] mb-4">
             Components Demonstrated
           </h2>
-          <ul className="space-y-2 text-mono-11">
+          <ul className="space-y-2 text-[var(--foreground)]">
             <li>✅ <strong>AddressSelector</strong> - RadioGroup-based address selection with empty state</li>
             <li>✅ <strong>OrderNotes</strong> - Textarea with character counter (max 500)</li>
             <li>✅ <strong>CheckoutSummary</strong> - Order summary with item count, subtotal, delivery, total</li>
@@ -133,8 +133,8 @@ export default function CheckoutComponentsDemo() {
           </ul>
           
           <div className="mt-6 space-y-2">
-            <h3 className="font-semibold text-mono-12">Features:</h3>
-            <ul className="space-y-1 text-sm text-mono-10">
+            <h3 className="font-semibold text-[var(--foreground)]">Features:</h3>
+            <ul className="space-y-1 text-sm text-[var(--muted-foreground)]">
               <li>• RadioGroup from @nasneh/ui for address selection</li>
               <li>• Textarea from @nasneh/ui for order notes</li>
               <li>• Default address badge</li>
@@ -146,28 +146,28 @@ export default function CheckoutComponentsDemo() {
             </ul>
           </div>
 
-          <div className="mt-4 text-sm text-mono-10">
+          <div className="mt-4 text-sm text-[var(--muted-foreground)]">
             <strong>Note:</strong> This is a demo page. Remove before merging or guard with environment check.
           </div>
         </div>
 
         {/* Current State Display */}
-        <div className="mt-8 p-6 rounded-xl bg-mono-2">
-          <h2 className="text-xl font-semibold text-mono-12 mb-4">
+        <div className="mt-8 p-6 rounded-xl bg-[var(--muted)]">
+          <h2 className="text-xl font-semibold text-[var(--foreground)] mb-4">
             Current State
           </h2>
           <div className="space-y-2 text-sm font-mono">
             <div>
-              <span className="text-mono-10">Selected Address:</span>{' '}
-              <span className="text-mono-12">{selectedAddressId || 'None'}</span>
+              <span className="text-[var(--muted-foreground)]">Selected Address:</span>{' '}
+              <span className="text-[var(--foreground)]">{selectedAddressId || 'None'}</span>
             </div>
             <div>
-              <span className="text-mono-10">Order Notes:</span>{' '}
-              <span className="text-mono-12">{orderNotes || 'Empty'}</span>
+              <span className="text-[var(--muted-foreground)]">Order Notes:</span>{' '}
+              <span className="text-[var(--foreground)]">{orderNotes || 'Empty'}</span>
             </div>
             <div>
-              <span className="text-mono-10">Notes Length:</span>{' '}
-              <span className="text-mono-12">{orderNotes.length} / 500</span>
+              <span className="text-[var(--muted-foreground)]">Notes Length:</span>{' '}
+              <span className="text-[var(--foreground)]">{orderNotes.length} / 500</span>
             </div>
           </div>
         </div>

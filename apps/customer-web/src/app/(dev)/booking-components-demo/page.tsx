@@ -59,14 +59,14 @@ export default function BookingComponentsDemoPage() {
   const mockLocation = '123 Main Street, Manama, Bahrain';
 
   return (
-    <div className="min-h-screen bg-mono-50 p-8">
+    <div className="min-h-screen bg-[var(--background)] p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-mono-900 mb-2">
+          <h1 className="text-3xl font-bold text-[var(--muted-foreground)]00 mb-2">
             {en.booking.pageTitle} - Components Demo
           </h1>
-          <p className="text-mono-600">
+          <p className="text-[var(--muted-foreground)]00">
             Interactive demo of all booking components with mock data
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function BookingComponentsDemoPage() {
             className={`px-4 py-2 rounded-xl ${
               showState === 'loaded'
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-mono-200 text-mono-900'
+                : 'bg-[var(--muted)]00 text-[var(--muted-foreground)]00'
             }`}
           >
             Loaded State
@@ -88,7 +88,7 @@ export default function BookingComponentsDemoPage() {
             className={`px-4 py-2 rounded-xl ${
               showState === 'loading'
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-mono-200 text-mono-900'
+                : 'bg-[var(--muted)]00 text-[var(--muted-foreground)]00'
             }`}
           >
             Loading State
@@ -98,7 +98,7 @@ export default function BookingComponentsDemoPage() {
             className={`px-4 py-2 rounded-xl ${
               showState === 'empty'
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-mono-200 text-mono-900'
+                : 'bg-[var(--muted)]00 text-[var(--muted-foreground)]00'
             }`}
           >
             Empty State
@@ -109,7 +109,7 @@ export default function BookingComponentsDemoPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* DateCalendar */}
           <div>
-            <h2 className="text-xl font-semibold text-mono-900 mb-4">
+            <h2 className="text-xl font-semibold text-[var(--muted-foreground)]00 mb-4">
               1. DateCalendar
             </h2>
             <DateCalendar
@@ -118,8 +118,8 @@ export default function BookingComponentsDemoPage() {
               onSelectDate={setSelectedDate}
               isLoading={showState === 'loading'}
             />
-            <div className="mt-4 p-4 bg-mono-100 rounded-xl">
-              <p className="text-sm text-mono-600">
+            <div className="mt-4 p-4 bg-[var(--muted)] rounded-xl">
+              <p className="text-sm text-[var(--muted-foreground)]00">
                 Selected Date: {selectedDate || 'None'}
               </p>
             </div>
@@ -127,7 +127,7 @@ export default function BookingComponentsDemoPage() {
 
           {/* TimeSlotSelector */}
           <div>
-            <h2 className="text-xl font-semibold text-mono-900 mb-4">
+            <h2 className="text-xl font-semibold text-[var(--muted-foreground)]00 mb-4">
               2. TimeSlotSelector
             </h2>
             <TimeSlotSelector
@@ -136,8 +136,8 @@ export default function BookingComponentsDemoPage() {
               onSelectTime={setSelectedTime}
               isLoading={showState === 'loading'}
             />
-            <div className="mt-4 p-4 bg-mono-100 rounded-xl">
-              <p className="text-sm text-mono-600">
+            <div className="mt-4 p-4 bg-[var(--muted)] rounded-xl">
+              <p className="text-sm text-[var(--muted-foreground)]00">
                 Selected Time: {selectedTime || 'None'}
               </p>
             </div>
@@ -145,7 +145,7 @@ export default function BookingComponentsDemoPage() {
 
           {/* BookingSummary */}
           <div>
-            <h2 className="text-xl font-semibold text-mono-900 mb-4">
+            <h2 className="text-xl font-semibold text-[var(--muted-foreground)]00 mb-4">
               3. BookingSummary
             </h2>
             {selectedDate && selectedTime ? (
@@ -158,21 +158,21 @@ export default function BookingComponentsDemoPage() {
                 notes={notes || undefined}
               />
             ) : (
-              <div className="p-8 bg-mono-100 rounded-xl text-center">
-                <p className="text-mono-600">
+              <div className="p-8 bg-[var(--muted)] rounded-xl text-center">
+                <p className="text-[var(--muted-foreground)]00">
                   Select a date and time to see the booking summary
                 </p>
               </div>
             )}
             <div className="mt-4">
-              <label className="block text-sm font-medium text-mono-900 mb-2">
+              <label className="block text-sm font-medium text-[var(--muted-foreground)]00 mb-2">
                 {en.booking.notes}
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder={en.booking.notesPlaceholder}
-                className="w-full p-3 border border-mono-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full p-3 border 00 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
                 rows={3}
               />
             </div>
@@ -180,7 +180,7 @@ export default function BookingComponentsDemoPage() {
 
           {/* BookingActions */}
           <div>
-            <h2 className="text-xl font-semibold text-mono-900 mb-4">
+            <h2 className="text-xl font-semibold text-[var(--muted-foreground)]00 mb-4">
               4. BookingActions
             </h2>
             <div className="space-y-4">
@@ -189,8 +189,8 @@ export default function BookingComponentsDemoPage() {
                 onConfirm={() => alert('Confirm clicked')}
                 confirmDisabled={!selectedDate || !selectedTime}
               />
-              <div className="p-4 bg-mono-100 rounded-xl">
-                <p className="text-sm text-mono-600 mb-2">
+              <div className="p-4 bg-[var(--muted)] rounded-xl">
+                <p className="text-sm text-[var(--muted-foreground)]00 mb-2">
                   Confirm button is disabled until date and time are selected
                 </p>
               </div>
@@ -199,8 +199,8 @@ export default function BookingComponentsDemoPage() {
                 onConfirm={() => alert('Confirm clicked')}
                 isConfirming={true}
               />
-              <div className="p-4 bg-mono-100 rounded-xl">
-                <p className="text-sm text-mono-600">
+              <div className="p-4 bg-[var(--muted)] rounded-xl">
+                <p className="text-sm text-[var(--muted-foreground)]00">
                   Loading state (isConfirming=true)
                 </p>
               </div>
@@ -209,32 +209,32 @@ export default function BookingComponentsDemoPage() {
         </div>
 
         {/* Current State Display */}
-        <div className="p-6 bg-mono-100 rounded-xl">
-          <h3 className="text-lg font-semibold text-mono-900 mb-4">
+        <div className="p-6 bg-[var(--muted)] rounded-xl">
+          <h3 className="text-lg font-semibold text-[var(--muted-foreground)]00 mb-4">
             Current State
           </h3>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-mono-600">Selected Date:</p>
-              <p className="font-medium text-mono-900">
+              <p className="text-[var(--muted-foreground)]00">Selected Date:</p>
+              <p className="font-medium text-[var(--muted-foreground)]00">
                 {selectedDate || 'Not selected'}
               </p>
             </div>
             <div>
-              <p className="text-mono-600">Selected Time:</p>
-              <p className="font-medium text-mono-900">
+              <p className="text-[var(--muted-foreground)]00">Selected Time:</p>
+              <p className="font-medium text-[var(--muted-foreground)]00">
                 {selectedTime || 'Not selected'}
               </p>
             </div>
             <div>
-              <p className="text-mono-600">Notes:</p>
-              <p className="font-medium text-mono-900">
+              <p className="text-[var(--muted-foreground)]00">Notes:</p>
+              <p className="font-medium text-[var(--muted-foreground)]00">
                 {notes || 'No notes'}
               </p>
             </div>
             <div>
-              <p className="text-mono-600">Can Confirm:</p>
-              <p className="font-medium text-mono-900">
+              <p className="text-[var(--muted-foreground)]00">Can Confirm:</p>
+              <p className="font-medium text-[var(--muted-foreground)]00">
                 {selectedDate && selectedTime ? 'Yes' : 'No'}
               </p>
             </div>
@@ -242,14 +242,14 @@ export default function BookingComponentsDemoPage() {
         </div>
 
         {/* Component Features */}
-        <div className="p-6 bg-mono-100 rounded-xl">
-          <h3 className="text-lg font-semibold text-mono-900 mb-4">
+        <div className="p-6 bg-[var(--muted)] rounded-xl">
+          <h3 className="text-lg font-semibold text-[var(--muted-foreground)]00 mb-4">
             Component Features
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-mono-900 mb-2">DateCalendar</h4>
-              <ul className="text-sm text-mono-600 space-y-1">
+              <h4 className="font-medium text-[var(--muted-foreground)]00 mb-2">DateCalendar</h4>
+              <ul className="text-sm text-[var(--muted-foreground)]00 space-y-1">
                 <li>✓ Shows 30 days from today</li>
                 <li>✓ Available dates are clickable</li>
                 <li>✓ Unavailable dates are grayed out</li>
@@ -259,8 +259,8 @@ export default function BookingComponentsDemoPage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-mono-900 mb-2">TimeSlotSelector</h4>
-              <ul className="text-sm text-mono-600 space-y-1">
+              <h4 className="font-medium text-[var(--muted-foreground)]00 mb-2">TimeSlotSelector</h4>
+              <ul className="text-sm text-[var(--muted-foreground)]00 space-y-1">
                 <li>✓ Shows available time slots</li>
                 <li>✓ Available slots are clickable</li>
                 <li>✓ Unavailable slots are grayed out</li>
@@ -270,8 +270,8 @@ export default function BookingComponentsDemoPage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-mono-900 mb-2">BookingSummary</h4>
-              <ul className="text-sm text-mono-600 space-y-1">
+              <h4 className="font-medium text-[var(--muted-foreground)]00 mb-2">BookingSummary</h4>
+              <ul className="text-sm text-[var(--muted-foreground)]00 space-y-1">
                 <li>✓ Service name and duration</li>
                 <li>✓ Provider name</li>
                 <li>✓ Formatted date and time</li>
@@ -281,8 +281,8 @@ export default function BookingComponentsDemoPage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-mono-900 mb-2">BookingActions</h4>
-              <ul className="text-sm text-mono-600 space-y-1">
+              <h4 className="font-medium text-[var(--muted-foreground)]00 mb-2">BookingActions</h4>
+              <ul className="text-sm text-[var(--muted-foreground)]00 space-y-1">
                 <li>✓ Back button (secondary)</li>
                 <li>✓ Confirm button (primary)</li>
                 <li>✓ Loading state support</li>
