@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 12:33:38 | Added (api): add slug support for products and services (Part 1: Backend) | PR #304 | @nasneh-hub |
 | 11:41:06 | Fixed (customer-web): resolve staging blockers (auth, routing, booking) | PR #303 | @nasneh-hub |
 | 11:40:16 | Documented (audit): PRD Reality Matrix for Sprint 6 | PR #302 | @nasneh-hub |
 | 11:01:07 | Added (api): comprehensive staging seed script for S6-03 data foundation | PR #301 | @nasneh-hub |
