@@ -67,6 +67,23 @@ function ensureStagingEnvironment() {
 }
 
 // ===========================================
+// Helper Functions
+// ===========================================
+
+/**
+ * Generate URL-safe slug from name
+ */
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special chars
+    .replace(/\s+/g, '-')      // Replace spaces with hyphens
+    .replace(/-+/g, '-')       // Remove duplicate hyphens
+    .substring(0, 100);        // Max 100 chars
+}
+
+// ===========================================
 // Test Data Constants
 // ===========================================
 
@@ -345,6 +362,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
       where: {
         vendorId: vendors[0].id,
         name: prod.name,
+          slug: generateSlug(prod.name),
       },
     });
 
@@ -365,6 +383,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
         data: {
           vendorId: vendors[0].id,
           name: prod.name,
+          slug: generateSlug(prod.name),
           nameAr: prod.nameAr,
           description: prod.description,
           price: prod.price,
@@ -383,6 +402,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
       where: {
         vendorId: vendors[1].id,
         name: prod.name,
+          slug: generateSlug(prod.name),
       },
     });
 
@@ -403,6 +423,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
         data: {
           vendorId: vendors[1].id,
           name: prod.name,
+          slug: generateSlug(prod.name),
           nameAr: prod.nameAr,
           description: prod.description,
           price: prod.price,
@@ -421,6 +442,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
       where: {
         vendorId: vendors[0].id,
         name: prod.name,
+          slug: generateSlug(prod.name),
       },
     });
 
@@ -441,6 +463,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
         data: {
           vendorId: vendors[0].id,
           name: prod.name,
+          slug: generateSlug(prod.name),
           nameAr: prod.nameAr,
           description: prod.description,
           price: prod.price,
@@ -459,6 +482,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
       where: {
         vendorId: vendors[2].id,
         name: prod.name,
+          slug: generateSlug(prod.name),
       },
     });
 
@@ -479,6 +503,7 @@ async function seedProducts(vendors: any[], categories: any[]) {
         data: {
           vendorId: vendors[2].id,
           name: prod.name,
+          slug: generateSlug(prod.name),
           nameAr: prod.nameAr,
           description: prod.description,
           price: prod.price,

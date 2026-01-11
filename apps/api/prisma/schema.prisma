@@ -235,6 +235,7 @@ model Product {
   categoryId    String?       @map("category_id")
   name          String
   nameAr        String?       @map("name_ar")
+  slug          String        @unique
   description   String?       @db.Text
   descriptionAr String?       @map("description_ar") @db.Text
   price         Decimal       @db.Decimal(10, 3) // BHD 3 decimals
@@ -252,6 +253,7 @@ model Product {
 
   @@index([vendorId])
   @@index([categoryId])
+  @@index([slug])
   @@index([status, isAvailable])
   @@map("products")
 }
@@ -266,6 +268,7 @@ model Service {
   categoryId      String?       @map("category_id")
   name            String
   nameAr          String?       @map("name_ar")
+  slug            String        @unique
   description     String?       @db.Text
   descriptionAr   String?       @map("description_ar") @db.Text
   price           Decimal       @db.Decimal(10, 3) // BHD 3 decimals
@@ -287,6 +290,7 @@ model Service {
 
   @@index([providerId])
   @@index([categoryId])
+  @@index([slug])
   @@index([serviceType])
   @@index([status, isAvailable])
   @@map("services")
