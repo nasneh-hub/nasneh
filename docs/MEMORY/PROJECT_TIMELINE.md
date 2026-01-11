@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:24:51 | Fixed (customer-web): remove mono classes from products components [S6-01 PR3] | PR #297 | @nasneh-hub |
 | 10:15:32 | Fixed (customer-web): remove mono classes from checkout components [S6-01 PR2] | PR #296 | @nasneh-hub |
 | 10:01:16 | Fixed (customer-web): remove mono classes from cart components [S6-01 PR1] | PR #295 | @nasneh-hub |
 | 07:50:09 | Added (dashboard): add application detail page with review actions [S5-05 PR4] | PR #294 | @nasneh-hub |
