@@ -179,6 +179,15 @@ export default function LoginPage() {
             </Button>
           </form>
 
+          {/* Staging Debug Info */}
+          {process.env.NEXT_PUBLIC_APP_ENV === 'staging' && (
+            <div className="mt-4 p-3 bg-[color:var(--bg-tertiary)] rounded-xl text-xs text-[color:var(--text-secondary)]">
+              <div className="font-medium mb-1">Debug Info (Staging Only):</div>
+              <div>API Base: {process.env.NEXT_PUBLIC_API_URL}</div>
+              <div>Auth Endpoint: {process.env.NEXT_PUBLIC_API_URL}/auth/request-otp</div>
+            </div>
+          )}
+
           {/* Go Back Button - FROM @nasneh/ui (shadcn-based) */}
           <Button
             type="button"
