@@ -9,17 +9,17 @@ export function CartEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       {/* Icon */}
-      <div className="w-24 h-24 rounded-full bg-mono-3 flex items-center justify-center mb-6">
-        <ShoppingBag className="w-12 h-12 text-mono-9" />
+      <div className="w-24 h-24 rounded-full bg-[var(--secondary)] flex items-center justify-center mb-6">
+        <ShoppingBag className="w-12 h-12 text-[var(--muted-foreground)]" />
       </div>
 
       {/* Title */}
-      <h2 className="text-2xl font-semibold text-mono-12 mb-2">
+      <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-2">
         {en.cart.emptyCart}
       </h2>
 
       {/* Description */}
-      <p className="text-mono-10 mb-8 max-w-md">
+      <p className="text-[var(--muted-foreground)] mb-8 max-w-md">
         {en.cart.emptyCartDescription}
       </p>
 
