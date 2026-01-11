@@ -211,10 +211,10 @@ export default function CartPage() {
     return (
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="text-center py-16">
-          <h2 className="text-2xl font-semibold text-mono-12 mb-2">
+          <h2 className="text-2xl font-semibold text-[var(--foreground)] mb-2">
             {en.ui.error}
           </h2>
-          <p className="text-mono-10 mb-8">{error}</p>
+          <p className="text-[var(--muted-foreground)] mb-8">{error}</p>
           <button
             onClick={fetchCart}
             className="text-primary hover:underline"
@@ -230,7 +230,7 @@ export default function CartPage() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 className="text-3xl font-bold text-mono-12 mb-8">
+        <h1 className="text-3xl font-bold text-[var(--foreground)] mb-8">
           {en.cart.title}
         </h1>
         <CartEmptyState />
@@ -240,7 +240,7 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <h1 className="text-3xl font-bold text-mono-12 mb-8">
+      <h1 className="text-3xl font-bold text-[var(--foreground)] mb-8">
         {en.cart.title}
       </h1>
 
@@ -285,17 +285,17 @@ export default function CartPage() {
 
       {/* Error Toast (inline, not permanent) */}
       {error && (
-        <div className="fixed bottom-4 right-4 p-4 rounded-xl bg-mono-2 border border-mono-6 shadow-lg max-w-md">
+        <div className="fixed bottom-4 right-4 p-4 rounded-xl bg-[var(--muted)] shadow-lg max-w-md">
           <div className="flex items-start gap-3">
             <div className="flex-1">
-              <div className="font-medium text-mono-12 mb-1">
+              <div className="font-medium text-[var(--foreground)] mb-1">
                 {en.ui.error}
               </div>
-              <div className="text-sm text-mono-10">{error}</div>
+              <div className="text-sm text-[var(--muted-foreground)]">{error}</div>
             </div>
             <button
               onClick={() => setError(null)}
-              className="text-mono-10 hover:text-mono-12"
+              className="text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             >
               ×
             </button>

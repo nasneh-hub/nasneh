@@ -36,7 +36,7 @@ export function CartActions({
         <button
           onClick={onClearCart}
           disabled={isClearing}
-          className="w-full py-3 text-sm text-mono-10 hover:text-mono-12 transition-colors disabled:opacity-50"
+          className="w-full py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors disabled:opacity-50"
         >
           {isClearing ? en.common.loading : en.cart.clearCart}
         </button>

@@ -36,10 +36,10 @@ export function CartItem({ item, onQuantityChange, onRemove, isUpdating }: CartI
   const itemTotal = item.price * item.quantity;
 
   return (
-    <div className="flex gap-4 p-4 rounded-xl bg-mono-2">
+    <div className="flex gap-4 p-4 rounded-xl bg-[var(--muted)]">
       {/* Product Image */}
       {item.image && (
-        <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-mono-3 flex-shrink-0">
+        <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-[var(--secondary)] flex-shrink-0">
           <Image
             src={item.image}
             alt={item.name}
@@ -53,11 +53,11 @@ export function CartItem({ item, onQuantityChange, onRemove, isUpdating }: CartI
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-mono-12 truncate">
+            <h3 className="font-semibold text-[var(--foreground)] truncate">
               {item.name}
             </h3>
             {item.vendor && (
-              <p className="text-sm text-mono-10 truncate">
+              <p className="text-sm text-[var(--muted-foreground)] truncate">
                 {item.vendor.name}
               </p>
             )}
@@ -67,7 +67,7 @@ export function CartItem({ item, onQuantityChange, onRemove, isUpdating }: CartI
           <button
             onClick={() => onRemove(item.id)}
             disabled={isUpdating}
-            className="text-mono-10 hover:text-mono-12 transition-colors disabled:opacity-50"
+            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors disabled:opacity-50"
             aria-label={en.cart.removeFromCart}
           >
             <X className="w-5 h-5" />
@@ -81,30 +81,30 @@ export function CartItem({ item, onQuantityChange, onRemove, isUpdating }: CartI
             <button
               onClick={handleDecrease}
               disabled={isUpdating || item.quantity <= 1}
-              className="w-8 h-8 rounded-xl bg-mono-3 hover:bg-mono-4 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-8 h-8 rounded-xl bg-[var(--secondary)] hover:bg-[var(--accent)] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Decrease quantity"
             >
-              <Minus className="w-4 h-4 text-mono-11" />
+              <Minus className="w-4 h-4 text-[var(--foreground)]" />
             </button>
             
-            <span className="w-12 text-center font-medium text-mono-12">
+            <span className="w-12 text-center font-medium text-[var(--foreground)]">
               {item.quantity}
             </span>
             
             <button
               onClick={handleIncrease}
               disabled={isUpdating}
-              className="w-8 h-8 rounded-xl bg-mono-3 hover:bg-mono-4 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-8 h-8 rounded-xl bg-[var(--secondary)] hover:bg-[var(--accent)] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Increase quantity"
             >
-              <Plus className="w-4 h-4 text-mono-11" />
+              <Plus className="w-4 h-4 text-[var(--foreground)]" />
             </button>
           </div>
 
           {/* Item Total */}
           <div className="text-right">
-            <div className="text-sm text-mono-10">{en.cart.price}</div>
-            <div className="font-semibold text-mono-12">
+            <div className="text-sm text-[var(--muted-foreground)]">{en.cart.price}</div>
+            <div className="font-semibold text-[var(--foreground)]">
               {formatCurrency(itemTotal)}
             </div>
           </div>
