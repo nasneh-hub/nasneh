@@ -90,7 +90,7 @@ export default function CartComponentsDemo() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-mono-12 mb-8">
+        <h1 className="text-3xl font-bold text-[var(--foreground)] mb-8">
           Cart Components Demo
         </h1>
 
@@ -140,18 +140,18 @@ export default function CartComponentsDemo() {
         </div>
 
         {/* Component Info */}
-        <div className="mt-12 p-6 rounded-xl bg-mono-2">
-          <h2 className="text-xl font-semibold text-mono-12 mb-4">
+        <div className="mt-12 p-6 rounded-xl bg-[var(--muted)]">
+          <h2 className="text-xl font-semibold text-[var(--foreground)] mb-4">
             Components Demonstrated
           </h2>
-          <ul className="space-y-2 text-mono-11">
+          <ul className="space-y-2 text-[var(--foreground)]">
             <li>✅ <strong>CartItem</strong> - Product card with quantity control</li>
             <li>✅ <strong>CartSummary</strong> - Subtotal, delivery fee, total</li>
             <li>✅ <strong>CartEmptyState</strong> - Empty cart message (remove all items to see)</li>
             <li>✅ <strong>VendorBanner</strong> - Vendor info with single-vendor warning</li>
             <li>✅ <strong>CartActions</strong> - Proceed to checkout + clear cart</li>
           </ul>
-          <div className="mt-4 text-sm text-mono-10">
+          <div className="mt-4 text-sm text-[var(--muted-foreground)]">
             <strong>Note:</strong> This is a demo page. Remove before merging or guard with environment check.
           </div>
         </div>
