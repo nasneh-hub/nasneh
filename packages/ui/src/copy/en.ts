@@ -1078,6 +1078,111 @@ export const en = {
     },
   },
   /**
+   * Admin Dashboard
+   * For admin application review and management
+   */
+  admin: {
+    applications: {
+      // Page title
+      title: 'Applications',
+      
+      // Tabs
+      tabs: {
+        all: 'All',
+        vendors: 'Vendors',
+        providers: 'Providers',
+      },
+      
+      // Status filter
+      status: {
+        all: 'All Status',
+        pending: 'Pending',
+        approved: 'Approved',
+        rejected: 'Rejected',
+      },
+      
+      // Table headers
+      table: {
+        id: 'ID',
+        applicant: 'Applicant',
+        business: 'Business Name',
+        type: 'Type',
+        status: 'Status',
+        submitted: 'Submitted',
+        actions: 'Actions',
+      },
+      
+      // Search and actions
+      search: 'Search by name or business...',
+      empty: 'No applications found',
+      view: 'View',
+      
+      // Detail page
+      detail: {
+        back: 'Back to Applications',
+        applicantInfo: 'Applicant Information',
+        businessInfo: 'Business Information',
+        documents: 'Documents',
+        actions: 'Actions',
+        approve: 'Approve Application',
+        reject: 'Reject Application',
+        
+        // Fields
+        name: 'Name',
+        phone: 'Phone',
+        email: 'Email',
+        crNumber: 'CR Number',
+        category: 'Category',
+        description: 'Description',
+        qualifications: 'Qualifications',
+        notProvided: 'Not provided',
+        
+        // Documents
+        documentsComingSoon: 'Document upload feature coming soon',
+        
+        // Status history
+        statusHistory: 'Status History',
+        adminNotes: 'Admin Notes',
+      },
+      
+      // Reject modal
+      reject: {
+        title: 'Reject Application',
+        reason: 'Rejection Reason',
+        reasonPlaceholder: 'Explain why this application is being rejected...',
+        reasonRequired: 'Rejection reason is required',
+        quickReasons: {
+          invalidLicense: 'Invalid license',
+          incompleteDocuments: 'Incomplete documents',
+          notEligible: 'Business not eligible',
+          other: 'Other',
+        },
+        confirm: 'Confirm Rejection',
+        cancel: 'Cancel',
+      },
+      
+      // Success messages
+      success: {
+        approved: 'Application approved successfully',
+        rejected: 'Application rejected successfully',
+      },
+      
+      // Error messages
+      errors: {
+        loadFailed: 'Failed to load applications',
+        approveFailed: 'Failed to approve application',
+        rejectFailed: 'Failed to reject application',
+        notFound: 'Application not found',
+        unauthorized: 'You are not authorized to view this page',
+      },
+      
+      // Loading states
+      loading: 'Loading applications...',
+      loadingDetail: 'Loading application details...',
+    },
+  },
+  
+  /**
    * Navigation Labels
    * For breadcrumbs and navigation
    */
