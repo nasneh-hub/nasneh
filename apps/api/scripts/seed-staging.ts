@@ -286,6 +286,15 @@ async function seedCategories() {
 
 async function seedUsers() {
   console.log('👥 Seeding test users...');
+  
+  // Log database identity for verification
+  console.log('   🔍 Database Identity Check:');
+  const dbInfo: any = await prisma.$queryRaw`SELECT current_database() as db, inet_server_addr()::text as host`;
+  console.log(`      Database: ${dbInfo[0]?.db || 'unknown'}`);
+  console.log(`      Host: ${dbInfo[0]?.host || 'unknown'}`);
+  console.log(`      APP_ENVIRONMENT: ${process.env.APP_ENVIRONMENT || 'not set'}`);
+  console.log('');
+  
   const created = [];
   
   // First, ensure permanent test accounts exist (NEVER DELETE)
@@ -308,8 +317,34 @@ async function seedUsers() {
       },
     });
     created.push(user);
-    console.log(`      ✓ ${user.phone} (${user.role})`);
+    console.log(`      ✓ ${user.phone} (${user.role}) [ID: ${user.id}]`);
   }
+  
+  // VERIFICATION: Immediately query permanent test accounts to confirm persistence
+  console.log('   🔍 Verifying permanent test accounts in database...');
+  const verifyPhones = PERMANENT_TEST_ACCOUNTS.map(a => a.phone);
+  const verifiedUsers = await prisma.user.findMany({
+    where: {
+      phone: { in: verifyPhones }
+    },
+    select: {
+      id: true,
+      phone: true,
+      role: true,
+      status: true,
+    }
+  });
+  console.log(`      Found ${verifiedUsers.length}/${PERMANENT_TEST_ACCOUNTS.length} permanent test accounts`);
+  for (const u of verifiedUsers) {
+    console.log(`      ✓ ${u.phone} → ${u.role} [ID: ${u.id.substring(0, 8)}...] [Status: ${u.status}]`);
+  }
+  if (verifiedUsers.length !== PERMANENT_TEST_ACCOUNTS.length) {
+    console.error(`      ❌ ERROR: Expected ${PERMANENT_TEST_ACCOUNTS.length} permanent accounts, found ${verifiedUsers.length}`);
+    console.error('      Seed did NOT persist! Check for transaction rollback or database connection issues.');
+    throw new Error('Permanent test accounts verification failed');
+  }
+  console.log('      ✅ All permanent test accounts verified in database');
+  console.log('');
   
   // Then, create additional test users
   console.log('   📝 Upserting additional test users...');
