@@ -155,6 +155,21 @@ export const servicesService = {
   },
 
   /**
+   * Get service by slug (public)
+   */
+  async getPublicServiceBySlug(slug: string) {
+    const service = await serviceRepository.findBySlug(slug);
+    if (!service || service.status !== 'ACTIVE') {
+      throw new ServiceNotFoundError();
+    }
+    // Check provider is active
+    if (service.provider?.status !== 'ACTIVE') {
+      throw new ServiceNotFoundError();
+    }
+    return service;
+  },
+
+  /**
    * Get services by provider (for provider dashboard)
    * Supports filters, sorting, and pagination
    */

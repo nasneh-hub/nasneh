@@ -448,3 +448,21 @@ export async function getPublicServiceById(req: Request, res: Response, next: Ne
     next(error);
   }
 }
+
+export async function getPublicServiceBySlug(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { slug } = req.params;
+    const service = await servicesService.getPublicServiceBySlug(slug);
+
+    res.json({
+      success: true,
+      data: service,
+    });
+  } catch (error) {
+    if (error instanceof ServiceNotFoundError) {
+      res.status(404).json({ error: error.message });
+      return;
+    }
+    next(error);
+  }
+}

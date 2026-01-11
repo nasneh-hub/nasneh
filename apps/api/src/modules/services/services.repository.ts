@@ -111,6 +111,33 @@ export const serviceRepository = {
   },
 
   /**
+   * Find service by slug
+   */
+  async findBySlug(slug: string) {
+    return prisma.service.findUnique({
+      where: { slug },
+      include: {
+        provider: {
+          select: {
+            id: true,
+            businessName: true,
+            logoUrl: true,
+            status: true,
+            category: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            nameAr: true,
+          },
+        },
+      },
+    });
+  },
+
+  /**
    * Find services by provider ID (for provider dashboard)
    * Includes all statuses except DELETED by default
    */

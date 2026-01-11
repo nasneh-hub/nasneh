@@ -22,6 +22,7 @@ import {
   deleteProduct,
   getPublicProducts,
   getProductById,
+  getProductBySlug,
   getFeaturedProducts,
 } from './products.controller.js';
 import { authMiddleware, requireRoles } from '../../middleware/auth.middleware.js';
@@ -97,6 +98,13 @@ const publicRouter: Router = Router();
  * @query   limit (default: 10)
  */
 publicRouter.get('/featured', getFeaturedProducts);
+
+/**
+ * @route   GET /products/slug/:slug
+ * @desc    Get product by slug
+ * @access  Public
+ */
+publicRouter.get('/slug/:slug', getProductBySlug);
 
 /**
  * @route   GET /products/:id

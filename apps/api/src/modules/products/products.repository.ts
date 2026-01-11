@@ -78,7 +78,35 @@ export class ProductsRepository {
   }
 
   /**
-   * Find products with filters and pagination
+   * Find product by slug
+   */
+  async findBySlug(slug: string) {
+    return prisma.product.findUnique({
+      where: { slug },
+      include: {
+        vendor: {
+          select: {
+            id: true,
+            storeName: true,
+            logoUrl: true,
+            category: true,
+            status: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            nameAr: true,
+            slug: true,
+          },
+        },
+      },
+    });
+  }
+
+  /**
+   * Find many products filters and pagination
    */
   async findMany(query: ProductQueryInput) {
     const {
