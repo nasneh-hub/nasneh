@@ -32,7 +32,7 @@ import { config } from '../../config/env.js';
 import { otpRepository } from './otp.repository.js';
 import { tokenRepository, StoredRefreshToken } from './token.repository.js';
 import { otpDeliveryService } from './otp-delivery.service.js';
-import { prisma } from '../../lib/prisma.js';
+import { prisma } from '../../lib/db.js';
 
 // ===========================================
 // In-memory stores (for audit logs only)
@@ -328,7 +328,7 @@ export class AuthService {
       id: user.id,
       phone: user.phone,
       roles: [user.role as UserRole],
-      status: user.status === 'VERIFIED' ? UserStatus.ACTIVE : UserStatus.PENDING,
+      status: user.status === 'VERIFIED' ? UserStatus.ACTIVE : UserStatus.SUSPENDED,
       trustLevel: TrustLevel.BASIC,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -353,7 +353,7 @@ export class AuthService {
       id: user.id,
       phone: user.phone,
       roles: [user.role as UserRole],
-      status: user.status === 'VERIFIED' ? UserStatus.ACTIVE : UserStatus.PENDING,
+      status: user.status === 'VERIFIED' ? UserStatus.ACTIVE : UserStatus.SUSPENDED,
       trustLevel: TrustLevel.BASIC,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
