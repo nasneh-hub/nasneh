@@ -53,6 +53,10 @@ export const api = {
     apiRequest(`/admin/vendor-applications${status ? `?status=${status}` : ''}`),
   getProviderApplications: (status?: string) =>
     apiRequest(`/admin/provider-applications${status ? `?status=${status}` : ''}`),
+  getVendorApplication: (id: string) =>
+    apiRequest(`/admin/vendor-applications/${id}`),
+  getProviderApplication: (id: string) =>
+    apiRequest(`/admin/provider-applications/${id}`),
   approveVendorApplication: (id: string, notes?: string) =>
     apiRequest(`/admin/vendor-applications/${id}`, {
       method: 'PATCH',
