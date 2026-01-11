@@ -226,10 +226,10 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-mono-12 mb-4">
+          <h1 className="text-2xl font-bold text-[var(--foreground)] mb-4">
             {en.ui.error}
           </h1>
-          <p className="text-mono-10 mb-6">{error}</p>
+          <p className="text-[var(--muted-foreground)] mb-6">{error}</p>
           <button
             onClick={handleRetry}
             className="px-6 py-3 rounded-xl bg-primary text-white hover:opacity-90 transition-opacity"
@@ -246,10 +246,10 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-mono-12 mb-4">
+          <h1 className="text-2xl font-bold text-[var(--foreground)] mb-4">
             {en.cart.emptyCart}
           </h1>
-          <p className="text-mono-10 mb-6">{en.cart.emptyCartDescription}</p>
+          <p className="text-[var(--muted-foreground)] mb-6">{en.cart.emptyCartDescription}</p>
           <button
             onClick={() => router.push('/products')}
             className="px-6 py-3 rounded-xl bg-primary text-white hover:opacity-90 transition-opacity"
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Page Title */}
-        <h1 className="text-3xl font-bold text-mono-12 mb-8">
+        <h1 className="text-3xl font-bold text-[var(--foreground)] mb-8">
           {en.checkout.title}
         </h1>
 
@@ -273,7 +273,7 @@ export default function CheckoutPage() {
           {/* Left Column: Checkout Form */}
           <div className="lg:col-span-2 space-y-8">
             {/* Address Selection */}
-            <div className="p-6 rounded-xl bg-mono-2">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
               <AddressSelector
                 addresses={addresses}
                 selectedAddressId={selectedAddressId}
@@ -283,7 +283,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Order Notes */}
-            <div className="p-6 rounded-xl bg-mono-2">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
               <OrderNotes
                 value={orderNotes}
                 onChange={setOrderNotes}
@@ -313,8 +313,8 @@ export default function CheckoutPage() {
 
             {/* Error Message (Inline) */}
             {error && (
-              <div className="p-4 rounded-xl bg-mono-3 border border-mono-5">
-                <p className="text-sm text-mono-11">{error}</p>
+              <div className="p-4 rounded-xl bg-[var(--secondary)] shadow-sm">
+                <p className="text-sm text-[var(--foreground)]">{error}</p>
               </div>
             )}
           </div>

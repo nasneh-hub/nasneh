@@ -19,26 +19,26 @@ export function CheckoutSummary({
   const isFreeDelivery = deliveryFee === 0;
 
   return (
-    <div className="p-6 rounded-xl bg-mono-2">
-      <h2 className="text-lg font-semibold text-mono-12 mb-4">
+    <div className="p-6 rounded-xl bg-[var(--muted)]">
+      <h2 className="text-lg font-semibold text-[var(--foreground)] mb-4">
         {en.checkout.orderSummary}
       </h2>
 
       <div className="space-y-3">
         {/* Item Count */}
-        <div className="flex items-center justify-between text-mono-11">
+        <div className="flex items-center justify-between text-[var(--foreground)]">
           <span>{en.checkout.items}</span>
           <span>{itemCount}</span>
         </div>
 
         {/* Subtotal */}
-        <div className="flex items-center justify-between text-mono-11">
+        <div className="flex items-center justify-between text-[var(--foreground)]">
           <span>{en.cart.subtotal}</span>
           <span>{formatCurrency(subtotal)}</span>
         </div>
 
         {/* Delivery Fee */}
-        <div className="flex items-center justify-between text-mono-11">
+        <div className="flex items-center justify-between text-[var(--foreground)]">
           <span>{en.cart.deliveryFee}</span>
           <span>
             {isFreeDelivery ? (
@@ -50,10 +50,10 @@ export function CheckoutSummary({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-mono-5" />
+        <div className="h-px bg-[var(--secondary)] my-1" />
 
         {/* Total */}
-        <div className="flex items-center justify-between text-lg font-semibold text-mono-12">
+        <div className="flex items-center justify-between text-lg font-semibold text-[var(--foreground)]">
           <span>{en.cart.total}</span>
           <span>{formatCurrency(total)}</span>
         </div>
