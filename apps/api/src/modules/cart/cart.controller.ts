@@ -4,24 +4,14 @@
  * HTTP handlers for cart endpoints.
  */
 
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { cartService, CartError } from './cart.service.js';
 import {
   addCartItemSchema,
   updateCartItemSchema,
   CartErrorCode,
 } from '../../types/cart.types.js';
-
-// ===========================================
-// Type Extensions
-// ===========================================
-
-interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-    role: string;
-  };
-}
+import { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 
 // ===========================================
 // Helper Functions
@@ -76,7 +66,7 @@ function getStatusCodeForError(code: CartErrorCode): number {
  */
 export async function getCart(req: AuthenticatedRequest, res: Response) {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -99,7 +89,7 @@ export async function getCart(req: AuthenticatedRequest, res: Response) {
  */
 export async function addItem(req: AuthenticatedRequest, res: Response) {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -132,7 +122,7 @@ export async function addItem(req: AuthenticatedRequest, res: Response) {
  */
 export async function updateItem(req: AuthenticatedRequest, res: Response) {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
     const { id: itemId } = req.params;
 
     if (!userId) {
@@ -166,7 +156,7 @@ export async function updateItem(req: AuthenticatedRequest, res: Response) {
  */
 export async function removeItem(req: AuthenticatedRequest, res: Response) {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
     const { id: itemId } = req.params;
 
     if (!userId) {
@@ -191,7 +181,7 @@ export async function removeItem(req: AuthenticatedRequest, res: Response) {
  */
 export async function clearCart(req: AuthenticatedRequest, res: Response) {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.userId;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
