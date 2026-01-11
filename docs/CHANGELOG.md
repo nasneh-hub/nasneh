@@ -94,6 +94,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#216:** add ACM certificate and Route53 for api-staging.nasneh.com
 
 ### 📚 Documentation (docs)
+- **#302:** PRD Reality Matrix for Sprint 6
 - **#277:** add staging frontend fix documentation (services not rendering)
 - **#276:** add E2E live verification report with staging seed evidence
 - **#273:** add E2E smoke test report and evidence
@@ -110,6 +111,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#207:** remove localStorage workaround
 
 ### 📚 Documentation (docs)
+- **#302:** PRD Reality Matrix for Sprint 6
 - **#277:** add staging frontend fix documentation (services not rendering)
 - **#276:** add E2E live verification report with staging seed evidence
 - **#273:** add E2E smoke test report and evidence
@@ -305,6 +307,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#187:** remove accidental bash command from ui-lint.yml
 
 ### 📚 Documentation (docs)
+- **#302:** PRD Reality Matrix for Sprint 6
 - **#277:** add staging frontend fix documentation (services not rendering)
 - **#276:** add E2E live verification report with staging seed evidence
 - **#273:** add E2E smoke test report and evidence
@@ -434,6 +437,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#141:** merge changelog and timeline into unified auto-docs workflow
 
 ### 📚 Documentation (docs)
+- **#302:** PRD Reality Matrix for Sprint 6
 - **#277:** add staging frontend fix documentation (services not rendering)
 - **#276:** add E2E live verification report with staging seed evidence
 - **#273:** add E2E smoke test report and evidence
@@ -469,6 +473,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.2.0] - 2026-01-03
 
 ### 📚 Documentation (docs)
+- **#302:** PRD Reality Matrix for Sprint 6
 - **#277:** add staging frontend fix documentation (services not rendering)
 - **#276:** add E2E live verification report with staging seed evidence
 - **#273:** add E2E smoke test report and evidence
@@ -753,6 +758,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **#43:** Resolve merge conflicts from Sprint 1 PRs
 
 ### 📚 Documentation (docs)
+- **#302:** PRD Reality Matrix for Sprint 6
 - **#277:** add staging frontend fix documentation (services not rendering)
 - **#276:** add E2E live verification report with staging seed evidence
 - **#273:** add E2E smoke test report and evidence
