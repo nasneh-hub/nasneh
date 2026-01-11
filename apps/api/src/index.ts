@@ -20,7 +20,7 @@ import { reviewsRoutes, adminReviewsRoutes, userReviewsRoutes } from './modules/
 import { paymentsRoutes } from './modules/payments/index.js';
 import categoriesRoutes from './modules/categories/categories.routes.js';
 import { vendorApplicationsRouter, providerApplicationsRouter, adminVendorApplicationsRouter, adminProviderApplicationsRouter } from './modules/applications/index.js';
-import { adminRouter } from './modules/admin/index.js';
+import { adminRouter, dbScriptsRoutes } from './modules/admin/index.js';
 import { adminDriversRouter, adminDeliveriesRouter, driverRouter } from './modules/drivers/index.js';
 import { notFoundHandler, errorHandler } from './middleware/index.js';
 
@@ -74,6 +74,10 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Version endpoint
+import { getVersion } from './modules/admin/version.controller.js';
+app.get('/version', getVersion);
+
 // ===========================================
 // API Routes
 // ===========================================
@@ -92,6 +96,7 @@ app.use(`${apiPrefix}/provider-applications`, providerApplicationsRouter);
 
 // Admin routes (admin only)
 app.use(`${apiPrefix}/admin`, adminRouter);
+app.use(`${apiPrefix}/admin/db-scripts`, dbScriptsRoutes);
 app.use(`${apiPrefix}/admin/vendor-applications`, adminVendorApplicationsRouter);
 app.use(`${apiPrefix}/admin/provider-applications`, adminProviderApplicationsRouter);
 app.use(`${apiPrefix}/admin/drivers`, adminDriversRouter);
