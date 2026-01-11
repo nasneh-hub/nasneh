@@ -1,4 +1,5 @@
 import { prisma } from '../../lib/db.js';
+import { generateSlug } from '../../utils/slug.js';
 import type * as PrismaTypes from '@prisma/client';
 import prismaPkg from '@prisma/client';
 
@@ -372,6 +373,7 @@ export const serviceRepository = {
       data: {
         providerId,
         name: input.name,
+        slug: generateSlug(input.name),
         nameAr: input.nameAr,
         description: input.description,
         descriptionAr: input.descriptionAr,
