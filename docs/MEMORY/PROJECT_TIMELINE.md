@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:32:27 | Fixed (customer-web): remove mono classes from demo pages [S6-01 PR5 FINAL] | PR #299 | @nasneh-hub |
 | 10:28:39 | Fixed (customer-web): remove mono classes from components [S6-01 PR4] | PR #298 | @nasneh-hub |
 | 10:24:51 | Fixed (customer-web): remove mono classes from products components [S6-01 PR3] | PR #297 | @nasneh-hub |
 | 10:15:32 | Fixed (customer-web): remove mono classes from checkout components [S6-01 PR2] | PR #296 | @nasneh-hub |
