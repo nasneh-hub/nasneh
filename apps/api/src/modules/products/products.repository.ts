@@ -4,6 +4,7 @@
  */
 
 import { prisma } from '../../lib/db.js';
+import { generateSlug } from '../../utils/slug.js';
 import {
   CreateProductInput,
   UpdateProductInput,
@@ -20,6 +21,7 @@ export class ProductsRepository {
       data: {
         vendorId,
         name: data.name,
+        slug: generateSlug(data.name),
         nameAr: data.nameAr,
         description: data.description,
         descriptionAr: data.descriptionAr,
