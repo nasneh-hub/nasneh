@@ -32,6 +32,7 @@ import { config } from '../../config/env.js';
 import { otpRepository } from './otp.repository.js';
 import { tokenRepository, StoredRefreshToken } from './token.repository.js';
 import { otpDeliveryService } from './otp-delivery.service.js';
+import { prisma } from '../../lib/prisma.js';
 
 // ===========================================
 // In-memory stores (for audit logs only)
@@ -306,15 +307,31 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getOrCreateUser(phone: string): Promise<AuthUser> {
-    const now = new Date();
+    // Try to find existing user
+    let user = await prisma.user.findUnique({
+      where: { phone },
+    });
+
+    // If user doesn't exist, create new customer
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          phone,
+          role: 'CUSTOMER',
+          status: 'VERIFIED',
+        },
+      });
+    }
+
+    // Map Prisma user to AuthUser
     return {
-      id: `user_${phone.replace(/\+/g, '')}`,
-      phone,
-      roles: [UserRole.CUSTOMER],
-      status: UserStatus.ACTIVE,
+      id: user.id,
+      phone: user.phone,
+      roles: [user.role as UserRole],
+      status: user.status === 'VERIFIED' ? UserStatus.ACTIVE : UserStatus.PENDING,
       trustLevel: TrustLevel.BASIC,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 
@@ -323,16 +340,23 @@ export class AuthService {
    * TODO: Replace with Prisma implementation
    */
   private async getUserById(userId: string): Promise<AuthUser | null> {
-    const phone = userId.replace('user_', '+');
-    const now = new Date();
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    // Map Prisma user to AuthUser
     return {
-      id: userId,
-      phone,
-      roles: [UserRole.CUSTOMER],
-      status: UserStatus.ACTIVE,
+      id: user.id,
+      phone: user.phone,
+      roles: [user.role as UserRole],
+      status: user.status === 'VERIFIED' ? UserStatus.ACTIVE : UserStatus.PENDING,
       trustLevel: TrustLevel.BASIC,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 }
