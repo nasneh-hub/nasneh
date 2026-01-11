@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 13:44:36 | Added: add admin DB scripts endpoints + UX fixes + version endpoint | PR #306 | @nasneh-hub |
 | 12:56:23 | Added (customer-web): implement slug-based routes (Part 2: Frontend) | PR #305 | @nasneh-hub |
 | 12:33:38 | Added (api): add slug support for products and services (Part 1: Backend) | PR #304 | @nasneh-hub |
 | 11:41:06 | Fixed (customer-web): resolve staging blockers (auth, routing, booking) | PR #303 | @nasneh-hub |
