@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:01:16 | Fixed (customer-web): remove mono classes from cart components [S6-01 PR1] | PR #295 | @nasneh-hub |
 | 07:50:09 | Added (dashboard): add application detail page with review actions [S5-05 PR4] | PR #294 | @nasneh-hub |
 | 07:40:13 | Added (dashboard): add admin applications list page [S5-05 PR3] | PR #293 | @nasneh-hub |
 | 07:28:44 | Added (ui): add admin applications copy tokens [S5-05 PR2] | PR #292 | @nasneh-hub |
