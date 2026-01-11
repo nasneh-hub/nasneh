@@ -198,18 +198,19 @@ function setAccessToken(token: string): void {
  */
 export async function authenticatedFetch(
   url: string,
-  options: RequestInit = {}
+  options?: Parameters<typeof fetch>[1]
 ): Promise<Response> {
+  const opts = options || {};
   const accessToken = getAccessToken();
   
   // First attempt with current token
   const headers = {
-    ...options.headers,
+    ...opts.headers,
     'Authorization': accessToken ? `Bearer ${accessToken}` : '',
   };
   
   let response = await fetch(url, {
-    ...options,
+    ...opts,
     headers,
   });
   
@@ -226,12 +227,12 @@ export async function authenticatedFetch(
         
         // Retry original request with new token
         const newHeaders = {
-          ...options.headers,
+          ...opts.headers,
           'Authorization': `Bearer ${refreshResponse.data.accessToken}`,
         };
         
         response = await fetch(url, {
-          ...options,
+          ...opts,
           headers: newHeaders,
         });
       }
