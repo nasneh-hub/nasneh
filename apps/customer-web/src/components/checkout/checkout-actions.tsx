@@ -34,7 +34,7 @@ export function CheckoutActions({
       <button
         onClick={onBack}
         disabled={isContinuing}
-        className="w-full py-3 text-sm text-mono-10 hover:text-mono-12 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+        className="w-full py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
       >
         <ArrowLeft className="w-4 h-4" />
         {en.checkout.backToCart}
