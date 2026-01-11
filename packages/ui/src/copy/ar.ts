@@ -453,6 +453,111 @@ export const ar = {
     tryAgain: 'حاول مرة أخرى',
   },
   /**
+   * Admin Dashboard
+   * For admin application review and management
+   */
+  admin: {
+    applications: {
+      // Page title
+      title: 'الطلبات',
+      
+      // Tabs
+      tabs: {
+        all: 'الكل',
+        vendors: 'البائعين',
+        providers: 'مقدمي الخدمات',
+      },
+      
+      // Status filter
+      status: {
+        all: 'كل الحالات',
+        pending: 'قيد المراجعة',
+        approved: 'مقبول',
+        rejected: 'مرفوض',
+      },
+      
+      // Table headers
+      table: {
+        id: 'الرقم',
+        applicant: 'المتقدم',
+        business: 'اسم النشاط',
+        type: 'النوع',
+        status: 'الحالة',
+        submitted: 'تاريخ التقديم',
+        actions: 'الإجراءات',
+      },
+      
+      // Search and actions
+      search: 'ابحث بالاسم أو النشاط...',
+      empty: 'لا توجد طلبات',
+      view: 'عرض',
+      
+      // Detail page
+      detail: {
+        back: 'العودة إلى الطلبات',
+        applicantInfo: 'معلومات المتقدم',
+        businessInfo: 'معلومات النشاط',
+        documents: 'المستندات',
+        actions: 'الإجراءات',
+        approve: 'قبول الطلب',
+        reject: 'رفض الطلب',
+        
+        // Fields
+        name: 'الاسم',
+        phone: 'الهاتف',
+        email: 'البريد الإلكتروني',
+        crNumber: 'رقم السجل التجاري',
+        category: 'الفئة',
+        description: 'الوصف',
+        qualifications: 'المؤهلات',
+        notProvided: 'غير متوفر',
+        
+        // Documents
+        documentsComingSoon: 'ميزة رفع المستندات قريباً',
+        
+        // Status history
+        statusHistory: 'سجل الحالة',
+        adminNotes: 'ملاحظات الإدارة',
+      },
+      
+      // Reject modal
+      reject: {
+        title: 'رفض الطلب',
+        reason: 'سبب الرفض',
+        reasonPlaceholder: 'اشرح سبب رفض هذا الطلب...',
+        reasonRequired: 'سبب الرفض مطلوب',
+        quickReasons: {
+          invalidLicense: 'رخصة غير صالحة',
+          incompleteDocuments: 'مستندات ناقصة',
+          notEligible: 'النشاط غير مؤهل',
+          other: 'أخرى',
+        },
+        confirm: 'تأكيد الرفض',
+        cancel: 'إلغاء',
+      },
+      
+      // Success messages
+      success: {
+        approved: 'تم قبول الطلب بنجاح',
+        rejected: 'تم رفض الطلب بنجاح',
+      },
+      
+      // Error messages
+      errors: {
+        loadFailed: 'فشل تحميل الطلبات',
+        approveFailed: 'فشل قبول الطلب',
+        rejectFailed: 'فشل رفض الطلب',
+        notFound: 'الطلب غير موجود',
+        unauthorized: 'غير مصرح لك بعرض هذه الصفحة',
+      },
+      
+      // Loading states
+      loading: 'جاري تحميل الطلبات...',
+      loadingDetail: 'جاري تحميل تفاصيل الطلب...',
+    },
+  },
+  
+  /**
    * Common UI Elements
    */
   common: {
