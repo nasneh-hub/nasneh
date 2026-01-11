@@ -193,10 +193,10 @@ export default function ProductDetailPage() {
         <div className="max-w-md mx-auto text-center">
           <div className="mb-6">
             <div className="text-6xl mb-4">📦</div>
-            <h1 className="text-2xl font-bold text-mono-12 mb-2">
+            <h1 className="text-2xl font-bold text-[var(--foreground)] mb-2">
               {en.product.notFound}
             </h1>
-            <p className="text-mono-11">
+            <p className="text-[var(--foreground)]">
               {en.product.notFoundDescription}
             </p>
           </div>
@@ -249,7 +249,7 @@ export default function ProductDetailPage() {
       
       {/* Reviews Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-mono-12 mb-6">
+        <h2 className="text-2xl font-bold text-[var(--foreground)] mb-6">
           {en.reviews.title}
         </h2>
         
