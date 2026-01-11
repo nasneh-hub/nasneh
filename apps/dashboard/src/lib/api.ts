@@ -47,4 +47,30 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
+
+  // Admin - Applications
+  getVendorApplications: (status?: string) =>
+    apiRequest(`/admin/vendor-applications${status ? `?status=${status}` : ''}`),
+  getProviderApplications: (status?: string) =>
+    apiRequest(`/admin/provider-applications${status ? `?status=${status}` : ''}`),
+  approveVendorApplication: (id: string, notes?: string) =>
+    apiRequest(`/admin/vendor-applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'APPROVED', notes }),
+    }),
+  rejectVendorApplication: (id: string, notes: string) =>
+    apiRequest(`/admin/vendor-applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'REJECTED', notes }),
+    }),
+  approveProviderApplication: (id: string, notes?: string) =>
+    apiRequest(`/admin/provider-applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'APPROVED', notes }),
+    }),
+  rejectProviderApplication: (id: string, notes: string) =>
+    apiRequest(`/admin/provider-applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'REJECTED', notes }),
+    }),
 };
