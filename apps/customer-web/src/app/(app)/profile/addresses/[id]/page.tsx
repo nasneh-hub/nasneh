@@ -70,6 +70,7 @@ export default function AddressFormPage() {
     if (!isNew && addressId) {
       fetchAddress();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, authLoading, router, isNew, addressId]);
 
   const fetchAddress = async () => {
