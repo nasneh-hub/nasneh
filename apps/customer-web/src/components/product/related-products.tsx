@@ -7,6 +7,7 @@ interface RelatedProductsProps {
   products: Array<{
     id: string;
     name: string;
+    slug: string;
     description?: string;
     price: number;
     images?: string[];

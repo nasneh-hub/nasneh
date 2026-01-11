@@ -8,6 +8,7 @@ import { en } from '@nasneh/ui/copy';
 interface Product {
   id: string;
   name: string;
+  slug: string;
   description?: string;
   price: number;
   image?: string;
@@ -24,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card
-      onClick={() => router.push(`/products/${product.id}`)}
+      onClick={() => router.push(`/products/${product.slug}`)}
       className="cursor-pointer overflow-hidden transition-transform duration-200 hover:-translate-y-1"
     >
       {product.image ? (

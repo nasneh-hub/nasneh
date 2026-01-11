@@ -13,6 +13,7 @@ import { ReviewList } from '@/components/reviews/review-list';
 interface Service {
   id: string;
   name: string;
+  slug: string;
   description: string;
   price: number;
   images?: string[];

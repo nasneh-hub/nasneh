@@ -8,6 +8,7 @@ import { en } from '@nasneh/ui/copy';
 interface Service {
   id: string;
   name: string;
+  slug: string;
   description?: string;
   price: number;
   image?: string;
@@ -25,7 +26,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
   return (
     <Card
-      onClick={() => router.push(`/services/${service.id}`)}
+      onClick={() => router.push(`/services/${service.slug}`)}
       className="cursor-pointer overflow-hidden transition-transform duration-200 hover:-translate-y-1"
     >
       {service.image ? (
