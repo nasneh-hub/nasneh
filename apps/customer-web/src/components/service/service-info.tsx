@@ -34,7 +34,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
     <div className="flex flex-col gap-6">
       {/* Service Name */}
       <div>
-        <h1 className="text-3xl font-bold text-mono-12">{service.name}</h1>
+        <h1 className="text-3xl font-bold text-[var(--foreground)]">{service.name}</h1>
         {service.serviceType && (
           <div className="mt-2">
             <Badge>{service.serviceType}</Badge>
@@ -44,7 +44,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
 
       {/* Price */}
       <div>
-        <div className="text-3xl font-bold text-mono-12">
+        <div className="text-3xl font-bold text-[var(--foreground)]">
           {formatCurrency(service.price)}
         </div>
       </div>
@@ -57,7 +57,7 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
               isAvailable ? 'bg-primary' : 'bg-destructive'
             }`}
           />
-          <span className="text-sm text-mono-11">
+          <span className="text-sm text-[var(--foreground)]">
             {isAvailable ? en.service.available : en.service.unavailable}
           </span>
         </div>
@@ -65,13 +65,13 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
 
       {/* Provider */}
       {service.provider && (
-        <div className="flex items-center gap-3 rounded-xl bg-mono-2 p-4">
+        <div className="flex items-center gap-3 rounded-xl bg-[var(--muted)] p-4">
           <Avatar name={service.provider.name} size="md" />
           <div>
-            <div className="text-sm text-mono-11">{en.service.providedBy}</div>
+            <div className="text-sm text-[var(--foreground)]">{en.service.providedBy}</div>
             <Link
               href={`/providers/${service.provider.id}`}
-              className="font-medium text-mono-12 hover:underline"
+              className="font-medium text-[var(--foreground)] hover:underline"
             >
               {service.provider.name}
             </Link>
@@ -90,19 +90,19 @@ export function ServiceInfo({ service, onBookNow }: ServiceInfoProps) {
 
       {/* Description */}
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-mono-12">
+        <h2 className="mb-3 text-lg font-semibold text-[var(--foreground)]">
           {en.service.description}
         </h2>
-        <p className="whitespace-pre-wrap text-mono-11">{service.description}</p>
+        <p className="whitespace-pre-wrap text-[var(--foreground)]">{service.description}</p>
       </div>
 
       {/* Category */}
       {service.category && (
         <div>
-            <div className="text-sm text-mono-11 mb-2">{en.navigation.categories}</div>
+            <div className="text-sm text-[var(--foreground)] mb-2">{en.navigation.categories}</div>
           <Link
             href={`/category/${service.category.slug}`}
-            className="inline-flex items-center gap-2 rounded-xl bg-mono-2 px-4 py-2 text-sm font-medium text-mono-12 hover:bg-mono-3"
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--muted)] px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--secondary)]"
           >
             {service.category.name}
           </Link>

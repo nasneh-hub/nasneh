@@ -36,10 +36,10 @@ export function ProductInfo({ product, onAddToCart, isAddingToCart }: ProductInf
     <div className="flex flex-col gap-6">
       {/* Title and Price */}
       <div>
-        <h1 className="text-3xl font-bold text-mono-12 mb-2">
+        <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">
           {product.name}
         </h1>
-        <div className="text-2xl font-semibold text-mono-12">
+        <div className="text-2xl font-semibold text-[var(--foreground)]">
           {formatCurrency(product.price)}
         </div>
       </div>
@@ -56,10 +56,10 @@ export function ProductInfo({ product, onAddToCart, isAddingToCart }: ProductInf
       {/* Description */}
       {product.description && (
         <div>
-          <h2 className="text-lg font-semibold text-mono-12 mb-2">
+          <h2 className="text-lg font-semibold text-[var(--foreground)] mb-2">
             {en.product.description}
           </h2>
-          <p className="text-mono-11 leading-relaxed">
+          <p className="text-[var(--foreground)] leading-relaxed">
             {product.description}
           </p>
         </div>
@@ -68,16 +68,16 @@ export function ProductInfo({ product, onAddToCart, isAddingToCart }: ProductInf
       {/* Vendor */}
       {product.vendor && (
         <div>
-          <div className="text-sm text-mono-10 mb-2">{en.product.soldBy}</div>
+          <div className="text-sm text-[var(--muted-foreground)] mb-2">{en.product.soldBy}</div>
           <Link
             href={`/vendors/${product.vendor.id}`}
-            className="flex items-center gap-3 p-3 rounded-xl bg-mono-2 hover:bg-mono-3 transition-colors"
+            className="flex items-center gap-3 p-3 rounded-xl bg-[var(--muted)] hover:bg-[var(--secondary)] transition-colors"
           >
             <Avatar
               name={product.vendor.name}
               src={product.vendor.avatar}
             />
-            <span className="font-medium text-mono-12">
+            <span className="font-medium text-[var(--foreground)]">
               {product.vendor.name}
             </span>
           </Link>

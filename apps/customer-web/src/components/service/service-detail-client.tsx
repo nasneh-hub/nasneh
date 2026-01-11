@@ -88,7 +88,7 @@ export function ServiceDetailClient({
 
       {/* Reviews Section */}
       <div className="mt-12">
-        <h2 className="mb-6 text-2xl font-bold text-mono-12">
+        <h2 className="mb-6 text-2xl font-bold text-[var(--foreground)]">
           {en.reviews.title}
         </h2>
         
@@ -110,7 +110,7 @@ export function ServiceDetailClient({
       {/* Related Services */}
       {relatedServices.length > 0 && (
         <div className="mt-12">
-          <h2 className="mb-6 text-2xl font-bold text-mono-12">
+          <h2 className="mb-6 text-2xl font-bold text-[var(--foreground)]">
             {en.service.relatedServices}
           </h2>
           <RelatedServices services={relatedServices} />

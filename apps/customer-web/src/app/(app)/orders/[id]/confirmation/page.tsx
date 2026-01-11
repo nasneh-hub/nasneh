@@ -151,11 +151,11 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <div className="text-center max-w-md">
-          <XCircle className="w-16 h-16 text-mono-10 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-mono-12 mb-4">
+          <XCircle className="w-16 h-16 text-[var(--muted-foreground)] mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-[var(--foreground)] mb-4">
             {en.order.notFound}
           </h1>
-          <p className="text-mono-10 mb-6">{en.order.notFoundDescription}</p>
+          <p className="text-[var(--muted-foreground)] mb-6">{en.order.notFoundDescription}</p>
           <Button onClick={() => router.push('/orders')}>
             {en.order.backToOrders}
           </Button>
@@ -169,11 +169,11 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <div className="text-center max-w-md">
-          <XCircle className="w-16 h-16 text-mono-10 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-mono-12 mb-4">
+          <XCircle className="w-16 h-16 text-[var(--muted-foreground)] mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-[var(--foreground)] mb-4">
             {en.ui.error}
           </h1>
-          <p className="text-mono-10 mb-6">{error}</p>
+          <p className="text-[var(--muted-foreground)] mb-6">{error}</p>
           <Button onClick={fetchOrder}>
             {en.ui.tryAgain}
           </Button>
@@ -193,30 +193,30 @@ export default function OrderConfirmationPage() {
           {paymentSuccess ? (
             <>
               <CheckCircle className="w-16 h-16 text-primary mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-mono-12 mb-2">
+              <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">
                 {en.order.title}
               </h1>
-              <p className="text-mono-10">
+              <p className="text-[var(--muted-foreground)]">
                 {en.order.orderPlaced}
               </p>
             </>
           ) : isProcessingPayment ? (
             <>
-              <div className="w-16 h-16 rounded-full border-4 border-mono-4 border-t-primary animate-spin mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-mono-12 mb-2">
+              <div className="w-16 h-16 rounded-full border-4  border-t-primary animate-spin mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">
                 {en.payment.processing}
               </h1>
-              <p className="text-mono-10">
+              <p className="text-[var(--muted-foreground)]">
                 {en.payment.mockModeDescription}
               </p>
             </>
           ) : paymentError ? (
             <>
-              <XCircle className="w-16 h-16 text-mono-10 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-mono-12 mb-2">
+              <XCircle className="w-16 h-16 text-[var(--muted-foreground)] mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">
                 {en.payment.paymentFailed}
               </h1>
-              <p className="text-mono-10 mb-4">{paymentError}</p>
+              <p className="text-[var(--muted-foreground)] mb-4">{paymentError}</p>
               <Button onClick={processPayment}>
                 {en.ui.tryAgain}
               </Button>
@@ -228,55 +228,55 @@ export default function OrderConfirmationPage() {
         {paymentSuccess && (
           <div className="space-y-6">
             {/* Order ID */}
-            <div className="p-6 rounded-xl bg-mono-2">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
               <div className="flex items-center gap-3 mb-4">
-                <Package className="w-5 h-5 text-mono-10" />
-                <h2 className="text-lg font-semibold text-mono-12">
+                <Package className="w-5 h-5 text-[var(--muted-foreground)]" />
+                <h2 className="text-lg font-semibold text-[var(--foreground)]">
                   {en.order.orderDetails}
                 </h2>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-mono-10">{en.order.orderNumber}</span>
-                  <span className="font-medium text-mono-12">{order.orderId}</span>
+                  <span className="text-[var(--muted-foreground)]">{en.order.orderNumber}</span>
+                  <span className="font-medium text-[var(--foreground)]">{order.orderId}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-mono-10">{en.order.orderStatus}</span>
-                  <span className="font-medium text-mono-12">{order.status}</span>
+                  <span className="text-[var(--muted-foreground)]">{en.order.orderStatus}</span>
+                  <span className="font-medium text-[var(--foreground)]">{order.status}</span>
                 </div>
               </div>
             </div>
 
             {/* Delivery Address */}
-            <div className="p-6 rounded-xl bg-mono-2">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
               <div className="flex items-center gap-3 mb-4">
-                <MapPin className="w-5 h-5 text-mono-10" />
-                <h2 className="text-lg font-semibold text-mono-12">
+                <MapPin className="w-5 h-5 text-[var(--muted-foreground)]" />
+                <h2 className="text-lg font-semibold text-[var(--foreground)]">
                   {en.order.deliveryAddress}
                 </h2>
               </div>
-              <div className="text-mono-11">
-                <p className="font-medium text-mono-12">{order.address.label}</p>
+              <div className="text-[var(--foreground)]">
+                <p className="font-medium text-[var(--foreground)]">{order.address.label}</p>
                 <p>{order.address.street}</p>
                 <p>{order.address.city}, {order.address.country}</p>
               </div>
             </div>
 
             {/* Order Items */}
-            <div className="p-6 rounded-xl bg-mono-2">
-              <h2 className="text-lg font-semibold text-mono-12 mb-4">
+            <div className="p-6 rounded-xl bg-[var(--muted)]">
+              <h2 className="text-lg font-semibold text-[var(--foreground)] mb-4">
                 {en.checkout.items}
               </h2>
               <div className="space-y-3">
                 {order.items.map((item) => (
                   <div key={item.id} className="flex justify-between">
                     <div>
-                      <p className="font-medium text-mono-12">{item.name}</p>
-                      <p className="text-sm text-mono-10">
+                      <p className="font-medium text-[var(--foreground)]">{item.name}</p>
+                      <p className="text-sm text-[var(--muted-foreground)]">
                         {en.cart.quantity}: {item.quantity}
                       </p>
                     </div>
-                    <p className="font-medium text-mono-12">
+                    <p className="font-medium text-[var(--foreground)]">
                       {formatCurrency(item.price)}
                     </p>
                   </div>
@@ -284,12 +284,12 @@ export default function OrderConfirmationPage() {
               </div>
 
               {/* Order Summary */}
-              <div className="mt-6 pt-6 border-t border-mono-4 space-y-2">
-                <div className="flex justify-between text-mono-11">
+              <div className="mt-6 pt-6 border-t  space-y-2">
+                <div className="flex justify-between text-[var(--foreground)]">
                   <span>{en.cart.subtotal}</span>
                   <span>{formatCurrency(order.subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-mono-11">
+                <div className="flex justify-between text-[var(--foreground)]">
                   <span>{en.cart.deliveryFee}</span>
                   <span>
                     {order.deliveryFee === 0 ? (
@@ -299,7 +299,7 @@ export default function OrderConfirmationPage() {
                     )}
                   </span>
                 </div>
-                <div className="flex justify-between text-lg font-bold text-mono-12 pt-2">
+                <div className="flex justify-between text-lg font-bold text-[var(--foreground)] pt-2">
                   <span>{en.cart.total}</span>
                   <span>{formatCurrency(order.total)}</span>
                 </div>
@@ -308,14 +308,14 @@ export default function OrderConfirmationPage() {
 
             {/* Order Notes */}
             {order.notes && (
-              <div className="p-6 rounded-xl bg-mono-2">
+              <div className="p-6 rounded-xl bg-[var(--muted)]">
                 <div className="flex items-center gap-3 mb-4">
-                  <FileText className="w-5 h-5 text-mono-10" />
-                  <h2 className="text-lg font-semibold text-mono-12">
+                  <FileText className="w-5 h-5 text-[var(--muted-foreground)]" />
+                  <h2 className="text-lg font-semibold text-[var(--foreground)]">
                     {en.checkout.orderNotes}
                   </h2>
                 </div>
-                <p className="text-mono-11">{order.notes}</p>
+                <p className="text-[var(--foreground)]">{order.notes}</p>
               </div>
             )}
 

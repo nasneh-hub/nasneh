@@ -24,7 +24,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
   
   return (
     <div className="mt-12">
-      <h2 className="text-2xl font-bold text-mono-12 mb-6">
+      <h2 className="text-2xl font-bold text-[var(--foreground)] mb-6">
         {en.product.relatedProducts}
       </h2>
       
