@@ -54,15 +54,8 @@ export const NavigationMenuList = forwardRef<HTMLUListElement, NavigationMenuLis
     return (
       <ul
         ref={ref}
-        className={className}
-        style={{
-          display: 'flex',
-          listStyle: 'none',
-          margin: 0,
-          padding: 0,
-          gap: 'var(--spacing-sm)',
-          ...style,
-        }}
+        className={`flex list-none m-0 p-0 gap-[var(--spacing-sm)] ${className || ''}`}
+        style={style}
         {...props}
       >
         {children}
@@ -91,31 +84,31 @@ NavigationMenuItem.displayName = 'NavigationMenuItem';
 // NavigationMenuLink - the actual link
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
   ({ children, active = false, className, style, ...props }, ref) => {
+    const [isHovered, setIsHovered] = React.useState(false);
+
     return (
       <a
         ref={ref}
-        className={className}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          fontSize: 'var(--font-size-sm)',
-          fontWeight: 'var(--font-weight-medium)',
-          color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
-          textDecoration: 'none',
-          borderRadius: 'var(--radius)',
-          transition: 'all 0.2s ease',
-          cursor: 'pointer',
-          ...style,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'var(--bg-secondary)';
-          e.currentTarget.style.color = 'var(--text-primary)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'transparent';
-          e.currentTarget.style.color = active ? 'var(--text-primary)' : 'var(--text-secondary)';
-        }}
+        className={`
+          flex items-center
+          px-[var(--spacing-md)] py-[var(--spacing-sm)]
+          text-[length:var(--font-size-sm)]
+          font-[var(--font-weight-medium)]
+          no-underline
+          rounded-[var(--radius)]
+          transition-all duration-200 ease-in-out
+          cursor-pointer
+          ${isHovered 
+            ? 'bg-[var(--bg-secondary)] text-[var(--text-primary)]' 
+            : active 
+              ? 'bg-transparent text-[var(--text-primary)]' 
+              : 'bg-transparent text-[var(--text-secondary)]'
+          }
+          ${className || ''}
+        `}
+        style={style}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         {...props}
       >
         {children}

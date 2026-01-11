@@ -155,11 +155,8 @@ export const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuConten
           ...alignmentStyles[align],
           zIndex: 50,
           minWidth: '200px',
-          background: 'var(--bg-primary)',
-          boxShadow: 'var(--shadow-lg)',
-          padding: 'var(--spacing-sm)',
         }}
-        className="rounded-xl"
+        className="rounded-xl bg-[var(--bg-primary)] shadow-[var(--shadow-lg)] p-[var(--spacing-sm)]"
         {...props}
       >
         {children}
@@ -184,17 +181,18 @@ export const DropdownMenuItem = forwardRef<HTMLDivElement, DropdownMenuItemProps
       <div
         ref={ref}
         onClick={handleClick}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          fontSize: 'var(--font-size-base)',
-          color: disabled ? 'var(--text-tertiary)' : 'var(--text-primary)',
-          cursor: disabled ? 'not-allowed' : 'pointer',
-          transition: 'background 0.2s',
-          opacity: disabled ? 0.5 : 1,
-        }}
-        className="rounded-xl hover:bg-[var(--bg-hover)]"
+        className={`
+          flex items-center
+          px-[var(--spacing-md)] py-[var(--spacing-sm)]
+          text-[length:var(--font-size-base)]
+          rounded-xl
+          transition-colors duration-200
+          hover:bg-[var(--bg-hover)]
+          ${disabled 
+            ? 'text-[var(--text-tertiary)] cursor-not-allowed opacity-50' 
+            : 'text-[var(--text-primary)] cursor-pointer'
+          }
+        `}
         {...props}
       >
         {children}
@@ -210,11 +208,7 @@ export const DropdownMenuSeparator = forwardRef<HTMLDivElement, DropdownMenuSepa
     return (
       <div
         ref={ref}
-        style={{
-          height: '1px',
-          margin: 'var(--spacing-xs) 0',
-          background: 'var(--border-primary)',
-        }}
+        className="h-px my-[var(--spacing-xs)] bg-[var(--border-primary)]"
         {...props}
       />
     );
