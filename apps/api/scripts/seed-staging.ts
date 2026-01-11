@@ -87,7 +87,16 @@ function generateSlug(name: string): string {
 // Test Data Constants
 // ===========================================
 
-// Test Users
+// Permanent Test Accounts (NEVER DELETE)
+// These accounts are used for automated testing and manual QA
+// OTP: 123456 (staging-only, via TEST_OTP env var)
+const PERMANENT_TEST_ACCOUNTS = [
+  { phone: '+97336000000', role: 'CUSTOMER' as const, name: 'Test Customer', email: 'customer@test.nasneh.com' },
+  { phone: '+97336000001', role: 'VENDOR' as const, name: 'Test Vendor', email: 'vendor@test.nasneh.com' },
+  { phone: '+97336000002', role: 'ADMIN' as const, name: 'Test Admin', email: 'admin@test.nasneh.com' },
+];
+
+// Additional Test Users (can be deleted/recreated)
 const TEST_USERS = [
   { phone: '+97333111001', role: 'CUSTOMER' as const, name: 'Test Customer' },
   { phone: '+97333111002', role: 'VENDOR' as const, name: 'Test Vendor' },
@@ -279,6 +288,31 @@ async function seedUsers() {
   console.log('👥 Seeding test users...');
   const created = [];
   
+  // First, ensure permanent test accounts exist (NEVER DELETE)
+  console.log('   🔒 Upserting permanent test accounts...');
+  for (const userData of PERMANENT_TEST_ACCOUNTS) {
+    const user = await prisma.user.upsert({
+      where: { phone: userData.phone },
+      update: {
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        status: 'VERIFIED',
+      },
+      create: {
+        phone: userData.phone,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        status: 'VERIFIED',
+      },
+    });
+    created.push(user);
+    console.log(`      ✓ ${user.phone} (${user.role})`);
+  }
+  
+  // Then, create additional test users
+  console.log('   📝 Upserting additional test users...');
   for (const userData of TEST_USERS) {
     const user = await prisma.user.upsert({
       where: { phone: userData.phone },

@@ -109,6 +109,30 @@ export class OtpRepository {
     attemptsRemaining?: number;
     stored?: StoredOtp;
   }> {
+    // STAGING-ONLY: Test OTP bypass for permanent test accounts
+    // Only active when APP_ENVIRONMENT=staging AND TEST_OTP env var is set
+    const isStaging = process.env.APP_ENVIRONMENT === 'staging';
+    const testOtp = process.env.TEST_OTP;
+    const testPhones = ['+97336000000', '+97336000001', '+97336000002'];
+    
+    if (isStaging && testOtp && testPhones.includes(phone) && otp === testOtp) {
+      // Create a mock stored OTP for test accounts
+      const mockStored: StoredOtp = {
+        otp: testOtp,
+        phone,
+        expiresAt: Date.now() + 300000, // 5 minutes from now
+        attempts: 0,
+        channel: 'SMS' as OtpChannel,
+        createdAt: Date.now(),
+      };
+      
+      return {
+        valid: true,
+        stored: mockStored,
+      };
+    }
+    
+    // Regular OTP validation flow
     const stored = await this.get(phone);
 
     if (!stored) {
