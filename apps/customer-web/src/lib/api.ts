@@ -64,7 +64,7 @@ interface VerifyOtpResponse {
  */
 export async function requestOtp(phone: string): Promise<ApiResponse<RequestOtpResponse>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/request-otp`, {
+    const response = await fetch(getApiUrl('/auth/request-otp'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export async function requestOtp(phone: string): Promise<ApiResponse<RequestOtpR
  */
 export async function verifyOtp(phone: string, otp: string): Promise<ApiResponse<VerifyOtpResponse>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-otp`, {
+    const response = await fetch(getApiUrl('/auth/verify-otp'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export async function verifyOtp(phone: string, otp: string): Promise<ApiResponse
  */
 export async function refreshToken(refreshToken: string): Promise<ApiResponse<{ accessToken: string; refreshToken?: string }>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
+    const response = await fetch(getApiUrl('/auth/refresh'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ export async function refreshToken(refreshToken: string): Promise<ApiResponse<{ 
  */
 export async function logout(accessToken: string): Promise<ApiResponse<void>> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
+    const response = await fetch(getApiUrl('/auth/logout'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
