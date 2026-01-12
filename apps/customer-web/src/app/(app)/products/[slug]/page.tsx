@@ -137,12 +137,24 @@ export default function ProductDetailPage() {
     try {
       setIsAddingToCart(true);
       
+      // Get access token from localStorage
+      const accessToken = typeof window !== 'undefined' 
+        ? localStorage.getItem('nasneh_access_token')
+        : null;
+      
+      if (!accessToken) {
+        // Redirect to login if not authenticated
+        router.push('/login');
+        return;
+      }
+      
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/cart/items`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
             productId: product.id,
@@ -154,9 +166,12 @@ export default function ProductDetailPage() {
       if (response.ok) {
         // TODO: Show success toast
         // TODO: Update cart count
+        console.log('Product added to cart successfully');
       } else if (response.status === 401) {
         // Redirect to login
         router.push('/login');
+      } else {
+        console.error('Failed to add to cart:', response.status);
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
