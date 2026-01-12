@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { en } from '@nasneh/ui/copy';
 import { Button, Skeleton } from '@nasneh/ui';
 import { Breadcrumb } from '@/components/shared/breadcrumb';
+import { getApiUrl } from '@/lib/api';
 import { ImageGallery } from '@/components/product/image-gallery';
 import { ProductInfo } from '@/components/product/product-info';
 import { RelatedProducts } from '@/components/product/related-products';
