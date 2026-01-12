@@ -9,6 +9,7 @@
 
 | Time | Event | Evidence | Author |
 |------|-------|----------|--------|
+| 10:06:58 | Fixed (customer-web): fix add to cart auth, booking page routing, and category URL structure | PR #308 | @nasneh-hub |
 | 09:33:07 | Fixed (customer-web): use getApiUrl to prevent double /api/v1 prefix | PR #307 | @nasneh-hub |
 
 ---
