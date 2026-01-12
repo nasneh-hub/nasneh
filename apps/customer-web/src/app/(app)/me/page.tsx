@@ -74,7 +74,7 @@ export default function AccountOverviewPage() {
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[var(--foreground)] mb-2">
-          {en.profile.myAccount}
+          {en.profile.myProfile}
         </h1>
         <p className="text-[var(--muted-foreground)]">
           Manage your account settings and preferences
@@ -90,7 +90,7 @@ export default function AccountOverviewPage() {
               {user?.phone || 'Guest'}
             </h2>
             <p className="text-[var(--muted-foreground)]">
-              {user?.roles?.includes('ADMIN') ? 'Admin' : 'Customer'}
+              {user?.role === 'ADMIN' ? 'Admin' : 'Customer'}
             </p>
           </div>
         </div>
