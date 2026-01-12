@@ -4,15 +4,10 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Redirect /categories/[slug] to /category/[slug] for consistency
-  if (pathname.startsWith('/categories/') && pathname !== '/categories') {
-    const slug = pathname.replace('/categories/', '');
-    return NextResponse.redirect(new URL(`/category/${slug}`, request.url));
-  }
-
-  // Redirect /kitchens to /categories (main listing page)
-  if (pathname === '/kitchens') {
-    return NextResponse.redirect(new URL('/categories', request.url));
+  // Redirect old /category/[slug] to new /categories/[slug] for consistency
+  if (pathname.startsWith('/category/') && pathname !== '/category') {
+    const slug = pathname.replace('/category/', '');
+    return NextResponse.redirect(new URL(`/categories/${slug}`, request.url));
   }
 
   // Redirect /sell to onboarding page (placeholder for now)
@@ -26,8 +21,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/categories/:path*',
-    '/kitchens',
+    '/category/:path*',
     '/sell',
   ],
 };
