@@ -5,6 +5,14 @@
 
 ---
 
+## 2026-01-12
+
+| Time | Event | Evidence | Author |
+|------|-------|----------|--------|
+| 09:33:07 | Fixed (customer-web): use getApiUrl to prevent double /api/v1 prefix | PR #307 | @nasneh-hub |
+
+---
+
 ## 2026-01-11
 
 | Time | Event | Evidence | Author |
