@@ -77,6 +77,19 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: nasneh_test
+          POSTGRES_PASSWORD: nasneh_test_password
+          POSTGRES_DB: nasneh_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
       redis:
         image: redis:7-alpine
         ports:
@@ -86,6 +99,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      DATABASE_URL: postgresql://nasneh_test:nasneh_test_password@localhost:5432/nasneh_test
+      REDIS_URL: redis://localhost:6379
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -109,8 +125,13 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: pnpm --filter=@nasneh/api prisma generate
+      - name: Run Prisma Migrations
+        run: pnpm --filter=@nasneh/api prisma migrate deploy
       - name: Run tests
         run: pnpm test
+
 
   build:
     name: Build
