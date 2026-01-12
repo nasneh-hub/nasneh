@@ -1,6 +1,7 @@
 {
   "name": "@nasneh/customer-web",
   "version": "0.0.1",
+  "_deploy": "2026-01-12-force",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
