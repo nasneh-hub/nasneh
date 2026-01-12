@@ -48,9 +48,9 @@ export function Header() {
 
   const tabs = [
     { name: 'Kitchens', href: '/kitchens' },
-    { name: 'Craft', href: '/craft' },
+    { name: 'Craft', href: '/categories/craft' },
     { name: 'Products', href: '/products' },
-    { name: 'Food Trucks', href: '/food-trucks' },
+    { name: 'Food Trucks', href: '/categories/food-trucks' },
     { name: 'Services', href: '/services', highlighted: true },
   ];
 

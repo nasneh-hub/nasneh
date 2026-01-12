@@ -56,10 +56,10 @@ export default async function ServiceBookingPage({
 }: {
   params: { slug: string };
 }) {
-  const serviceSlug = params.slug;
+  const serviceId = params.slug; // This is actually the service ID from the URL
 
   // Fetch service data server-side
-  const service = await fetchService(serviceSlug);
+  const service = await fetchService(serviceId);
 
   // If service not found, trigger Next.js 404
   if (!service) {
