@@ -11,9 +11,9 @@ export function Footer() {
   const footerLinks = {
     marketplace: [
       { name: en.footer.kitchens, href: '/kitchens' },
-      { name: en.footer.craft, href: '/categories/craft' },
-      { name: en.footer.products, href: '/products' },
-      { name: en.footer.foodTrucks, href: '/categories/food-trucks' },
+      { name: en.footer.craft, href: '/craft' },
+      { name: 'Market', href: '/market' },
+      { name: en.footer.foodTrucks, href: '/food-trucks' },
       { name: en.footer.services, href: '/services' },
     ],
     company: [

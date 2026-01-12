@@ -4,10 +4,40 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Redirect old /category/[slug] to new /categories/[slug] for consistency
+  // Redirect old /categories/* to new flat structure
+  if (pathname.startsWith('/categories/')) {
+    const slug = pathname.replace('/categories/', '');
+    
+    // Map old category slugs to new URLs
+    const categoryMap: Record<string, string> = {
+      'kitchens': '/kitchens',
+      'craft': '/craft',
+      'products': '/market',
+      'market': '/market',
+      'food-trucks': '/food-trucks',
+      'services': '/services',
+    };
+
+    const newPath = categoryMap[slug] || `/${slug}`;
+    return NextResponse.redirect(new URL(newPath, request.url));
+  }
+
+  // Redirect old /category/[slug] to new structure
   if (pathname.startsWith('/category/') && pathname !== '/category') {
     const slug = pathname.replace('/category/', '');
-    return NextResponse.redirect(new URL(`/categories/${slug}`, request.url));
+    
+    // Map to new category URLs
+    const categoryMap: Record<string, string> = {
+      'kitchens': '/kitchens',
+      'craft': '/craft',
+      'products': '/market',
+      'market': '/market',
+      'food-trucks': '/food-trucks',
+      'services': '/services',
+    };
+
+    const newPath = categoryMap[slug] || `/${slug}`;
+    return NextResponse.redirect(new URL(newPath, request.url));
   }
 
   // Redirect /sell to onboarding page (placeholder for now)
@@ -21,6 +51,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/categories/:path*',
     '/category/:path*',
     '/sell',
   ],
