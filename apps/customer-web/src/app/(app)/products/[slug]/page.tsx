@@ -149,7 +149,7 @@ export default function ProductDetailPage() {
       }
       
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/cart/items`,
+        getApiUrl('/cart/items'),
         {
           method: 'POST',
           headers: {
