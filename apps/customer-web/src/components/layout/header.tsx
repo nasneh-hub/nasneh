@@ -195,9 +195,9 @@ export function Header() {
 
             {/* Favorites (Desktop only) */}
             <button
-              onClick={() => router.push('/favorites')}
+              onClick={() => router.push('/me/wishlist')}
               className="hidden cursor-pointer items-center justify-center rounded-xl border-none bg-transparent p-[var(--spacing-sm)] transition-colors duration-200 hover:bg-[var(--bg-hover)] md:flex"
-              aria-label="Favorites"
+              aria-label="Wishlist"
             >
               <Heart size={20} className="text-[var(--text-primary)]" />
             </button>
@@ -233,32 +233,32 @@ export function Header() {
                     </p>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/profile')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/profile')}>
                     <User size={16} className="mr-[var(--spacing-sm)]" />
                     {en.profile.myProfile}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/orders')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/orders')}>
                     <Package size={16} className="mr-[var(--spacing-sm)]" />
                     {en.orders.myOrders}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/bookings')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/bookings')}>
                     <Calendar size={16} className="mr-[var(--spacing-sm)]" />
                     {en.bookings.myBookings}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/reviews')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/reviews')}>
                     <Star size={16} className="mr-[var(--spacing-sm)]" />
                     {en.reviews.myReviews}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/addresses')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/addresses')}>
                     <MapPin size={16} className="mr-[var(--spacing-sm)]" />
                     {en.profile.myAddresses}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/favorites')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/wishlist')}>
                     <Heart size={16} className="mr-[var(--spacing-sm)]" />
                     {en.wishlist.myWishlist}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/support')}>
+                  <DropdownMenuItem onClick={() => router.push('/me/support')}>
                     <Headphones size={16} className="mr-[var(--spacing-sm)]" />
                     {en.support.support}
                   </DropdownMenuItem>
