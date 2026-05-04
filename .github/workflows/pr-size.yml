@@ -65,7 +65,7 @@ jobs:
           echo "PR Size: $TOTAL lines (+$ADDED/-$DELETED)"
 
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const added = ${{ steps.size.outputs.added }};
